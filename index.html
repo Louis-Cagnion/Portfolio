@@ -252,16 +252,33 @@
                     <li>Gerer $? pour afficher le status de sortie de la derniere commande executee</li>
                     <li>Gerer ctrl+C, ctrl+D et ctrl+/</li>
                 </ul>
-                <br/>
-                Les bonus consistaient a pouvoir ajouter les operateurs logiques '&&' et '||' ainsi qu'a
+                Les bonus consistaient a pouvoir ajouter les operateurs logiques '&&' et '||', ainsi qu'a
                 l'ajout d'ordre de priorite d'execution via les parentheses. Votre humble serviteur s'est
                 occupe de cette partie dans les bonus, c'etait sympa de coder un arbre binaire par dessus
-                toute la partie obligatoire, ah ah, ah...<br/>
-                Ah et aussi il fallait pouvoir gerer la wildcard * pour le dossier courant.
+                toute la partie obligatoire, ah ah, aaaah...<br/>
+                Ah et aussi il fallait pouvoir gerer la wildcard '*' pour le dossier courant.
             </p>
         <h4>Philosophers</h4>
             <p>
-
+                Pour ce projet il fallait reussi a faire survivre des philosophes. Ces philosophes avaient
+                plusieurs modes :
+                <ul>
+                    <li>Un temps pour manger</li>
+                    <li>Un temps pour reflechir</li>
+                    <li>Un temps pour dormir</li>
+                    <li>Le nombre de fois qu'ils doivent manger (optionnel)</li>
+                </ul>
+                Ils possedaient ausi un temps de vie limite. Le but etait de donner differents parametres de temps
+                et differents nombres de philosophers, et en fonction de ces contraintes de temps, d'etre suffisament
+                precis pour garder en vie ou non des philosophers, les temps sont donnes en milisecondes, donc si ce
+                n'est pas bien calibrer ca va se voir rapidement. Et en plus de ca, il faut afficher les temps
+                auxquels des philosophes effectuent des actions, et ce temps ne dois pas avoir de decalage superieur
+                a 10ms.
+                La particularite de ce jeu de survie c'est que les philosophes ne peuvent manger que si 2 fourchettes
+                sont disponibles, mais chaque philosophe ne possede qu'une fourchette chacun, donc il faut reussir a
+                les organiser pour qu'un philosophe soit occuper pour laisser sa fourchette a un autre philosophe et
+                le laisser manger.
+                Les bonus consistent a faire le meme exercice mais en remplacant les threads par des semaphores.
             </p>
         <h4>Cub3D</h4>
             <p>
