@@ -313,11 +313,31 @@
             </p>
         <h4>Webserv</h4>
             <p>
-
+                L'avant-dernier projet de groupe du tronc commun, il fallait realiser son propre serveur HTTP.
+                Le site web devait :
+                <ul>
+                    <li>Etre configuer avec un fichier config creer de zero</li>
+                    <li>Etre non bloquant</li>
+                    <li>Utiliser un seul appel de la fonction poll</li>
+                    <li>faire en sotre que toutes les actions read et write se fassent apres avoir lance
+                        la fonction poll</li>
+                    <li>eviter de regarder errno directement apres un read ou write</li>
+                    <li>gerer les boucles infinies pour eviter de bloquer le site</li>
+                    <li>marcher sur un navigateur (logique)</li>
+                    <li>avoir des pages d'erreurs</li>
+                    <li>fournir le bon code d'erreur</li>
+                    <li>utiliser des CGI exclusivement</li>
+                    <li>gerer les methodes GET, POST et DELETE</li>
+                    <li>permettre au clients d'uplader des fichiers</li>
+                    <li>ecouter sur plusieurs ports differents et donner des contenus differents en fonction</li>
+                </ul>
+                Un gros moorceau pour la partie obligatoire.<br/>
+                Quand a la partie bonus, il fallait gerer les sessions de clients et leurs cookies, et ajouter
+                plusieurs types de CGI.
             </p>
         <h4>Transcendence</h4>
             <p>
-
+                
             </p>
     </div>
 </body>
