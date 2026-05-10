@@ -229,7 +229,35 @@
             </p>
         <h4>Minishell</h4>
             <p>
-
+                Le but de ce 1er projet de groupe etait de creer un mini shell (mais nan !). Il fallait :
+                <ul>
+                    <li>pouvoir naviguer dans plusieurs niveaux du shell</li>
+                    <li>coder soi-meme 5 commandes :<br/>
+                        <ul>
+                            <li>echo, avec l'option -n</li>
+                            <li>cd, chemin relatif ou absolu</li>
+                            <li>pwd, sans options</li>
+                            <li>export, sans options</li>
+                            <li>unset, sans options</li>
+                            <li>env, sans options</li>
+                            <li>exit, sans options</li>
+                        </ul>
+                    </li>
+                    <li>Avoir un prompt qui attends une commande</li>
+                    <li>Avoir un historique fonctionnel</li>
+                    <li>Pouvoir chercher et lancer le bon executable pour le chemin relatif ou absolu</li>
+                    <li>Pouvoir gerer les single et double quotes (',")</li>
+                    <li>Implementer les redirections (&lt;,&gt;,&lt;&lt;,&gt;&gt;)</li>
+                    <li>Gerer les variables d'environnement avec '$'</li>
+                    <li>Gerer $? pour afficher le status de sortie de la derniere commande executee</li>
+                    <li>Gerer ctrl+C, ctrl+D et ctrl+/</li>
+                </ul>
+                <br/>
+                Les bonus consistaient a pouvoir ajouter les operateurs logiques '&&' et '||' ainsi qu'a
+                l'ajout d'ordre de priorite d'execution via les parentheses. Votre humble serviteur s'est
+                occupe de cette partie dans les bonus, c'etait sympa de coder un arbre binaire par dessus
+                toute la partie obligatoire, ah ah, ah...<br/>
+                Ah et aussi il fallait pouvoir gerer la wildcard * pour le dossier courant.
             </p>
         <h4>Philosophers</h4>
             <p>
