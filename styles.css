@@ -20,6 +20,21 @@ h2 {
     text-align: center;
     background-color: rgb(27, 27, 27);
     border-radius: 10px;
+    padding: 2px 10px;
+}
+
+
+h3 {
+    text-align: center;
+    background-color: rgb(27, 27, 27);
+    border-radius: 10px;
+    padding: 5px 10px;
+}
+
+h4 {
+    background-color: rgb(27, 27, 27);
+    border-radius: 10px;
+    padding: 5px 10px;
 }
 
 div {
