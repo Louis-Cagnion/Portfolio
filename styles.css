@@ -18,6 +18,8 @@ h1 {
 
 h2 {
     text-align: center;
+    background-color: rgb(27, 27, 27);
+    border-radius: 10px;
 }
 
 div {
