@@ -1,6 +1,3 @@
-# Portfolio HTML corrigé et reformulé
-
-```html
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -420,251 +417,251 @@
             C'est moi qui me suis occupé de cette partie. Cela m'a permis de travailler sur des arbres binaires
             et toute la logique d'exécution liée aux priorités des commandes.
         </p>
-    <h4>Philosophers</h4>
-
-    <p>
-        Pour ce projet, il fallait réussir à faire survivre des philosophes.
-    </p>
-
-    <p>
-        Ces philosophes possédaient plusieurs états :
-    </p>
-
-    <ul>
-        <li>Un temps pour manger</li>
-        <li>Un temps pour réfléchir</li>
-        <li>Un temps pour dormir</li>
-        <li>Un nombre de repas à atteindre (optionnel)</li>
-    </ul>
-
-    <p>
-        Ils possédaient également un temps de vie limité. Le but était de fournir différents paramètres
-        de temps et différents nombres de philosophes, puis d'être suffisamment précis pour réussir à
-        les maintenir en vie selon les contraintes données.
-    </p>
-
-    <p>
-        Les temps étaient exprimés en millisecondes, donc le moindre mauvais calibrage se remarquait
-        immédiatement.
-    </p>
-
-    <p>
-        En plus de cela, il fallait afficher précisément le moment auquel chaque philosophe effectuait
-        une action, avec une marge d'erreur inférieure à 10 ms.
-    </p>
-
-    <p>
-        La particularité de ce projet venait du fait que les philosophes ne pouvaient manger que si
-        deux fourchettes étaient disponibles. Cependant, chaque philosophe ne possédait qu'une seule
-        fourchette. Il fallait donc organiser correctement les accès afin d'éviter les blocages,
-        les conflits et les morts prématurées.
-    </p>
-
-    <p>
-        Les bonus consistaient à refaire le même exercice en remplaçant les threads par des processus
-        enfants et les mutex par des sémaphores.
-    </p>
-
-    <h4>Cub3D</h4>
-
-    <p>
-        Le but de ce second projet de groupe était de créer un jeu inspiré de
-        <a href="https://search.brave.com/images?q=Wolfenstein+3D+gameplay">Wolfenstein</a>.
-    </p>
-
-    <p>
-        Les bonus consistaient notamment à :
-    </p>
-
-    <ul>
-        <li>Ajouter la gestion des collisions</li>
-        <li>Implémenter une minimap</li>
-        <li>Ajouter des portes</li>
-        <li>Créer des sprites animés</li>
-        <li>Gérer les mouvements de caméra avec la souris</li>
-    </ul>
-
-    <p>
-        La personne avec qui j'ai travaillé sur ce projet a même ajouté une caméra verticale alors que
-        le moteur utilisait de la fausse 2D.
-    </p>
-
-    <p>
-        Il a également été remarquable durant le projet, car même lorsque j'étais moins disponible,
-        il a continué à faire avancer énormément de choses de son côté. Cela mérite largement des
-        remerciements.
-    </p>
-
-    <h4>Inception</h4>
-
-    <p>
-        Dans ce projet, il fallait créer ses propres Dockerfiles et docker-compose en utilisant Nginx,
-        MariaDB et WordPress.
-    </p>
-
-    <p>
-        Le conteneur devait être créé et fonctionner sur une machine virtuelle.
-    </p>
-
-    <p>
-        Les bonus consistaient notamment à :
-    </p>
-
-    <ul>
-        <li>Ajouter un cache Redis à WordPress</li>
-        <li>Configurer un serveur FTP pointant sur le volume WordPress</li>
-        <li>Créer un site web statique hors PHP</li>
-        <li>Configurer Adminer</li>
-        <li>Ajouter un service supplémentaire jugé utile</li>
-    </ul>
-
-    <p>
-        C'est probablement le projet que j'ai le moins apprécié et celui avec lequel j'ai eu le plus
-        de difficultés.
-    </p>
-
-    <h4>Webserv</h4>
-
-    <p>
-        L'avant-dernier projet de groupe du tronc commun consistait à réaliser notre propre serveur HTTP.
-    </p>
-
-    <p>
-        Le serveur devait notamment :
-    </p>
-
-    <ul>
-        <li>Être configuré avec un fichier de configuration créé de zéro</li>
-        <li>Être non bloquant</li>
-        <li>Utiliser un seul appel à poll</li>
-        <li>Faire en sorte que tous les read et write soient exécutés après poll</li>
-        <li>Éviter l'utilisation directe de errno après un read ou write</li>
-        <li>Gérer les boucles infinies pour éviter de bloquer le serveur</li>
-        <li>Fonctionner correctement sur un navigateur</li>
-        <li>Avoir des pages d'erreurs</li>
-        <li>Retourner les bons codes HTTP</li>
-        <li>Utiliser des CGI</li>
-        <li>Gérer les méthodes GET, POST et DELETE</li>
-        <li>Permettre l'upload de fichiers</li>
-        <li>Écouter sur plusieurs ports avec différents contenus</li>
-    </ul>
-
-    <p>
-        C'était déjà un énorme morceau pour la partie obligatoire.
-    </p>
-
-    <p>
-        Pour les bonus, il fallait gérer les sessions des clients et les cookies,
-        ainsi qu'ajouter plusieurs types de CGI.
-    </p>
-
-    <h4>Transcendence</h4>
-
-    <p>
-        Pour ce dernier projet du tronc commun, qui était également un projet de groupe,
-        le but était de créer une véritable application web complète.
-    </p>
-
-    <p>
-        Le projet devait contenir :
-    </p>
-
-    <ul>
-        <li>Un frontend</li>
-        <li>Un backend</li>
-        <li>Une base de données</li>
-    </ul>
-
-    <p>
-        Comme nous étions nombreux à travailler dessus, il fallait également garder une organisation
-        claire avec des commits propres et compréhensibles.
-    </p>
-
-    <p>
-        L'application devait pouvoir être lancée via une seule commande à l'intérieur d'un conteneur,
-        fonctionner correctement sur navigateur, ne produire aucune erreur dans la console,
-        et inclure une politique de confidentialité ainsi que des conditions d'utilisation.
-    </p>
-
-    <p>
-        Concernant la stack technique, il fallait notamment :
-    </p>
-
-    <ul>
-        <li>Créer un frontend clair, réactif et responsive</li>
-        <li>Utiliser un framework CSS</li>
-        <li>Stocker les informations sensibles dans un fichier .env ignoré par Git</li>
-        <li>Créer une base de données bien structurée</li>
-        <li>Mettre en place une authentification sécurisée</li>
-        <li>Valider les données côté frontend et backend</li>
-        <li>Utiliser HTTPS côté backend</li>
-    </ul>
-
-    <p>
-        Ensuite, nous pouvions choisir différents modules à ajouter au projet.
-    </p>
-
-    <p>
-        Certains modules étaient mineurs et rapportaient un point, tandis que d'autres étaient majeurs
-        et rapportaient deux points.
-    </p>
-
-    <p>
-        Le but était de totaliser 14 points pour valider la partie obligatoire,
-        puis 19 points pour valider les bonus.
-    </p>
-
-    <p>
-        Pour ma part, je me suis occupé de deux modules majeurs :
-    </p>
-
-    <ol>
-        <li>Créer une IA capable d'affronter les joueurs</li>
-        <li>Créer une version 3D du jeu</li>
-    </ol>
-
-    <p>
-        Pour plus de détails sur l'organisation de notre équipe,
-        je vous invite à consulter
-        <a href="https://github.com/Louis-Cagnion/Transcendence125/blob/main/README.MD">
-            le README
-        </a>
-        du projet.
-    </p>
-
-    <div>
-        <h2>
-            Me contacter
-        </h2>
+        <h4>Philosophers</h4>
 
         <p>
-            Si vous souhaitez me contacter ou consulter mes différents réseaux,
-            vous pouvez les retrouver ci-dessous :
+            Pour ce projet, il fallait réussir à faire survivre des philosophes.
+        </p>
+
+        <p>
+            Ces philosophes possédaient plusieurs états :
         </p>
 
         <ul>
-            <li>
-                <a href="mailto:louis.cagnion.pro@gmail.com">Mon email</a>
-            </li>
-
-            <li>
-                <a href="https://www.linkedin.com/in/louis-cagnion-7249121a6/">
-                    Mon LinkedIn
-                </a>
-            </li>
-
-            <li>
-                <a href="https://github.com/Louis-Cagnion">
-                    Mon GitHub
-                </a>
-            </li>
-
-            <li>
-                <a href="https://www.codewars.com/users/Sung-Jinw00">
-                    Mon compte Codewars
-                </a>
-            </li>
+            <li>Un temps pour manger</li>
+            <li>Un temps pour réfléchir</li>
+            <li>Un temps pour dormir</li>
+            <li>Un nombre de repas à atteindre (optionnel)</li>
         </ul>
-    </div>
-</body>
+
+        <p>
+            Ils possédaient également un temps de vie limité. Le but était de fournir différents paramètres
+            de temps et différents nombres de philosophes, puis d'être suffisamment précis pour réussir à
+            les maintenir en vie selon les contraintes données.
+        </p>
+
+        <p>
+            Les temps étaient exprimés en millisecondes, donc le moindre mauvais calibrage se remarquait
+            immédiatement.
+        </p>
+
+        <p>
+            En plus de cela, il fallait afficher précisément le moment auquel chaque philosophe effectuait
+            une action, avec une marge d'erreur inférieure à 10 ms.
+        </p>
+
+        <p>
+            La particularité de ce projet venait du fait que les philosophes ne pouvaient manger que si
+            deux fourchettes étaient disponibles. Cependant, chaque philosophe ne possédait qu'une seule
+            fourchette. Il fallait donc organiser correctement les accès afin d'éviter les blocages,
+            les conflits et les morts prématurées.
+        </p>
+
+        <p>
+            Les bonus consistaient à refaire le même exercice en remplaçant les threads par des processus
+            enfants et les mutex par des sémaphores.
+        </p>
+
+        <h4>Cub3D</h4>
+
+        <p>
+            Le but de ce second projet de groupe était de créer un jeu inspiré de
+            <a href="https://search.brave.com/images?q=Wolfenstein+3D+gameplay">Wolfenstein</a>.
+        </p>
+
+        <p>
+            Les bonus consistaient notamment à :
+        </p>
+
+        <ul>
+            <li>Ajouter la gestion des collisions</li>
+            <li>Implémenter une minimap</li>
+            <li>Ajouter des portes</li>
+            <li>Créer des sprites animés</li>
+            <li>Gérer les mouvements de caméra avec la souris</li>
+        </ul>
+
+        <p>
+            La personne avec qui j'ai travaillé sur ce projet a même ajouté une caméra verticale alors que
+            le moteur utilisait de la fausse 2D.
+        </p>
+
+        <p>
+            Il a également été remarquable durant le projet, car même lorsque j'étais moins disponible,
+            il a continué à faire avancer énormément de choses de son côté. Cela mérite largement des
+            remerciements.
+        </p>
+
+        <h4>Inception</h4>
+
+        <p>
+            Dans ce projet, il fallait créer ses propres Dockerfiles et docker-compose en utilisant Nginx,
+            MariaDB et WordPress.
+        </p>
+
+        <p>
+            Le conteneur devait être créé et fonctionner sur une machine virtuelle.
+        </p>
+
+        <p>
+            Les bonus consistaient notamment à :
+        </p>
+
+        <ul>
+            <li>Ajouter un cache Redis à WordPress</li>
+            <li>Configurer un serveur FTP pointant sur le volume WordPress</li>
+            <li>Créer un site web statique hors PHP</li>
+            <li>Configurer Adminer</li>
+            <li>Ajouter un service supplémentaire jugé utile</li>
+        </ul>
+
+        <p>
+            C'est probablement le projet que j'ai le moins apprécié et celui avec lequel j'ai eu le plus
+            de difficultés.
+        </p>
+
+        <h4>Webserv</h4>
+
+        <p>
+            L'avant-dernier projet de groupe du tronc commun consistait à réaliser notre propre serveur HTTP.
+        </p>
+
+        <p>
+            Le serveur devait notamment :
+        </p>
+
+        <ul>
+            <li>Être configuré avec un fichier de configuration créé de zéro</li>
+            <li>Être non bloquant</li>
+            <li>Utiliser un seul appel à poll</li>
+            <li>Faire en sorte que tous les read et write soient exécutés après poll</li>
+            <li>Éviter l'utilisation directe de errno après un read ou write</li>
+            <li>Gérer les boucles infinies pour éviter de bloquer le serveur</li>
+            <li>Fonctionner correctement sur un navigateur</li>
+            <li>Avoir des pages d'erreurs</li>
+            <li>Retourner les bons codes HTTP</li>
+            <li>Utiliser des CGI</li>
+            <li>Gérer les méthodes GET, POST et DELETE</li>
+            <li>Permettre l'upload de fichiers</li>
+            <li>Écouter sur plusieurs ports avec différents contenus</li>
+        </ul>
+
+        <p>
+            C'était déjà un énorme morceau pour la partie obligatoire.
+        </p>
+
+        <p>
+            Pour les bonus, il fallait gérer les sessions des clients et les cookies,
+            ainsi qu'ajouter plusieurs types de CGI.
+        </p>
+
+        <h4>Transcendence</h4>
+
+        <p>
+            Pour ce dernier projet du tronc commun, qui était également un projet de groupe,
+            le but était de créer une véritable application web complète.
+        </p>
+
+        <p>
+            Le projet devait contenir :
+        </p>
+
+        <ul>
+            <li>Un frontend</li>
+            <li>Un backend</li>
+            <li>Une base de données</li>
+        </ul>
+
+        <p>
+            Comme nous étions nombreux à travailler dessus, il fallait également garder une organisation
+            claire avec des commits propres et compréhensibles.
+        </p>
+
+        <p>
+            L'application devait pouvoir être lancée via une seule commande à l'intérieur d'un conteneur,
+            fonctionner correctement sur navigateur, ne produire aucune erreur dans la console,
+            et inclure une politique de confidentialité ainsi que des conditions d'utilisation.
+        </p>
+
+        <p>
+            Concernant la stack technique, il fallait notamment :
+        </p>
+
+        <ul>
+            <li>Créer un frontend clair, réactif et responsive</li>
+            <li>Utiliser un framework CSS</li>
+            <li>Stocker les informations sensibles dans un fichier .env ignoré par Git</li>
+            <li>Créer une base de données bien structurée</li>
+            <li>Mettre en place une authentification sécurisée</li>
+            <li>Valider les données côté frontend et backend</li>
+            <li>Utiliser HTTPS côté backend</li>
+        </ul>
+
+        <p>
+            Ensuite, nous pouvions choisir différents modules à ajouter au projet.
+        </p>
+
+        <p>
+            Certains modules étaient mineurs et rapportaient un point, tandis que d'autres étaient majeurs
+            et rapportaient deux points.
+        </p>
+
+        <p>
+            Le but était de totaliser 14 points pour valider la partie obligatoire,
+            puis 19 points pour valider les bonus.
+        </p>
+
+        <p>
+            Pour ma part, je me suis occupé de deux modules majeurs :
+        </p>
+
+        <ol>
+            <li>Créer une IA capable d'affronter les joueurs</li>
+            <li>Créer une version 3D du jeu</li>
+        </ol>
+
+        <p>
+            Pour plus de détails sur l'organisation de notre équipe,
+            je vous invite à consulter
+            <a href="https://github.com/Louis-Cagnion/Transcendence125/blob/main/README.MD">
+                le README
+            </a>
+            du projet.
+        </p>
+
+        <div>
+            <h2>
+                Me contacter
+            </h2>
+
+            <p>
+                Si vous souhaitez me contacter ou consulter mes différents réseaux,
+                vous pouvez les retrouver ci-dessous :
+            </p>
+
+            <ul>
+                <li>
+                    <a href="mailto:louis.cagnion.pro@gmail.com">Mon email</a>
+                </li>
+
+                <li>
+                    <a href="https://www.linkedin.com/in/louis-cagnion-7249121a6/">
+                        Mon LinkedIn
+                    </a>
+                </li>
+
+                <li>
+                    <a href="https://github.com/Louis-Cagnion">
+                        Mon GitHub
+                    </a>
+                </li>
+
+                <li>
+                    <a href="https://www.codewars.com/users/Sung-Jinw00">
+                        Mon compte Codewars
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </body>
 </html>
