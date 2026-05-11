@@ -3,18 +3,30 @@
 }
 
 body {
-    background-color: rgb(48, 48, 48);
+    background-color: rgb(16, 16, 16);
 }
 
 h1 {
+    
+    width: fit-content;
+    margin: auto;
+    background-color: rgb(59, 59, 59);
+    padding: 5px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+h2 {
     text-align: center;
 }
 
 div {
-    background-color: rgb(71, 71, 71);
-    padding: 5px;
+    background-color: rgb(59, 59, 59);
+    padding: 10px;
     border-radius: 10px;
+    margin: auto;
     margin-bottom: 20px;
+    max-width: 1000px;
 }
 
 p {
