@@ -59,27 +59,28 @@ async function initPage() {
     school.list.forEach(elem => {
         projectsDiv.append(createTag('h4', elem.h4, elem.id))
         writeParagraphs(projectsDiv, elem.paragraphs)
-        switch (elem.h4) {
-            case "Fract-ol":
+        switch (elem.id) {
+            case "fract-ol":
                 projectsDiv.append(createTagList('ul', elem.bonuses))
                 break;
-            case "Minishell":
+            case "minishell":
                 projectsDiv.append(createTagList('ul', elem.requirements))
                 writeParagraphs(projectsDiv, elem.bonusParagraphs)
                 break;
-            case "Philosophers":
+            case "philosophers":
                 projectsDiv.append(createTagList('ul', elem.states))
                 writeParagraphs(projectsDiv, elem.stateParagraphs)
                 break;
-            case "Cub3D" || "Inception":
+            case "cub3d":
+            case "inception":
                 projectsDiv.append(createTagList('ul', elem.bonuses))
                 writeParagraphs(projectsDiv, elem.outroParagraphs)
                 break;
-            case "Webserv":
+            case "webserv":
                 projectsDiv.append(createTagList('ul', elem.requirements))
                 writeParagraphs(projectsDiv, elem.outroParagraphs)
                 break;
-            case "Transcendence":
+            case "transcendence":
                 projectsDiv.append(createTagList('ul', elem.components))
                 writeParagraphs(projectsDiv, elem.componentParagraphs)
                 projectsDiv.append(createTagList('ul', elem.techStack))
@@ -100,8 +101,8 @@ async function initPage() {
     )
     divContact.append(createTagList('ul', contact.links, (link) => {
         const li = createTag('li')
-    li.appendChild(createTag('a', link.label, '', link.href))
-    return li
+        li.appendChild(createTag('a', link.label, '', link.href))
+        return li
     }))
 }
 
