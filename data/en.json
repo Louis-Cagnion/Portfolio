@@ -9,10 +9,11 @@
   "about": {
     "h2": "About me",
     "paragraphs": [
-      "My name is Louis Cagnion and I am a student at 42 Perpignan. During my core curriculum at the school, I worked on various projects that allowed me to learn C and C++, as well as several practical tools such as MinilibX for graphical rendering, Docker for sharing applications compatible with most environments, and networking and API concepts. I also learned how to manage data on a user-facing website through backend and frontend development.",
-      "Today, as I am wrapping up my core curriculum, I want to pursue a RNCP7 degree in AI and algorithms. To that end, I am primarily looking for a 6-month work contract to gain my first professional experience and develop my skills in real-world conditions.",
-      "I also want to deepen my knowledge in areas related to the qualification I am pursuing, particularly around AI and algorithms.",
-      "While looking for a professional opportunity, I continue to practice in areas I have not yet had the chance to explore in depth, such as Python applied to AI, working with LLMs, and the various tools used in data science, machine learning, and deep learning."
+      "My name is Louis Cagnion and I am a student at 42 Perpignan. During my common core curriculum, I completed various projects that allowed me to learn C and C++, as well as several practical tools such as MinilibX for graphical rendering, Docker for sharing applications compatible with most environments, and how networks and APIs work. I also learned to manage data on a website visited by users through backend and frontend development.",
+      "Now, as I am finishing my common core, I am looking to pursue an RNCP7 in AI and algorithmics. To that end, I am primarily seeking a 6-month work contract or a 2-year work-study program in order to gain my first professional experience and develop my skills in real-world conditions.",
+      "I also wish to deepen my knowledge in the areas related to the qualification I am working toward, particularly around AI and algorithmics.",
+      "While looking for a professional opportunity, I continue to practice in areas I have not yet had the chance to explore in depth, such as Python applied to AI, the use of LLMs, and the various tools used in data science, machine learning, and deep learning.",
+      "I also enjoy working on passion projects that broaden my knowledge and skills, such as this portfolio, through which I am learning frontend development with HTML, JavaScript, and CSS."
     ]
   },
   "journey": {
