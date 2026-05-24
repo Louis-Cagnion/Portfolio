@@ -1,7 +1,7 @@
 import { fetchData } from "./fetch.js"
 import { createTag, writeParagraphs, createTagList, insertLinkParagraph } from "./tag.js"
 
-const commonPath = "../data/"
+const commonPath = "./data/"
 const frPath = `${commonPath}fr.json`
 const enPath = `${commonPath}en.json`
 const languages = [
