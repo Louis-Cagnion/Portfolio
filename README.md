@@ -1,5 +1,10 @@
 # Portfolio
 
+Personal developer portfolio built with Vanilla JavaScript, HTML and CSS.
+
+🔗 You can access to the website here:  
+https://louis-cagnion.github.io/Portfolio/
+
 ## Table of Contents
 - [About the project](#about-the-project)
 - [Features](#features)
@@ -7,11 +12,6 @@
 - [Current Goals](#current-goals)
 - [Featured Projects](#featured-projects)
 - [Author](#author)
-
-Personal developer portfolio built with Vanilla JavaScript, HTML and CSS.
-
-🔗 Live website:  
-https://louis-cagnion.github.io/Portfolio/
 
 ---
 
