@@ -1,13 +1,13 @@
 /**
- * @param {string} type //tag type
- * @param {string} inner //body
- * @param {string} id //tag ID
- * @param {string} href //link ref
+ * @param {string} type tag type
+ * @param {string} inner body
+ * @param {string} id tag ID
+ * @param {string} href link ref
  * 
  * @returns {Element}
  */
 export function createTag(type, inner = '', id = '', href = '') {
-    let newElement = document.createElement(type)
+    const newElement = document.createElement(type)
     newElement.innerHTML = inner
     if (id)
         newElement.id = id
@@ -17,17 +17,18 @@ export function createTag(type, inner = '', id = '', href = '') {
 }
 
 /**
- * @param {string} tagType //list tag type 
+ * @param {string} listTag
  * @param {object} items
+ * @param {Function} func util function that makes you able to modify each item before adding them to the list, an li tag must be returned
  * 
  * @returns {Element}
  */
-export function createList (tagType, items, func = null) {
+export function createTagList(listTag, items, func = null) {
     if (items === undefined || !items || !items.length)
         return document.createDocumentFragment()
-    let l = createTag(tagType === 'ul' ? 'ul' : 'ol')
+    const l = createTag(listTag === 'ul' ? 'ul' : 'ol')
     items.forEach(item => {
-        let li = func !== null ? func(item) : createTag('li', item)
+        const li = (func !== null ? func(item) : createTag('li', item))
         l.append(li)
     })
     return l
@@ -48,15 +49,17 @@ export function writeParagraphs(parentTag, pList) {
 }
 
 /**
+ * Create a paragraph, insert a link at the end and append it to parentTag
+ * 
  * @param {Element} parentTag 
  * @param {string} intro 
- * @param {object} links //contains label and href
+ * @param {object} linkParams contains label and href
  */
-export function insertLinkParagraph(parentTag, intro, links) {
-    if (!links || !links.label || !links.href)
+export function insertLinkParagraph(parentTag, intro, linkParams) {
+    if (!linkParams || !linkParams.label || !linkParams.href)
         return
-    let p = createTag('p', intro + ' ')
-    const link = createTag('a', links.label, '', links.href)
+    const p = createTag('p', intro + ' ')
+    const link = createTag('a', linkParams.label, '', linkParams.href)
     p.appendChild(link)
     parentTag.append(p)
 }

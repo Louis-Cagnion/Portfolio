@@ -1,9 +1,9 @@
 /**
- * @param {const string} url
+ * @param {string} url
  * 
- * @returns {Promise}
+ * @returns {Promise} A promise of a response in json format
  */
-export async function getData(url) {
+export async function fetchData(url) {
     try {
         const response = await fetch(url, {
             method: 'GET',

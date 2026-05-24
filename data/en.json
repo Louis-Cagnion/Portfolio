@@ -125,8 +125,7 @@
             "In short: imagine two stacks, the second one empty, and you can only interact with the top or bottom element of each stack to move numbers around.",
             "I managed to develop an algorithm that sorted in around 5700 moves on average. I was proud of the method I found after testing several different approaches, even though I eventually had to draw inspiration from an existing algorithm to get under 5500 operations.",
             "The bonus was to create a \"Checker\" to verify that a sequence of operations resulted in a correctly sorted list at the end."
-          ],
-          "bonuses": []
+          ]
         },
         {
           "id": "fract-ol",

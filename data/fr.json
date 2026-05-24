@@ -125,8 +125,7 @@
             "En résumé, imaginez deux listes : la seconde est vide, et vous ne pouvez interagir qu'avec le premier ou le dernier élément de chaque liste afin de déplacer les nombres.",
             "J'avais réussi à développer un algorithme qui effectuait le tri en environ 5700 coups en moyenne. J'étais fier de cette méthode trouvée après avoir testé plusieurs approches différentes, même si j'ai finalement dû m'inspirer d'un algorithme existant pour passer sous la barre des 5500 opérations.",
             "Le bonus consistait à créer un \"Checker\" permettant de vérifier qu'une suite d'opérations donnait bien, à la fin, une liste triée dans l'ordre croissant."
-          ],
-          "bonuses": []
+          ]
         },
         {
           "id": "fract-ol",
