@@ -149,7 +149,7 @@
             "Managing history",
             "Implementing redirections (<, >, <<, >>)",
             "Handling environment variables",
-            "Handling keyboard signals like Ctrl+C and Ctrl+D"
+            "Handling keyboard signals like Ctrl+C, Ctrl+D and Ctrl+/ "
           ],
           "bonusParagraphs": [
             "The bonuses involved adding the logical operators '&&' and '||', along with priority management using parentheses.",

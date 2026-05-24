@@ -149,7 +149,7 @@
             "Gérer l'historique",
             "Implémenter les redirections (<, >, <<, >>)",
             "Gérer les variables d'environnement",
-            "Gérer les signaux clavier comme Ctrl+C et Ctrl+D"
+            "Gérer les signaux clavier comme Ctrl+C, Ctrl+D et Ctrl+/ "
           ],
           "bonusParagraphs": [
             "Les bonus consistaient à ajouter les opérateurs logiques '&&' et '||', ainsi qu'une gestion des priorités avec des parenthèses.",
