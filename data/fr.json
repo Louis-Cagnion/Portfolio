@@ -1,0 +1,302 @@
+{
+  "meta": {
+    "title": "Louis Cagnion Portfolio"
+  },
+  "nav": {
+    "home": "Accueil",
+    "about": "Je me présente",
+    "journey": "Mon parcours",
+    "skills": "Mes compétences",
+    "projects": "Mes projets",
+    "contact": "Me contacter"
+  },
+  "home": {
+    "h1": "Bienvenue sur mon portfolio"
+  },
+  "about": {
+    "h2": "Je me présente",
+    "paragraphs": [
+      "Je m'appelle Louis Cagnion et je suis étudiant à 42 Perpignan. Au cours de mon tronc commun à l'école, j'ai réalisé différents projets qui m'ont permis d'apprendre le C et le C++, ainsi que plusieurs outils pratiques comme la MinilibX pour le rendu graphique, Docker pour partager des applications compatibles avec la plupart des environnements, ou encore le fonctionnement des réseaux et des API. J'ai également appris à gérer des données sur un site web visité par des utilisateurs grâce au développement backend et frontend.",
+      "Aujourd'hui, alors que je suis en train de clôturer mon tronc commun, je souhaite m'orienter vers un RNCP7 en IA et algorithmie. Pour cela, je recherche en priorité un contrat de travail de 6 mois afin d'acquérir une première expérience professionnelle et développer mes compétences dans des conditions réelles.",
+      "Je souhaite également approfondir mes connaissances dans les domaines liés au titre que j'essaie d'obtenir, notamment autour de l'IA et de l'algorithmie.",
+      "En attendant de trouver une opportunité professionnelle, je continue de m'exercer sur des domaines que je n'ai pas encore eu l'occasion d'approfondir, comme Python appliqué à l'IA, l'utilisation de LLMs, ainsi que les différents outils utilisés en data science, machine learning et deep learning."
+    ]
+  },
+  "journey": {
+    "h2": "Mon parcours de développeur",
+    "paragraphs": [
+      "J'ai humblement commencé dans le code durant ma première piscine à 42. Oui, oui, je ne connaissais absolument rien à ce milieu avant de commencer la sélection de l'école. Je ne savais même pas ce qu'était un terminal ou un IDE.",
+      "On m'a parlé de l'école, de leur façon d'apprendre la programmation, des débouchés possibles après le tronc commun, et je me suis dit que cela avait l'air intéressant. J'ai donc tenté la piscine de 42 pour voir de quoi j'étais capable dans ce nouveau milieu.",
+      "Au final, il s'avère que je me suis découvert une véritable passion pendant cette sélection, même si partir de zéro n'a pas été simple.",
+      "Un moment m'a particulièrement marqué. Au début, je demandais de l'aide pour faire les premiers exercices à des personnes qui avaient déjà des connaissances en programmation. Puis, quand nous sommes passés sur du C pendant la majeure partie de la piscine, ce sont eux qui sont venus me demander de l'aide parce que j'avais avancé plus loin qu'eux dans les exercices.",
+      "C'est à ce moment-là que j'ai compris que j'avais peut-être un potentiel dans ce domaine et, surtout, que j'aimais énormément pratiquer et progresser dedans. Et oui, pour ceux qui se demandent, je les ai aidés avec plaisir. On m'avait aidé à me lancer, c'était donc naturel pour moi de les aider en retour.",
+      "Je n'ai malheureusement pas réussi ma première piscine du premier coup, même en ayant des résultats dans la moyenne des autres candidats. J'étais déçu, presque triste, mais je suis rentré chez moi avec un nouvel objectif : retenter une piscine et intégrer cette école.",
+      "J'étais donc prêt à me préparer de mon côté pour réussir la sélection la fois suivante, mais le destin en a décidé autrement. Quelques jours après les résultats, j'ai reçu un message du directeur de l'école me proposant de participer à la piscine suivante, qui arrivait seulement trois semaines plus tard, alors qu'en temps normal il faut attendre un an avant de pouvoir retenter.",
+      "Évidemment, je n'ai pas hésité une seconde. Je me suis empressé d'accepter et j'étais extrêmement heureux de pouvoir revenir aussi vite sur le champ de bataille.",
+      "Le début n'a pas été simple, car je devais terminer mon préavis dans la restauration pendant les premiers jours de cette nouvelle piscine. Malgré cela, j'ai réussi à me préparer à temps pour l'examen de la première semaine, obtenir la note maximale et rattraper tout mon retard durant le week-end, tout en participant au projet de groupe débloqué uniquement pendant les week-ends de piscine.",
+      "Après avoir donné mon maximum durant cette seconde piscine, j'ai finalement été accepté, à mon plus grand bonheur et soulagement. J'ai donc commencé mon aventure dans la programmation en novembre 2024, au début de la rentrée des étudiants de 42 Perpignan.",
+      "Nous avions désormais, en théorie, trois ans devant nous pour terminer le tronc commun. De mon côté, je voulais me donner à fond dans mon apprentissage du code. J'ai donc choisi de me challenger en réalisant tous les bonus possibles sur les projets que je sélectionnais.",
+      "Je voulais également avancer rapidement tout en gardant un travail de qualité, car aller vite sans rien apprendre n'aurait eu aucun intérêt. C'est ce que j'ai essayé de faire pendant tout mon cursus.",
+      "Même si je n'ai pas été aussi rapide que certains amis rencontrés pendant mes piscines, qui ont terminé le cursus en six mois, j'ai tout de même réussi à finir tous les projets du tronc commun en un an et demi, avec les bonus lorsque cela était possible.",
+      "J'en ai également profité pour tester différents outils d'apprentissage en participant à certains événements proposés par l'école, notamment les Coding Games. Pour ma part, je n'ai pas vraiment apprécié le format du site, et on m'a alors parlé d'une autre plateforme plus adaptée à ce que je recherchais.",
+      "Ce site s'appelle <strong>Codewars</strong> (<a href=\"https://www.codewars.com/users/Sung-Jinw00\">Mon profil</a>). Il propose un système de niveaux, de classement et d'expérience, tout en permettant de voir les solutions proposées par la communauté une fois un exercice terminé.",
+      "Grâce à cette plateforme, j'ai découvert de nombreuses façons de résoudre des problèmes en C, C++ et Python, ainsi que des outils dont j'ignorais totalement l'existence. J'étais souvent impressionné de voir à quel point certains développeurs pouvaient résoudre des problèmes complexes avec des solutions courtes et élégantes.",
+      "C'est également là, après avoir appris les bases grâce à des tutoriels, que j'ai réellement commencé à développer mes compétences en Python.",
+      "À présent, je me consacre à des projets que je considère utiles, soit pour progresser vers mes objectifs futurs dans la programmation, soit parce qu'ils peuvent apporter quelque chose d'utile à d'autres personnes ou à moi-même.",
+      "Vous pourrez retrouver les projets sur lesquels j'ai travaillé ou sur lesquels je travaille actuellement dans la rubrique \"Mes projets\"."
+    ]
+  },
+  "skills": {
+    "h2": "Mes compétences",
+    "intro": "En termes de compétences, j'ai acquis plusieurs qualités dans différents domaines :",
+    "categories": [
+      {
+        "title": "Les langages de programmation :",
+        "items": ["Bash (Intermédiaire)", "C (Avancé)", "C++ (Avancé)", "Python (Intermédiaire)", "JavaScript (Débutant)"]
+      },
+      {
+        "title": "Les langages de balisage :",
+        "items": ["HTML", "CSS"]
+      },
+      {
+        "title": "Les différentes stacks et technologies :",
+        "items": ["Makefiles", "Git", "GitHub", "Threads / sémaphores", "Mutex et processus enfants", "WebSockets", "APIs", "Numpy", "Matplotlib", "PyTorch"]
+      },
+      {
+        "title": "Les outils :",
+        "items": [
+          "VirtualBox pour la création de machines virtuelles",
+          "MinilibX pour le rendu graphique",
+          "Valgrind pour le débogage",
+          "Docker pour créer des applications stables et scalables",
+          "VS Code, que j'utilise au quotidien pour coder"
+        ]
+      }
+    ],
+    "outro": "Et d'autres compétences sont encore à venir."
+  },
+  "projects": {
+    "h2": "Mes projets",
+    "personal": {
+      "h3": "Mes projets personnels",
+      "list": [
+        {
+          "id": "portfolio",
+          "h4": "Ce portfolio",
+          "paragraphs": ["Et oui, ça compte."],
+          "links": []
+        },
+        {
+          "id": "chatbot",
+          "h4": "Un chatbot IA",
+          "paragraphs": [
+            "En termes d'IA et de Python, j'ai créé un petit projet de chatbot relié par adresse IP à un mini LLM de Mistral AI via Ollama. Pour l'instant, le projet reste assez basique, mais je compte l'améliorer prochainement."
+          ],
+          "links": [
+            { "href": "https://louis-cagnion.github.io/Chatbot/", "label": "ici" }
+          ],
+          "linkIntro": "Vous pouvez y jeter un œil"
+        },
+        {
+          "id": "wiki",
+          "h4": "Un wiki complet de jeu vidéo",
+          "paragraphs": [
+            "Grâce à HTML, CSS et JavaScript, qui me permettent aujourd'hui de raconter mon parcours à travers ce portfolio, je travaille actuellement sur un projet de wiki autour du jeu <strong>Heartopia</strong>.",
+            "À travers ce projet, je souhaite aider la communauté francophone, ainsi que moi-même, à mieux comprendre les mécaniques du jeu, obtenir des ressources, réussir certains succès et progresser plus facilement.",
+            "Mon objectif est de proposer des comparaisons, des observations et différentes astuces afin de simplifier la vie des joueurs dans un jeu qui possède énormément de mécaniques et de systèmes cachés."
+          ],
+          "links": [
+            { "href": "https://louis-cagnion.github.io/Heartopia_map_tracking/", "label": "ce lien" }
+          ],
+          "linkIntro": "Vous pouvez retrouver ce projet gratuitement en ligne via"
+        }
+      ]
+    },
+    "school": {
+      "h3": "Mes projets d'école",
+      "intro": "Durant mon cursus, j'ai eu l'occasion de réaliser plusieurs projets solo et de groupe particulièrement intéressants.",
+      "list": [
+        {
+          "id": "push_swap",
+          "h4": "Push_swap",
+          "paragraphs": [
+            "Le but de ce projet était de coder un algorithme de tri le plus efficace possible afin de trier jusqu'à 500 nombres.",
+            "Pour obtenir la note maximale, il fallait réussir à trier une liste aléatoire de 500 entiers en moins de 5500 opérations avec des mouvements très limités.",
+            "En résumé, imaginez deux listes : la seconde est vide, et vous ne pouvez interagir qu'avec le premier ou le dernier élément de chaque liste afin de déplacer les nombres.",
+            "J'avais réussi à développer un algorithme qui effectuait le tri en environ 5700 coups en moyenne. J'étais fier de cette méthode trouvée après avoir testé plusieurs approches différentes, même si j'ai finalement dû m'inspirer d'un algorithme existant pour passer sous la barre des 5500 opérations.",
+            "Le bonus consistait à créer un \"Checker\" permettant de vérifier qu'une suite d'opérations donnait bien, à la fin, une liste triée dans l'ordre croissant."
+          ],
+          "bonuses": []
+        },
+        {
+          "id": "fract-ol",
+          "h4": "Fract-ol",
+          "paragraphs": [
+            "Ce projet était plus artistique. Le but était d'utiliser la MinilibX afin de créer un rendu graphique de fractales.",
+            "Pour ceux qui ne savent pas ce qu'est une fractale : il s'agit d'un motif qui se répète à l'infini lorsqu'on zoome dessus. Le chou romanesco est d'ailleurs un excellent exemple de fractale naturelle.",
+            "Les bonus consistaient à :"
+          ],
+          "bonuses": [
+            "Créer une troisième fractale en plus de Julia et Mandelbrot",
+            "Faire suivre le zoom avec la position de la souris",
+            "Déplacer la caméra avec les flèches directionnelles",
+            "Modifier dynamiquement les couleurs de la fractale"
+          ]
+        },
+        {
+          "id": "minishell",
+          "h4": "Minishell",
+          "paragraphs": [
+            "Le but de ce premier projet de groupe était de recréer un mini shell.",
+            "Il fallait notamment :"
+          ],
+          "requirements": [
+            "Pouvoir naviguer dans différents niveaux du shell",
+            "Recréer plusieurs commandes Bash comme cd, echo, pwd, export ou exit",
+            "Gérer l'historique",
+            "Implémenter les redirections (<, >, <<, >>)",
+            "Gérer les variables d'environnement",
+            "Gérer les signaux clavier comme Ctrl+C et Ctrl+D"
+          ],
+          "bonusParagraphs": [
+            "Les bonus consistaient à ajouter les opérateurs logiques '&&' et '||', ainsi qu'une gestion des priorités avec des parenthèses.",
+            "C'est moi qui me suis occupé de cette partie. Cela m'a permis de travailler sur des arbres binaires et toute la logique d'exécution liée aux priorités des commandes."
+          ]
+        },
+        {
+          "id": "philosophers",
+          "h4": "Philosophers",
+          "paragraphs": [
+            "Pour ce projet, il fallait réussir à faire survivre des philosophes.",
+            "Ces philosophes possédaient plusieurs états :"
+          ],
+          "states": [
+            "Un temps pour manger",
+            "Un temps pour réfléchir",
+            "Un temps pour dormir",
+            "Un nombre de repas à atteindre (optionnel)"
+          ],
+          "stateParagraphs": [
+            "Ils possédaient également un temps de vie limité. Le but était de fournir différents paramètres de temps et différents nombres de philosophes, puis d'être suffisamment précis pour réussir à les maintenir en vie selon les contraintes données.",
+            "Les temps étaient exprimés en millisecondes, donc le moindre mauvais calibrage se remarquait immédiatement.",
+            "En plus de cela, il fallait afficher précisément le moment auquel chaque philosophe effectuait une action, avec une marge d'erreur inférieure à 10 ms.",
+            "La particularité de ce projet venait du fait que les philosophes ne pouvaient manger que si deux fourchettes étaient disponibles. Cependant, chaque philosophe ne possédait qu'une seule fourchette. Il fallait donc organiser correctement les accès afin d'éviter les blocages, les conflits et les morts prématurées.",
+            "Les bonus consistaient à refaire le même exercice en remplaçant les threads par des processus enfants et les mutex par des sémaphores."
+          ]
+        },
+        {
+          "id": "cub3d",
+          "h4": "Cub3D",
+          "paragraphs": [
+            "Le but de ce second projet de groupe était de créer un jeu inspiré de <a href=\"https://search.brave.com/images?q=Wolfenstein+3D+gameplay\">Wolfenstein</a>.",
+            "Les bonus consistaient notamment à :"
+          ],
+          "bonuses": [
+            "Ajouter la gestion des collisions",
+            "Implémenter une minimap",
+            "Ajouter des portes",
+            "Créer des sprites animés",
+            "Gérer les mouvements de caméra avec la souris"
+          ],
+          "outroParagraphs": [
+            "La personne avec qui j'ai travaillé sur ce projet a même ajouté une caméra verticale alors que le moteur utilisait de la fausse 2D.",
+            "Il a également été remarquable durant le projet, car même lorsque j'étais moins disponible, il a continué à faire avancer énormément de choses de son côté. Cela mérite largement des remerciements."
+          ]
+        },
+        {
+          "id": "inception",
+          "h4": "Inception",
+          "paragraphs": [
+            "Dans ce projet, il fallait créer ses propres Dockerfiles et docker-compose en utilisant Nginx, MariaDB et WordPress.",
+            "Le conteneur devait être créé et fonctionner sur une machine virtuelle.",
+            "Les bonus consistaient notamment à :"
+          ],
+          "bonuses": [
+            "Ajouter un cache Redis à WordPress",
+            "Configurer un serveur FTP pointant sur le volume WordPress",
+            "Créer un site web statique hors PHP",
+            "Configurer Adminer",
+            "Ajouter un service supplémentaire jugé utile"
+          ],
+          "outroParagraphs": [
+            "C'est probablement le projet que j'ai le moins apprécié et celui avec lequel j'ai eu le plus de difficultés."
+          ]
+        },
+        {
+          "id": "webserv",
+          "h4": "Webserv",
+          "paragraphs": [
+            "L'avant-dernier projet de groupe du tronc commun consistait à réaliser notre propre serveur HTTP.",
+            "Le serveur devait notamment :"
+          ],
+          "requirements": [
+            "Être configuré avec un fichier de configuration créé de zéro",
+            "Être non bloquant",
+            "Utiliser un seul appel à poll",
+            "Faire en sorte que tous les read et write soient exécutés après poll",
+            "Éviter l'utilisation directe de errno après un read ou write",
+            "Gérer les boucles infinies pour éviter de bloquer le serveur",
+            "Fonctionner correctement sur un navigateur",
+            "Avoir des pages d'erreurs",
+            "Retourner les bons codes HTTP",
+            "Utiliser des CGI",
+            "Gérer les méthodes GET, POST et DELETE",
+            "Permettre l'upload de fichiers",
+            "Écouter sur plusieurs ports avec différents contenus"
+          ],
+          "outroParagraphs": [
+            "C'était déjà un énorme morceau pour la partie obligatoire.",
+            "Pour les bonus, il fallait gérer les sessions des clients et les cookies, ainsi qu'ajouter plusieurs types de CGI."
+          ]
+        },
+        {
+          "id": "transcendence",
+          "h4": "Transcendence",
+          "paragraphs": [
+            "Pour ce dernier projet du tronc commun, qui était également un projet de groupe, le but était de créer une véritable application web complète.",
+            "Le projet devait contenir :"
+          ],
+          "components": ["Un frontend", "Un backend", "Une base de données"],
+          "componentParagraphs": [
+            "Comme nous étions nombreux à travailler dessus, il fallait également garder une organisation claire avec des commits propres et compréhensibles.",
+            "L'application devait pouvoir être lancée via une seule commande à l'intérieur d'un conteneur, fonctionner correctement sur navigateur, ne produire aucune erreur dans la console, et inclure une politique de confidentialité ainsi que des conditions d'utilisation.",
+            "Concernant la stack technique, il fallait notamment :"
+          ],
+          "techStack": [
+            "Créer un frontend clair, réactif et responsive",
+            "Utiliser un framework CSS",
+            "Stocker les informations sensibles dans un fichier .env ignoré par Git",
+            "Créer une base de données bien structurée",
+            "Mettre en place une authentification sécurisée",
+            "Valider les données côté frontend et backend",
+            "Utiliser HTTPS côté backend"
+          ],
+          "moduleParagraphs": [
+            "Ensuite, nous pouvions choisir différents modules à ajouter au projet.",
+            "Certains modules étaient mineurs et rapportaient un point, tandis que d'autres étaient majeurs et rapportaient deux points.",
+            "Le but était de totaliser 14 points pour valider la partie obligatoire, puis 19 points pour valider les bonus.",
+            "Pour ma part, je me suis occupé de deux modules majeurs :"
+          ],
+          "myModules": [
+            "Créer une IA capable d'affronter les joueurs",
+            "Créer une version 3D du jeu"
+          ],
+          "links": [
+            { "href": "https://github.com/Louis-Cagnion/Transcendence125/blob/main/README.MD", "label": "le README" }
+          ],
+          "linkIntro": "Pour plus de détails sur l'organisation de notre équipe, je vous invite à consulter"
+        }
+      ]
+    }
+  },
+  "contact": {
+    "h2": "Me contacter",
+    "intro": "Si vous souhaitez me contacter ou consulter mes différents réseaux, vous pouvez les retrouver ci-dessous :",
+    "links": [
+      { "href": "mailto:louis.cagnion.pro@gmail.com", "label": "Mon email" },
+      { "href": "https://www.linkedin.com/in/louis-cagnion-7249121a6/", "label": "Mon LinkedIn" },
+      { "href": "https://github.com/Louis-Cagnion", "label": "Mon GitHub" },
+      { "href": "https://www.codewars.com/users/Sung-Jinw00", "label": "Mon compte Codewars" }
+    ]
+  }
+}
