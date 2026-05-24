@@ -7,13 +7,15 @@ body {
 }
 
 h1 {
-    
     width: fit-content;
-    margin: auto;
     background-color: rgb(59, 59, 59);
     padding: 5px;
     border-radius: 10px;
     margin-bottom: 20px;
+    position: absolute;
+    text-align: center;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 h2 {
@@ -50,4 +52,36 @@ p {
     margin: 10px;
     text-indent: 20px;
     text-align: justify;
+}
+
+#selectLanguage {
+    color: black;
+}
+
+#selectLanguage option {
+    background-color: white;
+    color: black;
+}
+
+#languageSelect {
+    background-color: rgb(21, 21, 21);
+    width: 125px;
+    font-size: large;
+    text-align: center;
+    margin-left: 0px;
+}
+
+#languageSelect p {
+    text-align: center;
+    margin: 0;
+    text-indent: 0;
+}
+
+#header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: transparent;
+    padding: 0;
+    position: relative;
 }

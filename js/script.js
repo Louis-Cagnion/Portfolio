@@ -1,14 +1,50 @@
 import { fetchData } from "./fetch.js"
 import { createTag, writeParagraphs, createTagList, insertLinkParagraph } from "./tag.js"
 
-async function initPage() {
+const commonPath = "../data/"
+const frPath = `${commonPath}fr.json`
+const enPath = `${commonPath}en.json`
+const languages = [
+    'FR',
+    'EN'
+]
+let lIndex = 0
+let curpath = frPath
+
+function createLanguageList (winTitle) {
+    const winLanguage = createTag('div', '', 'languageSelect')
+    winLanguage.append(createTag('p', winTitle))
+    const select = createTag('select', '', 'selectLanguage', '', 'Languages')
+    let i = 1
+    languages.forEach(l => {
+        select.append(createTag('option', l, '', '',`${i}`))
+        i++
+    })
+    select.value = curpath === frPath ? '1' : '2'
+    winLanguage.append(select)
+    document.body.append(winLanguage)
+    select.addEventListener('change', (e) => {
+        if (e.target.value === languages[lIndex])
+            return
+        lIndex = (lIndex + 1) % 2
+        curpath = curpath === frPath ? enPath : frPath
+        initPage(curpath)
+    })
+}
+
+async function initPage(path = frPath) {
     // get file data
-    const text = await fetchData("../data/fr.json")
+    const text = await fetchData(path)
+    document.body.innerHTML = ''
+    createLanguageList(text.language)
 
     //append title and h1
     document.head.append(createTag('title', text.meta.title))
     const body = document.body
-    body.append(createTag('h1', text.home.h1))
+    const header = createTag('div', '', 'header')
+    header.append(document.getElementById('languageSelect'))
+    header.append(createTag('h1', text.home.h1))
+    body.prepend(header)
 
     //append 1st paragraph
     const about = text.about

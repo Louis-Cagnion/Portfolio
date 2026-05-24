@@ -2,14 +2,7 @@
   "meta": {
     "title": "Louis Cagnion Portfolio"
   },
-  "nav": {
-    "home": "Accueil",
-    "about": "Je me présente",
-    "journey": "Mon parcours",
-    "skills": "Mes compétences",
-    "projects": "Mes projets",
-    "contact": "Me contacter"
-  },
+  "language": "Langue",
   "home": {
     "h1": "Bienvenue sur mon portfolio"
   },

@@ -3,12 +3,15 @@
  * @param {string} inner body
  * @param {string} id tag ID
  * @param {string} href link ref
+ * @param {string} value select div value
  * 
  * @returns {Element}
  */
-export function createTag(type, inner = '', id = '', href = '') {
+export function createTag(type, inner = '', id = '', href = '', value = '') {
     const newElement = document.createElement(type)
     newElement.innerHTML = inner
+    if (value)
+        newElement.value = value
     if (id)
         newElement.id = id
     if (type === 'a')
