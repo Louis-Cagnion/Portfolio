@@ -22,7 +22,8 @@ export function createTag(type, inner = '', id = '', href = '', value = '') {
 /**
  * @param {string} listTag
  * @param {object} items
- * @param {Function} func util function that makes you able to modify each item before adding them to the list, an li tag must be returned
+ * @param {Function} func util function that makes you able to modify each
+ *                        item before adding them to the list, an li tag must be returned
  * 
  * @returns {Element}
  */
