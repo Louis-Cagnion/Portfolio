@@ -65,7 +65,11 @@ async function initPage(path = frPath) {
     const ol = createTag('ol')
     const divSkills = createTag('div')
     body.append(divSkills)
-    divSkills.append(createTag('h2', {innerHTML: skills.h2}), createTag('p', {innerHTML: skills.intro}), ol)
+    divSkills.append(
+        createTag('h2', {innerHTML: skills.h2}),
+        createTag('p', {innerHTML: skills.intro}),
+        ol
+    )
     skills.categories.forEach((keys) => {
         ol.append(createTag('li', {innerHTML: keys.title}))
         ol.append(createTagList('ul', keys.items))
