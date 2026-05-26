@@ -13,7 +13,7 @@ let curpath = frPath
 
 function createLanguageList (winTitle) {
     const winLanguage = createTag('div', {id: 'languageSelect'})
-    winLanguage.append(createTag('p', {innerHTML: 'languageSelect'}))
+    winLanguage.append(createTag('p', {innerHTML: winTitle}))
     const select = createTag('select', {id: 'languageSelect', value:'Languages'})
     let i = 1
     languages.forEach(l => {
