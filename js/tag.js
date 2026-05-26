@@ -1,21 +1,16 @@
 /**
- * @param {string} type tag type
- * @param {string} inner body
- * @param {string} id tag ID
- * @param {string} href link ref
- * @param {string} value select div value
- * 
+ * @param {string} type
+ * @param {Object} attributes
  * @returns {Element}
  */
-export function createTag(type, inner = '', id = '', href = '', value = '') {
+export function createTag(type, attributes = {}) {
     const newElement = document.createElement(type)
-    newElement.innerHTML = inner
-    if (value)
-        newElement.value = value
-    if (id)
-        newElement.id = id
-    if (type === 'a')
-        newElement.href = href
+
+    Object.entries(attributes).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+            newElement[key] = value
+        }
+    })
     return newElement
 }
 
@@ -32,7 +27,7 @@ export function createTagList(listTag, items, func = null) {
         return document.createDocumentFragment()
     const l = createTag(listTag === 'ul' ? 'ul' : 'ol')
     items.forEach(item => {
-        const li = (func !== null ? func(item) : createTag('li', item))
+        const li = (func !== null ? func(item) : createTag('li', {innerHTML: item}))
         l.append(li)
     })
     return l
@@ -48,7 +43,7 @@ export function writeParagraphs(parentTag, pList) {
     if (!pList || !pList.length)
         return
     pList.forEach(p => {
-        parentTag.append(createTag('p', p))
+        parentTag.append(createTag('p', {innerHTML: p}))
     })
 }
 
@@ -62,8 +57,8 @@ export function writeParagraphs(parentTag, pList) {
 export function insertLinkParagraph(parentTag, intro, linkParams) {
     if (!linkParams || !linkParams.label || !linkParams.href)
         return
-    const p = createTag('p', intro + ' ')
-    const link = createTag('a', linkParams.label, '', linkParams.href)
+    const p = createTag('p', {innerHTML: intro + ' '})
+    const link = createTag('a', {innerHTML: linkParams.label, href: linkParams.href})
     p.appendChild(link)
     parentTag.append(p)
 }

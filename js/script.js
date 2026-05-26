@@ -12,12 +12,12 @@ let lIndex = 0
 let curpath = frPath
 
 function createLanguageList (winTitle) {
-    const winLanguage = createTag('div', '', 'languageSelect')
-    winLanguage.append(createTag('p', winTitle))
-    const select = createTag('select', '', 'selectLanguage', '', 'Languages')
+    const winLanguage = createTag('div', {id: 'languageSelect'})
+    winLanguage.append(createTag('p', {innerHTML: 'languageSelect'}))
+    const select = createTag('select', {id: 'languageSelect', value:'Languages'})
     let i = 1
     languages.forEach(l => {
-        select.append(createTag('option', l, '', '',`${i}`))
+        select.append(createTag('option', {innerHTML: l, value: `${i}`}))
         i++
     })
     select.value = curpath === frPath ? '1' : '2'
@@ -39,25 +39,25 @@ async function initPage(path = frPath) {
     createLanguageList(text.language)
 
     //append title and h1
-    document.head.append(createTag('title', text.meta.title))
+    document.head.append(createTag('title', {innerHTML: text.meta.title}))
     const body = document.body
-    const header = createTag('div', '', 'header')
+    const header = createTag('div', {id: 'header'})
     header.append(document.getElementById('languageSelect'))
-    header.append(createTag('h1', text.home.h1))
+    header.append(createTag('h1', {innerHTML: text.home.h1}))
     body.prepend(header)
 
     //append 1st paragraph
     const about = text.about
     const divPresentation = createTag('div')
     body.append(divPresentation)
-    divPresentation.append(createTag('h2', about.h2))
+    divPresentation.append(createTag('h2', {innerHTML: about.h2}))
     writeParagraphs(divPresentation, about.paragraphs)
 
     //append 2nd paragraph
     const journey = text.journey
     const divJourney = createTag('div')
     body.append(divJourney)
-    divJourney.append(createTag('h2', journey.h2))
+    divJourney.append(createTag('h2', {innerHTML: journey.h2}))
     writeParagraphs(divJourney, journey.paragraphs)
 
     //append 3rd paragraph
@@ -65,35 +65,35 @@ async function initPage(path = frPath) {
     const ol = createTag('ol')
     const divSkills = createTag('div')
     body.append(divSkills)
-    divSkills.append(createTag('h2', skills.h2), createTag('p', skills.intro), ol)
+    divSkills.append(createTag('h2', {innerHTML: skills.h2}), createTag('p', {innerHTML: skills.intro}), ol)
     skills.categories.forEach((keys) => {
-        ol.append(createTag('li', keys.title))
+        ol.append(createTag('li', {innerHTML: keys.title}))
         ol.append(createTagList('ul', keys.items))
         ol.append(createTag('br'))
     })
-    divSkills.append(createTag('p', skills.outro))
+    divSkills.append(createTag('p', {innerHTML: skills.outro}))
 
     //append 4th paragraph
     const projects = text.projects
     const projectsDiv = createTag('div')
     body.append(projectsDiv)
-    projectsDiv.append(createTag('h2', projects.h2))
+    projectsDiv.append(createTag('h2', {innerHTML: projects.h2}))
     //personnal projects
     const pers = projects.personal
-    projectsDiv.append(createTag('h3', pers.h3))
+    projectsDiv.append(createTag('h3', {innerHTML: pers.h3}))
     pers.list.forEach(elem => {
-        projectsDiv.append(createTag('h4', elem.h4, elem.id))
+        projectsDiv.append(createTag('h4', {innerHTML: elem.h4, id: elem.id}))
         writeParagraphs(projectsDiv, elem.paragraphs)
         insertLinkParagraph(projectsDiv, elem.linkIntro, elem.links[0])
     })
     //school projects
     const school = projects.school
     projectsDiv.append(
-        createTag('h3', school.h3),
-        createTag('p', school.intro)
+        createTag('h3', {innerHTML: school.h3}),
+        createTag('p', {innerHTML: school.intro})
     )
     school.list.forEach(elem => {
-        projectsDiv.append(createTag('h4', elem.h4, elem.id))
+        projectsDiv.append(createTag('h4', {innerHTML: elem.h4, id: elem.id}))
         writeParagraphs(projectsDiv, elem.paragraphs)
         switch (elem.id) {
             case "fract-ol":
@@ -132,12 +132,12 @@ async function initPage(path = frPath) {
     body.append(divContact)
     const contact = text.contact
     divContact.append(
-        createTag('h2', contact.h2),
-        createTag('p', contact.intro)
+        createTag('h2', {innerHTML: contact.h2}),
+        createTag('p', {innerHTML: contact.intro})
     )
     divContact.append(createTagList('ul', contact.links, (link) => {
         const li = createTag('li')
-        li.appendChild(createTag('a', link.label, '', link.href))
+        li.appendChild(createTag('a', {innerHTML: link.label, href: link.href}))
         return li
     }))
 }
