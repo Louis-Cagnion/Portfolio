@@ -35,7 +35,7 @@ export function createTagList(listTag, items, func = null) {
 
 /**
  * @param {string} parentTag 
- * @param {object} pList
+ * @param {Object.<string>} pList
  *  
  * @returns {Element}
  */

@@ -1,4 +1,5 @@
 import { fetchData } from "./fetch.js"
+import { renderProjects } from "./projects.js"
 import { createTag, writeParagraphs, createTagList, insertLinkParagraph } from "./tag.js"
 
 const commonPath = "./data/"
@@ -99,36 +100,9 @@ async function initPage(path = frPath) {
     school.list.forEach(elem => {
         projectsDiv.append(createTag('h4', {innerHTML: elem.h4, id: elem.id}))
         writeParagraphs(projectsDiv, elem.paragraphs)
-        switch (elem.id) {
-            case "fract-ol":
-                projectsDiv.append(createTagList('ul', elem.bonuses))
-                break;
-            case "minishell":
-                projectsDiv.append(createTagList('ul', elem.requirements))
-                writeParagraphs(projectsDiv, elem.bonusParagraphs)
-                break;
-            case "philosophers":
-                projectsDiv.append(createTagList('ul', elem.states))
-                writeParagraphs(projectsDiv, elem.stateParagraphs)
-                break;
-            case "cub3d":
-            case "inception":
-                projectsDiv.append(createTagList('ul', elem.bonuses))
-                writeParagraphs(projectsDiv, elem.outroParagraphs)
-                break;
-            case "webserv":
-                projectsDiv.append(createTagList('ul', elem.requirements))
-                writeParagraphs(projectsDiv, elem.outroParagraphs)
-                break;
-            case "transcendence":
-                projectsDiv.append(createTagList('ul', elem.components))
-                writeParagraphs(projectsDiv, elem.componentParagraphs)
-                projectsDiv.append(createTagList('ul', elem.techStack))
-                writeParagraphs(projectsDiv, elem.moduleParagraphs)
-                projectsDiv.append(createTagList('ul', elem.myModules))
-                insertLinkParagraph(projectsDiv, elem.linkIntro, elem.links[0])
-                break;
-        }
+        const renderer = renderProjects[elem.id]
+        if (renderer)
+            renderer(projectsDiv, elem)
     })
 
     // contact me
