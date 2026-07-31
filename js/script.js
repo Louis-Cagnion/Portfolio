@@ -1,123 +1,183 @@
 import { fetchData } from "./fetch.js"
 import { renderProjects } from "./projects.js"
-import { createTag, writeParagraphs, createTagList, insertLinkParagraph } from "./tag.js"
+import { createTag, writeParagraphs, createTagList, insertLinkParagraph, renderMedia, createDetails } from "./tag.js"
 
 const commonPath = "./data/"
 const frPath = `${commonPath}fr.json`
 const enPath = `${commonPath}en.json`
-const languages = [
-    'FR',
-    'EN'
-]
-let lIndex = 0
-let curpath = frPath
+const languages = ['FR', 'EN']
+const SECTION_IDS = ['home', 'journey', 'skills', 'projects', 'contact']
 
-function createLanguageList (winTitle) {
-    const winLanguage = createTag('div', {id: 'languageSelect'})
-    winLanguage.append(createTag('p', {innerHTML: winTitle}))
-    const select = createTag('select', {id: 'languageSelect', value:'Languages'})
-    let i = 1
-    languages.forEach(l => {
-        select.append(createTag('option', {innerHTML: l, value: `${i}`}))
-        i++
+let curPath = frPath
+let activeSection = sectionFromHash()
+
+/** @returns {string} the section id from location.hash, or the first section if invalid/absent */
+function sectionFromHash() {
+    const id = location.hash.slice(1)
+    return SECTION_IDS.includes(id) ? id : SECTION_IDS[0]
+}
+
+/**
+ * Show the requested section and hide the others, updating the nav's active state.
+ * @param {string} id
+ */
+function showSection(id) {
+    activeSection = SECTION_IDS.includes(id) ? id : SECTION_IDS[0]
+
+    document.querySelectorAll('.page-section').forEach((section) => {
+        section.hidden = section.dataset.section !== activeSection
     })
-    select.value = curpath === frPath ? '1' : '2'
-    winLanguage.append(select)
-    document.body.append(winLanguage)
-    select.addEventListener('change', (e) => {
-        if (e.target.value === languages[lIndex])
-            return
-        lIndex = (lIndex + 1) % 2
-        curpath = curpath === frPath ? enPath : frPath
-        initPage(curpath)
+    document.querySelectorAll('#sectionNav button').forEach((button) => {
+        const isActive = button.dataset.section === activeSection
+        button.classList.toggle('active', isActive)
+        button.setAttribute('aria-current', isActive ? 'page' : 'false')
     })
 }
 
-async function initPage(path = frPath) {
-    // get file data
-    const text = await fetchData(path)
-    document.body.innerHTML = ''
-    createLanguageList(text.language)
+function buildLanguageSelect(winTitle) {
+    const wrapper = createTag('div', {id: 'languageSelect'})
+    wrapper.append(createTag('p', {innerHTML: winTitle}))
 
-    //append title and h1
-    document.head.append(createTag('title', {innerHTML: text.meta.title}))
-    const body = document.body
-    const header = createTag('div', {id: 'header'})
-    header.append(document.getElementById('languageSelect'))
-    header.append(createTag('h1', {innerHTML: text.home.h1}))
-    body.prepend(header)
+    const select = createTag('select', {id: 'languagePicker'})
+    languages.forEach((label, i) => {
+        select.append(createTag('option', {innerHTML: label, value: String(i + 1)}))
+    })
+    select.value = curPath === frPath ? '1' : '2'
+    select.addEventListener('change', () => {
+        curPath = curPath === frPath ? enPath : frPath
+        initPage(curPath)
+    })
 
-    //append 1st paragraph
-    const about = text.about
-    const divPresentation = createTag('div')
-    body.append(divPresentation)
-    divPresentation.append(createTag('h2', {innerHTML: about.h2}))
-    writeParagraphs(divPresentation, about.paragraphs)
+    wrapper.append(select)
+    return wrapper
+}
 
-    //append 2nd paragraph
-    const journey = text.journey
-    const divJourney = createTag('div')
-    body.append(divJourney)
-    divJourney.append(createTag('h2', {innerHTML: journey.h2}))
-    writeParagraphs(divJourney, journey.paragraphs)
+function buildNav(navLabels) {
+    const nav = createTag('nav', {id: 'sectionNav'})
+    SECTION_IDS.forEach((id) => {
+        const button = createTag('button', {type: 'button', innerHTML: navLabels[id], dataset: {section: id}})
+        button.addEventListener('click', () => {
+            location.hash = id
+            showSection(id)
+        })
+        nav.append(button)
+    })
+    return nav
+}
 
-    //append 3rd paragraph
-    const skills = text.skills
+function buildSection(id) {
+    return createTag('section', {className: 'page-section', dataset: {section: id}})
+}
+
+function buildHomeSection(about) {
+    const section = buildSection('home')
+    section.append(createTag('h2', {innerHTML: about.h2}))
+    writeParagraphs(section, about.paragraphs)
+    return section
+}
+
+function buildJourneySection(journey) {
+    const section = buildSection('journey')
+    section.append(createTag('h2', {innerHTML: journey.h2}))
+    writeParagraphs(section, journey.paragraphs)
+    return section
+}
+
+function buildSkillsSection(skills) {
+    const section = buildSection('skills')
     const ol = createTag('ol')
-    const divSkills = createTag('div')
-    body.append(divSkills)
-    divSkills.append(
+    section.append(
         createTag('h2', {innerHTML: skills.h2}),
         createTag('p', {innerHTML: skills.intro}),
         ol
     )
-    skills.categories.forEach((keys) => {
-        ol.append(createTag('li', {innerHTML: keys.title}))
-        ol.append(createTagList('ul', keys.items))
-        ol.append(createTag('br'))
+    skills.categories.forEach((category) => {
+        ol.append(createTag('li', {innerHTML: category.title}))
+        ol.append(createTagList('ul', category.items))
     })
-    divSkills.append(createTag('p', {innerHTML: skills.outro}))
+    section.append(createTag('p', {innerHTML: skills.outro}))
+    return section
+}
 
-    //append 4th paragraph
-    const projects = text.projects
-    const projectsDiv = createTag('div')
-    body.append(projectsDiv)
-    projectsDiv.append(createTag('h2', {innerHTML: projects.h2}))
-    //personnal projects
-    const pers = projects.personal
-    projectsDiv.append(createTag('h3', {innerHTML: pers.h3}))
-    pers.list.forEach(elem => {
-        projectsDiv.append(createTag('h4', {innerHTML: elem.h4, id: elem.id}))
-        writeParagraphs(projectsDiv, elem.paragraphs)
-        insertLinkParagraph(projectsDiv, elem.linkIntro, elem.links[0])
+/**
+ * A single project, collapsed by default (native <details>/<summary>) so the
+ * projects section doesn't dump every project's full write-up on screen at once.
+ * @param {object} elem project entry from the JSON data
+ * @param {Function} [extraRenderer] project-specific renderer from renderProjects
+ */
+function buildProjectCard(elem, extraRenderer) {
+    return createDetails(elem.h4, (body) => {
+        writeParagraphs(body, elem.paragraphs)
+        if (extraRenderer)
+            extraRenderer(body, elem)
+        if (elem.links && elem.links.length)
+            insertLinkParagraph(body, elem.linkIntro, elem.links[0])
+        renderMedia(body, elem.media)
     })
-    //school projects
+}
+
+function buildProjectsSection(projects) {
+    const section = buildSection('projects')
+    section.append(createTag('h2', {innerHTML: projects.h2}))
+
+    const personal = projects.personal
+    section.append(createTag('h3', {innerHTML: personal.h3}))
+    personal.list.forEach((elem) => section.append(buildProjectCard(elem)))
+
     const school = projects.school
-    projectsDiv.append(
+    section.append(
         createTag('h3', {innerHTML: school.h3}),
         createTag('p', {innerHTML: school.intro})
     )
-    school.list.forEach(elem => {
-        projectsDiv.append(createTag('h4', {innerHTML: elem.h4, id: elem.id}))
-        writeParagraphs(projectsDiv, elem.paragraphs)
-        const renderer = renderProjects[elem.id]
-        if (renderer)
-            renderer(projectsDiv, elem)
-    })
+    school.list.forEach((elem) => section.append(buildProjectCard(elem, renderProjects[elem.id])))
 
-    // contact me
-    const divContact = createTag('div')
-    body.append(divContact)
-    const contact = text.contact
-    divContact.append(
+    return section
+}
+
+function buildContactSection(contact) {
+    const section = buildSection('contact')
+    section.append(
         createTag('h2', {innerHTML: contact.h2}),
         createTag('p', {innerHTML: contact.intro})
     )
-    divContact.append(createTagList('ul', contact.links, (link) => {
+    section.append(createTagList('ul', contact.links, (link) => {
         const li = createTag('li')
-        li.appendChild(createTag('a', {innerHTML: link.label, href: link.href}))
+        li.append(createTag('a', {innerHTML: link.label, href: link.href}))
         return li
     }))
+    return section
 }
+
+async function initPage(path = curPath) {
+    const text = await fetchData(path)
+    curPath = path
+    document.documentElement.lang = curPath === frPath ? 'fr' : 'en'
+    document.body.innerHTML = ''
+    document.head.querySelector('title')?.remove()
+    document.head.append(createTag('title', {innerHTML: text.meta.title}))
+
+    const hero = createTag('div', {className: 'hero'})
+    if (text.home.photo)
+        hero.append(createTag('img', {className: 'avatar', src: text.home.photo, alt: ''}))
+    hero.append(createTag('h1', {innerHTML: text.home.h1}))
+
+    const header = createTag('header', {id: 'siteHeader'})
+    header.append(hero, buildLanguageSelect(text.language))
+    document.body.append(header, buildNav(text.nav))
+
+    const main = createTag('main', {id: 'sectionsContainer'})
+    main.append(
+        buildHomeSection(text.about),
+        buildJourneySection(text.journey),
+        buildSkillsSection(text.skills),
+        buildProjectsSection(text.projects),
+        buildContactSection(text.contact)
+    )
+    document.body.append(main)
+
+    showSection(activeSection)
+}
+
+window.addEventListener('hashchange', () => showSection(sectionFromHash()))
 
 initPage()

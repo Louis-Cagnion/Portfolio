@@ -3,8 +3,16 @@
     "title": "Louis Cagnion Portfolio"
   },
   "language": "Language",
+  "nav": {
+    "home": "Home",
+    "journey": "Journey",
+    "skills": "Skills",
+    "projects": "Projects",
+    "contact": "Contact"
+  },
   "home": {
-    "h1": "Welcome to my portfolio"
+    "h1": "Welcome to my portfolio",
+    "photo": ""
   },
   "about": {
     "h2": "About me",
@@ -78,7 +86,8 @@
           "id": "portfolio",
           "h4": "This portfolio",
           "paragraphs": ["Yes, this counts."],
-          "links": []
+          "links": [],
+          "media": []
         },
         {
           "id": "chatbot",
@@ -89,7 +98,8 @@
           "links": [
             { "href": "https://louis-cagnion.github.io/Chatbot/", "label": "here" }
           ],
-          "linkIntro": "You can check it out"
+          "linkIntro": "You can check it out",
+          "media": []
         },
         {
           "id": "wiki",
@@ -102,7 +112,8 @@
           "links": [
             { "href": "https://louis-cagnion.github.io/Heartopia_map_tracking/", "label": "this link" }
           ],
-          "linkIntro": "You can find this project for free online via"
+          "linkIntro": "You can find this project for free online via",
+          "media": []
         }
       ]
     },
@@ -119,7 +130,8 @@
             "In short: imagine two stacks, the second one empty, and you can only interact with the top or bottom element of each stack to move numbers around.",
             "I managed to develop an algorithm that sorted in around 5700 moves on average. I was proud of the method I found after testing several different approaches, even though I eventually had to draw inspiration from an existing algorithm to get under 5500 operations.",
             "The bonus was to create a \"Checker\" to verify that a sequence of operations resulted in a correctly sorted list at the end."
-          ]
+          ],
+          "media": []
         },
         {
           "id": "fract-ol",
@@ -134,7 +146,8 @@
             "Making the zoom follow the mouse position",
             "Moving the camera with arrow keys",
             "Dynamically changing the fractal's colors"
-          ]
+          ],
+          "media": []
         },
         {
           "id": "minishell",
@@ -154,7 +167,8 @@
           "bonusParagraphs": [
             "The bonuses involved adding the logical operators '&&' and '||', along with priority management using parentheses.",
             "I was the one who handled this part. It allowed me to work with binary trees and all the execution logic related to command priorities."
-          ]
+          ],
+          "media": []
         },
         {
           "id": "philosophers",
@@ -175,7 +189,8 @@
             "On top of that, you had to display precisely when each philosopher performed an action, with an error margin of less than 10 ms.",
             "The catch was that philosophers could only eat if two forks were available. However, each philosopher only owned one fork. So you had to properly organize access to avoid deadlocks, conflicts, and premature deaths.",
             "The bonuses consisted of redoing the same exercise by replacing threads with child processes and mutexes with semaphores."
-          ]
+          ],
+          "media": []
         },
         {
           "id": "cub3d",
@@ -194,7 +209,8 @@
           "outroParagraphs": [
             "The person I worked with on this project even added a vertical camera despite the engine using fake 2D.",
             "He was also remarkable throughout the project — even when I was less available, he kept pushing things forward on his own. That definitely deserves recognition."
-          ]
+          ],
+          "media": []
         },
         {
           "id": "inception",
@@ -213,7 +229,8 @@
           ],
           "outroParagraphs": [
             "This is probably the project I enjoyed the least and the one I struggled with the most."
-          ]
+          ],
+          "media": []
         },
         {
           "id": "webserv",
@@ -240,7 +257,8 @@
           "outroParagraphs": [
             "The mandatory part alone was already a huge undertaking.",
             "For the bonuses, we had to manage client sessions and cookies, as well as support multiple CGI types."
-          ]
+          ],
+          "media": []
         },
         {
           "id": "transcendence",
@@ -277,7 +295,8 @@
           "links": [
             { "href": "https://github.com/Louis-Cagnion/Transcendence125/blob/main/README.MD", "label": "the README" }
           ],
-          "linkIntro": "For more details on how our team was organized, feel free to check out"
+          "linkIntro": "For more details on how our team was organized, feel free to check out",
+          "media": []
         }
       ]
     }

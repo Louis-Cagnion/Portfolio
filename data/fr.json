@@ -3,8 +3,16 @@
     "title": "Louis Cagnion Portfolio"
   },
   "language": "Langue",
+  "nav": {
+    "home": "Accueil",
+    "journey": "Parcours",
+    "skills": "Compétences",
+    "projects": "Projets",
+    "contact": "Contact"
+  },
   "home": {
-    "h1": "Bienvenue sur mon portfolio"
+    "h1": "Bienvenue sur mon portfolio",
+    "photo": ""
   },
   "about": {
     "h2": "Je me présente",
@@ -78,7 +86,8 @@
           "id": "portfolio",
           "h4": "Ce portfolio",
           "paragraphs": ["Et oui, ça compte."],
-          "links": []
+          "links": [],
+          "media": []
         },
         {
           "id": "chatbot",
@@ -89,7 +98,8 @@
           "links": [
             { "href": "https://louis-cagnion.github.io/Chatbot/", "label": "ici" }
           ],
-          "linkIntro": "Vous pouvez y jeter un œil"
+          "linkIntro": "Vous pouvez y jeter un œil",
+          "media": []
         },
         {
           "id": "wiki",
@@ -102,7 +112,8 @@
           "links": [
             { "href": "https://louis-cagnion.github.io/Heartopia_map_tracking/", "label": "ce lien" }
           ],
-          "linkIntro": "Vous pouvez retrouver ce projet gratuitement en ligne via"
+          "linkIntro": "Vous pouvez retrouver ce projet gratuitement en ligne via",
+          "media": []
         }
       ]
     },
@@ -119,7 +130,8 @@
             "En résumé, imaginez deux listes : la seconde est vide, et vous ne pouvez interagir qu'avec le premier ou le dernier élément de chaque liste afin de déplacer les nombres.",
             "J'avais réussi à développer un algorithme qui effectuait le tri en environ 5700 coups en moyenne. J'étais fier de cette méthode trouvée après avoir testé plusieurs approches différentes, même si j'ai finalement dû m'inspirer d'un algorithme existant pour passer sous la barre des 5500 opérations.",
             "Le bonus consistait à créer un \"Checker\" permettant de vérifier qu'une suite d'opérations donnait bien, à la fin, une liste triée dans l'ordre croissant."
-          ]
+          ],
+          "media": []
         },
         {
           "id": "fract-ol",
@@ -134,7 +146,8 @@
             "Faire suivre le zoom avec la position de la souris",
             "Déplacer la caméra avec les flèches directionnelles",
             "Modifier dynamiquement les couleurs de la fractale"
-          ]
+          ],
+          "media": []
         },
         {
           "id": "minishell",
@@ -154,7 +167,8 @@
           "bonusParagraphs": [
             "Les bonus consistaient à ajouter les opérateurs logiques '&&' et '||', ainsi qu'une gestion des priorités avec des parenthèses.",
             "C'est moi qui me suis occupé de cette partie. Cela m'a permis de travailler sur des arbres binaires et toute la logique d'exécution liée aux priorités des commandes."
-          ]
+          ],
+          "media": []
         },
         {
           "id": "philosophers",
@@ -175,7 +189,8 @@
             "En plus de cela, il fallait afficher précisément le moment auquel chaque philosophe effectuait une action, avec une marge d'erreur inférieure à 10 ms.",
             "La particularité de ce projet venait du fait que les philosophes ne pouvaient manger que si deux fourchettes étaient disponibles. Cependant, chaque philosophe ne possédait qu'une seule fourchette. Il fallait donc organiser correctement les accès afin d'éviter les blocages, les conflits et les morts prématurées.",
             "Les bonus consistaient à refaire le même exercice en remplaçant les threads par des processus enfants et les mutex par des sémaphores."
-          ]
+          ],
+          "media": []
         },
         {
           "id": "cub3d",
@@ -194,7 +209,8 @@
           "outroParagraphs": [
             "La personne avec qui j'ai travaillé sur ce projet a même ajouté une caméra verticale alors que le moteur utilisait de la fausse 2D.",
             "Il a également été remarquable durant le projet, car même lorsque j'étais moins disponible, il a continué à faire avancer énormément de choses de son côté. Cela mérite largement des remerciements."
-          ]
+          ],
+          "media": []
         },
         {
           "id": "inception",
@@ -213,7 +229,8 @@
           ],
           "outroParagraphs": [
             "C'est probablement le projet que j'ai le moins apprécié et celui avec lequel j'ai eu le plus de difficultés."
-          ]
+          ],
+          "media": []
         },
         {
           "id": "webserv",
@@ -240,7 +257,8 @@
           "outroParagraphs": [
             "C'était déjà un énorme morceau pour la partie obligatoire.",
             "Pour les bonus, il fallait gérer les sessions des clients et les cookies, ainsi qu'ajouter plusieurs types de CGI."
-          ]
+          ],
+          "media": []
         },
         {
           "id": "transcendence",
@@ -277,7 +295,8 @@
           "links": [
             { "href": "https://github.com/Louis-Cagnion/Transcendence125/blob/main/README.MD", "label": "le README" }
           ],
-          "linkIntro": "Pour plus de détails sur l'organisation de notre équipe, je vous invite à consulter"
+          "linkIntro": "Pour plus de détails sur l'organisation de notre équipe, je vous invite à consulter",
+          "media": []
         }
       ]
     }
