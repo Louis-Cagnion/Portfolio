@@ -185,17 +185,6 @@
           ],
           "linkIntro": "Vous pouvez consulter le site",
           "media": []
-        },
-        {
-          "id": "php_sql",
-          "h4": "Apprentissage du PHP et du SQL",
-          "paragraphs": [
-            "En parallèle de mon poste actuel, j'ai commencé à apprendre le PHP et le SQL en partant de zéro, deux domaines que je n'avais jamais eu l'occasion d'approfondir jusque-là.",
-            "J'y ai abordé le cycle de vie d'une requête HTTP, l'autoloading de classes, le routage et la gestion sécurisée des sessions, les requêtes SQL via PDO (jointures, agrégats, requêtes préparées), les appels HTTP natifs en PHP, ainsi que les grandes familles d'attaques web (injection SQL, XSS, CSRF, vol de session) et les moyens de s'en protéger.",
-            "Je documente cet apprentissage au fil de l'eau sous forme de fiches, avec l'objectif de les intégrer prochainement à Devpedia."
-          ],
-          "links": [],
-          "media": []
         }
       ]
     },

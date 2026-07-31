@@ -1,8 +1,8 @@
 # Portfolio
 
-Personal developer portfolio built with Vanilla JavaScript, HTML and CSS.
+Personal developer portfolio built with Vanilla JavaScript, HTML and CSS — no frontend framework.
 
-🔗 You can access to the website here:  
+🔗 You can access the website here:
 https://louis-cagnion.github.io/Portfolio/
 
 ## Table of Contents
@@ -17,25 +17,24 @@ https://louis-cagnion.github.io/Portfolio/
 
 ## About the project
 
-This portfolio was created to present:
-- my developer journey,
-- the projects I worked on during the 42 common core,
-- my personal projects,
-- and the technologies I am currently learning.
+This portfolio presents:
+- my developer journey and current situation (job, work-study program, goals),
+- the professional, personal, and school projects I've worked on,
+- my skills, organized by category, with a link to [Devpedia](https://louis-cagnion.github.io/Devpedia/) for a more detailed view,
+- and how to get in touch.
 
-The website currently supports multiple languages through dynamic JSON content loading and was designed without using frontend frameworks.
+Content is split into navigable sections (Home, Journey, Skills, Projects, Contact) instead of one long scrolling page, and is loaded dynamically from JSON so the site fully supports French and English.
 
 ---
 
 ## Features
 
-- Dynamic content generation with JavaScript
-- Multi-language support (FR / EN)
-- JSON-based content management
-- Responsive structure
+- Sectioned navigation (sticky nav bar, one section visible at a time, deep-linkable via URL hash)
+- Collapsible project cards (native `<details>`/`<summary>`), grouped into professional / personal / school projects
+- Per-project media slots (image, video, or link) ready to be filled in as illustrations become available
+- Multi-language support (FR / EN), JSON-based content management
+- Responsive, dark "deep space" themed design
 - Modular code organization
-- Project and skills presentation
-- External links integration
 
 ---
 
@@ -44,7 +43,7 @@ The website currently supports multiple languages through dynamic JSON content l
 ### Frontend
 - HTML5
 - CSS3
-- Vanilla JavaScript (ES6)
+- Vanilla JavaScript (ES6 modules)
 
 ### Tools & Concepts
 - Git / GitHub
@@ -56,15 +55,9 @@ The website currently supports multiple languages through dynamic JSON content l
 
 ## Current Goals
 
-This portfolio is still a work in progress.
-
 Planned improvements include:
-- Better UI/UX design
-- Project cards and visual previews
-- Improved responsiveness
-- Animations and transitions
-- Cleaner navigation
-- Better accessibility
+- Filling in the media slots (screenshots, demo videos) as they become available
+- Further accessibility polish
 
 ---
 
@@ -72,14 +65,23 @@ Planned improvements include:
 
 Some of the projects presented in this portfolio include:
 
+**Professional** (at Tressol-Chabrier)
+- Conversational search tool
+- Reporting dashboards
+- Admin back-office
+
+**Personal**
+- [Devpedia](https://louis-cagnion.github.io/Devpedia/), a software development encyclopedia
+- Personal AI chatbot project
+- Heartopia wiki project
+
+**School (42 common core)**
 - Minishell
 - Webserv
 - Cub3D
 - Transcendence
 - Philosophers
 - Push_swap
-- Personal AI chatbot project
-- Heartopia wiki project
 
 ---
 

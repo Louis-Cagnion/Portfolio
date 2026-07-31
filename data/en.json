@@ -185,17 +185,6 @@
           ],
           "linkIntro": "You can check out the site",
           "media": []
-        },
-        {
-          "id": "php_sql",
-          "h4": "Learning PHP and SQL",
-          "paragraphs": [
-            "Alongside my current position, I started learning PHP and SQL from scratch — two areas I had never had the chance to explore in depth before.",
-            "I covered the lifecycle of an HTTP request, class autoloading, routing and secure session handling, SQL queries through PDO (joins, aggregates, prepared statements), native HTTP calls in PHP, as well as the main families of web attacks (SQL injection, XSS, CSRF, session hijacking) and how to guard against them.",
-            "I'm documenting this learning process along the way as notes, with the goal of eventually folding them into Devpedia."
-          ],
-          "links": [],
-          "media": []
         }
       ]
     },
