@@ -63,17 +63,33 @@
         "items": ["HTML", "CSS"]
       },
       {
-        "title": "Les différentes stacks et technologies :",
-        "items": ["Makefiles", "Git", "GitHub", "Threads / sémaphores", "Mutex et processus enfants", "WebSockets", "APIs", "SQL / PDO", "Elasticsearch", "Sécurité web (injection SQL, XSS, CSRF, sessions)", "Numpy", "Matplotlib", "PyTorch"]
+        "title": "Outils de développement :",
+        "items": ["Makefiles", "Git", "GitHub"]
+      },
+      {
+        "title": "Concurrence et systèmes :",
+        "items": ["Threads / sémaphores", "Mutex et processus enfants"]
+      },
+      {
+        "title": "Réseau et bases de données :",
+        "items": ["WebSockets", "APIs", "SQL / PDO", "Elasticsearch"]
+      },
+      {
+        "title": "Sécurité :",
+        "items": ["Sécurité web (injection SQL, XSS, CSRF, sessions)"]
+      },
+      {
+        "title": "Data science et IA :",
+        "items": ["Numpy", "Matplotlib", "PyTorch"]
       },
       {
         "title": "Les outils :",
         "items": [
-          "VirtualBox pour la création de machines virtuelles",
-          "MinilibX pour le rendu graphique",
-          "Valgrind pour le débogage",
-          "Docker pour créer des applications stables et scalables",
-          "VS Code, que j'utilise au quotidien pour coder"
+          "VirtualBox (création de machines virtuelles)",
+          "MinilibX (rendu graphique)",
+          "Valgrind (débogage)",
+          "Docker (applications stables et scalables)",
+          "VS Code (mon éditeur au quotidien)"
         ]
       }
     ],
@@ -374,7 +390,7 @@
       { "href": "mailto:louis.cagnion.pro@gmail.com", "label": "Mon email" },
       { "href": "https://www.linkedin.com/in/louis-cagnion-7249121a6/", "label": "Mon LinkedIn" },
       { "href": "https://github.com/Louis-Cagnion", "label": "Mon GitHub" },
-      { "href": "https://www.codewars.com/users/Sung-Jinw00", "label": "Mon compte Codewars" }
+      { "href": "https://www.codewars.com/users/Sung-Jinw00", "label": "Mon Codewars" }
     ]
   }
 }

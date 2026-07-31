@@ -63,17 +63,33 @@
         "items": ["HTML", "CSS"]
       },
       {
-        "title": "Stacks and technologies:",
-        "items": ["Makefiles", "Git", "GitHub", "Threads / semaphores", "Mutex and child processes", "WebSockets", "APIs", "SQL / PDO", "Elasticsearch", "Web security (SQL injection, XSS, CSRF, sessions)", "Numpy", "Matplotlib", "PyTorch"]
+        "title": "Development tools:",
+        "items": ["Makefiles", "Git", "GitHub"]
+      },
+      {
+        "title": "Concurrency and systems:",
+        "items": ["Threads / semaphores", "Mutex and child processes"]
+      },
+      {
+        "title": "Networking and databases:",
+        "items": ["WebSockets", "APIs", "SQL / PDO", "Elasticsearch"]
+      },
+      {
+        "title": "Security:",
+        "items": ["Web security (SQL injection, XSS, CSRF, sessions)"]
+      },
+      {
+        "title": "Data science and AI:",
+        "items": ["Numpy", "Matplotlib", "PyTorch"]
       },
       {
         "title": "Tools:",
         "items": [
-          "VirtualBox for virtual machine creation",
-          "MinilibX for graphical rendering",
-          "Valgrind for debugging",
-          "Docker for building stable and scalable applications",
-          "VS Code, which I use daily for coding"
+          "VirtualBox (virtual machine creation)",
+          "MinilibX (graphical rendering)",
+          "Valgrind (debugging)",
+          "Docker (building stable and scalable applications)",
+          "VS Code (my daily editor)"
         ]
       }
     ],
@@ -374,7 +390,7 @@
       { "href": "mailto:louis.cagnion.pro@gmail.com", "label": "My email" },
       { "href": "https://www.linkedin.com/in/louis-cagnion-7249121a6/", "label": "My LinkedIn" },
       { "href": "https://github.com/Louis-Cagnion", "label": "My GitHub" },
-      { "href": "https://www.codewars.com/users/Sung-Jinw00", "label": "My Codewars profile" }
+      { "href": "https://www.codewars.com/users/Sung-Jinw00", "label": "My Codewars" }
     ]
   }
 }
