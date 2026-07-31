@@ -116,20 +116,26 @@ function buildProjectCard(elem, extraRenderer) {
     })
 }
 
+/**
+ * Append one project category (its heading, optional intro, and every project card) to a section.
+ * @param {Element} section
+ * @param {{h3: string, intro?: string, list: object[]}} category
+ */
+function appendProjectCategory(section, category) {
+    section.append(createTag('h3', {innerHTML: category.h3}))
+    if (category.intro)
+        section.append(createTag('p', {innerHTML: category.intro}))
+    category.list.forEach((elem) => section.append(buildProjectCard(elem, renderProjects[elem.id])))
+}
+
 function buildProjectsSection(projects) {
     const section = buildSection('projects')
     section.append(createTag('h2', {innerHTML: projects.h2}))
 
-    const personal = projects.personal
-    section.append(createTag('h3', {innerHTML: personal.h3}))
-    personal.list.forEach((elem) => section.append(buildProjectCard(elem)))
-
-    const school = projects.school
-    section.append(
-        createTag('h3', {innerHTML: school.h3}),
-        createTag('p', {innerHTML: school.intro})
-    )
-    school.list.forEach((elem) => section.append(buildProjectCard(elem, renderProjects[elem.id])))
+    if (projects.professional)
+        appendProjectCategory(section, projects.professional)
+    appendProjectCategory(section, projects.personal)
+    appendProjectCategory(section, projects.school)
 
     return section
 }

@@ -18,9 +18,10 @@
     "h2": "Je me présente",
     "paragraphs": [
       "Je m'appelle Louis Cagnion et je suis étudiant à 42 Perpignan. Au cours de mon tronc commun à l'école, j'ai réalisé différents projets qui m'ont permis d'apprendre le C et le C++, ainsi que plusieurs outils pratiques comme la MinilibX pour le rendu graphique, Docker pour partager des applications compatibles avec la plupart des environnements, ou encore le fonctionnement des réseaux et des API. J'ai également appris à gérer des données sur un site web visité par des utilisateurs grâce au développement backend et frontend.",
-      "Aujourd'hui, alors que je suis en train de clôturer mon tronc commun, je souhaite m'orienter vers un RNCP7 en IA et algorithmie. Pour cela, je recherche en priorité un contrat de travail de 6 mois ou une alternance de 2 ans afin d'acquérir une première expérience professionnelle et développer mes compétences dans des conditions réelles.",
-      "Je souhaite également approfondir mes connaissances dans les domaines liés au titre que j'essaie d'obtenir, notamment autour de l'IA et de l'algorithmie.",
-      "En attendant de trouver une opportunité professionnelle, je continue de m'exercer sur des domaines que je n'ai pas encore eu l'occasion d'approfondir, comme Python appliqué à l'IA, l'utilisation de LLMs, ainsi que les différents outils utilisés en data science, machine learning et deep learning.",
+      "Aujourd'hui, mon tronc commun terminé, j'ai trouvé une alternance de 2 ans pour préparer un RNCP6 Concepteur développeur de solutions informatiques, qui débutera en septembre 2026. En attendant, je travaille à temps plein au siège du Groupe Tressol-Chabrier à Montpellier depuis le 13 juillet 2026.",
+      "Mon objectif de fond reste inchangé : une fois ce RNCP6 obtenu, je souhaite enchaîner sur une alternance d'un an afin de décrocher un RNCP7 en IA et algorithmie. Je souhaite donc approfondir mes connaissances dans les domaines liés à ces deux titres, à commencer par le développement de solutions informatiques, puis l'IA et l'algorithmie pour la suite.",
+      "À plus long terme, mon ambition est de contribuer à la recherche en intelligence artificielle, avec l'objectif de participer aux avancées vers une IA générale (AGI), et au-delà.",
+      "En complément de mon poste actuel, je continue de m'exercer sur des domaines que je n'ai pas encore eu l'occasion d'approfondir, comme Python appliqué à l'IA, l'utilisation de LLMs, ainsi que les différents outils utilisés en data science, machine learning et deep learning.",
       "Je me laisse aussi tenter par des projets passion qui étendent mon champ de connaissances et de compétences, comme ce portfolio, qui m'apprend le développement frontend avec HTML, JavaScript et CSS."
     ]
   },
@@ -45,6 +46,7 @@
       "Grâce à cette plateforme, j'ai découvert de nombreuses façons de résoudre des problèmes en C, C++ et Python, ainsi que des outils dont j'ignorais totalement l'existence. J'étais souvent impressionné de voir à quel point certains développeurs pouvaient résoudre des problèmes complexes avec des solutions courtes et élégantes.",
       "C'est également là, après avoir appris les bases grâce à des tutoriels, que j'ai réellement commencé à développer mes compétences en Python.",
       "À présent, je me consacre à des projets que je considère utiles, soit pour progresser vers mes objectifs futurs dans la programmation, soit parce qu'ils peuvent apporter quelque chose d'utile à d'autres personnes ou à moi-même.",
+      "Depuis que j'ai terminé le tronc commun, j'ai rejoint le siège du Groupe Tressol-Chabrier à Montpellier en tant que développeur à temps plein. J'y participe à la conception d'applications internes (recherche de données, tableaux de bord, back-office d'administration), aussi bien côté frontend que backend, ce qui me permet de mettre en pratique mes compétences dans des conditions réelles en attendant de démarrer mon alternance en septembre 2026.",
       "Vous pourrez retrouver les projets sur lesquels j'ai travaillé ou sur lesquels je travaille actuellement dans la rubrique \"Mes projets\"."
     ]
   },
@@ -54,7 +56,7 @@
     "categories": [
       {
         "title": "Les langages de programmation :",
-        "items": ["Bash (Intermédiaire)", "C (Avancé)", "C++ (Avancé)", "Python (Intermédiaire)", "JavaScript (Débutant)"]
+        "items": ["Bash (Intermédiaire)", "C (Avancé)", "C++ (Avancé)", "Python (Intermédiaire)", "PHP (Débutant)", "JavaScript (Intermédiaire)"]
       },
       {
         "title": "Les langages de balisage :",
@@ -62,7 +64,7 @@
       },
       {
         "title": "Les différentes stacks et technologies :",
-        "items": ["Makefiles", "Git", "GitHub", "Threads / sémaphores", "Mutex et processus enfants", "WebSockets", "APIs", "Numpy", "Matplotlib", "PyTorch"]
+        "items": ["Makefiles", "Git", "GitHub", "Threads / sémaphores", "Mutex et processus enfants", "WebSockets", "APIs", "SQL / PDO", "Elasticsearch", "Sécurité web (injection SQL, XSS, CSRF, sessions)", "Numpy", "Matplotlib", "PyTorch"]
       },
       {
         "title": "Les outils :",
@@ -79,6 +81,43 @@
   },
   "projects": {
     "h2": "Mes projets",
+    "professional": {
+      "h3": "Mes projets professionnels",
+      "intro": "Depuis que je travaille au siège du Groupe Tressol-Chabrier, je participe au développement de plusieurs applications internes. Pour des raisons de confidentialité, je reste ici volontairement général sur le fonctionnement métier et ne mentionne que l'aspect technique du code produit.",
+      "list": [
+        {
+          "id": "search_tool",
+          "h4": "Un outil de recherche conversationnelle",
+          "paragraphs": [
+            "Je participe au développement d'un outil de recherche conversationnelle permettant d'interroger le stock de véhicules du groupe en langage naturel. Une requête utilisateur est d'abord interprétée par un LLM, qui en extrait les critères et la reformule, avant de construire une requête Elasticsearch adaptée.",
+            "J'y ai notamment mis en place un système d'authentification par token signé HMAC, qui résout automatiquement le contexte (concession, source de données) sans configuration manuelle par concession. J'ai également corrigé plusieurs bugs de qualité de données (problèmes d'encodage, champs vides, filtres trop permissifs sur la marque ou le type de véhicule).",
+            "Côté performance, j'ai réduit le poids d'un écran de chargement de plusieurs méga-octets à quelques dizaines de kilo-octets, réactivé la mise en cache navigateur, et fait passer le temps de réponse d'un point d'entrée critique de plus d'une seconde à moins de 50 millisecondes."
+          ],
+          "links": [],
+          "media": []
+        },
+        {
+          "id": "dashboards",
+          "h4": "Des tableaux de bord de pilotage",
+          "paragraphs": [
+            "Je contribue à plusieurs tableaux de bord internes permettant de visualiser et filtrer des données commerciales par concession (ventes de véhicules d'occasion, qualité, suivi de stock), avec une intégration Power BI sur l'un d'entre eux.",
+            "J'ai notamment travaillé sur la refonte de l'interface (filtres, barre latérale, mise en page) pour la rendre utilisable aussi bien sur ordinateur que sur mobile."
+          ],
+          "links": [],
+          "media": []
+        },
+        {
+          "id": "admin_backoffice",
+          "h4": "Un back-office d'administration",
+          "paragraphs": [
+            "Enfin, je travaille sur un back-office d'administration commun à plusieurs applications internes, avec authentification HTTP, limitation de débit pour se prémunir des attaques par force brute, et protection CSRF basée sur un token de session.",
+            "J'ai également développé un client HTTP natif en PHP (au-dessus de cURL) pour communiquer avec des services externes, avec une gestion structurée des erreurs réseau et applicatives, et de la validation de certificats SSL."
+          ],
+          "links": [],
+          "media": []
+        }
+      ]
+    },
     "personal": {
       "h3": "Mes projets personnels",
       "list": [
@@ -113,6 +152,31 @@
             { "href": "https://louis-cagnion.github.io/Heartopia_map_tracking/", "label": "ce lien" }
           ],
           "linkIntro": "Vous pouvez retrouver ce projet gratuitement en ligne via",
+          "media": []
+        },
+        {
+          "id": "devpedia",
+          "h4": "Devpedia, une encyclopédie du développement",
+          "paragraphs": [
+            "Devpedia est un site que j'ai créé pour documenter, expliquer et partager mes connaissances sur différents sujets liés au développement logiciel. Ce projet m'aide à approfondir ma compréhension par la recherche et la pédagogie, à m'entraîner à construire des interfaces web modernes, et à rendre ces connaissances accessibles à toute personne intéressée.",
+            "Le site couvre aujourd'hui plusieurs langages de programmation (C, C++, PHP, Python — y compris la data science et l'IA avec NumPy, pandas, Matplotlib, scikit-learn, les réseaux de neurones, PyTorch, le NLP et les LLMs —, JavaScript), les langages de balisage (HTML, CSS), des langages spécifiques comme Regex et SQL, plusieurs shells (Bash, PowerShell, Zsh), ainsi que Git, du fonctionnement quotidien jusqu'à son modèle interne.",
+            "Chaque chapitre est un simple fichier Markdown, dont le rendu est assuré par un parseur que j'ai écrit moi-même pour ce projet plutôt que par une librairie existante. Le site est également traduit automatiquement en anglais, espagnol et portugais via l'API DeepL."
+          ],
+          "links": [
+            { "href": "https://louis-cagnion.github.io/Devpedia/", "label": "ici" }
+          ],
+          "linkIntro": "Vous pouvez consulter le site",
+          "media": []
+        },
+        {
+          "id": "php_sql",
+          "h4": "Apprentissage du PHP et du SQL",
+          "paragraphs": [
+            "En parallèle de mon poste actuel, j'ai commencé à apprendre le PHP et le SQL en partant de zéro, deux domaines que je n'avais jamais eu l'occasion d'approfondir jusque-là.",
+            "J'y ai abordé le cycle de vie d'une requête HTTP, l'autoloading de classes, le routage et la gestion sécurisée des sessions, les requêtes SQL via PDO (jointures, agrégats, requêtes préparées), les appels HTTP natifs en PHP, ainsi que les grandes familles d'attaques web (injection SQL, XSS, CSRF, vol de session) et les moyens de s'en protéger.",
+            "Je documente cet apprentissage au fil de l'eau sous forme de fiches, avec l'objectif de les intégrer prochainement à Devpedia."
+          ],
+          "links": [],
           "media": []
         }
       ]

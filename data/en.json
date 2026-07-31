@@ -18,9 +18,10 @@
     "h2": "About me",
     "paragraphs": [
       "My name is Louis Cagnion and I am a student at 42 Perpignan. During my common core curriculum, I completed various projects that allowed me to learn C and C++, as well as several practical tools such as MinilibX for graphical rendering, Docker for sharing applications compatible with most environments, and how networks and APIs work. I also learned to manage data on a website visited by users through backend and frontend development.",
-      "Now, as I am finishing my common core, I am looking to pursue an RNCP7 in AI and algorithmics. To that end, I am primarily seeking a 6-month work contract or a 2-year work-study program in order to gain my first professional experience and develop my skills in real-world conditions.",
-      "I also wish to deepen my knowledge in the areas related to the qualification I am working toward, particularly around AI and algorithmics.",
-      "While looking for a professional opportunity, I continue to practice in areas I have not yet had the chance to explore in depth, such as Python applied to AI, the use of LLMs, and the various tools used in data science, machine learning, and deep learning.",
+      "Now that I have completed my common core, I have secured a 2-year work-study program leading to an RNCP6 as a Software Solutions Designer and Developer (Concepteur développeur de solutions informatiques), starting in September 2026. In the meantime, I have been working full-time at the Tressol-Chabrier Group's headquarters in Montpellier since July 13, 2026.",
+      "My underlying goal hasn't changed: once I complete this RNCP6, I plan to pursue a further one-year work-study program to earn an RNCP7 in AI and algorithmics. So I want to deepen my knowledge in the areas related to both qualifications, starting with software development, then AI and algorithmics for what comes next.",
+      "In the longer term, my ambition is to contribute to AI research, with the goal of taking part in the advances toward artificial general intelligence (AGI), and beyond.",
+      "Alongside my current position, I continue to practice in areas I have not yet had the chance to explore in depth, such as Python applied to AI, the use of LLMs, and the various tools used in data science, machine learning, and deep learning.",
       "I also enjoy working on passion projects that broaden my knowledge and skills, such as this portfolio, through which I am learning frontend development with HTML, JavaScript, and CSS."
     ]
   },
@@ -45,6 +46,7 @@
       "Through that platform, I discovered many ways to solve problems in C, C++, and Python, as well as tools I had no idea existed. I was often impressed by how some developers could solve complex problems with short, elegant solutions.",
       "It was also there, after learning the basics through tutorials, that I truly started developing my Python skills.",
       "Now I focus on projects I consider useful — either to advance toward my future programming goals, or because they can bring something valuable to others or to myself.",
+      "Since completing my common core, I have joined the Tressol-Chabrier Group's headquarters in Montpellier as a full-time developer. There, I contribute to internal applications (data search, dashboards, admin back-office), working on both the frontend and backend, which lets me put my skills into practice in real-world conditions while I wait to start my work-study program in September 2026.",
       "You can find the projects I have worked on or am currently working on in the \"My projects\" section."
     ]
   },
@@ -54,7 +56,7 @@
     "categories": [
       {
         "title": "Programming languages:",
-        "items": ["Bash (Intermediate)", "C (Advanced)", "C++ (Advanced)", "Python (Intermediate)", "JavaScript (Beginner)"]
+        "items": ["Bash (Intermediate)", "C (Advanced)", "C++ (Advanced)", "Python (Intermediate)", "PHP (Beginner)", "JavaScript (Intermediate)"]
       },
       {
         "title": "Markup languages:",
@@ -62,7 +64,7 @@
       },
       {
         "title": "Stacks and technologies:",
-        "items": ["Makefiles", "Git", "GitHub", "Threads / semaphores", "Mutex and child processes", "WebSockets", "APIs", "Numpy", "Matplotlib", "PyTorch"]
+        "items": ["Makefiles", "Git", "GitHub", "Threads / semaphores", "Mutex and child processes", "WebSockets", "APIs", "SQL / PDO", "Elasticsearch", "Web security (SQL injection, XSS, CSRF, sessions)", "Numpy", "Matplotlib", "PyTorch"]
       },
       {
         "title": "Tools:",
@@ -79,6 +81,43 @@
   },
   "projects": {
     "h2": "My projects",
+    "professional": {
+      "h3": "Professional projects",
+      "intro": "Since joining the Tressol-Chabrier Group's headquarters, I have contributed to several internal applications. For confidentiality reasons, I stay deliberately general about the business logic here and only describe the technical side of the code.",
+      "list": [
+        {
+          "id": "search_tool",
+          "h4": "A conversational search tool",
+          "paragraphs": [
+            "I contribute to a conversational search tool that lets users query the group's vehicle stock in natural language. A user query is first interpreted by an LLM, which extracts search criteria and rewrites it, before an Elasticsearch query is built accordingly.",
+            "On this project, I built a signed HMAC token authentication system that automatically resolves context (dealership, data source) without any manual per-dealership setup. I also fixed several data-quality bugs (encoding issues, empty fields, overly permissive brand/vehicle-type filters).",
+            "On the performance side, I cut a loading screen's payload from several megabytes down to a few tens of kilobytes, re-enabled browser caching, and brought a critical endpoint's response time down from over a second to under 50 milliseconds."
+          ],
+          "links": [],
+          "media": []
+        },
+        {
+          "id": "dashboards",
+          "h4": "Reporting dashboards",
+          "paragraphs": [
+            "I contribute to several internal dashboards that let users visualize and filter business data per dealership (used-vehicle sales, quality, stock tracking), with a Power BI integration on one of them.",
+            "I notably worked on reworking the interface (filters, sidebar, layout) to make it usable on both desktop and mobile."
+          ],
+          "links": [],
+          "media": []
+        },
+        {
+          "id": "admin_backoffice",
+          "h4": "An admin back-office",
+          "paragraphs": [
+            "Lastly, I work on an admin back-office shared across several internal applications, with HTTP authentication, rate limiting against brute-force attacks, and session-token-based CSRF protection.",
+            "I also built a native PHP HTTP client (on top of cURL) to communicate with external services, with structured handling of network and application errors, and SSL certificate validation."
+          ],
+          "links": [],
+          "media": []
+        }
+      ]
+    },
     "personal": {
       "h3": "Personal projects",
       "list": [
@@ -113,6 +152,31 @@
             { "href": "https://louis-cagnion.github.io/Heartopia_map_tracking/", "label": "this link" }
           ],
           "linkIntro": "You can find this project for free online via",
+          "media": []
+        },
+        {
+          "id": "devpedia",
+          "h4": "Devpedia, a software development encyclopedia",
+          "paragraphs": [
+            "Devpedia is a website I created to document, explain, and share my knowledge of various software development topics. This project helps me deepen my understanding through research and teaching, practice building modern web interfaces, and make this knowledge accessible to anyone interested in learning.",
+            "The site currently covers several programming languages (C, C++, PHP, Python — including data science and AI with NumPy, pandas, Matplotlib, scikit-learn, neural networks, PyTorch, NLP and LLMs —, JavaScript), markup languages (HTML, CSS), domain-specific languages such as Regex and SQL, several shells (Bash, PowerShell, Zsh), and Git, from everyday use to its internal object model.",
+            "Each chapter is a plain Markdown file, rendered by a parser I wrote myself for this project rather than an existing library. The site is also automatically translated into English, Spanish, and Portuguese via the DeepL API."
+          ],
+          "links": [
+            { "href": "https://louis-cagnion.github.io/Devpedia/", "label": "here" }
+          ],
+          "linkIntro": "You can check out the site",
+          "media": []
+        },
+        {
+          "id": "php_sql",
+          "h4": "Learning PHP and SQL",
+          "paragraphs": [
+            "Alongside my current position, I started learning PHP and SQL from scratch — two areas I had never had the chance to explore in depth before.",
+            "I covered the lifecycle of an HTTP request, class autoloading, routing and secure session handling, SQL queries through PDO (joins, aggregates, prepared statements), native HTTP calls in PHP, as well as the main families of web attacks (SQL injection, XSS, CSRF, session hijacking) and how to guard against them.",
+            "I'm documenting this learning process along the way as notes, with the goal of eventually folding them into Devpedia."
+          ],
+          "links": [],
           "media": []
         }
       ]
