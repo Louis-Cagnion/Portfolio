@@ -77,7 +77,9 @@
         ]
       }
     ],
-    "outro": "And more skills are still to come."
+    "outro": "And more skills are still to come.",
+    "linkIntro": "For a more complete and detailed view of my development knowledge, you can check out",
+    "link": { "href": "https://louis-cagnion.github.io/Devpedia/", "label": "Devpedia" }
   },
   "projects": {
     "h2": "My projects",

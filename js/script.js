@@ -96,6 +96,7 @@ function buildSkillsSection(skills) {
         ol.append(createTagList('ul', category.items))
     })
     section.append(createTag('p', {innerHTML: skills.outro}))
+    insertLinkParagraph(section, skills.linkIntro, skills.link)
     return section
 }
 

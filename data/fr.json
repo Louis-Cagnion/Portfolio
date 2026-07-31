@@ -77,7 +77,9 @@
         ]
       }
     ],
-    "outro": "Et d'autres compétences sont encore à venir."
+    "outro": "Et d'autres compétences sont encore à venir.",
+    "linkIntro": "Pour une vue plus complète et détaillée de mes connaissances en développement, vous pouvez consulter",
+    "link": { "href": "https://louis-cagnion.github.io/Devpedia/", "label": "Devpedia" }
   },
   "projects": {
     "h2": "Mes projets",
