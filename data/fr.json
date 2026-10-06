@@ -101,7 +101,7 @@
     "h2": "Mes projets",
     "professional": {
       "h3": "Mes projets professionnels",
-      "intro": "Depuis que je travaille au siège du Groupe Tressol-Chabrier, je participe au développement de plusieurs applications internes. Pour des raisons de confidentialité, je reste ici volontairement général sur le fonctionnement métier et ne mentionne que l'aspect technique du code produit.",
+      "intro": "Depuis que je travaille au siège du Groupe Tressol-Chabrier, je participe au développement de plusieurs applications et pipelines de données internes. Pour des raisons de confidentialité, je reste ici volontairement général sur le fonctionnement métier et ne mentionne que l'aspect technique du code produit.",
       "list": [
         {
           "id": "search_tool",
@@ -109,7 +109,8 @@
           "paragraphs": [
             "Je participe au développement d'un outil de recherche conversationnelle permettant d'interroger le stock de véhicules du groupe en langage naturel. Une requête utilisateur est d'abord interprétée par un LLM, qui en extrait les critères et la reformule, avant de construire une requête Elasticsearch adaptée.",
             "J'y ai notamment mis en place un système d'authentification par token signé HMAC, qui résout automatiquement le contexte (concession, source de données) sans configuration manuelle par concession. J'ai également corrigé plusieurs bugs de qualité de données (problèmes d'encodage, champs vides, filtres trop permissifs sur la marque ou le type de véhicule).",
-            "Côté performance, j'ai réduit le poids d'un écran de chargement de plusieurs méga-octets à quelques dizaines de kilo-octets, réactivé la mise en cache navigateur, et fait passer le temps de réponse d'un point d'entrée critique de plus d'une seconde à moins de 50 millisecondes."
+            "Côté performance, j'ai réduit le poids d'un écran de chargement de plusieurs méga-octets à quelques dizaines de kilo-octets, réactivé la mise en cache navigateur, et fait passer le temps de réponse d'un point d'entrée critique de plus d'une seconde à moins de 50 millisecondes.",
+            "L'application est pensée pour fonctionner sur plusieurs concessions : l'identifiant de concession est fixé côté serveur à la validation du token puis injecté dans chaque requête, sans que le client puisse le modifier. J'y ai également ajouté une limitation de débit par adresse IP, une protection CSRF sur les requêtes qui modifient des données et une application web installable (PWA) avec saisie vocale. Une campagne de crash-test m'a permis d'identifier et de corriger une trentaine de bugs et de failles."
           ],
           "links": [],
           "media": []
@@ -119,7 +120,41 @@
           "h4": "Des tableaux de bord de pilotage",
           "paragraphs": [
             "Je contribue à plusieurs tableaux de bord internes permettant de visualiser et filtrer des données commerciales par concession (ventes de véhicules d'occasion, qualité, suivi de stock), avec une intégration Power BI sur l'un d'entre eux.",
-            "J'ai notamment travaillé sur la refonte de l'interface (filtres, barre latérale, mise en page) pour la rendre utilisable aussi bien sur ordinateur que sur mobile."
+            "J'ai notamment travaillé sur la refonte de l'interface (filtres, barre latérale, mise en page) pour la rendre utilisable aussi bien sur ordinateur que sur mobile.",
+            "J'ai également développé un tableau de bord de direction couvrant plusieurs domaines (ventes de véhicules neufs et d'occasion, appels, NPS, qualité, événements). Il s'appuie sur 17 endpoints d'API et des graphiques ECharts, et propose une carte du réseau dont les adresses sont géocodées par lot puis mises en cache. Un cache fichier à écriture atomique permet de continuer à servir le dernier état connu si la base est momentanément indisponible."
+          ],
+          "links": [],
+          "media": []
+        },
+        {
+          "id": "nps_scores",
+          "h4": "Les scores NPS, de la donnée à l'écran",
+          "paragraphs": [
+            "J'ai développé le pipeline quotidien qui alimente les scores NPS (véhicules neufs et après-vente) par concession. Il part d'un classeur Google Sheets trimestriel et aboutit à une table de faits consommée par Power BI, en trois couches (Staging, Silver, Gold) sur SQL Server, au sein de la plateforme de données du groupe.",
+            "Le pipeline normalise les marques, détecte les décalages de colonnes du classeur source, rapproche chaque concession du référentiel du groupe et regroupe les différentes orthographes d'une même commune. Chaque couche est validée par un test de cohérence SQL (par exemple, un score NPS doit rester compris entre -100 et 100) et le déploiement passe par Azure Pipelines, avec une exécution quotidienne planifiée.",
+            "Côté back-office, j'ai aussi réalisé le module PHP qui affiche ces scores par trimestre, marque et site, avec une calculette de simulation des objectifs. L'accès aux données est résilient : si l'entrepôt est indisponible, le module bascule sur une copie de staging, puis sur un JSON statique, plutôt que de planter, et un cache fichier limite le nombre de requêtes."
+          ],
+          "links": [],
+          "media": []
+        },
+        {
+          "id": "audit_infomediaires",
+          "h4": "Un audit nocturne des boutiques en ligne",
+          "paragraphs": [
+            "J'ai développé un pipeline Python qui vérifie chaque nuit que les boutiques de véhicules d'occasion du groupe sont bien visibles sur plusieurs plateformes d'annonces. Il compte les annonces réellement affichées, détecte les doublons de véhicules et mesure l'écart avec le stock de référence. L'extraction repose sur Playwright, en parallèle par plateforme, avec gestion des bandeaux cookies et des contrôles anti-robot.",
+            "Le pipeline s'arrête volontairement lorsqu'une boutique n'affiche aucune annonce ou qu'un doublon est confirmé, et se termine « avec avertissements » si certaines boutiques n'ont pas pu être lues. Il est déployé via Azure Pipelines (validation avec Ruff et pytest, environnements de préproduction et de production) et couvert par plusieurs centaines de tests.",
+            "Les résultats sont consultables dans un module du back-office que j'ai également développé : tableau filtrable et triable par boutique et par plateforme, export CSV, cartes « à traiter en priorité » et alerte dédiée aux boutiques non lues, avec la cause de l'échec."
+          ],
+          "links": [],
+          "media": []
+        },
+        {
+          "id": "pdf_parser",
+          "h4": "Un parseur de politiques commerciales PDF",
+          "paragraphs": [
+            "J'ai développé un outil Python qui convertit des PDF de politiques commerciales de constructeurs en JSON structuré et versionné par marque (titres, texte, listes à puces et tableaux dont les cellules sont typées : date, pourcentage, montant, entier). Il est conçu pour alimenter un chatbot en aval.",
+            "La détection des tableaux fonctionne en cascade : texte natif du PDF d'abord, contrôle croisé avec img2table lorsqu'une cellule paraît suspecte, puis repli sur l'OCR (PaddleOCR) uniquement si rien n'a été trouvé. Les valeurs douteuses sont marquées « suspectes » plutôt que passées sous silence.",
+            "Côté performance, j'ai réduit le temps de traitement d'environ 30 % en abaissant la résolution de rendu, et parallélisé le repli OCR en fonction de la mémoire disponible. L'outil est couvert par environ 170 tests et a été éprouvé sur une vingtaine de documents couvrant plus de dix marques."
           ],
           "links": [],
           "media": []
@@ -129,7 +164,8 @@
           "h4": "Un back-office d'administration",
           "paragraphs": [
             "Enfin, je travaille sur un back-office d'administration commun à plusieurs applications internes, avec authentification HTTP, limitation de débit pour se prémunir des attaques par force brute, et protection CSRF basée sur un token de session.",
-            "J'ai également développé un client HTTP natif en PHP (au-dessus de cURL) pour communiquer avec des services externes, avec une gestion structurée des erreurs réseau et applicatives, et de la validation de certificats SSL."
+            "J'ai également développé un client HTTP natif en PHP (au-dessus de cURL) pour communiquer avec des services externes, avec une gestion structurée des erreurs réseau et applicatives, et de la validation de certificats SSL.",
+            "Dans ce back-office (PHP 8 avec Slim 4, SQL Server en PDO, une base par module, droits d'accès par module et par profil, authentification OAuth2/OIDC en complément de la connexion native, tests PHPUnit), j'ai développé les modules de scores NPS et d'audit des boutiques en ligne décrits ci-dessus."
           ],
           "links": [],
           "media": []

@@ -101,7 +101,7 @@
     "h2": "My projects",
     "professional": {
       "h3": "Professional projects",
-      "intro": "Since joining the Tressol-Chabrier Group's headquarters, I have contributed to several internal applications. For confidentiality reasons, I stay deliberately general about the business logic here and only describe the technical side of the code.",
+      "intro": "Since joining the Tressol-Chabrier Group's headquarters, I have contributed to several internal applications and data pipelines. For confidentiality reasons, I stay deliberately general about the business logic here and only describe the technical side of the code.",
       "list": [
         {
           "id": "search_tool",
@@ -109,7 +109,8 @@
           "paragraphs": [
             "I contribute to a conversational search tool that lets users query the group's vehicle stock in natural language. A user query is first interpreted by an LLM, which extracts search criteria and rewrites it, before an Elasticsearch query is built accordingly.",
             "On this project, I built a signed HMAC token authentication system that automatically resolves context (dealership, data source) without any manual per-dealership setup. I also fixed several data-quality bugs (encoding issues, empty fields, overly permissive brand/vehicle-type filters).",
-            "On the performance side, I cut a loading screen's payload from several megabytes down to a few tens of kilobytes, re-enabled browser caching, and brought a critical endpoint's response time down from over a second to under 50 milliseconds."
+            "On the performance side, I cut a loading screen's payload from several megabytes down to a few tens of kilobytes, re-enabled browser caching, and brought a critical endpoint's response time down from over a second to under 50 milliseconds.",
+            "The application is designed to serve several dealerships: the dealership identifier is set server-side when the token is validated and then injected into every request, so the client cannot alter it. I also added per-IP rate limiting, CSRF protection on requests that modify data, and an installable web app (PWA) with voice input. A crash-test campaign let me identify and fix about thirty bugs and vulnerabilities."
           ],
           "links": [],
           "media": []
@@ -119,7 +120,41 @@
           "h4": "Reporting dashboards",
           "paragraphs": [
             "I contribute to several internal dashboards that let users visualize and filter business data per dealership (used-vehicle sales, quality, stock tracking), with a Power BI integration on one of them.",
-            "I notably worked on reworking the interface (filters, sidebar, layout) to make it usable on both desktop and mobile."
+            "I notably worked on reworking the interface (filters, sidebar, layout) to make it usable on both desktop and mobile.",
+            "I also built a management dashboard covering several domains (new and used vehicle sales, calls, NPS, quality, events). It relies on 17 API endpoints and ECharts charts, and offers a network map whose addresses are batch-geocoded and cached. An atomic-write file cache keeps serving the last known state when the database is temporarily unavailable."
+          ],
+          "links": [],
+          "media": []
+        },
+        {
+          "id": "nps_scores",
+          "h4": "NPS scores, from data to screen",
+          "paragraphs": [
+            "I built the daily pipeline that feeds NPS scores (new vehicles and after-sales) per dealership. It starts from a quarterly Google Sheets workbook and ends in a fact table consumed by Power BI, across three layers (Staging, Silver, Gold) on SQL Server, within the group's data platform.",
+            "The pipeline normalizes brands, detects column shifts in the source workbook, matches each dealership to the group's reference data and merges the different spellings of the same town. Each layer is validated by a SQL consistency test (for example, an NPS score must stay between -100 and 100), and deployment goes through Azure Pipelines with a scheduled daily run.",
+            "On the back-office side, I also built the PHP module that displays these scores by quarter, brand and site, with a calculator to simulate targets. Data access is resilient: if the data warehouse is unavailable, the module falls back to a staging copy, then to a static JSON file, rather than crashing, and a file cache limits the number of queries."
+          ],
+          "links": [],
+          "media": []
+        },
+        {
+          "id": "audit_infomediaires",
+          "h4": "A nightly audit of online shops",
+          "paragraphs": [
+            "I built a Python pipeline that checks every night that the group's used-vehicle shops are properly visible on several classified-ad platforms. It counts the ads actually displayed, detects duplicate vehicles and measures the gap with the reference stock. Extraction relies on Playwright, in parallel per platform, handling cookie banners and anti-bot checks.",
+            "The pipeline deliberately stops when a shop displays no ads or when a duplicate is confirmed, and ends \"with warnings\" if some shops could not be read. It is deployed through Azure Pipelines (validation with Ruff and pytest, pre-production and production environments) and covered by several hundred tests.",
+            "Results can be browsed in a back-office module that I also built: a table that can be filtered and sorted by shop and platform, CSV export, \"priority actions\" cards and a dedicated alert for unread shops, including the cause of the failure."
+          ],
+          "links": [],
+          "media": []
+        },
+        {
+          "id": "pdf_parser",
+          "h4": "A PDF commercial-policy parser",
+          "paragraphs": [
+            "I built a Python tool that converts manufacturers' commercial-policy PDFs into structured JSON, versioned per brand (titles, text, bullet lists and tables with typed cells: date, percentage, amount, integer). It is designed to feed a downstream chatbot.",
+            "Table detection works as a cascade: the PDF's native text first, a cross-check with img2table when a cell looks suspicious, then an OCR fallback (PaddleOCR) only if nothing was found. Doubtful values are flagged as \"suspect\" rather than silently passed through.",
+            "On the performance side, I cut processing time by about 30% by lowering the rendering resolution, and parallelized the OCR fallback according to available memory. The tool is covered by about 170 tests and has been proven on around twenty documents spanning more than ten brands."
           ],
           "links": [],
           "media": []
@@ -129,7 +164,8 @@
           "h4": "An admin back-office",
           "paragraphs": [
             "Lastly, I work on an admin back-office shared across several internal applications, with HTTP authentication, rate limiting against brute-force attacks, and session-token-based CSRF protection.",
-            "I also built a native PHP HTTP client (on top of cURL) to communicate with external services, with structured handling of network and application errors, and SSL certificate validation."
+            "I also built a native PHP HTTP client (on top of cURL) to communicate with external services, with structured handling of network and application errors, and SSL certificate validation.",
+            "In this back-office (PHP 8 with Slim 4, SQL Server via PDO, one database per module, access rights per module and per profile, OAuth2/OIDC authentication alongside native login, PHPUnit tests), I built the NPS score and online-shop audit modules described above."
           ],
           "links": [],
           "media": []
