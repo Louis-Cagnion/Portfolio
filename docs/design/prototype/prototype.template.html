@@ -191,35 +191,56 @@ h1 { font-family: var(--display); font-weight: 400; font-size: clamp(2.3rem, 6.6
 .mag { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
 .ico { width: 26px; height: 26px; flex: none; overflow: visible; }
 
-/* projects */
-.filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 22px; }
-.filters button { border: 1px solid var(--line); background: none; color: var(--dim); font: 500 0.9rem var(--sans); padding: 7px 14px; cursor: pointer; }
-.filters button[aria-pressed="true"] { color: var(--accent-ink); background: var(--accent); border-color: var(--accent); }
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr)); gap: 18px; }
-.card { display: flex; flex-direction: column; text-align: left; padding: 22px; color: var(--text); font: inherit; cursor: pointer; transition: transform 0.25s, border-color 0.25s; }
-.card:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--accent) 50%, transparent); }
-.card .cat { font: 400 0.8rem var(--mono); color: var(--accent); margin-bottom: 10px; }
-.card h3 { font: 600 1.12rem var(--sans); margin: 0 0 8px; }
-.card p { color: var(--dim); margin: 0 0 16px; flex: 1; }
+/* projects: three star systems, the orbiting planets are the projects */
+.systems { width: 100%; height: auto; display: block; overflow: visible; }
+.orbit { fill: none; stroke: rgba(220, 230, 255, 0.12); stroke-dasharray: 3 6; }
+.sun-label { fill: var(--text); font: 400 15px var(--display); text-anchor: middle; }
+.sun-sub { fill: var(--faint); font: 400 12px var(--mono); text-anchor: middle; }
+.planet { cursor: pointer; }
+.planet:focus { outline: none; }
+.planet .pl-hit { fill: transparent; }
+.planet .pl-label { opacity: 0; transition: opacity 0.25s; pointer-events: none; }
+.planet .pl-bg { fill: rgba(9, 16, 38, 0.92); stroke: rgba(232, 180, 90, 0.55); }
+.planet .pl-name { fill: var(--text); font: 500 12.5px var(--sans); }
+.planet:hover .pl-label, .planet:focus-visible .pl-label { opacity: 1; }
+.planet:hover .pl-body, .planet:focus-visible .pl-body { filter: brightness(1.35) drop-shadow(0 0 8px rgba(232, 180, 90, 0.8)); }
+.plist { margin-top: 26px; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr)); gap: 8px 22px; }
+.plist button { display: flex; gap: 10px; align-items: center; background: none; border: 0; color: var(--dim); font: inherit; font-size: 0.92rem; text-align: left; padding: 4px 0; cursor: pointer; }
+.plist button:hover, .plist button:focus-visible { color: var(--text); }
+.plist i { width: 9px; height: 9px; border-radius: 50%; flex: none; }
 .tags { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; padding: 0; margin: 0; }
 .tags li { font: 400 0.8rem var(--mono); padding: 3px 8px; border: 1px solid var(--line); }
-.card.hide { display: none; }
 .sheet-bg { position: fixed; inset: 0; z-index: 20; background: rgba(0, 0, 0, 0.55); opacity: 0; pointer-events: none; transition: opacity 0.35s; }
 .sheet { position: fixed; top: 0; right: 0; bottom: 0; z-index: 21; width: min(620px, 100%); overflow-y: auto; padding: 32px; background: var(--panel); border-left: 1px solid var(--line); transform: translateX(100%); transition: transform 0.45s cubic-bezier(.2, .8, .2, 1); }
 .sheet.open { transform: none; }
 .sheet-bg.open { opacity: 1; pointer-events: auto; }
 .sheet .cat { font: 400 0.85rem var(--mono); color: var(--accent); }
 .sheet h3 { font-family: var(--display); font-weight: 400; font-size: 1.25rem; margin: 10px 0 16px; line-height: 1.35; }
+.sheet .tags { margin-bottom: 18px; }
 .sheet .body { color: var(--dim); }
 .close { float: right; width: 44px; height: 44px; border: 1px solid var(--line); background: none; color: var(--text); font-size: 1.2rem; cursor: pointer; }
 
-/* contact */
-.contact { padding: 32px; max-width: 760px; }
-.contact .big { display: inline-block; font-family: var(--display); font-size: clamp(0.95rem, 3vw, 1.6rem); color: var(--text); text-decoration: none; border-bottom: 2px solid var(--accent); margin: 8px 0 28px; overflow-wrap: anywhere; }
-.links { display: flex; flex-wrap: wrap; gap: 10px; list-style: none; padding: 0; margin: 0; }
-.links a { display: inline-flex; align-items: center; gap: 10px; padding: 10px 16px; border: 1px solid var(--line); color: var(--text); text-decoration: none; }
-.links a:hover { border-color: var(--accent); }
-.links svg { width: 18px; height: 18px; }
+/* contact: Voyager-style golden record, one groove per channel */
+.record-wrap { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px; align-items: center; }
+.disc { width: 100%; max-width: 460px; justify-self: center; overflow: visible; filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.6)); }
+.grooves { animation: turn 60s linear infinite; transform-origin: 0 0; }
+@keyframes turn { to { transform: rotate(360deg); } }
+.groove-track { fill: none; stroke: rgba(70, 45, 10, 0.35); stroke-width: 7; transition: stroke 0.35s, filter 0.35s; }
+.groove-track.lit { stroke: rgba(255, 235, 180, 0.85); filter: drop-shadow(0 0 6px #ffd27a); }
+.engrave { fill: none; stroke: rgba(80, 52, 14, 0.75); stroke-width: 1.1; stroke-linecap: round; }
+.engrave-text { fill: rgba(80, 52, 14, 0.85); font: 600 9.5px var(--mono); letter-spacing: 1.5px; }
+.msg h3 { font-family: var(--display); font-weight: 400; font-size: 1.15rem; margin: 0 0 10px; line-height: 1.5; }
+.msg p { color: var(--dim); margin: 0 0 22px; }
+.msg .email { display: block; font-family: var(--display); font-size: clamp(0.95rem, 2.4vw, 1.3rem); color: var(--text); text-decoration: none; margin: 0 0 16px; overflow-wrap: anywhere; }
+.msg .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 26px; }
+.msg .btn { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; }
+.copied { font: 500 0.85rem var(--mono); color: var(--live); opacity: 0; transition: opacity 0.3s; align-self: center; }
+.copied.on { opacity: 1; }
+.channels-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+.channels-list a { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 14px; border: 1px solid var(--line); color: var(--text); text-decoration: none; transition: border-color 0.25s, background 0.25s; }
+.channels-list a:hover, .channels-list a:focus-visible { border-color: var(--accent); background: var(--accent-soft); }
+.channels-list small { font: 400 0.78rem var(--mono); color: var(--faint); }
+@media (max-width: 820px) { .record-wrap { grid-template-columns: 1fr; } .disc { max-width: 320px; } }
 
 /* mockup-only options */
 .opts { position: fixed; left: 16px; bottom: 16px; z-index: 30; padding: 10px 12px; background: #1e2128; color: #ddd; border: 1px solid #3a3f4a; border-radius: 10px; font: 12px system-ui, sans-serif; }
@@ -335,20 +356,45 @@ h1 { font-family: var(--display); font-weight: 400; font-size: clamp(2.3rem, 6.6
     </section>
     <section class="view" id="projects">
         <h2>Mes projets</h2>
-        <p class="lede">Clique sur une carte pour ouvrir son détail.</p>
-        <div class="filters" role="group" aria-label="Filtrer"><button aria-pressed="true" data-f="all">Tous</button><button aria-pressed="false" data-f="pro">Professionnels</button><button aria-pressed="false" data-f="perso">Personnels</button><button aria-pressed="false" data-f="school">École 42</button></div>
-        <div class="grid" id="grid"></div>
+        <p class="lede">Trois systèmes stellaires, un par univers : chaque planète en orbite est un projet. Sélectionne une planète, ou un titre de la liste, pour ouvrir son détail.</p>
+        <svg class="systems" id="systems" role="group" aria-label="Systèmes de projets"></svg>
+        <div class="plist" id="plist" aria-label="Liste des projets"></div>
     </section>
     <section class="view" id="contact">
         <h2>Me contacter</h2>
-        <div class="hud contact">
-            <p class="lede">Une question, une opportunité ou simplement envie d'échanger : écris-moi.</p>
-            <a class="big" href="mailto:louis.cagnion.pro@gmail.com">louis.cagnion.pro@gmail.com</a>
-            <ul class="links">
-                <li><a href="#"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45z"/></svg>LinkedIn</a></li>
-                <li><a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 19c-4 1.3-4-2-6-2.5M15 22v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12 12 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V22"/></svg>GitHub</a></li>
-                <li><a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7l8-4 8 4v10l-8 4-8-4z"/><path d="M9 10l3 2 3-2M12 12v4"/></svg>Codewars</a></li>
-            </ul>
+        <p class="lede">Comme le disque d'or embarqué sur les sondes Voyager, ce message attend que quelqu'un le trouve.</p>
+        <div class="record-wrap">
+            <svg class="disc" viewBox="-250 -250 500 500" aria-hidden="true">
+                <defs>
+                    <radialGradient id="recGold" cx=".42" cy=".38" r=".75"><stop offset="0" stop-color="#ffe7a8"/><stop offset=".45" stop-color="#e8b45a"/><stop offset=".8" stop-color="#b47a2a"/><stop offset="1" stop-color="#7a4f17"/></radialGradient>
+                    <linearGradient id="recSheen" x1="0" y1="0" x2="1" y2="1"><stop offset=".3" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".35"/><stop offset=".7" stop-color="#fff" stop-opacity="0"/></linearGradient>
+                    <path id="recLabelRing" d="M-62 0A62 62 0 1 1 62 0A62 62 0 1 1 -62 0"/>
+                </defs>
+                <circle r="240" fill="url(#recGold)"/>
+                <g class="grooves" id="recGrooves"></g>
+                <g id="recTracks"></g>
+                <circle r="240" fill="url(#recSheen)" opacity=".6"/>
+                <circle r="92" fill="#d9a54d" stroke="rgba(80,52,14,.6)" stroke-width="1.5"/>
+                <circle r="8" fill="#5a3b10"/>
+                <text class="engrave-text"><textPath href="#recLabelRing">LOUIS.CAGNION.PRO@GMAIL.COM  ✶  </textPath></text>
+                <g class="engrave" transform="translate(-30 -30)"><circle r="6"/><circle cx="16" r="6"/><path d="M6 0h4"/></g>
+                <g class="engrave" transform="translate(16 18)"><path d="M0 0L-24-12M0 0L-28 4M0 0L-20 16M0 0L-6 24M0 0L14 22M0 0L26 8M0 0L24-10M0 0L10-24"/><circle r="2.5" fill="rgba(80,52,14,.75)"/></g>
+            </svg>
+            <section class="msg">
+                <h3>Une question, une opportunité, une envie d'échanger ?</h3>
+                <p>Mon adresse est gravée au centre du disque. Chaque sillon mène aussi à l'un de mes réseaux.</p>
+                <a class="email" href="mailto:louis.cagnion.pro@gmail.com" data-track="0">louis.cagnion.pro@gmail.com</a>
+                <div class="actions">
+                    <button class="btn primary" id="copyMail" data-track="0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>Copier l'adresse</button>
+                    <a class="btn" href="mailto:louis.cagnion.pro@gmail.com" data-track="0">Écrire un e-mail</a>
+                    <span class="copied" id="copiedMail" role="status">Adresse copiée</span>
+                </div>
+                <ul class="channels-list">
+                    <li><a href="#" data-track="1">LinkedIn<small>sillon 2</small></a></li>
+                    <li><a href="#" data-track="2">GitHub<small>sillon 3</small></a></li>
+                    <li><a href="#" data-track="3">Codewars<small>sillon 4</small></a></li>
+                </ul>
+            </section>
         </div>
     </section>
 </main>
@@ -868,18 +914,73 @@ document.getElementById('legend').innerHTML = '<span>Chaque compétence est un a
         .map(([lv, label]) => `<span class="mag">${bodyIcon(lv)}${label}</span>`).join('');
 mobile.addEventListener('change', buildJourney);
 
-/* projects grid + detail sheet */
-const CATNAMES = { pro: 'Professionnel', perso: 'Personnel', school: 'École 42' };
-const grid = document.getElementById('grid'), sheet = document.getElementById('sheet'), sheetBg = document.getElementById('sheetBg');
+/* projects: three star systems (pro, perso, school) whose orbiting planets are the projects */
+const SYS = [
+    { cat: 'pro', name: 'Tressol-Chabrier', sun: ['#fff6da', '#e8b45a'], planet: ['#ffd88f', '#b9822f'] },
+    { cat: 'perso', name: 'Projets perso', sun: ['#f3e1ff', '#a46bd8'], planet: ['#e3c3ff', '#7a45b0'] },
+    { cat: 'school', name: '42 Perpignan', sun: ['#dcfff8', '#4fd1c5'], planet: ['#b8f5ec', '#25857c'] },
+];
+const sysSvg = document.getElementById('systems'), measureCtx = document.createElement('canvas').getContext('2d');
+const plainTitle = t => t.replace(/<[^>]+>/g, '');
+let planets = [];
+/* label width from canvas metrics: valid while the section is hidden (no DOM measurement) */
+function labelWidth(t) { measureCtx.font = '500 12.5px "IBM Plex Sans", sans-serif'; return measureCtx.measureText(t).width; }
+function placePlanet(pl) {
+    const x = pl.cx + pl.r * Math.cos(pl.a), y = pl.cy + pl.r * 0.42 * Math.sin(pl.a);
+    pl.g.setAttribute('transform', `translate(${x.toFixed(1)} ${y.toFixed(1)})`);
+    pl.g.style.opacity = Math.sin(pl.a) < 0 ? 0.75 : 1;
+}
+function buildSystems() {
+    sysSvg.innerHTML = ''; planets = [];
+    const m = narrow.matches, w = m ? 360 : 1100, cell = m ? 400 : w / 3, h = m ? cell * 3 : 400;
+    sysSvg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+    const defs = mk('defs', {}, sysSvg);
+    SYS.forEach((s, i) => {
+        const cx = m ? w / 2 : cell * i + cell / 2, cy = m ? cell * i + cell / 2 - 10 : h / 2 - 10;
+        const sg = mk('radialGradient', { id: `sun${i}` }, defs); mk('stop', { offset: 0, 'stop-color': s.sun[0] }, sg); mk('stop', { offset: 0.55, 'stop-color': s.sun[1] }, sg); mk('stop', { offset: 1, 'stop-color': s.sun[1], 'stop-opacity': 0 }, sg);
+        const pg = mk('radialGradient', { id: `pl${i}`, cx: 0.35, cy: 0.3, r: 0.8 }, defs); mk('stop', { offset: 0, 'stop-color': s.planet[0] }, pg); mk('stop', { offset: 1, 'stop-color': s.planet[1] }, pg);
+        const list = DATA.projects.filter(p => p.cat === s.cat), radii = [72, 120, 168];
+        radii.forEach(r => mk('ellipse', { class: 'orbit', cx, cy, rx: r, ry: r * 0.42 }, sysSvg));
+        mk('circle', { cx, cy, r: 44, fill: `url(#sun${i})` }, sysSvg);
+        mk('circle', { cx, cy, r: 16, fill: s.sun[0] }, sysSvg);
+        mk('text', { class: 'sun-label', x: cx, y: cy + 112 }, sysSvg).textContent = s.name;
+        mk('text', { class: 'sun-sub', x: cx, y: cy + 132 }, sysSvg).textContent = `${list.length} projets`;
+        list.forEach((p, j) => {
+            const r = radii[j % 3], size = 7 + Math.min(6, p.paragraphs.length * 1.4), title = plainTitle(p.title);
+            const g = mk('g', { class: 'planet', tabindex: 0, role: 'button', 'aria-label': title }, sysSvg);
+            mk('circle', { class: 'pl-hit', r: size + 10 }, g);
+            mk('circle', { class: 'pl-body', r: size, fill: `url(#pl${i})` }, g);
+            const lg = mk('g', { class: 'pl-label' }, g);
+            mk('rect', { class: 'pl-bg', x: size + 6, y: -10, width: labelWidth(title) + 16, height: 22, rx: 4 }, lg);
+            mk('text', { class: 'pl-name', x: size + 14, y: 4.5 }, lg).textContent = title;
+            g.addEventListener('mouseenter', () => sysSvg.append(g)); g.addEventListener('focus', () => sysSvg.append(g));
+            g.addEventListener('click', () => openSheet(p, g));
+            g.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openSheet(p, g); } });
+            const pl = { g, cx, cy, r, a: j * 2.4 + i, sp: 0.00012 * (180 / r) };
+            placePlanet(pl); planets.push(pl);
+        });
+    });
+}
+const plist = document.getElementById('plist');
 DATA.projects.forEach(p => {
-    const b = document.createElement('button'); b.className = 'hud card'; b.dataset.cat = p.cat;
-    b.innerHTML = `<span class="cat">${CATNAMES[p.cat]}</span><h3>${p.title}</h3><p>${p.summary}</p><ul class="tags">${p.tags.map(t => `<li>${t}</li>`).join('')}</ul>`;
-    b.addEventListener('click', () => openSheet(p, b)); grid.append(b);
+    const s = SYS.find(x => x.cat === p.cat), b = document.createElement('button');
+    b.innerHTML = `<i style="background:${s.planet[1]}"></i>${p.title}`; b.addEventListener('click', () => openSheet(p, b)); plist.append(b);
 });
+let lastSpin = performance.now();
+(function spin(now) {
+    const dt = now - lastSpin; lastSpin = now;
+    if (current === 'projects' && !reduce()) for (const pl of planets) { if (!pl.g.matches(':hover, :focus-visible')) pl.a += pl.sp * dt; placePlanet(pl); }
+    requestAnimationFrame(spin);
+})(lastSpin);
+buildSystems();
+narrow.addEventListener('change', buildSystems);
+
+/* project detail sheet, shared by the planets, the list and the skills' related projects */
+const sheet = document.getElementById('sheet'), sheetBg = document.getElementById('sheetBg');
 let opener;
 function openSheet(p, from) {
     opener = from;
-    document.getElementById('sCat').textContent = CATNAMES[p.cat]; document.getElementById('sTitle').innerHTML = p.title;
+    document.getElementById('sCat').textContent = `Système ${SYS.find(s => s.cat === p.cat).name}`; document.getElementById('sTitle').innerHTML = p.title;
     document.getElementById('sTags').innerHTML = p.tags.map(t => `<li>${t}</li>`).join('');
     document.getElementById('sBody').innerHTML = p.paragraphs.map(x => `<p>${x}</p>`).join('');
     sheet.classList.add('open'); sheetBg.classList.add('open'); sheet.scrollTop = 0; document.getElementById('close').focus();
@@ -891,10 +992,22 @@ addEventListener('keydown', e => {
     if (sheet.classList.contains('open')) closeSheet();
     else if (current === 'skills') exitFocus();
 });
-document.querySelectorAll('.filters button').forEach(f => f.addEventListener('click', () => {
-    document.querySelectorAll('.filters button').forEach(x => x.setAttribute('aria-pressed', x === f));
-    grid.querySelectorAll('.card').forEach(cd => cd.classList.toggle('hide', f.dataset.f !== 'all' && cd.dataset.cat !== f.dataset.f));
-}));
+
+/* contact: golden record grooves (rotating) and one wider groove per channel, lit on hover */
+const recGrooves = document.getElementById('recGrooves'), recTracks = document.getElementById('recTracks');
+for (let r = 100; r < 236; r += 2.2) mk('circle', { r: r.toFixed(1), fill: 'none', stroke: `rgba(90,58,16,${(0.16 + 0.12 * Math.sin(r * 0.7)).toFixed(2)})`, 'stroke-width': 0.7 }, recGrooves);
+const trackEls = [118, 150, 182, 214].map(r => mk('circle', { r, class: 'groove-track' }, recTracks));
+document.querySelectorAll('[data-track]').forEach(el => {
+    const t = trackEls[el.dataset.track];
+    ['mouseenter', 'focus'].forEach(ev => el.addEventListener(ev, () => t.classList.add('lit')));
+    ['mouseleave', 'blur'].forEach(ev => el.addEventListener(ev, () => t.classList.remove('lit')));
+});
+document.getElementById('copyMail').addEventListener('click', async () => {
+    const msg = document.getElementById('copiedMail');
+    try { await navigator.clipboard.writeText('louis.cagnion.pro@gmail.com'); msg.textContent = 'Adresse copiée'; }
+    catch { msg.textContent = 'Copie impossible : sélectionne l\'adresse ci-dessus'; }
+    msg.classList.add('on'); setTimeout(() => msg.classList.remove('on'), 2200);
+});
 show('home', false);
 document.fonts.ready.then(() => { const a = nav.querySelector('[aria-current]'); pill.style.left = a.offsetLeft + 'px'; pill.style.width = a.offsetWidth + 'px'; });
 if (window.self !== window.top) document.querySelector('.opts').remove();

@@ -1,4 +1,3 @@
-/* Builds prototype.html and projects-data.js from the template and the real portfolio content (data/fr.json). */
 const fs = require('fs');
 const path = require('path');
 
@@ -35,5 +34,4 @@ const projects = Object.entries(CAT).flatMap(([src, cat]) => fr.projects[src].li
 
 const tpl = fs.readFileSync(path.join(here, 'prototype.template.html'), 'utf8');
 fs.writeFileSync(path.join(here, 'prototype.html'), tpl.replace('/*DATA*/', JSON.stringify({ steps, projects, skills })));
-fs.writeFileSync(path.join(here, 'projects-data.js'), 'window.PROJECTS = ' + JSON.stringify(projects) + ';');
 console.log('built', projects.length, 'projects,', skills.length, 'skill groups');
