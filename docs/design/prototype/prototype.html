@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prototype de refonte</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230f1a38'/%3E%3Cpath d='M12 50 C 26 50, 38 44, 52 16' fill='none' stroke='%23e8b45a' stroke-width='5' stroke-linecap='round' stroke-dasharray='0.1 9' opacity='.6'/%3E%3Cpath d='M12 50 C 22 50, 30 47, 37 40' fill='none' stroke='%23e8b45a' stroke-width='5' stroke-linecap='round'/%3E%3Ccircle cx='37' cy='40' r='7' fill='%238fe3bf'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Michroma&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root {
+    --void: #070d1f; --panel: #0f1a38; --panel-2: #15244b; --line: rgba(220, 230, 255, 0.13);
+    --text: #e6ecff; --dim: #9aa7cc; --faint: #66739c;
+    --accent: #e8b45a; --accent-ink: #070d1f; --accent-soft: rgba(232, 180, 90, 0.15);
+    --live: #8fe3bf; --star: 230, 236, 255;
+    --display: "Michroma", system-ui, sans-serif; --sans: "IBM Plex Sans", system-ui, sans-serif; --mono: "IBM Plex Mono", ui-monospace, monospace;
+    --bar-h: 61px;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+html { scrollbar-gutter: stable; }
+body { background: var(--void); color: var(--text); font-family: var(--sans); font-size: 1.0625rem; line-height: 1.6; overflow-x: clip; }
+#sky { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; }
+.bar, main { position: relative; z-index: 1; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+.bar { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 12px clamp(16px, 4vw, 48px); background: color-mix(in srgb, var(--void) 82%, transparent); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+.brand { display: flex; align-items: center; gap: 12px; font-family: var(--display); font-size: 0.82rem; color: var(--text); text-decoration: none; letter-spacing: 0.03em; }
+.brand i { width: 8px; height: 8px; border-radius: 50%; background: var(--live); box-shadow: 0 0 10px var(--live); animation: blink 2.4s infinite; }
+@keyframes blink { 50% { opacity: 0.35; } }
+.nav { position: relative; display: flex; gap: 4px; padding: 4px; border: 1px solid var(--line); border-radius: 999px; background: color-mix(in srgb, var(--panel) 70%, transparent); }
+.nav button { position: relative; z-index: 1; border: 0; background: none; color: var(--dim); font: 500 0.92rem var(--sans); padding: 8px 16px; border-radius: 999px; cursor: pointer; transition: color 0.3s; }
+.nav button:hover { color: var(--text); }
+.nav button[aria-current="page"] { color: var(--accent-ink); }
+.nav .pill { position: absolute; top: 4px; bottom: 4px; border-radius: 999px; background: var(--accent); transition: left 0.5s cubic-bezier(.65, 0, .35, 1), width 0.5s cubic-bezier(.65, 0, .35, 1); }
+.lang { display: flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; }
+.lang button { border: 0; background: none; color: var(--dim); font: 500 0.8rem var(--mono); padding: 7px 12px; cursor: pointer; }
+.lang button[aria-pressed="true"] { background: var(--accent-soft); color: var(--accent); }
+
+main { max-width: 1200px; margin: 0 auto; padding: 0 clamp(16px, 4vw, 48px) 120px; }
+.view { display: none; }
+.view.on { display: block; }
+.view.leave { pointer-events: none; }
+#warpStage { position: fixed; inset: 0; z-index: 3; overflow: hidden; pointer-events: none; visibility: hidden; }
+#warpStage.active { visibility: visible; filter: url(#fov); }
+.view.leave.fwd { animation: outFwd 0.45s cubic-bezier(.5, 0, .75, .4) both; }
+.view.leave.bwd { animation: outBwd 0.45s cubic-bezier(.5, 0, .75, .4) both; }
+.view.enter.fwd { animation: inFwd 0.55s cubic-bezier(.2, .8, .2, 1) 0.45s both; }
+.view.enter.bwd { animation: inBwd 0.55s cubic-bezier(.2, .8, .2, 1) 0.45s both; }
+@keyframes outFwd { to { opacity: 0; transform: scale(1.7); } }
+@keyframes inFwd { from { opacity: 0; transform: scale(0.55); } }
+@keyframes outBwd { to { opacity: 0; transform: scale(0.55); } }
+@keyframes inBwd { from { opacity: 0; transform: scale(1.7); } }
+
+h2 { font-family: var(--display); font-weight: 400; font-size: clamp(1.3rem, 3vw, 1.9rem); margin: 56px 0 8px; }
+.lede { color: var(--dim); margin: 0 0 28px; max-width: 60ch; }
+.hud { position: relative; border: 1px solid var(--line); background: linear-gradient(var(--panel), color-mix(in srgb, var(--panel) 40%, transparent)); }
+.hud::before, .hud::after { content: ""; position: absolute; width: 14px; height: 14px; border: 2px solid var(--accent); pointer-events: none; }
+.hud::before { top: -2px; left: -2px; border-right: 0; border-bottom: 0; }
+.hud::after { bottom: -2px; right: -2px; border-left: 0; border-top: 0; }
+
+/* home */
+.hero { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 48px; align-items: center; min-height: calc(100vh - 180px); padding-top: 32px; }
+.mission { color: var(--accent); font-weight: 500; margin: 0 0 22px; }
+h1 { font-family: var(--display); font-weight: 400; font-size: clamp(2.3rem, 6.6vw, 5.2rem); line-height: 1.04; letter-spacing: -0.01em; margin: 0 0 26px; }
+.pitch { max-width: 33em; color: var(--dim); font-size: 1.12rem; margin: 0 0 32px; }
+.ctas { display: flex; flex-wrap: wrap; gap: 12px; }
+.btn { padding: 13px 22px; font: 600 0.95rem var(--sans); border: 1px solid var(--line); color: var(--text); background: none; cursor: pointer; transition: border-color 0.2s, transform 0.2s; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn:hover { transform: translateY(-2px); }
+.btn:not(.primary):hover { border-color: var(--accent); }
+.telemetry { padding: 22px; }
+.telemetry h3 { font: 500 0.95rem var(--sans); color: var(--dim); margin: 0 0 12px; }
+.rows { margin: 0; }
+.rows div { display: flex; justify-content: space-between; gap: 16px; padding: 11px 0; border-bottom: 1px dashed var(--line); }
+.rows div:last-child { border-bottom: 0; }
+.rows dt { color: var(--dim); }
+.rows dd { margin: 0; font-family: var(--mono); text-align: right; }
+.rows dd.live { color: var(--live); }
+
+/* shared detail panel */
+.detail { margin-top: 28px; padding: 26px 28px; }
+.detail header { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+.detail h3 { font-family: var(--display); font-weight: 400; font-size: 1.1rem; margin: 0 0 4px; line-height: 1.4; }
+.when { font-family: var(--mono); color: var(--accent); font-size: 0.9rem; }
+.count { font-family: var(--mono); color: var(--faint); font-size: 0.8rem; margin-left: 10px; }
+.detail .body { max-width: 68ch; color: var(--dim); }
+.fade { animation: fadeText 0.45s ease; }
+@keyframes fadeText { from { opacity: 0; transform: translateY(8px); } }
+.arrows { display: flex; gap: 8px; flex: none; }
+.arrows button, .stage-arrows button { width: 44px; height: 44px; border: 1px solid var(--line); background: color-mix(in srgb, var(--void) 60%, transparent); color: var(--text); font-size: 1.05rem; cursor: pointer; }
+.arrows button:hover:not(:disabled), .stage-arrows button:hover:not(:disabled) { border-color: var(--accent); }
+.arrows button:disabled, .stage-arrows button:disabled { opacity: 0.3; cursor: default; }
+
+/* inline links inside written content */
+.body a, .lede a { color: var(--accent); text-decoration: none; background: linear-gradient(currentColor, currentColor) 0 100% / 100% 1px no-repeat; padding-bottom: 1px; transition: background-size 0.25s, color 0.2s; }
+.body a:hover, .body a:focus-visible, .lede a:hover { background-size: 100% 2px; color: #f6d08f; }
+.body strong { color: var(--text); font-weight: 600; }
+
+/* journey */
+#jDetail .body { max-width: none; }
+.jstage { position: relative; }
+.traj { width: 100%; height: auto; overflow: visible; display: block; }
+.traj .track { fill: none; stroke: var(--line); stroke-width: 2; stroke-dasharray: 5 8; }
+.traj .done { fill: none; stroke: var(--accent); stroke-width: 2.5; }
+.traj .wp { cursor: pointer; }
+.traj .wp:focus { outline: none; }
+.traj .hit { fill: transparent; }
+.traj .stop { transition: opacity 0.4s, filter 0.3s; }
+.traj .wp.future .stop { opacity: 0.65; }
+.traj .wp.dest .stop { opacity: 1; }
+.traj .wp:hover .stop, .traj .wp:focus-visible .stop, .traj .wp.sel .stop { filter: brightness(1.25) drop-shadow(0 0 6px rgba(232, 180, 90, 0.55)); }
+.traj .wp text { fill: var(--dim); font: 500 14px var(--sans); transition: opacity 0.3s; }
+.traj .wp text.y { fill: var(--faint); font: 400 12px var(--mono); }
+.traj .wp.sel text:not(.y) { fill: var(--text); }
+.traj .pulse { fill: none; stroke: var(--live); stroke-width: 2; animation: pulse 2s infinite; transform-box: fill-box; transform-origin: center; }
+@keyframes pulse { from { transform: scale(1); opacity: 0.9; } to { transform: scale(3); opacity: 0; } }
+.trail circle { fill: #ffc56b; }
+.ship-g { filter: drop-shadow(0 0 4px rgba(232, 180, 90, 0.6)); }
+.ship-g .flame { opacity: 0.35; transform-box: fill-box; transform-origin: 100% 50%; transition: opacity 0.3s; }
+.ship-g.thrust .flame { opacity: 1; animation: flame 0.14s steps(2, end) infinite; }
+@keyframes flame { 50% { transform: scaleX(1.4); } }
+.ship-g .hull { animation: bob 3.2s ease-in-out infinite; }
+@keyframes bob { 50% { transform: translateY(-1.2px); } }
+.jtitle, .stage-arrows { display: none; }
+
+/* skills: zoomable constellations whose stars turn into celestial bodies */
+.skills-layout { position: relative; }
+.viz { width: 100%; height: 460px; display: block; transition: height 0.7s cubic-bezier(.65, 0, .35, 1); }
+.viz text { font-family: var(--sans); }
+.const .link { stroke: rgba(230, 236, 255, 0.24); stroke-width: 1.3; vector-effect: non-scaling-stroke; transition: stroke 0.3s; }
+.const .group { cursor: pointer; transition: opacity 0.6s; }
+.const .group:focus { outline: none; }
+.const .cell { fill: transparent; }
+.const .group:hover .link, .const .group:focus-visible .link { stroke: rgba(232, 180, 90, 0.55); }
+.const .group:focus-visible .cname { text-decoration: underline; }
+.const .pt { transition: opacity 0.5s; }
+.const .st { fill: rgb(var(--star)); }
+.const .ring { fill: none; stroke: rgb(var(--star)); vector-effect: non-scaling-stroke; transform-box: fill-box; transform-origin: center; opacity: 0; }
+.const .lv3 .ring { animation: starPulse 2.4s ease-out infinite; }
+.const .lv2 .ring { animation: starPulse2 3.4s ease-out infinite; }
+@keyframes starPulse { from { transform: scale(1); opacity: 0.85; } to { transform: scale(3); opacity: 0; } }
+@keyframes starPulse2 { from { transform: scale(1); opacity: 0.5; } to { transform: scale(2); opacity: 0; } }
+.const .name { fill: var(--text); font-size: calc(12.5px * var(--u, 1)); opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+.const .group:hover .name { opacity: 1; }
+.const .cname { fill: var(--dim); font-size: calc(14px * var(--u, 1)); font-weight: 600; text-anchor: middle; transition: opacity 0.4s; }
+.const .body { pointer-events: none; }
+.const .body-in { transform: scale(calc(var(--u, 1) * var(--bs, 1.4))); }
+.const.focused .group { cursor: default; }
+.const.focused .group.dim { opacity: 0.06; pointer-events: none; }
+.const.focused .group.sel .name { opacity: 1; font-size: calc(14px * var(--u, 1)); }
+.const.focused .group.sel .cname { opacity: 0; }
+.const.focused .group.sel .link { stroke: rgba(230, 236, 255, 0.35); }
+.const.focused .st-g { cursor: pointer; }
+.const .link.walk { stroke: var(--accent) !important; stroke-width: 2.4; }
+.const .st-g.cur .name { fill: var(--accent); }
+.const .marker { fill: none; stroke: var(--accent); stroke-width: 2; vector-effect: non-scaling-stroke; opacity: 0; transition: opacity 0.4s; filter: drop-shadow(0 0 6px var(--accent)); pointer-events: none; }
+.const.focused .marker { opacity: 0; }
+.b-glow { transform-box: fill-box; transform-origin: center; animation: breathe 3s ease-in-out infinite; }
+.b-spin { animation: spin 60s linear infinite; }
+.b-drift { transform-box: fill-box; transform-origin: center; animation: drift 9s ease-in-out infinite; }
+@keyframes breathe { 50% { transform: scale(1.18); opacity: 0.75; } }
+@keyframes spin { to { transform: rotate(360deg); } }
+.b-lava { animation: lava 2.8s ease-in-out infinite; }
+@keyframes lava { 50% { filter: brightness(1.45) drop-shadow(0 0 2px #ff7a2a); } }
+.b-flicker { transform-box: fill-box; transform-origin: center; animation: flicker 1.6s steps(1, end) infinite, breathe 2.2s ease-in-out infinite; }
+@keyframes flicker { 0%, 100% { filter: brightness(1); } 18% { filter: brightness(1.35); } 37% { filter: brightness(.85); } 52% { filter: brightness(1.2); } 71% { filter: brightness(.9); } }
+@keyframes drift { 50% { transform: rotate(8deg) scale(1.06); opacity: 0.85; } }
+.hint { color: var(--faint); font-size: 0.9rem; margin: 10px 0 0; transition: opacity 0.4s; }
+.focus .hint { opacity: 0; }
+.focus-panel { position: absolute; top: 0; right: 0; bottom: 0; width: min(46%, 540px); overflow-x: hidden; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--line) transparent; padding: 22px 24px; background: color-mix(in srgb, var(--panel) 52%, transparent); backdrop-filter: blur(12px); opacity: 0; visibility: hidden; transform: translateX(24px); transition: opacity 0.5s 0.3s, transform 0.5s 0.3s, visibility 0s 0.8s; }
+.focus .focus-panel { opacity: 1; visibility: visible; transform: none; transition: opacity 0.5s 0.35s, transform 0.5s 0.35s, visibility 0s; }
+.back { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line); background: none; color: var(--text); font: 500 0.9rem var(--sans); padding: 8px 14px; cursor: pointer; }
+.back:hover { border-color: var(--accent); }
+.ctitle { font-family: var(--display); font-size: 1.05rem; margin: 18px 0 12px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 18px; }
+.chips button { border: 1px solid var(--line); background: none; color: var(--dim); font: 500 0.88rem var(--sans); padding: 6px 12px; cursor: pointer; }
+.chips button:hover { color: var(--text); border-color: color-mix(in srgb, var(--accent) 50%, transparent); }
+.chips button[aria-pressed="true"] { color: var(--accent-ink); background: var(--accent); border-color: var(--accent); }
+.focus-panel .skill { margin-top: 0; padding: 0; border: 0; background: none; transition: opacity 0.3s, transform 0.3s; }
+.skill::before, .skill::after { display: none; }
+.traveling { opacity: 0; transform: translateY(8px); }
+.skill .lvl { display: inline-flex; align-items: center; gap: 8px; color: var(--dim); font-size: 0.9rem; margin-top: 2px; }
+.todo { color: var(--faint); font-style: italic; }
+.related { margin: 18px 0 0; }
+.related p { margin: 0 0 8px; color: var(--faint); font-size: 0.85rem; }
+.related .chips { margin: 0; }
+.legend { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 22px; color: var(--faint); font-size: 0.85rem; margin-top: 18px; }
+.legend > span:first-child { flex-basis: 100%; color: var(--dim); }
+.mag { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
+.ico { width: 26px; height: 26px; flex: none; overflow: visible; }
+
+/* projects */
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 22px; }
+.filters button { border: 1px solid var(--line); background: none; color: var(--dim); font: 500 0.9rem var(--sans); padding: 7px 14px; cursor: pointer; }
+.filters button[aria-pressed="true"] { color: var(--accent-ink); background: var(--accent); border-color: var(--accent); }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr)); gap: 18px; }
+.card { display: flex; flex-direction: column; text-align: left; padding: 22px; color: var(--text); font: inherit; cursor: pointer; transition: transform 0.25s, border-color 0.25s; }
+.card:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--accent) 50%, transparent); }
+.card .cat { font: 400 0.8rem var(--mono); color: var(--accent); margin-bottom: 10px; }
+.card h3 { font: 600 1.12rem var(--sans); margin: 0 0 8px; }
+.card p { color: var(--dim); margin: 0 0 16px; flex: 1; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; padding: 0; margin: 0; }
+.tags li { font: 400 0.8rem var(--mono); padding: 3px 8px; border: 1px solid var(--line); }
+.card.hide { display: none; }
+.sheet-bg { position: fixed; inset: 0; z-index: 20; background: rgba(0, 0, 0, 0.55); opacity: 0; pointer-events: none; transition: opacity 0.35s; }
+.sheet { position: fixed; top: 0; right: 0; bottom: 0; z-index: 21; width: min(620px, 100%); overflow-y: auto; padding: 32px; background: var(--panel); border-left: 1px solid var(--line); transform: translateX(100%); transition: transform 0.45s cubic-bezier(.2, .8, .2, 1); }
+.sheet.open { transform: none; }
+.sheet-bg.open { opacity: 1; pointer-events: auto; }
+.sheet .cat { font: 400 0.85rem var(--mono); color: var(--accent); }
+.sheet h3 { font-family: var(--display); font-weight: 400; font-size: 1.25rem; margin: 10px 0 16px; line-height: 1.35; }
+.sheet .body { color: var(--dim); }
+.close { float: right; width: 44px; height: 44px; border: 1px solid var(--line); background: none; color: var(--text); font-size: 1.2rem; cursor: pointer; }
+
+/* contact */
+.contact { padding: 32px; max-width: 760px; }
+.contact .big { display: inline-block; font-family: var(--display); font-size: clamp(0.95rem, 3vw, 1.6rem); color: var(--text); text-decoration: none; border-bottom: 2px solid var(--accent); margin: 8px 0 28px; overflow-wrap: anywhere; }
+.links { display: flex; flex-wrap: wrap; gap: 10px; list-style: none; padding: 0; margin: 0; }
+.links a { display: inline-flex; align-items: center; gap: 10px; padding: 10px 16px; border: 1px solid var(--line); color: var(--text); text-decoration: none; }
+.links a:hover { border-color: var(--accent); }
+.links svg { width: 18px; height: 18px; }
+
+/* mockup-only options */
+.opts { position: fixed; left: 16px; bottom: 16px; z-index: 30; padding: 10px 12px; background: #1e2128; color: #ddd; border: 1px solid #3a3f4a; border-radius: 10px; font: 12px system-ui, sans-serif; }
+.opts b { display: block; margin-bottom: 6px; }
+.opts .row { display: flex; gap: 6px; }
+.opts .row button { padding: 5px 9px; border: 1px solid #4a505d; background: #2a2e37; color: #ddd; border-radius: 6px; cursor: pointer; font: inherit; }
+.opts .row button[aria-pressed="true"] { border-color: #9cf; color: #fff; }
+
+.tabbar { display: none; }
+.flash { position: fixed; inset: 0; z-index: 4; pointer-events: none; opacity: 0; background: radial-gradient(circle, rgba(var(--star), 0.22), transparent 60%); transition: opacity 0.3s; }
+.flash.on { opacity: 1; }
+@media (max-width: 880px) {
+    .nav { display: none; }
+    .hero { grid-template-columns: 1fr; min-height: auto; gap: 32px; }
+    .detail { padding: 22px 18px; }
+    .skills-layout:not(.focus) .focus-panel { display: none; }
+    .focus .viz-wrap { position: sticky; top: var(--bar-h); z-index: 0; }
+    .focus-panel { position: relative; z-index: 1; width: auto; margin-top: -34vw; overflow: visible; transform: translateY(24px); }
+    .focus .focus-panel { transform: none; }
+    .opts { bottom: 86px; left: 8px; }
+    .tabbar { display: grid; grid-template-columns: repeat(5, 1fr); position: fixed; left: 10px; right: 10px; bottom: 10px; z-index: 6; padding: 6px; border-radius: 22px; border: 1px solid var(--line); background: color-mix(in srgb, var(--panel) 90%, transparent); backdrop-filter: blur(14px); }
+    .tabbar button { display: grid; justify-items: center; gap: 2px; border: 0; background: none; color: var(--dim); font: 500 0.68rem var(--sans); padding: 6px 0; border-radius: 16px; cursor: pointer; }
+    .tabbar svg { width: 20px; height: 20px; }
+    .tabbar button[aria-current="page"] { color: var(--accent); background: var(--accent-soft); }
+    .sheet { top: auto; height: 88vh; width: 100%; border-left: 0; border-top: 1px solid var(--line); transform: translateY(100%); }
+}
+/* phones: the journey becomes a zoomed, swipeable camera on a vertical curve */
+@media (max-width: 700px) {
+    .jstage { position: sticky; top: var(--bar-h); height: 58svh; overflow: hidden; touch-action: none; }
+    .jstage .traj { position: absolute; inset: 0; height: 100%; }
+    .traj.vertical .track { stroke-width: calc(3px * var(--u, 1)); }
+    .traj.vertical .done { stroke-width: calc(3.5px * var(--u, 1)); }
+    .traj.vertical .wp text { font-size: calc(15px * var(--u, 1)); font-weight: 600; }
+    .traj.vertical .wp text.y { font-size: calc(12.5px * var(--u, 1)); font-weight: 400; }
+    .traj.vertical .wp.sel text { opacity: 0; }
+    .jtitle { display: block; position: absolute; left: 112px; right: 62px; top: 36%; transform: translateY(-50%); pointer-events: none; transition: opacity 0.3s, transform 0.3s; }
+    .jtitle.out { opacity: 0; transform: translateY(calc(-50% + 12px)); }
+    .jtitle b { display: block; font-family: var(--display); font-weight: 400; font-size: clamp(1.1rem, 6vw, 1.5rem); line-height: 1.3; }
+    .jtitle span { font-family: var(--mono); color: var(--accent); font-size: 0.88rem; }
+    .stage-arrows { display: grid; gap: 8px; position: absolute; right: 0; top: 36%; transform: translateY(-50%); }
+    #jDetail { z-index: 1; margin-top: -20svh; background: color-mix(in srgb, var(--panel) 50%, transparent); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+    #jDetail .arrows { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; animation-delay: 0s !important; transition-duration: 0.01ms !important; } }
+</style>
+</head>
+<body>
+<canvas id="sky" aria-hidden="true"></canvas>
+<header class="bar">
+    <a class="brand" href="#home" data-go="home"><i></i>Louis Cagnion</a>
+    <nav class="nav" aria-label="Sections"><span class="pill"></span></nav>
+    <div class="lang" role="group" aria-label="Langue"><button aria-pressed="true">FR</button><button aria-pressed="false">EN</button></div>
+</header>
+<main>
+    <section class="view" id="home">
+        <div class="hero">
+            <div>
+                <p class="mission">Mission en cours : de la piscine 42 à l'intelligence artificielle</p>
+                <h1>Louis Cagnion</h1>
+                <p class="pitch">Développeur au Groupe Tressol-Chabrier, formé à 42 Perpignan. Parti de zéro en 2024, je conçois aujourd'hui des applications et des pipelines de données en production.</p>
+                <div class="ctas"><button class="btn primary" data-go="projects">Voir mes projets</button><button class="btn" data-go="contact">Me contacter</button></div>
+            </div>
+            <aside class="hud telemetry">
+                <h3>Télémétrie</h3>
+                <dl class="rows">
+                    <div><dt>Décollage</dt><dd>Piscine 42, 2024</dd></div>
+                    <div><dt>Tronc commun 42</dt><dd>Terminé en 18 mois</dd></div>
+                    <div><dt>Position actuelle</dt><dd class="live">Groupe Tressol-Chabrier</dd></div>
+                    <div><dt>Prochaine étape</dt><dd>RNCP6, alternance 2 ans</dd></div>
+                    <div><dt>Destination</dt><dd>Recherche en IA</dd></div>
+                </dl>
+            </aside>
+        </div>
+    </section>
+    <section class="view" id="journey">
+        <h2>Mon parcours</h2>
+        <p class="lede" id="jLede"></p>
+        <div class="jstage" id="jStage">
+            <svg class="traj" id="traj" role="group" aria-label="Étapes du parcours">
+                <path id="track" class="track"/>
+                <path id="done" class="done"/>
+                <g id="wps"></g>
+                <g id="trail" class="trail"></g><g id="ship" class="ship-g"><path class="flame" d="M-9 0L-24-3.2L-30 0L-24 3.2Z" fill="url(#jFlame)"/><g class="hull"><path d="M13 0L-5-6L-9-5.5L-7 0L-9 5.5L-5 6Z" fill="#e6ecff"/><path d="M-1-5L-8-11L-11-11L-8-4.2ZM-1 5L-8 11L-11 11L-8 4.2Z" fill="#e8b45a"/><path d="M2-2.2L8 0L2 2.2Z" fill="#8fe3bf"/></g></g>
+            </svg>
+            <div class="jtitle" id="jTitle"><b id="jtName"></b><span id="jtWhen"></span></div>
+            <div class="stage-arrows"><button id="sUp" aria-label="Étape précédente">&#8593;</button><button id="sDown" aria-label="Étape suivante">&#8595;</button></div>
+        </div>
+        <article class="hud detail" id="jDetail" aria-live="polite">
+            <header><div><h3 id="dTitle"></h3><span class="when" id="dWhen"></span><span class="count" id="dCount"></span></div><div class="arrows"><button id="prev" aria-label="Étape précédente">&#8592;</button><button id="next" aria-label="Étape suivante">&#8594;</button></div></header>
+            <div class="body" id="dBody"></div>
+        </article>
+    </section>
+    <section class="view" id="skills">
+        <h2>Mes compétences</h2>
+        <p class="lede">Chaque constellation regroupe un domaine. Choisis-en une pour l'explorer étoile par étoile.</p>
+        <div class="skills-layout" id="skillsLayout">
+            <div class="viz-wrap">
+                <svg class="viz const" id="constSvg" role="group" aria-label="Constellations des compétences"></svg>
+                <p class="hint">Sélectionne une constellation pour zoomer dessus.</p>
+            </div>
+            <div class="focus-panel hud" id="focusPanel">
+                <button class="back" id="back"><span aria-hidden="true">&#8592;</span>Toutes les compétences</button>
+                <p class="ctitle" id="cTitle"></p>
+                <div class="chips" id="chips" role="group" aria-label="Compétences de la constellation"></div>
+                <article class="hud detail skill" id="skill" aria-live="polite">
+                    <header><div><h3 id="kName"></h3><span class="lvl" id="kLvl"></span></div><div class="arrows"><button id="kPrev" aria-label="Étoile précédente">&#8592;</button><button id="kNext" aria-label="Étoile suivante">&#8594;</button></div></header>
+                    <div class="body" id="kDesc"></div>
+                    <div class="related" id="kRel"></div>
+                </article>
+            </div>
+        </div>
+        <div class="legend" id="legend"></div>
+    </section>
+    <section class="view" id="projects">
+        <h2>Mes projets</h2>
+        <p class="lede">Clique sur une carte pour ouvrir son détail.</p>
+        <div class="filters" role="group" aria-label="Filtrer"><button aria-pressed="true" data-f="all">Tous</button><button aria-pressed="false" data-f="pro">Professionnels</button><button aria-pressed="false" data-f="perso">Personnels</button><button aria-pressed="false" data-f="school">École 42</button></div>
+        <div class="grid" id="grid"></div>
+    </section>
+    <section class="view" id="contact">
+        <h2>Me contacter</h2>
+        <div class="hud contact">
+            <p class="lede">Une question, une opportunité ou simplement envie d'échanger : écris-moi.</p>
+            <a class="big" href="mailto:louis.cagnion.pro@gmail.com">louis.cagnion.pro@gmail.com</a>
+            <ul class="links">
+                <li><a href="#"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45z"/></svg>LinkedIn</a></li>
+                <li><a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 19c-4 1.3-4-2-6-2.5M15 22v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12 12 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V22"/></svg>GitHub</a></li>
+                <li><a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7l8-4 8 4v10l-8 4-8-4z"/><path d="M9 10l3 2 3-2M12 12v4"/></svg>Codewars</a></li>
+            </ul>
+        </div>
+    </section>
+</main>
+<nav class="tabbar" aria-label="Sections"></nav>
+<div class="sheet-bg" id="sheetBg"></div>
+<aside class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sTitle"><button class="close" id="close" aria-label="Fermer">&#215;</button><span class="cat" id="sCat"></span><h3 id="sTitle"></h3><ul class="tags" id="sTags"></ul><div class="body" id="sBody"></div></aside>
+<div class="flash" aria-hidden="true"></div>
+<div id="warpStage" aria-hidden="true"></div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="fov" x="0" y="0" width="1" height="1" primitiveUnits="objectBoundingBox" color-interpolation-filters="sRGB"><feImage id="fovMap" x="0" y="0" width="1" height="1" preserveAspectRatio="none" result="map"/><feDisplacementMap id="fovDisp" in="SourceGraphic" in2="map" scale="0" xChannelSelector="R" yChannelSelector="G"/></filter></svg>
+<div class="opts" aria-label="Options de maquette">
+    <b>Départ du parcours</b>
+    <div class="row"><button aria-pressed="false" data-start="first">Début</button><button aria-pressed="true" data-start="now">Position actuelle</button></div>
+</div>
+<script>
+const DATA = {"steps":[{"body":"earth","title":"Première piscine","when":"2024","t":0,"paragraphs":["J'ai humblement commencé dans le code durant ma première piscine à 42. Oui, oui, je ne connaissais absolument rien à ce milieu avant de commencer la sélection de l'école. Je ne savais même pas ce qu'était un terminal ou un IDE.","On m'a parlé de l'école, de leur façon d'apprendre la programmation, des débouchés possibles après le tronc commun, et je me suis dit que cela avait l'air intéressant. J'ai donc tenté la piscine de 42 pour voir de quoi j'étais capable dans ce nouveau milieu.","Au final, il s'avère que je me suis découvert une véritable passion pendant cette sélection, même si partir de zéro n'a pas été simple.","Un moment m'a particulièrement marqué. Au début, je demandais de l'aide pour faire les premiers exercices à des personnes qui avaient déjà des connaissances en programmation. Puis, quand nous sommes passés sur du C pendant la majeure partie de la piscine, ce sont eux qui sont venus me demander de l'aide parce que j'avais avancé plus loin qu'eux dans les exercices.","C'est à ce moment-là que j'ai compris que j'avais peut-être un potentiel dans ce domaine et, surtout, que j'aimais énormément pratiquer et progresser dedans. Et oui, pour ceux qui se demandent, je les ai aidés avec plaisir. On m'avait aidé à me lancer, c'était donc naturel pour moi de les aider en retour.","Je n'ai malheureusement pas réussi ma première piscine du premier coup, même en ayant des résultats dans la moyenne des autres candidats. J'étais déçu, presque triste, mais je suis rentré chez moi avec un nouvel objectif : retenter une piscine et intégrer cette école."]},{"body":"moon","title":"Seconde chance","when":"2024","t":0.12,"paragraphs":["J'étais donc prêt à me préparer de mon côté pour réussir la sélection la fois suivante, mais le destin en a décidé autrement. Quelques jours après les résultats, j'ai reçu un message du directeur de l'école me proposant de participer à la piscine suivante, qui arrivait seulement trois semaines plus tard, alors qu'en temps normal il faut attendre un an avant de pouvoir retenter.","Évidemment, je n'ai pas hésité une seconde. Je me suis empressé d'accepter et j'étais extrêmement heureux de pouvoir revenir aussi vite sur le champ de bataille.","Le début n'a pas été simple, car je devais terminer mon préavis dans la restauration pendant les premiers jours de cette nouvelle piscine. Malgré cela, j'ai réussi à me préparer à temps pour l'examen de la première semaine, obtenir la note maximale et rattraper tout mon retard durant le week-end, tout en participant au projet de groupe débloqué uniquement pendant les week-ends de piscine.","Après avoir donné mon maximum durant cette seconde piscine, j'ai finalement été accepté, à mon plus grand bonheur et soulagement. J'ai donc commencé mon aventure dans la programmation en novembre 2024, au début de la rentrée des étudiants de 42 Perpignan."]},{"body":"mars","title":"Tronc commun","when":"nov. 2024 à 2026","t":0.25,"paragraphs":["Nous avions désormais, en théorie, trois ans devant nous pour terminer le tronc commun. De mon côté, je voulais me donner à fond dans mon apprentissage du code. J'ai donc choisi de me challenger en réalisant tous les bonus possibles sur les projets que je sélectionnais.","Je voulais également avancer rapidement tout en gardant un travail de qualité, car aller vite sans rien apprendre n'aurait eu aucun intérêt. C'est ce que j'ai essayé de faire pendant tout mon cursus.","Même si je n'ai pas été aussi rapide que certains amis rencontrés pendant mes piscines, qui ont terminé le cursus en six mois, j'ai tout de même réussi à finir tous les projets du tronc commun en un an et demi, avec les bonus lorsque cela était possible."]},{"body":"asteroids","title":"Codewars","when":"pendant le cursus","t":0.37,"paragraphs":["J'en ai également profité pour tester différents outils d'apprentissage en participant à certains événements proposés par l'école, notamment les Coding Games. Pour ma part, je n'ai pas vraiment apprécié le format du site, et on m'a alors parlé d'une autre plateforme plus adaptée à ce que je recherchais.","Ce site s'appelle <strong>Codewars</strong> (<a href=\"https://www.codewars.com/users/Sung-Jinw00\">Mon profil</a>). Il propose un système de niveaux, de classement et d'expérience, tout en permettant de voir les solutions proposées par la communauté une fois un exercice terminé.","Grâce à cette plateforme, j'ai découvert de nombreuses façons de résoudre des problèmes en C, C++ et Python, ainsi que des outils dont j'ignorais totalement l'existence. J'étais souvent impressionné de voir à quel point certains développeurs pouvaient résoudre des problèmes complexes avec des solutions courtes et élégantes.","C'est également là, après avoir appris les bases grâce à des tutoriels, que j'ai réellement commencé à développer mes compétences en Python."]},{"body":"station","title":"Tressol-Chabrier","when":"depuis juillet 2026","t":0.5,"now":true,"paragraphs":["À présent, je me consacre à des projets que je considère utiles, soit pour progresser vers mes objectifs futurs dans la programmation, soit parce qu'ils peuvent apporter quelque chose d'utile à d'autres personnes ou à moi-même.","Depuis que j'ai terminé le tronc commun, j'ai rejoint le siège du Groupe Tressol-Chabrier à Montpellier en tant que développeur à temps plein. J'y participe à la conception d'applications internes (recherche de données, tableaux de bord, back-office d'administration), aussi bien côté frontend que backend, ce qui me permet de mettre en pratique mes compétences dans des conditions réelles en attendant de démarrer mon alternance en septembre 2026.","Vous pourrez retrouver les projets sur lesquels j'ai travaillé ou sur lesquels je travaille actuellement dans la rubrique \"Mes projets\"."]},{"body":"saturn","title":"Alternance RNCP6","when":"sept. 2026 à 2028","t":0.66,"paragraphs":["Aujourd'hui, mon tronc commun terminé, j'ai trouvé une alternance de 2 ans pour préparer un RNCP6 Concepteur développeur de solutions informatiques, qui débutera en septembre 2026. En attendant, je travaille à temps plein au siège du Groupe Tressol-Chabrier à Montpellier depuis le 13 juillet 2026."]},{"body":"nebula","title":"RNCP7 IA","when":"ensuite","t":0.83,"paragraphs":["Mon objectif de fond reste inchangé : une fois ce RNCP6 obtenu, je souhaite enchaîner sur une alternance d'un an afin de décrocher un RNCP7 en IA et algorithmie. Je souhaite donc approfondir mes connaissances dans les domaines liés à ces deux titres, à commencer par le développement de solutions informatiques, puis l'IA et l'algorithmie pour la suite."]},{"body":"galaxy","title":"Recherche en IA","when":"horizon","t":1,"paragraphs":["À plus long terme, mon ambition est de contribuer à la recherche en intelligence artificielle, avec l'objectif de participer aux avancées vers une IA générale (AGI), et au-delà."]}],"projects":[{"id":"search_tool","cat":"pro","title":"Un outil de recherche conversationnelle","summary":"Interroger le stock de véhicules du groupe en langage naturel, grâce à un LLM qui construit la requête Elasticsearch.","tags":["LLM","Elasticsearch","HMAC","PWA"],"paragraphs":["Je participe au développement d'un outil de recherche conversationnelle permettant d'interroger le stock de véhicules du groupe en langage naturel. Une requête utilisateur est d'abord interprétée par un LLM, qui en extrait les critères et la reformule, avant de construire une requête Elasticsearch adaptée.","J'y ai notamment mis en place un système d'authentification par token signé HMAC, qui résout automatiquement le contexte (concession, source de données) sans configuration manuelle par concession. J'ai également corrigé plusieurs bugs de qualité de données (problèmes d'encodage, champs vides, filtres trop permissifs sur la marque ou le type de véhicule).","Côté performance, j'ai réduit le poids d'un écran de chargement de plusieurs méga-octets à quelques dizaines de kilo-octets, réactivé la mise en cache navigateur, et fait passer le temps de réponse d'un point d'entrée critique de plus d'une seconde à moins de 50 millisecondes.","L'application est pensée pour fonctionner sur plusieurs concessions : l'identifiant de concession est fixé côté serveur à la validation du token puis injecté dans chaque requête, sans que le client puisse le modifier. J'y ai également ajouté une limitation de débit par adresse IP, une protection CSRF sur les requêtes qui modifient des données et une application web installable (PWA) avec saisie vocale. Une campagne de crash-test m'a permis d'identifier et de corriger une trentaine de bugs et de failles."]},{"id":"dashboards","cat":"pro","title":"Des tableaux de bord de pilotage","summary":"Je contribue à plusieurs tableaux de bord internes permettant de visualiser et filtrer des données commerciales par concession (ventes de véhicules d'occasion, qualité, suivi de stock), avec une intégration Power BI sur l'un d'entre eux.","tags":[],"paragraphs":["Je contribue à plusieurs tableaux de bord internes permettant de visualiser et filtrer des données commerciales par concession (ventes de véhicules d'occasion, qualité, suivi de stock), avec une intégration Power BI sur l'un d'entre eux.","J'ai notamment travaillé sur la refonte de l'interface (filtres, barre latérale, mise en page) pour la rendre utilisable aussi bien sur ordinateur que sur mobile.","J'ai également développé un tableau de bord de direction couvrant plusieurs domaines (ventes de véhicules neufs et d'occasion, appels, NPS, qualité, événements). Il s'appuie sur 17 endpoints d'API et des graphiques ECharts, et propose une carte du réseau dont les adresses sont géocodées par lot puis mises en cache. Un cache fichier à écriture atomique permet de continuer à servir le dernier état connu si la base est momentanément indisponible."]},{"id":"nps_scores","cat":"pro","title":"Les scores NPS, de la donnée à l'écran","summary":"Du classeur trimestriel jusqu'au tableau de bord : pipeline en trois couches et module de back-office.","tags":["SQL Server","Power BI","PHP","Azure Pipelines"],"paragraphs":["J'ai développé le pipeline quotidien qui alimente les scores NPS (véhicules neufs et après-vente) par concession. Il part d'un classeur Google Sheets trimestriel et aboutit à une table de faits consommée par Power BI, en trois couches (Staging, Silver, Gold) sur SQL Server, au sein de la plateforme de données du groupe.","Le pipeline normalise les marques, détecte les décalages de colonnes du classeur source, rapproche chaque concession du référentiel du groupe et regroupe les différentes orthographes d'une même commune. Chaque couche est validée par un test de cohérence SQL (par exemple, un score NPS doit rester compris entre -100 et 100) et le déploiement passe par Azure Pipelines, avec une exécution quotidienne planifiée.","Côté back-office, j'ai aussi réalisé le module PHP qui affiche ces scores par trimestre, marque et site, avec une calculette de simulation des objectifs. L'accès aux données est résilient : si l'entrepôt est indisponible, le module bascule sur une copie de staging, puis sur un JSON statique, plutôt que de planter, et un cache fichier limite le nombre de requêtes."]},{"id":"audit_infomediaires","cat":"pro","title":"Un audit nocturne des boutiques en ligne","summary":"Pipeline Python qui vérifie chaque nuit la visibilité des boutiques en ligne du groupe sur les plateformes d'annonces.","tags":["Python","Playwright","pytest","Azure Pipelines"],"paragraphs":["J'ai développé un pipeline Python qui vérifie chaque nuit que les boutiques de véhicules d'occasion du groupe sont bien visibles sur plusieurs plateformes d'annonces. Il compte les annonces réellement affichées, détecte les doublons de véhicules et mesure l'écart avec le stock de référence. L'extraction repose sur Playwright, en parallèle par plateforme, avec gestion des bandeaux cookies et des contrôles anti-robot.","Le pipeline s'arrête volontairement lorsqu'une boutique n'affiche aucune annonce ou qu'un doublon est confirmé, et se termine « avec avertissements » si certaines boutiques n'ont pas pu être lues. Il est déployé via Azure Pipelines (validation avec Ruff et pytest, environnements de préproduction et de production) et couvert par plusieurs centaines de tests.","Les résultats sont consultables dans un module du back-office que j'ai également développé : tableau filtrable et triable par boutique et par plateforme, export CSV, cartes « à traiter en priorité » et alerte dédiée aux boutiques non lues, avec la cause de l'échec."]},{"id":"pdf_parser","cat":"pro","title":"Un parseur de politiques commerciales PDF","summary":"J'ai développé un outil Python qui convertit des PDF de politiques commerciales de constructeurs en JSON structuré et versionné par marque (titres, texte, listes à puces et tableaux dont les cellules sont typées : date, pourcentage, montant, entier).","tags":[],"paragraphs":["J'ai développé un outil Python qui convertit des PDF de politiques commerciales de constructeurs en JSON structuré et versionné par marque (titres, texte, listes à puces et tableaux dont les cellules sont typées : date, pourcentage, montant, entier). Il est conçu pour alimenter un chatbot en aval.","La détection des tableaux fonctionne en cascade : texte natif du PDF d'abord, contrôle croisé avec img2table lorsqu'une cellule paraît suspecte, puis repli sur l'OCR (PaddleOCR) uniquement si rien n'a été trouvé. Les valeurs douteuses sont marquées « suspectes » plutôt que passées sous silence.","Côté performance, j'ai réduit le temps de traitement d'environ 30 % en abaissant la résolution de rendu, et parallélisé le repli OCR en fonction de la mémoire disponible. L'outil est couvert par environ 170 tests et a été éprouvé sur une vingtaine de documents couvrant plus de dix marques."]},{"id":"admin_backoffice","cat":"pro","title":"Un back-office d'administration","summary":"Enfin, je travaille sur un back-office d'administration commun à plusieurs applications internes, avec authentification HTTP, limitation de débit pour se prémunir des attaques par force brute, et protection CSRF basée sur un token de session.","tags":[],"paragraphs":["Enfin, je travaille sur un back-office d'administration commun à plusieurs applications internes, avec authentification HTTP, limitation de débit pour se prémunir des attaques par force brute, et protection CSRF basée sur un token de session.","J'ai également développé un client HTTP natif en PHP (au-dessus de cURL) pour communiquer avec des services externes, avec une gestion structurée des erreurs réseau et applicatives, et de la validation de certificats SSL.","Dans ce back-office (PHP 8 avec Slim 4, SQL Server en PDO, une base par module, droits d'accès par module et par profil, authentification OAuth2/OIDC en complément de la connexion native, tests PHPUnit), j'ai développé les modules de scores NPS et d'audit des boutiques en ligne décrits ci-dessus."]},{"id":"portfolio","cat":"perso","title":"Ce portfolio","summary":"Et oui, ça compte.","tags":[],"paragraphs":["Et oui, ça compte."]},{"id":"chatbot","cat":"perso","title":"Un chatbot IA","summary":"En termes d'IA et de Python, j'ai créé un petit projet de chatbot relié par adresse IP à un mini LLM de Mistral AI via Ollama.","tags":[],"paragraphs":["En termes d'IA et de Python, j'ai créé un petit projet de chatbot relié par adresse IP à un mini LLM de Mistral AI via Ollama. Pour l'instant, le projet reste assez basique, mais je compte l'améliorer prochainement."]},{"id":"wiki","cat":"perso","title":"Un wiki complet de jeu vidéo","summary":"Grâce à HTML, CSS et JavaScript, qui me permettent aujourd'hui de raconter mon parcours à travers ce portfolio, je travaille actuellement sur un projet de wiki autour du jeu <strong>Heartopia</strong>.","tags":[],"paragraphs":["Grâce à HTML, CSS et JavaScript, qui me permettent aujourd'hui de raconter mon parcours à travers ce portfolio, je travaille actuellement sur un projet de wiki autour du jeu <strong>Heartopia</strong>.","À travers ce projet, je souhaite aider la communauté francophone, ainsi que moi-même, à mieux comprendre les mécaniques du jeu, obtenir des ressources, réussir certains succès et progresser plus facilement.","Mon objectif est de proposer des comparaisons, des observations et différentes astuces afin de simplifier la vie des joueurs dans un jeu qui possède énormément de mécaniques et de systèmes cachés."]},{"id":"devpedia","cat":"perso","title":"Devpedia, une encyclopédie du développement","summary":"Encyclopédie du développement logiciel, rendue par un parseur Markdown écrit à la main et traduite en trois langues.","tags":["JavaScript","Markdown","API DeepL"],"paragraphs":["Devpedia est un site que j'ai créé pour documenter, expliquer et partager mes connaissances sur différents sujets liés au développement logiciel. Ce projet m'aide à approfondir ma compréhension par la recherche et la pédagogie, à m'entraîner à construire des interfaces web modernes, et à rendre ces connaissances accessibles à toute personne intéressée.","Le site couvre aujourd'hui plusieurs langages de programmation (C, C++, PHP, Python — y compris la data science et l'IA avec NumPy, pandas, Matplotlib, scikit-learn, les réseaux de neurones, PyTorch, le NLP et les LLMs —, JavaScript), les langages de balisage (HTML, CSS), des langages spécifiques comme Regex et SQL, plusieurs shells (Bash, PowerShell, Zsh), ainsi que Git, du fonctionnement quotidien jusqu'à son modèle interne.","Chaque chapitre est un simple fichier Markdown, dont le rendu est assuré par un parseur que j'ai écrit moi-même pour ce projet plutôt que par une librairie existante. Le site est également traduit automatiquement en anglais, espagnol et portugais via l'API DeepL."]},{"id":"push_swap","cat":"school","title":"Push_swap","summary":"Le but de ce projet était de coder un algorithme de tri le plus efficace possible afin de trier jusqu'à 500 nombres.","tags":[],"paragraphs":["Le but de ce projet était de coder un algorithme de tri le plus efficace possible afin de trier jusqu'à 500 nombres.","Pour obtenir la note maximale, il fallait réussir à trier une liste aléatoire de 500 entiers en moins de 5500 opérations avec des mouvements très limités.","En résumé, imaginez deux listes : la seconde est vide, et vous ne pouvez interagir qu'avec le premier ou le dernier élément de chaque liste afin de déplacer les nombres.","J'avais réussi à développer un algorithme qui effectuait le tri en environ 5700 coups en moyenne. J'étais fier de cette méthode trouvée après avoir testé plusieurs approches différentes, même si j'ai finalement dû m'inspirer d'un algorithme existant pour passer sous la barre des 5500 opérations.","Le bonus consistait à créer un \"Checker\" permettant de vérifier qu'une suite d'opérations donnait bien, à la fin, une liste triée dans l'ordre croissant."]},{"id":"fract-ol","cat":"school","title":"Fract-ol","summary":"Ce projet était plus artistique.","tags":[],"paragraphs":["Ce projet était plus artistique. Le but était d'utiliser la MinilibX afin de créer un rendu graphique de fractales.","Pour ceux qui ne savent pas ce qu'est une fractale : il s'agit d'un motif qui se répète à l'infini lorsqu'on zoome dessus. Le chou romanesco est d'ailleurs un excellent exemple de fractale naturelle.","Les bonus consistaient à :"]},{"id":"minishell","cat":"school","title":"Minishell","summary":"Recréer un shell en groupe ; j'y ai pris en charge les opérateurs logiques et les priorités.","tags":["C","Arbres binaires"],"paragraphs":["Le but de ce premier projet de groupe était de recréer un mini shell (mais nan !).","Il fallait notamment :"]},{"id":"philosophers","cat":"school","title":"Philosophers","summary":"Pour ce projet, il fallait réussir à faire survivre des philosophes.","tags":[],"paragraphs":["Pour ce projet, il fallait réussir à faire survivre des philosophes.","Ces philosophes possédaient plusieurs états :"]},{"id":"cub3d","cat":"school","title":"Cub3D","summary":"Le but de ce second projet de groupe était de créer un jeu inspiré de <a href=\"https://search.brave.com/images?q=Wolfenstein+3D+gameplay\">Wolfenstein</a>.","tags":[],"paragraphs":["Le but de ce second projet de groupe était de créer un jeu inspiré de <a href=\"https://search.brave.com/images?q=Wolfenstein+3D+gameplay\">Wolfenstein</a>.","Les bonus consistaient notamment à :"]},{"id":"inception","cat":"school","title":"Inception","summary":"Dans ce projet, il fallait créer ses propres Dockerfiles et docker-compose en utilisant Nginx, MariaDB et WordPress.","tags":[],"paragraphs":["Dans ce projet, il fallait créer ses propres Dockerfiles et docker-compose en utilisant Nginx, MariaDB et WordPress.","Le conteneur devait être créé et fonctionner sur une machine virtuelle.","Les bonus consistaient notamment à :"]},{"id":"webserv","cat":"school","title":"Webserv","summary":"L'avant-dernier projet de groupe du tronc commun consistait à réaliser notre propre serveur HTTP.","tags":[],"paragraphs":["L'avant-dernier projet de groupe du tronc commun consistait à réaliser notre propre serveur HTTP.","Le serveur devait notamment :"]},{"id":"transcendence","cat":"school","title":"Transcendence","summary":"Application web complète en équipe ; j'y ai réalisé l'IA adverse et la version 3D du jeu.","tags":["Frontend","Backend","Docker","3D"],"paragraphs":["Pour ce dernier projet du tronc commun, qui était également un projet de groupe, le but était de créer une véritable application web complète.","Le projet devait contenir :"]}],"skills":[{"title":"Langages de programmation","short":"Langages","items":[{"name":"C","level":"Avancé","projects":["push_swap","fract-ol","minishell","philosophers","cub3d"],"description":"Mon langage de base : tous les projets en solo et en groupe du tronc commun de 42 ont été écrits en C, des algorithmes de tri de Push_swap au moteur graphique de Cub3D, avec les bonus dès que c'était possible."},{"name":"C++","level":"Avancé","projects":["webserv"],"description":"Approfondi pendant le tronc commun de 42, notamment avec Webserv : un serveur HTTP non bloquant écrit de zéro, avec un seul appel à poll, des CGI et la gestion de l'upload."},{"name":"Python","level":"Intermédiaire","projects":["audit_infomediaires","pdf_parser","chatbot"],"description":"Appris par des tutoriels puis par Codewars, et aujourd'hui utilisé en production : un pipeline d'audit nocturne couvert par plusieurs centaines de tests et un parseur de PDF avec OCR."},{"name":"JavaScript","level":"Intermédiaire","projects":["portfolio","devpedia","wiki","dashboards"],"description":"Sans framework : ce portfolio, Devpedia et son parseur Markdown fait maison, le wiki Heartopia, ainsi que les graphiques ECharts des tableaux de bord professionnels."},{"name":"Bash","level":"Intermédiaire","projects":["minishell"],"description":"Minishell m'a fait reproduire en C le comportement de Bash : redirections, variables d'environnement, signaux, opérateurs logiques et priorités avec parenthèses."},{"name":"PHP","level":"Débutant","projects":["admin_backoffice","nps_scores","audit_infomediaires"],"description":"Utilisé au Groupe Tressol-Chabrier : back-office PHP 8 avec Slim 4, modules de scores NPS et d'audit, client HTTP natif au-dessus de cURL et tests PHPUnit."}]},{"title":"Langages de balisage","short":"Balisage","items":[{"name":"HTML","projects":["portfolio","devpedia","wiki"],"description":"La structure de mes sites : ce portfolio, Devpedia et le wiki Heartopia."},{"name":"CSS","projects":["portfolio","devpedia","dashboards"],"description":"Mise en page responsive de mes sites et refonte de l'interface des tableaux de bord pour un usage aussi bien sur ordinateur que sur mobile."}]},{"title":"Outils de développement","short":"Outils de dev","items":[{"name":"Makefiles","projects":["minishell","cub3d","philosophers"],"description":"Chaque projet C du tronc commun de 42 se compile avec son propre Makefile."},{"name":"Git","projects":["transcendence"],"description":"Versionnement de tous mes projets ; Transcendence a exigé des commits propres et compréhensibles pour toute une équipe."},{"name":"GitHub","projects":["devpedia","wiki","portfolio"],"description":"Hébergement de mon code et de mes sites, publiés sur GitHub Pages."}]},{"title":"Concurrence et systèmes","short":"Systèmes","items":[{"name":"Threads / sémaphores","projects":["philosophers"],"description":"Philosophers : maintenir des philosophes en vie à la milliseconde près ; le bonus remplace les threads par des processus et les mutex par des sémaphores."},{"name":"Mutex et processus enfants","projects":["philosophers","minishell"],"description":"Mutex pour partager les fourchettes de Philosophers sans blocage, processus enfants pour exécuter les commandes de Minishell."}]},{"title":"Réseau et bases de données","short":"Réseau et BDD","items":[{"name":"WebSockets","projects":[],"description":""},{"name":"APIs","projects":["dashboards","devpedia","search_tool"],"description":"Le tableau de bord de direction s'appuie sur 17 endpoints d'API ; Devpedia est traduit via l'API DeepL."},{"name":"SQL / PDO","projects":["admin_backoffice","nps_scores"],"description":"Back-office sur SQL Server via PDO avec une base par module, et pipeline NPS en trois couches validées par des tests de cohérence SQL."},{"name":"Elasticsearch","projects":["search_tool"],"description":"L'outil de recherche conversationnelle transforme une question en langage naturel en requête Elasticsearch sur le stock de véhicules."}]},{"title":"Sécurité","short":"Sécurité","items":[{"name":"Sécurité web","note":"injection SQL, XSS, CSRF, sessions","projects":["search_tool","admin_backoffice"],"description":"Token signé HMAC, limitation de débit par adresse IP, protection CSRF et OAuth2/OIDC ; une campagne de crash-test a permis de corriger une trentaine de bugs et de failles."}]},{"title":"Data science et IA","short":"Data et IA","items":[{"name":"NumPy","projects":["devpedia"],"description":"Pratiqué en autodidacte ; Devpedia lui consacre un chapitre."},{"name":"Matplotlib","projects":["devpedia"],"description":"Pratiqué en autodidacte ; Devpedia lui consacre un chapitre."},{"name":"PyTorch","projects":["devpedia"],"description":"Pratiqué en autodidacte pour aborder le deep learning ; Devpedia lui consacre un chapitre."}]},{"title":"Outils","short":"Outils","items":[{"name":"VirtualBox","note":"création de machines virtuelles","projects":["inception"],"description":"Inception : l'infrastructure de conteneurs devait tourner dans une machine virtuelle."},{"name":"MinilibX","note":"rendu graphique","projects":["fract-ol","cub3d"],"description":"Rendu des fractales de Fract-ol et du moteur de Cub3D."},{"name":"Valgrind","note":"débogage","projects":["minishell","philosophers"],"description":"Traque des fuites mémoire et des erreurs d'accès dans mes projets C."},{"name":"Docker","note":"applications stables et scalables","projects":["inception","transcendence"],"description":"Dockerfiles et docker-compose écrits à la main pour Nginx, MariaDB et WordPress dans Inception ; Transcendence se lance en une seule commande dans un conteneur."},{"name":"VS Code","note":"mon éditeur au quotidien","projects":[],"description":"Mon éditeur au quotidien."}]}]};
+const SECTIONS = [['home', 'Accueil', 'M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z'], ['journey', 'Parcours', 'M4 19c4-1 6-5 8-9s5-6 8-6'], ['skills', 'Compétences', 'M12 3l2.6 5.6L20 9.3l-4 4 1 5.7-5-2.8-5 2.8 1-5.7-4-4 5.4-.7z'], ['projects', 'Projets', 'M3 6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM3 9h18'], ['contact', 'Contact', 'M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM3 7l9 6 9-6']];
+const ORDER = SECTIONS.map(s => s[0]);
+const NS = 'http://www.w3.org/2000/svg';
+const mk = (tag, a, parent) => { const e = document.createElementNS(NS, tag); for (const k in a) e.setAttribute(k, a[k]); parent && parent.append(e); return e; };
+const reduce = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+const mobile = matchMedia('(max-width: 700px)');
+const hash = s => [...s].reduce((h, ch) => (h * 31 + ch.charCodeAt(0)) >>> 0, 7);
+const ease = k => k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
+const lerp = (a, b, t) => a + (b - a) * t;
+
+/* camera: animates an SVG viewBox (centre + width), height follows the element's ratio */
+function makeCamera(svg) {
+    const c = { cx: 0, cy: 0, w: 1, raf: 0, pending: null };
+    const settle = () => { cancelAnimationFrame(c.raf); c.raf = 0; const p = c.pending; c.pending = null; p && p(); };
+    c.ratio = () => svg.clientHeight / svg.clientWidth || 0.4;
+    c.apply = () => { const h = c.w * c.ratio(); svg.setAttribute('viewBox', `${c.cx - c.w / 2} ${c.cy - h / 2} ${c.w} ${h}`); svg.style.setProperty('--u', (c.w / (svg.clientWidth || 1)).toFixed(4)); };
+    c.set = t => { settle(); Object.assign(c, t); c.apply(); };
+    c.tween = (target, dur, onFrame) => {
+        settle();
+        const from = { cx: c.cx, cy: c.cy, w: c.w }, t0 = performance.now(), d = reduce() ? 0 : dur;
+        return new Promise(res => { c.pending = res; (function f(now) {
+            const k = d ? Math.min(1, (now - t0) / d) : 1, e = ease(k), to = target();
+            c.cx = lerp(from.cx, to.cx, e); c.cy = lerp(from.cy, to.cy, e); c.w = lerp(from.w, to.w, e);
+            c.apply(); onFrame && onFrame(e);
+            if (k < 1) c.raf = requestAnimationFrame(f); else settle();
+        })(t0); });
+    };
+    return c;
+}
+
+/* starfield (positive speed flies forward, negative backward) + stardust on the desktop side margins */
+const sky = document.getElementById('sky'), ctx = sky.getContext('2d');
+const BASE = 0.12;
+let W, H, stars = [], dust = [], speed = BASE, target = BASE, mx = 0, my = 0;
+function resize() {
+    const dpr = Math.min(devicePixelRatio, 2); W = innerWidth; H = innerHeight; sky.width = W * dpr; sky.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    stars = [...Array(Math.round(W * H / 5000))].map(() => ({ x: (Math.random() - 0.5) * W * 2, y: (Math.random() - 0.5) * H * 2, z: Math.random() * W, pz: 0 }));
+    dust = [];
+    if (W <= 880) return;
+    const band = Math.max(140, (W - 1200) / 2 + 160), n = Math.round(band * H / 700);
+    for (const side of [0, 1]) for (let i = 0; i < n; i++) {
+        const d = band * Math.pow(Math.random(), 1.8);
+        dust.push({ x: side ? W - d : d, y: Math.random() * H, r: Math.random() < 0.07 ? 1.4 : 0.35 + Math.random() * 0.65, a: 0.12 + Math.random() * 0.6, ph: Math.random() * 6.3, sp: 0.4 + Math.random() * 1.8, gold: Math.random() < 0.12, depth: 0.3 + Math.random() * 0.7 });
+    }
+}
+addEventListener('resize', resize); resize();
+addEventListener('pointermove', e => { mx = e.clientX / W - 0.5; my = e.clientY / H - 0.5; });
+(function frame(t = 0) {
+    speed += (target - speed) * 0.08;
+    ctx.globalAlpha = Math.abs(speed) > 2 ? 0.35 : 1; ctx.fillStyle = '#070d1f'; ctx.fillRect(0, 0, W, H); ctx.globalAlpha = 1;
+    const calm = Math.max(0, 1 - Math.abs(speed) / 6);
+    if (calm > 0.01) for (const p of dust) {
+        p.y -= 0.03 * p.depth; if (p.y < -2) p.y = H + 2;
+        const tw = 0.55 + 0.45 * Math.sin(t / 1000 * p.sp + p.ph), a = (p.a * tw * calm).toFixed(3);
+        ctx.fillStyle = p.gold ? `rgba(232,180,90,${a})` : `rgba(230,236,255,${a})`;
+        ctx.beginPath(); ctx.arc(p.x - mx * 16 * p.depth, p.y - my * 16 * p.depth, p.r, 0, 6.283); ctx.fill();
+    }
+    for (const s of stars) {
+        s.pz = s.z; s.z -= speed;
+        if (s.z < 1) { s.z = s.pz = W; s.x = (Math.random() - 0.5) * W * 2; s.y = (Math.random() - 0.5) * H * 2; }
+        else if (s.z > W) { s.z = s.pz = W * (0.05 + Math.random() * 0.25); s.x = (Math.random() - 0.5) * W * 2; s.y = (Math.random() - 0.5) * H * 2; }
+        const k = 128 / s.z, k2 = 128 / s.pz;
+        ctx.strokeStyle = `rgba(230,236,255,${Math.min(1, (1 - s.z / W) * 1.4)})`; ctx.lineWidth = Math.max(0.6, (1 - s.z / W) * 2.2);
+        ctx.beginPath(); ctx.moveTo(s.x * k2 + W / 2 - mx * 30 * k2, s.y * k2 + H / 2 - my * 30 * k2); ctx.lineTo(s.x * k + W / 2 - mx * 30 * k + 0.1, s.y * k + H / 2 - my * 30 * k + 0.1); ctx.stroke();
+    }
+    requestAnimationFrame(frame);
+})();
+
+/* navigation: forward = fly through the current section, backward = it recedes */
+const nav = document.querySelector('.nav'), pill = nav.querySelector('.pill'), tabbar = document.querySelector('.tabbar'), flash = document.querySelector('.flash');
+SECTIONS.forEach(([id, label, d]) => {
+    const b = document.createElement('button'); b.textContent = label; b.dataset.go = id; nav.append(b);
+    const t = document.createElement('button'); t.dataset.go = id; t.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="${d}"/></svg>${label}`; tabbar.append(t);
+});
+/* hyperspace: both sections move into a fixed viewport-sized stage, scale from its centre and get bent by a FOV filter */
+const mainEl = document.querySelector('main'), warpStage = document.getElementById('warpStage'), fovDisp = document.getElementById('fovDisp');
+const FOV_MAX = 0.3;
+document.getElementById('fovMap').setAttribute('href', (() => {
+    const c = document.createElement('canvas'); c.width = c.height = 128;
+    const g = c.getContext('2d'), img = g.createImageData(128, 128);
+    for (let j = 0; j < 128; j++) for (let i = 0; i < 128; i++) {
+        const xn = i / 127 * 2 - 1, yn = j / 127 * 2 - 1, f = Math.pow(Math.min(1, Math.hypot(xn, yn) / 1.414), 1.8), k = (j * 128 + i) * 4;
+        img.data[k] = 128 - 127 * xn * f; img.data[k + 1] = 128 - 127 * yn * f; img.data[k + 2] = 128; img.data[k + 3] = 255;
+    }
+    g.putImageData(img, 0, 0); return c.toDataURL();
+})());
+let current = null, finish = null;
+function show(id, animate = true) {
+    if (id === current) return;
+    if (finish) finish();
+    const prev = current; current = id;
+    document.querySelectorAll('.nav [data-go], .tabbar [data-go]').forEach(b => b.dataset.go === id ? b.setAttribute('aria-current', 'page') : b.removeAttribute('aria-current'));
+    const active = nav.querySelector(`[data-go="${id}"]`); pill.style.left = active.offsetLeft + 'px'; pill.style.width = active.offsetWidth + 'px';
+    const next = document.getElementById(id);
+    const reveal = () => { if (id === 'journey') refreshJourney(); if (id === 'skills') refreshSkills(); };
+    if (!prev || !animate || reduce()) { document.querySelectorAll('.view').forEach(v => v.classList.toggle('on', v === next)); scrollTo(0, 0); reveal(); return; }
+    const old = document.getElementById(prev), dir = ORDER.indexOf(id) > ORDER.indexOf(prev) ? 'fwd' : 'bwd';
+    const mb = mainEl.getBoundingClientRect(), cs = getComputedStyle(mainEl);
+    const left = mb.left + parseFloat(cs.paddingLeft), width = mb.width - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+    const oldTop = old.getBoundingClientRect().top, newTop = document.querySelector('.bar').offsetHeight;
+    const place = (v, top, z) => Object.assign(v.style, { position: 'absolute', left: left + 'px', top: top + 'px', width: width + 'px', zIndex: z, transformOrigin: `${innerWidth / 2 - left}px ${innerHeight / 2 - top}px` });
+    warpStage.append(old, next);
+    place(old, oldTop, dir === 'fwd' ? 2 : 1); place(next, newTop, dir === 'fwd' ? 1 : 2);
+    next.classList.add('on');
+    old.classList.add('leave', dir); next.classList.add('enter', dir);
+    warpStage.classList.add('active');
+    scrollTo(0, 0);
+    reveal();
+    target = dir === 'fwd' ? 42 : -42; flash.classList.add('on');
+    const t0 = performance.now(); let bendRaf = 0;
+    (function bend(now) { const k = Math.min(1, (now - t0) / 1000); fovDisp.setAttribute('scale', (Math.sin(Math.PI * k) * FOV_MAX).toFixed(4)); if (k < 1) bendRaf = requestAnimationFrame(bend); })(t0);
+    const t1 = setTimeout(() => { target = BASE; flash.classList.remove('on'); }, 650);
+    const t2 = setTimeout(() => finish && finish(), 1020);
+    finish = () => {
+        clearTimeout(t1); clearTimeout(t2); cancelAnimationFrame(bendRaf);
+        ORDER.forEach(v => mainEl.append(document.getElementById(v)));
+        old.classList.remove('on', 'leave', dir); old.removeAttribute('style');
+        next.classList.remove('enter', dir); next.removeAttribute('style');
+        warpStage.classList.remove('active'); fovDisp.setAttribute('scale', 0);
+        target = BASE; flash.classList.remove('on'); finish = null;
+        reveal();
+    };
+}
+document.addEventListener('click', e => { const b = e.target.closest('[data-go]'); if (b) { e.preventDefault(); show(b.dataset.go); } });
+
+/* journey: a spaceship voyage from a classic departure (Earth) to a spectacular destination (a giant galaxy) */
+const traj = document.getElementById('traj'), stage = document.getElementById('jStage'), track = document.getElementById('track'), done = document.getElementById('done'), shipG = document.getElementById('ship'), wps = document.getElementById('wps'), trailG = document.getElementById('trail');
+const STEPS = DATA.steps, NOW = STEPS.findIndex(s => s.now), LAST = STEPS.length - 1, jcam = makeCamera(traj), JZOOM = 1.3, GAP = 130, FOCUS_Y = 0.36;
+const STOP_R = { earth: 9, moon: 7, mars: 9, asteroids: 12, station: 13, saturn: 15, nebula: 22, galaxy: 30 };
+let lens = [], len = 0, cur = NOW, shipPos = 0, shipRaf = 0, startAt = 'now', jMoving = false, shipDir = 1, particles = [], trailRaf = 0;
+const vertical = () => mobile.matches;
+const J_ARMS = (() => {
+    let out = '';
+    for (let arm = 0; arm < 3; arm++) for (let i = 0; i < 60; i++) {
+        const r = 2 + 28 * (i / 60), a = i * 0.13 + arm * 2.094 + (i % 3) * 0.05;
+        const col = i < 14 ? '#fff0cf' : i < 34 ? '#d6deff' : '#93aaff';
+        out += `<circle cx="${(r * Math.cos(a)).toFixed(2)}" cy="${(r * Math.sin(a)).toFixed(2)}" r="${(1.3 - i / 70).toFixed(2)}" fill="${col}" opacity="${(0.95 - i / 75).toFixed(2)}"/>`;
+    }
+    return out;
+})();
+traj.insertAdjacentHTML('afterbegin', `<defs>
+<radialGradient id="jEarth" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#b9e6ff"/><stop offset=".5" stop-color="#2f7fd8"/><stop offset="1" stop-color="#0b2556"/></radialGradient>
+<radialGradient id="jMoon" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#eef0f5"/><stop offset=".55" stop-color="#9ba2b4"/><stop offset="1" stop-color="#3f4558"/></radialGradient>
+<radialGradient id="jMars" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#ffbe95"/><stop offset=".55" stop-color="#c4502d"/><stop offset="1" stop-color="#47160b"/></radialGradient>
+<radialGradient id="jSaturn" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#fbe7bd"/><stop offset=".55" stop-color="#c9964f"/><stop offset="1" stop-color="#4f3515"/></radialGradient>
+<radialGradient id="jNebA"><stop offset="0" stop-color="#c86bd8" stop-opacity=".9"/><stop offset="1" stop-color="#c86bd8" stop-opacity="0"/></radialGradient>
+<radialGradient id="jNebB"><stop offset="0" stop-color="#4fd1c5" stop-opacity=".78"/><stop offset="1" stop-color="#4fd1c5" stop-opacity="0"/></radialGradient>
+<radialGradient id="jNebC"><stop offset="0" stop-color="#e8b45a" stop-opacity=".72"/><stop offset="1" stop-color="#e8b45a" stop-opacity="0"/></radialGradient>
+<radialGradient id="jCore"><stop offset="0" stop-color="#fff7e0"/><stop offset=".3" stop-color="#ffe0a0" stop-opacity=".95"/><stop offset="1" stop-color="#9fb4ff" stop-opacity="0"/></radialGradient>
+<radialGradient id="jHalo"><stop offset="0" stop-color="#b9c8ff" stop-opacity=".35"/><stop offset="1" stop-color="#b9c8ff" stop-opacity="0"/></radialGradient>
+<linearGradient id="jFlame" x1="1" x2="0"><stop offset="0" stop-color="#fff3c4"/><stop offset=".4" stop-color="#ffb347"/><stop offset="1" stop-color="#ff5a1a" stop-opacity="0"/></linearGradient>
+<clipPath id="jEarthClip"><circle r="9"/></clipPath>
+</defs>`);
+/* one drawing per stop, centred on 0,0 */
+function stopMarkup(kind) {
+    switch (kind) {
+    case 'earth': return `<circle r="9" fill="url(#jEarth)"/><g clip-path="url(#jEarthClip)" fill="#4fb07a" opacity=".85"><path d="M-6-4c2-2 5-1 6 1s-1 4-3 4-4-3-3-5z"/><path d="M2 2c2-1 5 0 5 2s-2 4-4 3-2-4-1-5z"/></g><circle r="11" fill="none" stroke="#9fd8ff" stroke-opacity=".35"/>`;
+    case 'moon': return `<circle r="7" fill="url(#jMoon)"/><circle cx="-2" cy="-1.5" r="1.5" fill="rgba(60,65,82,.55)"/><circle cx="2.5" cy="2" r="1.1" fill="rgba(60,65,82,.5)"/>`;
+    case 'mars': return `<circle r="9" fill="url(#jMars)"/><path d="M-7 1h5M1-4h5M-2 5h6" stroke="rgba(80,25,10,.45)" stroke-width="1.2" stroke-linecap="round"/>`;
+    case 'asteroids': return `<g fill="#8c8478"><path d="M-9-3l3-2 3 1 0 3-3 2-3-1z"/><path d="M2-8l2-1 2 1-1 2-2 0z" fill="#a39a8c"/><path d="M4 2l3-1 3 2-1 3-3 0-2-2z"/><path d="M-4 6l2-1 2 1-1 2h-2z" fill="#a39a8c"/><path d="M-1-1l1.5-1 1.5 1-1 1.5h-1.5z" fill="#6f6960"/></g>`;
+    case 'station': return `<rect x="-17" y="-3" width="9" height="6" fill="#3d63b8" stroke="#9fc1ff" stroke-width=".6"/><rect x="8" y="-3" width="9" height="6" fill="#3d63b8" stroke="#9fc1ff" stroke-width=".6"/><path d="M-8 0h16" stroke="#c9d3ea" stroke-width="1.4"/><ellipse rx="8" ry="8" fill="none" stroke="#dfe6f5" stroke-width="2"/><circle r="3.6" fill="#c9d3ea"/><circle r="1.4" fill="#8fe3bf"/>`;
+    case 'saturn': return `<g transform="rotate(-16)"><ellipse rx="26" ry="7" fill="none" stroke="#e8d3a0" stroke-width="3" opacity=".75"/><circle r="15" fill="url(#jSaturn)"/><path d="M-26 0A26 7 0 0 0 26 0" fill="none" stroke="#e8d3a0" stroke-width="3" opacity=".9"/></g>`;
+    case 'nebula': return `<g class="b-drift"><ellipse cx="-6" cy="-3" rx="26" ry="16" fill="url(#jNebA)"/><ellipse cx="9" cy="5" rx="22" ry="15" fill="url(#jNebB)" transform="rotate(25 9 5)"/><ellipse cx="1" cy="-1" rx="14" ry="11" fill="url(#jNebC)"/></g><circle cx="-8" cy="-5" r="1.5" fill="#fff"/><circle cx="8" cy="4" r="1.1" fill="#fff" opacity=".85"/><circle cx="2" cy="10" r=".9" fill="#fff" opacity=".7"/>`;
+    default: return `<circle r="44" fill="url(#jHalo)"/><g transform="rotate(-20) scale(1 .5)"><circle r="32" fill="url(#jCore)" opacity=".75"/><g class="b-spin">${J_ARMS}</g><circle r="7" fill="url(#jCore)"/></g>`;
+    }
+}
+const galaxyK = () => vertical() ? 1.25 : 1.6;
+const stopR = s => STOP_R[s.body] * (s.body === 'galaxy' ? galaxyK() : 1);
+function catmull(p) {
+    let d = `M${p[0][0]} ${p[0][1]}`;
+    for (let i = 0; i < p.length - 1; i++) {
+        const a = p[i - 1] || p[i], b = p[i], cc = p[i + 1], e = p[i + 2] || cc;
+        d += ` C${b[0] + (cc[0] - a[0]) / 6} ${b[1] + (cc[1] - a[1]) / 6}, ${cc[0] - (e[0] - b[0]) / 6} ${cc[1] - (e[1] - b[1]) / 6}, ${cc[0]} ${cc[1]}`;
+    }
+    return d;
+}
+function lengthAtY(y) { let lo = 0, hi = len; for (let n = 0; n < 40; n++) { const mid = (lo + hi) / 2; track.getPointAtLength(mid).y < y ? lo = mid : hi = mid; } return (lo + hi) / 2; }
+/* where the ship parks: just before each stop, or just after Earth for the departure */
+const dock = i => i === 0 ? lens[0] + stopR(STEPS[0]) + 20 : lens[i] - stopR(STEPS[i]) - 20;
+function camFor(d) { const w = stage.clientWidth / JZOOM, h = w * jcam.ratio(), p = track.getPointAtLength(d); return { cx: 6 + w / 2, cy: p.y + (0.5 - FOCUS_Y) * h, w }; }
+function buildJourney() {
+    wps.innerHTML = '';
+    const v = vertical();
+    traj.classList.toggle('vertical', v);
+    document.getElementById('jLede').textContent = v ? 'Glisse sur la trajectoire ou utilise les flèches pour changer d\'escale.' : 'Choisis une escale pour faire voyager le vaisseau et lire son récit.';
+    let pts;
+    if (v) { pts = STEPS.map((s, i) => [56 + 22 * Math.sin(i * 1.3), 50 + i * GAP + (i === LAST ? 40 : 0)]); track.setAttribute('d', catmull(pts)); }
+    else { traj.setAttribute('viewBox', '0 0 1100 300'); track.setAttribute('d', 'M40 250 C 340 250, 640 220, 990 120'); traj.style.removeProperty('--u'); }
+    done.setAttribute('d', track.getAttribute('d'));
+    len = track.getTotalLength();
+    lens = v ? pts.map(p => lengthAtY(p[1])) : STEPS.map(s => s.t * len);
+    done.style.strokeDasharray = len; done.style.strokeDashoffset = len - lens[NOW];
+    STEPS.forEach((s, i) => {
+        const p = track.getPointAtLength(lens[i]), R = stopR(s);
+        const g = mk('g', { class: `wp${i > NOW ? ' future' : ''}${i === LAST ? ' dest' : ''}`, tabindex: 0, role: 'button', 'aria-label': `${s.title}, ${s.when}` }, wps);
+        mk('circle', { class: 'hit', cx: p.x, cy: p.y, r: Math.max(v ? 30 : 22, R + 6) }, g);
+        if (i === NOW) mk('circle', { class: 'pulse', cx: p.x, cy: p.y, r: R + 3 }, g);
+        const body = mk('g', { class: `stop ${s.body}`, transform: `translate(${p.x} ${p.y})${s.body === 'galaxy' ? ` scale(${galaxyK()})` : ''}` }, g);
+        body.innerHTML = stopMarkup(s.body);
+        let x, y1, y2, anchor = 'start';
+        if (v) { x = p.x + Math.min(R, 34) + 16; y1 = p.y + 1; y2 = p.y + 19; }
+        else if (i === LAST) { x = p.x; y1 = p.y - R - 34; y2 = y1 + 17; anchor = 'middle'; }
+        else { const below = i % 2 === 0; x = p.x - 12; y1 = below ? p.y + R + 22 : p.y - R - 26; y2 = y1 + 17; }
+        mk('text', { x, y: y1, 'text-anchor': anchor }, g).textContent = s.title;
+        mk('text', { class: 'y', x, y: y2, 'text-anchor': anchor }, g).textContent = s.when;
+        g.addEventListener('click', () => { if (!dragged) select(i, true); });
+        g.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select(i, true); } });
+    });
+    wps.after(trailG); trailG.after(shipG);
+    shipPos = dock(cur); placeShip(shipPos, false); markSteps();
+    if (v) { jcam.set(camFor(lens[cur])); setTitle(cur); }
+}
+function placeShip(d, moving) {
+    const a = track.getPointAtLength(Math.max(0, d - 1.5)), b = track.getPointAtLength(Math.min(len, d + 1.5)), p = track.getPointAtLength(d);
+    const ang = Math.atan2(b.y - a.y, b.x - a.x) + (shipDir < 0 ? Math.PI : 0);
+    shipG.setAttribute('transform', `translate(${p.x.toFixed(2)} ${p.y.toFixed(2)}) rotate(${(ang * 180 / Math.PI).toFixed(2)}) scale(1.3)`);
+    shipG.classList.toggle('thrust', moving);
+    if (moving && !reduce()) emitTrail(p.x - Math.cos(ang) * 13, p.y - Math.sin(ang) * 13);
+}
+function emitTrail(x, y) {
+    if (particles.length > 40) particles.shift().el.remove();
+    const el = mk('circle', { cx: x + (Math.random() - 0.5) * 2, cy: y + (Math.random() - 0.5) * 2, r: 2.2 }, trailG);
+    particles.push({ el, life: 1 });
+    if (!trailRaf) trailRaf = requestAnimationFrame(trailLoop);
+}
+function trailLoop() {
+    particles = particles.filter(pt => { pt.life -= 0.035; if (pt.life <= 0) { pt.el.remove(); return false; } pt.el.setAttribute('r', (0.6 + 1.8 * pt.life).toFixed(2)); pt.el.setAttribute('opacity', (pt.life * 0.8).toFixed(2)); return true; });
+    trailRaf = particles.length ? requestAnimationFrame(trailLoop) : 0;
+}
+function markSteps() { wps.querySelectorAll('.wp').forEach((g, k) => g.classList.toggle('sel', k === cur)); }
+function setTitle(i) { document.getElementById('jtName').textContent = STEPS[i].title; document.getElementById('jtWhen').textContent = STEPS[i].when; }
+function fillDetail(i) {
+    document.getElementById('dTitle').textContent = STEPS[i].title; document.getElementById('dWhen').textContent = STEPS[i].when;
+    document.getElementById('dCount').textContent = `escale ${i + 1} sur ${STEPS.length}`;
+    const body = document.getElementById('dBody'); body.innerHTML = STEPS[i].paragraphs.map(p => `<p>${p}</p>`).join('');
+    body.classList.remove('fade'); void body.offsetWidth; body.classList.add('fade');
+    ['prev', 'sUp'].forEach(id => document.getElementById(id).disabled = i === 0);
+    ['next', 'sDown'].forEach(id => document.getElementById(id).disabled = i === LAST);
+}
+async function select(i, user) {
+    i = Math.max(0, Math.min(LAST, i));
+    const from = shipPos, to = dock(i);
+    if (to !== from) shipDir = to > from ? 1 : -1;
+    cur = i; markSteps(); fillDetail(i);
+    const dur = 600 + Math.abs(to - from) * (vertical() ? 1.4 : 1.2);
+    if (vertical()) {
+        if (user) { const top = document.getElementById('journey').getBoundingClientRect().top + scrollY; if (scrollY > top) scrollTo({ top, behavior: reduce() ? 'auto' : 'smooth' }); }
+        const title = document.getElementById('jTitle'); title.classList.add('out');
+        jMoving = true;
+        await jcam.tween(() => camFor(lens[i]), dur, e => { shipPos = lerp(from, to, e); placeShip(shipPos, e < 1); });
+        jMoving = false; shipDir = 1; placeShip(shipPos, false);
+        if (cur === i) { setTitle(i); title.classList.remove('out'); }
+        return;
+    }
+    const t0 = performance.now(), d = reduce() ? 1 : dur;
+    cancelAnimationFrame(shipRaf);
+    (function step(now) {
+        const k = Math.min(1, (now - t0) / d); shipPos = lerp(from, to, ease(k)); placeShip(shipPos, k < 1);
+        if (k < 1) shipRaf = requestAnimationFrame(step); else { shipDir = 1; placeShip(shipPos, false); }
+    })(t0);
+}
+['prev', 'sUp'].forEach(id => document.getElementById(id).onclick = () => select(cur - 1, true));
+['next', 'sDown'].forEach(id => document.getElementById(id).onclick = () => select(cur + 1, true));
+
+/* drag on the curve: finger down = go up the curve (previous), finger up = go down (next) */
+let drag = null, dragged = false, wheelAcc = 0, wheelLock = 0;
+stage.addEventListener('pointerdown', e => { if (!vertical() || jMoving || e.target.closest('button')) return; drag = { y: e.clientY, cy: jcam.cy, id: e.pointerId }; dragged = false; });
+stage.addEventListener('pointermove', e => {
+    if (!drag || e.pointerId !== drag.id) return;
+    const dy = e.clientY - drag.y;
+    if (Math.abs(dy) > 6 && !dragged) { dragged = true; stage.setPointerCapture(drag.id); document.getElementById('jTitle').classList.add('out'); }
+    if (dragged) jcam.set({ cy: drag.cy - dy / JZOOM });
+});
+function endDrag(e) {
+    if (!drag) return;
+    const dy = e.clientY - drag.y; drag = null;
+    if (!dragged) return;
+    const focusY = jcam.cy - (0.5 - FOCUS_Y) * jcam.w * jcam.ratio();
+    let best = 0; lens.forEach((l, k) => { if (Math.abs(track.getPointAtLength(l).y - focusY) < Math.abs(track.getPointAtLength(lens[best]).y - focusY)) best = k; });
+    if (best === cur && Math.abs(dy) > 40) best = cur + (dy < 0 ? 1 : -1);
+    best = Math.max(0, Math.min(STEPS.length - 1, best));
+    if (best === cur) jcam.tween(() => camFor(lens[cur]), 350).then(() => document.getElementById('jTitle').classList.remove('out'));
+    else select(best, false);
+    setTimeout(() => { dragged = false; }, 0);
+}
+stage.addEventListener('pointerup', endDrag); stage.addEventListener('pointercancel', endDrag);
+stage.addEventListener('wheel', e => {
+    if (!vertical()) return;
+    e.preventDefault();
+    if (performance.now() < wheelLock) return;
+    wheelAcc += e.deltaY;
+    if (Math.abs(wheelAcc) > 60) { select(cur + (wheelAcc > 0 ? 1 : -1), false); wheelAcc = 0; wheelLock = performance.now() + 650; }
+}, { passive: false });
+function refreshJourney() { requestAnimationFrame(() => { if (vertical() && !jcam.raf) jcam.set(camFor(lens[cur])); }); }
+new ResizeObserver(() => { if (vertical() && !jcam.raf && !drag) jcam.set(camFor(lens[cur])); }).observe(stage);
+document.querySelectorAll('.opts [data-start]').forEach(b => b.addEventListener('click', () => {
+    startAt = b.dataset.start; document.querySelectorAll('.opts [data-start]').forEach(x => x.setAttribute('aria-pressed', x === b));
+    if (current !== 'journey') show('journey');
+    select(startAt === 'now' ? NOW : 0, true);
+}));
+buildJourney(); select(NOW);
+
+/* skills: zoomable constellations; in focus the stars spread out and turn into celestial bodies */
+const CATS = DATA.skills, LV = { 'Avancé': 3, 'Intermédiaire': 2, 'Débutant': 1 };
+const LV_LABEL = ['Niveau à préciser', 'Débutant', 'Intermédiaire', 'Avancé'];
+const BODY_R = [14, 12, 22, 30];
+let curBS = 0.6;
+const bsOverview = () => narrow.matches ? 0.5 : 0.6, bsFocus = () => narrow.matches ? 1.15 : 1.4;
+const bodyScale = () => curBS;
+function setBS(v) { curBS = v; svgC.style.setProperty('--bs', v.toFixed(3)); }
+function setBodyT(t) { setBS(lerp(bsOverview(), bsFocus(), t)); }
+/* close-up on one body: it fills the visible area, neighbours are pushed out of frame */
+function astreTarget(ci, sj) {
+    const s = geo[ci].stars[sj], m = narrow.matches, W = svgC.clientWidth, H = svgC.clientHeight;
+    const w = W / (m ? 7 : 9), h = w * ccam.ratio(), visW = m ? W : W * 0.54;
+    const bs = Math.min(visW * 0.34, H * 0.34) / BODY_R[s.lv];
+    return { cam: m ? { cx: s.ex, cy: s.ey + 0.2 * h, w } : { cx: s.ex + 0.22 * w, cy: s.ey, w }, bs };
+}
+function animate(dur, frame) {
+    return new Promise(res => { const t0 = performance.now(), d = reduce() ? 0 : dur; (function f(now) { const k = d ? Math.min(1, (now - t0) / d) : 1; frame(k); k < 1 ? requestAnimationFrame(f) : res(); })(t0); });
+}
+/* dive onto star sj; with hopFrom, pull back mid-way to show the path between the two bodies */
+function dive(ci, sj, hopFrom) {
+    const g = geo[ci], from = { cx: ccam.cx, cy: ccam.cy, w: ccam.w }, bs0 = curBS, tgt = astreTarget(ci, sj);
+    let mid = null;
+    if (hopFrom != null) { const a = g.stars[hopFrom], b = g.stars[sj]; mid = { w: Math.max(Math.hypot(b.ex - a.ex, b.ey - a.ey) * 2.4, 160), bs: bsFocus() }; }
+    return animate(mid ? 1400 : 950, k => {
+        const e = ease(k), up = ease(Math.min(1, k * 2)), down = ease(Math.max(0, k * 2 - 1));
+        const w = mid ? (k < 0.5 ? lerp(from.w, mid.w, up) : lerp(mid.w, tgt.cam.w, down)) : lerp(from.w, tgt.cam.w, e);
+        const bs = mid ? (k < 0.5 ? lerp(bs0, mid.bs, up) : lerp(mid.bs, tgt.bs, down)) : lerp(bs0, tgt.bs, e);
+        ccam.set({ cx: lerp(from.cx, tgt.cam.cx, e), cy: lerp(from.cy, tgt.cam.cy, e), w }); setBS(bs); layoutStars(g, 1);
+    });
+}
+const narrow = matchMedia('(max-width: 880px)');
+const svgC = document.getElementById('constSvg'), layout = document.getElementById('skillsLayout'), ccam = makeCamera(svgC);
+let gdim = { w: 1100, h: 440 }, geo = [], focusCat = -1, focusStar = 0, marker, moving = false, spreadT = 0;
+
+const DEFS = `<defs>
+<radialGradient id="gGiant"><stop offset="0" stop-color="#fffbe6"/><stop offset=".5" stop-color="#ffe17a"/><stop offset=".85" stop-color="#f2a93b"/><stop offset="1" stop-color="#f2a93b" stop-opacity="0"/></radialGradient>
+<radialGradient id="gGiantGlow"><stop offset="0" stop-color="#ffd75a" stop-opacity=".5"/><stop offset="1" stop-color="#ffd75a" stop-opacity="0"/></radialGradient>
+<radialGradient id="gNebA"><stop offset="0" stop-color="#c86bd8" stop-opacity=".9"/><stop offset="1" stop-color="#c86bd8" stop-opacity="0"/></radialGradient>
+<radialGradient id="gNebB"><stop offset="0" stop-color="#4fd1c5" stop-opacity=".78"/><stop offset="1" stop-color="#4fd1c5" stop-opacity="0"/></radialGradient>
+<radialGradient id="gNebC"><stop offset="0" stop-color="#e8b45a" stop-opacity=".72"/><stop offset="1" stop-color="#e8b45a" stop-opacity="0"/></radialGradient>
+<radialGradient id="gCore"><stop offset="0" stop-color="#fff7e0"/><stop offset=".35" stop-color="#ffe0a0" stop-opacity=".9"/><stop offset="1" stop-color="#9fb4ff" stop-opacity="0"/></radialGradient>
+<radialGradient id="gMagmaRock" cx=".38" cy=".32" r=".8"><stop offset="0" stop-color="#5c3426"/><stop offset=".55" stop-color="#2b1713"/><stop offset="1" stop-color="#120909"/></radialGradient><radialGradient id="gMagmaGlow"><stop offset=".45" stop-color="#ff5a1a" stop-opacity=".45"/><stop offset="1" stop-color="#ff5a1a" stop-opacity="0"/></radialGradient><radialGradient id="gMagmaShade" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#ffd0a0" stop-opacity=".16"/><stop offset=".6" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".5"/></radialGradient><clipPath id="cMagma"><circle r="10.6"/></clipPath><radialGradient id="gPlasma"><stop offset="0" stop-color="#fff1d6"/><stop offset=".35" stop-color="#ff9f4a" stop-opacity=".9"/><stop offset=".7" stop-color="#e2453c" stop-opacity=".45"/><stop offset="1" stop-color="#e2453c" stop-opacity="0"/></radialGradient><linearGradient id="gDisk" x1="0" x2="1"><stop offset="0" stop-color="#e2453c" stop-opacity=".2"/><stop offset=".5" stop-color="#ffb35c"/><stop offset="1" stop-color="#e2453c" stop-opacity=".2"/></linearGradient><linearGradient id="gJet" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9fd8ff" stop-opacity="0"/><stop offset=".5" stop-color="#cfe9ff"/><stop offset="1" stop-color="#9fd8ff" stop-opacity="0"/></linearGradient>
+</defs>`;
+/* spiral arms as dots along two logarithmic spirals, drawn once and reused */
+const GALAXY_ARMS = (() => {
+    let out = '';
+    for (let arm = 0; arm < 2; arm++) for (let i = 0; i < 46; i++) {
+        const t = i * 0.16, r = 3 + 26 * (i / 46), a = t + arm * Math.PI;
+        const x = (r * Math.cos(a)).toFixed(2), y = (r * Math.sin(a)).toFixed(2);
+        const op = (0.95 - i / 60).toFixed(2), rad = (1.5 - i / 46).toFixed(2), col = i < 12 ? '#ffe9c2' : i < 30 ? '#cfd9ff' : '#8fa8ff';
+        out += `<circle cx="${x}" cy="${y}" r="${rad}" fill="${col}" opacity="${op}"/>`;
+    }
+    return out;
+})();
+/* one SVG drawing per mastery level, centred on 0,0, sized in screen pixels */
+function bodyMarkup(lv) {
+    if (lv === 3) return `<g transform="rotate(-24) scale(1 .55)"><circle r="30" fill="url(#gCore)" opacity=".8"/><g class="b-spin">${GALAXY_ARMS}</g><circle r="6" fill="url(#gCore)"/></g>`;
+    if (lv === 2) return `<g class="b-drift"><ellipse cx="-5" cy="-3" rx="20" ry="13" fill="url(#gNebA)"/><ellipse cx="7" cy="4" rx="17" ry="12" fill="url(#gNebB)" transform="rotate(25 7 4)"/><ellipse cx="1" cy="-1" rx="11" ry="9" fill="url(#gNebC)"/></g><circle cx="-6" cy="-4" r="1.3" fill="#fff"/><circle cx="6" cy="3" r="1" fill="#fff" opacity=".85"/><circle cx="1" cy="8" r=".8" fill="#fff" opacity=".7"/><circle cx="10" cy="-6" r=".7" fill="#fff" opacity=".6"/>`;
+    if (lv === 1) return `<circle class="b-glow" r="22" fill="url(#gGiantGlow)"/><circle r="11" fill="url(#gGiant)"/><circle cx="-3" cy="2" r="2" fill="rgba(200,120,30,.22)"/><circle cx="3.5" cy="-2.5" r="1.4" fill="rgba(200,120,30,.18)"/>`;
+    return `<circle r="20" fill="url(#gMagmaGlow)"/><circle r="11" fill="url(#gMagmaRock)"/><g class="b-lava" clip-path="url(#cMagma)" fill="none" stroke-linejoin="round" stroke-linecap="round"><path d="M-11-2L-7-1L-4-4L0-3L3-6L5-11M-4-4L-5-8L-3-11M-7-1L-6 3L-10 6M-6 3L-2 4L1 1L0-3M1 1L5 2L8-1L11-2M5 2L6 6L9 8M-2 4L-1 8L2 11M-1 8L-5 10M3-6L7-6L10-8M8-1L7-4M-10 6L-8 9" stroke="#ff5a1a" stroke-width="2" opacity=".55"/><path d="M-11-2L-7-1L-4-4L0-3L3-6L5-11M-4-4L-5-8L-3-11M-7-1L-6 3L-10 6M-6 3L-2 4L1 1L0-3M1 1L5 2L8-1L11-2M5 2L6 6L9 8M-2 4L-1 8L2 11M-1 8L-5 10M3-6L7-6L10-8M8-1L7-4M-10 6L-8 9" stroke="#ffd36a" stroke-width=".75"/></g><circle cx="5" cy="-3" r="1.4" fill="rgba(0,0,0,.35)"/><circle cx="-5" cy="5" r="1.1" fill="rgba(0,0,0,.3)"/><circle r="11" fill="url(#gMagmaShade)"/>`;
+}
+const bodyIcon = lv => `<svg class="ico" viewBox="-36 -36 72 72" aria-hidden="true">${bodyMarkup(lv)}</svg>`;
+
+const ratioC = () => ccam.ratio();
+const overviewCam = () => ({ cx: gdim.w / 2, cy: gdim.h / 2, w: Math.max(gdim.w, gdim.h / ratioC()) });
+function focusCam(ci, sj) {
+    const g = geo[ci], s = g.stars[sj], m = narrow.matches;
+    const w = m ? Math.max(g.ebw + 70, (g.ebh + 90) / ratioC(), 200) : Math.max(g.ebw * 0.75 + 190, (g.ebh + 140) / ratioC(), 340);
+    const h = w * ratioC();
+    return m ? { cx: s.ex, cy: s.ey + 0.2 * h, w } : { cx: s.ex + 0.22 * w, cy: s.ey, w };
+}
+function setHeight(focus) {
+    if (narrow.matches) { svgC.style.height = 'auto'; svgC.style.aspectRatio = focus ? '1 / 1.15' : `${gdim.w} / ${gdim.h}`; }
+    else { svgC.style.aspectRatio = ''; svgC.style.height = focus ? '540px' : '460px'; }
+}
+
+function buildConst() {
+    svgC.innerHTML = DEFS; geo = [];
+    setBodyT(0);
+    const m = narrow.matches, cols = m ? 2 : 4, cw = m ? 170 : 275, ch = m ? 200 : 220, spread = m ? 1.8 : 2.1;
+    gdim = { w: cols * cw, h: Math.ceil(CATS.length / cols) * ch };
+    CATS.forEach((cat, i) => {
+        const x0 = (i % cols) * cw, y0 = Math.floor(i / cols) * ch, cx = x0 + cw / 2, cy = y0 + ch / 2 - 14, n = cat.items.length, seed = hash(cat.title);
+        const g = mk('g', { class: 'group', tabindex: 0, role: 'button', 'aria-label': `Explorer : ${cat.title}` }, svgC);
+        mk('rect', { class: 'cell', x: x0, y: y0, width: cw, height: ch }, g);
+        let stars = cat.items.map((it, j) => {
+            const a = j * 2.39996 + (seed % 628) / 100, rad = n === 1 ? 0 : 20 + 21 * Math.sqrt(j + 0.6);
+            return { it, x: Math.max(x0 + 18, Math.min(x0 + cw - 18, cx + rad * Math.cos(a) * 1.25)), y: Math.max(y0 + 18, Math.min(y0 + ch - 54, cy + rad * Math.sin(a) * 0.9)) };
+        });
+        stars.sort((p, q) => Math.atan2(p.y - cy, p.x - cx) - Math.atan2(q.y - cy, q.x - cx));
+        const first = stars.findIndex(s => s.it === cat.items[0]);
+        stars = stars.slice(first).concat(stars.slice(0, first));
+        stars.forEach(s => { s.ex = cx + (s.x - cx) * spread; s.ey = cy + (s.y - cy) * spread; });
+        const links = stars.slice(1).map(() => mk('line', { class: 'link' }, g));
+        stars.forEach((s, j) => {
+            const lv = LV[s.it.level] || 0, r = [4.2, 3.2, 5, 7][lv], sg = mk('g', { class: `st-g lv${lv}` }, g);
+            s.lv = lv;
+            s.body = mk('g', { class: 'body' }, sg);
+            const inner = mk('g', { class: 'body-in' }, s.body); inner.innerHTML = bodyMarkup(lv);
+            s.hit = mk('circle', { r: 18, fill: 'transparent' }, sg);
+            s.label = mk('text', { class: 'name', 'text-anchor': 'middle' }, sg); s.label.textContent = s.it.name;
+            sg.addEventListener('click', e => { if (focusCat === i) { e.stopPropagation(); goStar(j); } });
+            s.el = sg;
+        });
+        mk('text', { class: 'cname', x: cx, y: y0 + ch - 22 }, g).textContent = cat.short;
+        const exs = stars.map(s => s.ex), eys = stars.map(s => s.ey);
+        geo.push({ g, stars, links, ebw: Math.max(...exs) - Math.min(...exs), ebh: Math.max(...eys) - Math.min(...eys) });
+        layoutStars(geo[i], 0);
+        g.addEventListener('click', () => focusCat < 0 && enterFocus(i));
+        g.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && focusCat < 0) { e.preventDefault(); enterFocus(i); } });
+    });
+    marker = mk('circle', { class: 'marker', r: 12 }, svgC);
+    setHeight(false); ccam.set(overviewCam());
+}
+/* t = 0: compact constellation (overview), t = 1: spread out (focus) */
+function layoutStars(g, t) {
+    const u = parseFloat(svgC.style.getPropertyValue('--u') || 1);
+    g.stars.forEach(s => {
+        s.cx = lerp(s.x, s.ex, t); s.cy = lerp(s.y, s.ey, t);
+        s.hit.setAttribute('cx', s.cx); s.hit.setAttribute('cy', s.cy);
+        s.body.setAttribute('transform', `translate(${s.cx} ${s.cy})`);
+        const off = (BODY_R[s.lv] * bodyScale() * (s.lv === 3 ? 0.6 : 1) + 9) * u;
+        s.label.setAttribute('x', s.cx); s.label.setAttribute('y', s.cy - off);
+    });
+    g.links.forEach((l, j) => { const a = g.stars[j], b = g.stars[j + 1]; l.setAttribute('x1', a.cx); l.setAttribute('y1', a.cy); l.setAttribute('x2', b.cx); l.setAttribute('y2', b.cy); });
+}
+function placeMarker(x, y) { const s = geo[focusCat] && geo[focusCat].stars[focusStar], u = parseFloat(svgC.style.getPropertyValue('--u') || 1); marker.setAttribute('cx', x); marker.setAttribute('cy', y); marker.setAttribute('r', ((s ? BODY_R[s.lv] * bodyScale() : 12) + 9) * u); }
+function renderChips() {
+    const chips = document.getElementById('chips'); chips.innerHTML = '';
+    geo[focusCat].stars.forEach((s, j) => { const b = document.createElement('button'); b.textContent = s.it.name; b.setAttribute('aria-pressed', j === focusStar); b.addEventListener('click', () => goStar(j)); chips.append(b); });
+}
+function showSkill() {
+    const s = geo[focusCat].stars[focusStar], it = s.it;
+    document.getElementById('kName').textContent = it.name;
+    document.getElementById('kLvl').innerHTML = `${bodyIcon(s.lv)}${LV_LABEL[s.lv]}`;
+    document.getElementById('kDesc').innerHTML = it.description ? `<p>${it.description}</p>` : '<p class="todo">Description à compléter.</p>';
+    const rel = document.getElementById('kRel'); rel.innerHTML = '';
+    const projs = (it.projects || []).map(id => DATA.projects.find(p => p.id === id)).filter(Boolean);
+    if (projs.length) {
+        rel.innerHTML = '<p>Projets liés</p><div class="chips"></div>';
+        projs.forEach(p => { const b = document.createElement('button'); b.textContent = p.title; b.addEventListener('click', () => { show('projects'); setTimeout(() => openSheet(p, b), 750); }); rel.querySelector('.chips').append(b); });
+    }
+    document.getElementById('kPrev').disabled = focusStar === 0;
+    document.getElementById('kNext').disabled = focusStar === geo[focusCat].stars.length - 1;
+    geo[focusCat].stars.forEach((st, j) => st.el.classList.toggle('cur', j === focusStar));
+    document.getElementById('skill').classList.remove('traveling');
+}
+async function enterFocus(i) {
+    focusCat = i; focusStar = 0; moving = true;
+    geo.forEach((g, k) => { g.g.classList.toggle('sel', k === i); g.g.classList.toggle('dim', k !== i); });
+    svgC.classList.add('focused'); layout.classList.add('focus');
+    document.getElementById('cTitle').textContent = CATS[i].title;
+    document.getElementById('skill').classList.add('traveling');
+    renderChips(); setHeight(true);
+    if (narrow.matches) { const top = svgC.getBoundingClientRect().top + scrollY - parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--bar-h')) - 8; scrollTo({ top, behavior: reduce() ? 'auto' : 'smooth' }); }
+    await ccam.tween(() => focusCam(i, 0), 1000, e => { setBodyT(e); layoutStars(geo[i], e); });
+    setBodyT(1); layoutStars(geo[i], 1);
+    if (focusCat !== i) return;
+    await dive(i, 0, null);
+    moving = false; showSkill();
+}
+async function goStar(j) {
+    if (focusCat < 0 || j < 0 || j >= geo[focusCat].stars.length || j === focusStar || moving) return;
+    const g = geo[focusCat], a = g.stars[focusStar], b = g.stars[j], link = Math.abs(j - focusStar) === 1 ? g.links[Math.min(j, focusStar)] : null;
+    moving = true; focusStar = j; renderChips();
+    document.getElementById('skill').classList.add('traveling');
+    g.links.forEach(l => l.classList.remove('walk'));
+    if (link) link.classList.add('walk');
+    const fromStar = g.stars.indexOf(a);
+    await dive(focusCat, j, fromStar);
+    moving = false; showSkill();
+}
+async function exitFocus() {
+    if (focusCat < 0) return;
+    const i = focusCat, g = geo[i]; focusCat = -1;
+    layout.classList.remove('focus'); svgC.classList.remove('focused');
+    geo.forEach(x => { x.g.classList.remove('sel', 'dim'); x.links.forEach(l => l.classList.remove('walk')); x.stars.forEach(s => s.el.classList.remove('cur')); });
+    setHeight(false);
+    const from = { cx: ccam.cx, cy: ccam.cy, w: ccam.w }, bs0 = curBS, to = overviewCam();
+    await animate(1200, k => { const e = ease(k); ccam.set({ cx: lerp(from.cx, to.cx, e), cy: lerp(from.cy, to.cy, e), w: lerp(from.w, to.w, e) }); setBS(lerp(bs0, bsOverview(), e)); layoutStars(g, 1 - e); });
+    setBodyT(0); layoutStars(g, 0);
+    g.g.focus({ preventScroll: true });
+}
+document.getElementById('back').addEventListener('click', exitFocus);
+document.getElementById('kPrev').addEventListener('click', () => goStar(focusStar - 1));
+document.getElementById('kNext').addEventListener('click', () => goStar(focusStar + 1));
+function recentre() {
+    if (ccam.raf || moving) return;
+    if (focusCat < 0) { ccam.set(overviewCam()); return; }
+    const t = astreTarget(focusCat, focusStar); ccam.set(t.cam); setBS(t.bs); layoutStars(geo[focusCat], 1);
+}
+new ResizeObserver(recentre).observe(svgC);
+function refreshSkills() { requestAnimationFrame(recentre); }
+function buildSkills() { focusCat = -1; layout.classList.remove('focus'); svgC.classList.remove('focused'); buildConst(); }
+buildSkills();
+narrow.addEventListener('change', buildSkills);
+document.getElementById('legend').innerHTML = '<span>Chaque compétence est un astre : plus il est vaste, plus je la maîtrise.</span>'
+    + [[3, 'Galaxie : avancé'], [2, 'Nébuleuse : intermédiaire'], [1, 'Géante jaune : débutant'], [0, 'Étoile en fusion : niveau à préciser']]
+        .map(([lv, label]) => `<span class="mag">${bodyIcon(lv)}${label}</span>`).join('');
+mobile.addEventListener('change', buildJourney);
+
+/* projects grid + detail sheet */
+const CATNAMES = { pro: 'Professionnel', perso: 'Personnel', school: 'École 42' };
+const grid = document.getElementById('grid'), sheet = document.getElementById('sheet'), sheetBg = document.getElementById('sheetBg');
+DATA.projects.forEach(p => {
+    const b = document.createElement('button'); b.className = 'hud card'; b.dataset.cat = p.cat;
+    b.innerHTML = `<span class="cat">${CATNAMES[p.cat]}</span><h3>${p.title}</h3><p>${p.summary}</p><ul class="tags">${p.tags.map(t => `<li>${t}</li>`).join('')}</ul>`;
+    b.addEventListener('click', () => openSheet(p, b)); grid.append(b);
+});
+let opener;
+function openSheet(p, from) {
+    opener = from;
+    document.getElementById('sCat').textContent = CATNAMES[p.cat]; document.getElementById('sTitle').innerHTML = p.title;
+    document.getElementById('sTags').innerHTML = p.tags.map(t => `<li>${t}</li>`).join('');
+    document.getElementById('sBody').innerHTML = p.paragraphs.map(x => `<p>${x}</p>`).join('');
+    sheet.classList.add('open'); sheetBg.classList.add('open'); sheet.scrollTop = 0; document.getElementById('close').focus();
+}
+function closeSheet() { if (!sheet.classList.contains('open')) return; sheet.classList.remove('open'); sheetBg.classList.remove('open'); opener && opener.isConnected && opener.focus(); }
+document.getElementById('close').onclick = closeSheet; sheetBg.onclick = closeSheet;
+addEventListener('keydown', e => {
+    if (e.key !== 'Escape') return;
+    if (sheet.classList.contains('open')) closeSheet();
+    else if (current === 'skills') exitFocus();
+});
+document.querySelectorAll('.filters button').forEach(f => f.addEventListener('click', () => {
+    document.querySelectorAll('.filters button').forEach(x => x.setAttribute('aria-pressed', x === f));
+    grid.querySelectorAll('.card').forEach(cd => cd.classList.toggle('hide', f.dataset.f !== 'all' && cd.dataset.cat !== f.dataset.f));
+}));
+show('home', false);
+document.fonts.ready.then(() => { const a = nav.querySelector('[aria-current]'); pill.style.left = a.offsetLeft + 'px'; pill.style.width = a.offsetWidth + 'px'; });
+if (window.self !== window.top) document.querySelector('.opts').remove();
+window.setStart = mode => { startAt = mode; if (current !== 'journey') show('journey', false); select(mode === 'now' ? NOW : 0, true); };
+</script>
+</body>
+</html>

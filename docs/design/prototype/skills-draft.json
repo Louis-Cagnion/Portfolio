@@ -1,0 +1,76 @@
+[
+  {
+    "title": "Langages de programmation",
+    "short": "Langages",
+    "items": [
+      { "name": "C", "level": "Avancé", "projects": ["push_swap", "fract-ol", "minishell", "philosophers", "cub3d"], "description": "Mon langage de base : tous les projets en solo et en groupe du tronc commun de 42 ont été écrits en C, des algorithmes de tri de Push_swap au moteur graphique de Cub3D, avec les bonus dès que c'était possible." },
+      { "name": "C++", "level": "Avancé", "projects": ["webserv"], "description": "Approfondi pendant le tronc commun de 42, notamment avec Webserv : un serveur HTTP non bloquant écrit de zéro, avec un seul appel à poll, des CGI et la gestion de l'upload." },
+      { "name": "Python", "level": "Intermédiaire", "projects": ["audit_infomediaires", "pdf_parser", "chatbot"], "description": "Appris par des tutoriels puis par Codewars, et aujourd'hui utilisé en production : un pipeline d'audit nocturne couvert par plusieurs centaines de tests et un parseur de PDF avec OCR." },
+      { "name": "JavaScript", "level": "Intermédiaire", "projects": ["portfolio", "devpedia", "wiki", "dashboards"], "description": "Sans framework : ce portfolio, Devpedia et son parseur Markdown fait maison, le wiki Heartopia, ainsi que les graphiques ECharts des tableaux de bord professionnels." },
+      { "name": "Bash", "level": "Intermédiaire", "projects": ["minishell"], "description": "Minishell m'a fait reproduire en C le comportement de Bash : redirections, variables d'environnement, signaux, opérateurs logiques et priorités avec parenthèses." },
+      { "name": "PHP", "level": "Débutant", "projects": ["admin_backoffice", "nps_scores", "audit_infomediaires"], "description": "Utilisé au Groupe Tressol-Chabrier : back-office PHP 8 avec Slim 4, modules de scores NPS et d'audit, client HTTP natif au-dessus de cURL et tests PHPUnit." }
+    ]
+  },
+  {
+    "title": "Langages de balisage",
+    "short": "Balisage",
+    "items": [
+      { "name": "HTML", "projects": ["portfolio", "devpedia", "wiki"], "description": "La structure de mes sites : ce portfolio, Devpedia et le wiki Heartopia." },
+      { "name": "CSS", "projects": ["portfolio", "devpedia", "dashboards"], "description": "Mise en page responsive de mes sites et refonte de l'interface des tableaux de bord pour un usage aussi bien sur ordinateur que sur mobile." }
+    ]
+  },
+  {
+    "title": "Outils de développement",
+    "short": "Outils de dev",
+    "items": [
+      { "name": "Makefiles", "projects": ["minishell", "cub3d", "philosophers"], "description": "Chaque projet C du tronc commun de 42 se compile avec son propre Makefile." },
+      { "name": "Git", "projects": ["transcendence"], "description": "Versionnement de tous mes projets ; Transcendence a exigé des commits propres et compréhensibles pour toute une équipe." },
+      { "name": "GitHub", "projects": ["devpedia", "wiki", "portfolio"], "description": "Hébergement de mon code et de mes sites, publiés sur GitHub Pages." }
+    ]
+  },
+  {
+    "title": "Concurrence et systèmes",
+    "short": "Systèmes",
+    "items": [
+      { "name": "Threads / sémaphores", "projects": ["philosophers"], "description": "Philosophers : maintenir des philosophes en vie à la milliseconde près ; le bonus remplace les threads par des processus et les mutex par des sémaphores." },
+      { "name": "Mutex et processus enfants", "projects": ["philosophers", "minishell"], "description": "Mutex pour partager les fourchettes de Philosophers sans blocage, processus enfants pour exécuter les commandes de Minishell." }
+    ]
+  },
+  {
+    "title": "Réseau et bases de données",
+    "short": "Réseau et BDD",
+    "items": [
+      { "name": "WebSockets", "projects": [], "description": "" },
+      { "name": "APIs", "projects": ["dashboards", "devpedia", "search_tool"], "description": "Le tableau de bord de direction s'appuie sur 17 endpoints d'API ; Devpedia est traduit via l'API DeepL." },
+      { "name": "SQL / PDO", "projects": ["admin_backoffice", "nps_scores"], "description": "Back-office sur SQL Server via PDO avec une base par module, et pipeline NPS en trois couches validées par des tests de cohérence SQL." },
+      { "name": "Elasticsearch", "projects": ["search_tool"], "description": "L'outil de recherche conversationnelle transforme une question en langage naturel en requête Elasticsearch sur le stock de véhicules." }
+    ]
+  },
+  {
+    "title": "Sécurité",
+    "short": "Sécurité",
+    "items": [
+      { "name": "Sécurité web", "note": "injection SQL, XSS, CSRF, sessions", "projects": ["search_tool", "admin_backoffice"], "description": "Token signé HMAC, limitation de débit par adresse IP, protection CSRF et OAuth2/OIDC ; une campagne de crash-test a permis de corriger une trentaine de bugs et de failles." }
+    ]
+  },
+  {
+    "title": "Data science et IA",
+    "short": "Data et IA",
+    "items": [
+      { "name": "NumPy", "projects": ["devpedia"], "description": "Pratiqué en autodidacte ; Devpedia lui consacre un chapitre." },
+      { "name": "Matplotlib", "projects": ["devpedia"], "description": "Pratiqué en autodidacte ; Devpedia lui consacre un chapitre." },
+      { "name": "PyTorch", "projects": ["devpedia"], "description": "Pratiqué en autodidacte pour aborder le deep learning ; Devpedia lui consacre un chapitre." }
+    ]
+  },
+  {
+    "title": "Outils",
+    "short": "Outils",
+    "items": [
+      { "name": "VirtualBox", "note": "création de machines virtuelles", "projects": ["inception"], "description": "Inception : l'infrastructure de conteneurs devait tourner dans une machine virtuelle." },
+      { "name": "MinilibX", "note": "rendu graphique", "projects": ["fract-ol", "cub3d"], "description": "Rendu des fractales de Fract-ol et du moteur de Cub3D." },
+      { "name": "Valgrind", "note": "débogage", "projects": ["minishell", "philosophers"], "description": "Traque des fuites mémoire et des erreurs d'accès dans mes projets C." },
+      { "name": "Docker", "note": "applications stables et scalables", "projects": ["inception", "transcendence"], "description": "Dockerfiles et docker-compose écrits à la main pour Nginx, MariaDB et WordPress dans Inception ; Transcendence se lance en une seule commande dans un conteneur." },
+      { "name": "VS Code", "note": "mon éditeur au quotidien", "projects": [], "description": "Mon éditeur au quotidien." }
+    ]
+  }
+]

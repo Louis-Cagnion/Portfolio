@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Projets B, systèmes orbitaux</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Michroma&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="mockup-base.css">
+<style>
+.systems { width: 100%; height: auto; display: block; overflow: visible; }
+.orbit { fill: none; stroke: rgba(220, 230, 255, 0.12); stroke-dasharray: 3 6; }
+.sun-label { fill: var(--text); font: 400 15px var(--display); text-anchor: middle; }
+.sun-sub { fill: var(--faint); font: 400 12px var(--mono); text-anchor: middle; }
+.planet { cursor: pointer; }
+.planet:focus { outline: none; }
+.planet .pl-label { opacity: 0; transition: opacity 0.25s; pointer-events: none; }
+.planet .pl-bg { fill: rgba(9, 16, 38, 0.92); stroke: rgba(232, 180, 90, 0.55); }
+.planet .pl-name { fill: var(--text); font: 500 12.5px var(--sans); }
+.planet:hover .pl-label, .planet:focus-visible .pl-label { opacity: 1; }
+.planet:hover .pl-body, .planet:focus-visible .pl-body { filter: brightness(1.35) drop-shadow(0 0 8px rgba(232, 180, 90, 0.8)); }
+.planet .pl-hit { fill: transparent; }
+.hint { color: var(--faint); font-size: 0.9rem; }
+.list { margin-top: 26px; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr)); gap: 8px 22px; }
+.list button { display: flex; gap: 10px; align-items: center; background: none; border: 0; color: var(--dim); font: inherit; font-size: 0.92rem; text-align: left; padding: 4px 0; cursor: pointer; }
+.list button:hover { color: var(--text); }
+.list i { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+.sheet h3 { font-family: var(--display); font-weight: 400; font-size: 1.2rem; margin: 10px 0 14px; line-height: 1.4; }
+.sheet .tags { margin-bottom: 18px; }
+.cat { font: 400 0.85rem var(--mono); color: var(--accent); }
+</style>
+</head>
+<body>
+<canvas id="sky" aria-hidden="true"></canvas>
+<header class="bar"><a class="brand" href="#"><i></i>Louis Cagnion</a><span class="tag-opt">Projets, option B</span></header>
+<main>
+    <h2>Mes projets</h2>
+    <p class="lede">Trois systèmes stellaires, un par univers ; chaque planète en orbite est un projet. Survole une planète pour lire son nom, clique pour ouvrir son détail.</p>
+    <svg class="systems" id="sys" role="group" aria-label="Systèmes de projets"></svg>
+    <div class="list" id="list" aria-label="Liste des projets"></div>
+</main>
+<div class="sheet-bg" id="sheetBg"></div>
+<aside class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sTitle"><button class="close" id="close" aria-label="Fermer">&#215;</button><span class="cat" id="sCat"></span><h3 id="sTitle"></h3><ul class="tags" id="sTags"></ul><div class="body" id="sBody"></div></aside>
+<script src="projects-data.js"></script>
+<script src="mockup-sky.js"></script>
+<script>
+const NS = 'http://www.w3.org/2000/svg';
+const mk = (t, a, p) => { const e = document.createElementNS(NS, t); for (const k in a) e.setAttribute(k, a[k]); p && p.append(e); return e; };
+const SYS = [
+    { cat: 'pro', name: 'Tressol-Chabrier', sub: 'professionnel', sun: ['#fff6da', '#e8b45a'], planet: ['#ffd88f', '#b9822f'] },
+    { cat: 'perso', name: 'Projets perso', sub: 'personnel', sun: ['#f3e1ff', '#a46bd8'], planet: ['#e3c3ff', '#7a45b0'] },
+    { cat: 'school', name: '42 Perpignan', sub: 'école', sun: ['#dcfff8', '#4fd1c5'], planet: ['#b8f5ec', '#25857c'] },
+];
+const svg = document.getElementById('sys'), mobile = matchMedia('(max-width: 760px)');
+let planets = [], labels = [];
+function sizeLabels() { labels.forEach(([t, r]) => { const b = t.getBBox(); r.setAttribute('x', b.x - 8); r.setAttribute('y', b.y - 5); r.setAttribute('width', b.width + 16); r.setAttribute('height', b.height + 10); }); }
+function build() {
+    svg.innerHTML = ''; planets = []; labels = [];
+    const m = mobile.matches, w = m ? 360 : 1100, cell = m ? 400 : w / 3, h = m ? cell * 3 : 400;
+    svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+    const defs = mk('defs', {}, svg);
+    SYS.forEach((s, i) => {
+        const cx = m ? w / 2 : cell * i + cell / 2, cy = m ? cell * i + cell / 2 - 10 : h / 2 - 10;
+        const sg = mk('radialGradient', { id: `sun${i}` }, defs); mk('stop', { offset: 0, 'stop-color': s.sun[0] }, sg); mk('stop', { offset: 0.55, 'stop-color': s.sun[1] }, sg); mk('stop', { offset: 1, 'stop-color': s.sun[1], 'stop-opacity': 0 }, sg);
+        const pg = mk('radialGradient', { id: `pl${i}`, cx: 0.35, cy: 0.3, r: 0.8 }, defs); mk('stop', { offset: 0, 'stop-color': s.planet[0] }, pg); mk('stop', { offset: 1, 'stop-color': s.planet[1] }, pg);
+        const list = PROJECTS.filter(p => p.cat === s.cat), radii = [72, 120, 168];
+        radii.forEach(r => mk('ellipse', { class: 'orbit', cx, cy, rx: r, ry: r * 0.42 }, svg));
+        mk('circle', { cx, cy, r: 44, fill: `url(#sun${i})` }, svg);
+        mk('circle', { cx, cy, r: 16, fill: s.sun[0] }, svg);
+        mk('text', { class: 'sun-label', x: cx, y: cy + 112 }, svg).textContent = s.name;
+        mk('text', { class: 'sun-sub', x: cx, y: cy + 132 }, svg).textContent = `${list.length} projets`;
+        list.forEach((p, j) => {
+            const r = radii[j % 3], size = 7 + Math.min(6, p.paragraphs.length * 1.4);
+            const g = mk('g', { class: 'planet', tabindex: 0, role: 'button', 'aria-label': p.title.replace(/<[^>]+>/g, '') }, svg);
+            mk('circle', { class: 'pl-hit', r: size + 10 }, g);
+            mk('circle', { class: 'pl-body', r: size, fill: `url(#pl${i})` }, g);
+            const lg = mk('g', { class: 'pl-label' }, g), bg = mk('rect', { class: 'pl-bg', rx: 4 }, lg);
+            const label = mk('text', { class: 'pl-name', x: size + 14, y: 4.5 }, lg); label.textContent = p.title.replace(/<[^>]+>/g, '');
+            labels.push([label, bg]);
+            g.addEventListener('mouseenter', () => g.parentNode.append(g)); g.addEventListener('focus', () => g.parentNode.append(g));
+            g.addEventListener('click', () => open(p, g));
+            g.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(p, g); } });
+            planets.push({ g, cx, cy, r, a: j * 2.4 + i, sp: 0.00012 * (180 / r), paused: false });
+        });
+    });
+    const listEl = document.getElementById('list'); listEl.innerHTML = '';
+    PROJECTS.forEach(p => {
+        const s = SYS.find(x => x.cat === p.cat), b = document.createElement('button');
+        b.innerHTML = `<i style="background:${s.planet[1]}"></i>${p.title}`; b.addEventListener('click', () => open(p, b)); listEl.append(b);
+    });
+}
+let last = performance.now();
+(function spin(now) {
+    const dt = now - last; last = now;
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    for (const pl of planets) {
+        if (!reduce && !pl.g.matches(':hover, :focus-visible')) pl.a += pl.sp * dt;
+        const x = pl.cx + pl.r * Math.cos(pl.a), y = pl.cy + pl.r * 0.42 * Math.sin(pl.a);
+        pl.g.setAttribute('transform', `translate(${x.toFixed(1)} ${y.toFixed(1)})`);
+        pl.g.style.opacity = Math.sin(pl.a) < 0 ? 0.75 : 1;
+    }
+    requestAnimationFrame(spin);
+})(last);
+const sheet = document.getElementById('sheet'), sheetBg = document.getElementById('sheetBg');
+let opener;
+function open(p, from) {
+    opener = from;
+    document.getElementById('sCat').textContent = `Système ${SYS.find(s => s.cat === p.cat).name}`;
+    document.getElementById('sTitle').innerHTML = p.title;
+    document.getElementById('sTags').innerHTML = p.tags.map(t => `<li>${t}</li>`).join('');
+    document.getElementById('sBody').innerHTML = p.paragraphs.map(x => `<p>${x}</p>`).join('');
+    sheet.classList.add('open'); sheetBg.classList.add('open'); sheet.scrollTop = 0; document.getElementById('close').focus();
+}
+function close() { sheet.classList.remove('open'); sheetBg.classList.remove('open'); opener && opener.focus(); }
+document.getElementById('close').onclick = close; sheetBg.onclick = close;
+addEventListener('keydown', e => { if (e.key === 'Escape' && sheet.classList.contains('open')) close(); });
+build(); sizeLabels(); document.fonts.ready.then(sizeLabels);
+mobile.addEventListener('change', () => { build(); sizeLabels(); });
+</script>
+</body>
+</html>
