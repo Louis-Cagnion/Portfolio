@@ -13,7 +13,7 @@ Avec Live Server (Louis l'utilise sur le port 5500) ou tout serveur statique lan
 | `docs/design/prototype/prototype.html` | Prototype complet des cinq rubriques et des transitions |
 | `docs/design/prototype/phones.html` | Le prototype dans trois cadres de téléphone (320, 390 et 430 px) |
 
-Le petit panneau gris en bas à gauche du prototype (choix du point de départ du parcours) n'existe que dans la maquette. Le texte reste en français seulement : la version anglaise sera traduite à l'implémentation.
+Le petit panneau gris en bas à gauche du prototype (choix du point de départ du parcours) n'existe que dans la maquette. Le texte reste en français seulement : la version anglaise sera traduite à l'implémentation. Les polices viennent de Google Fonts (connexion requise pour le bon rendu), et la maquette est publiée avec le site sur GitHub Pages tant qu'elle existe dans le dépôt.
 
 ## Régénérer après une modification
 
