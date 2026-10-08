@@ -14,7 +14,7 @@
     },
     "language": "Language",
     "sections": "Sections",
-    "loading": "Loading…",
+    "loading": "Attempting to connect with the pilot…",
     "close": "Close",
     "errors": {
       "title": "Mission control could not connect to the pilot's ship",

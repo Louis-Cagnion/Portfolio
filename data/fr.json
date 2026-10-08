@@ -14,7 +14,7 @@
     },
     "language": "Langue",
     "sections": "Sections",
-    "loading": "Chargement…",
+    "loading": "Tentative de connexion avec le pilote…",
     "close": "Fermer",
     "errors": {
       "title": "Le centre de contrôle n'a pas pu se connecter au vaisseau du pilote",
