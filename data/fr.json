@@ -1,421 +1,1600 @@
 {
   "meta": {
-    "title": "Louis Cagnion Portfolio"
+    "lang": "fr",
+    "title": "Louis Cagnion Portfolio",
+    "description": "Portfolio de Louis Cagnion, développeur au Groupe Tressol-Chabrier formé à 42 Perpignan : parcours, compétences, projets et contact."
   },
-  "language": "Langue",
-  "nav": {
-    "home": "Accueil",
-    "journey": "Parcours",
-    "skills": "Compétences",
-    "projects": "Projets",
-    "contact": "Contact"
+  "ui": {
+    "nav": {
+      "home": "Accueil",
+      "journey": "Parcours",
+      "skills": "Compétences",
+      "projects": "Projets",
+      "contact": "Contact"
+    },
+    "language": "Langue",
+    "sections": "Sections",
+    "loading": "Chargement…",
+    "close": "Fermer",
+    "errors": {
+      "title": "Impossible d'afficher le site",
+      "network": "Le réseau semble inaccessible. Vérifie ta connexion, puis réessaie.",
+      "timeout": "Le délai de chargement est dépassé. Réessaie dans un instant.",
+      "http": "Le serveur a répondu avec une erreur (HTTP {status}).",
+      "json": "Le fichier de contenu est invalide (JSON illisible).",
+      "schema": "Le contenu est incomplet : le champ {path} est manquant ou invalide.",
+      "retry": "Réessayer",
+      "langSwitch": "Voir le site en anglais"
+    }
   },
   "home": {
-    "h1": "Bienvenue sur mon portfolio",
-    "photo": ""
-  },
-  "about": {
-    "h2": "Je me présente",
-    "paragraphs": [
-      "Je m'appelle Louis Cagnion et je suis étudiant à 42 Perpignan. Au cours de mon tronc commun à l'école, j'ai réalisé différents projets qui m'ont permis d'apprendre le C et le C++, ainsi que plusieurs outils pratiques comme la MinilibX pour le rendu graphique, Docker pour partager des applications compatibles avec la plupart des environnements, ou encore le fonctionnement des réseaux et des API. J'ai également appris à gérer des données sur un site web visité par des utilisateurs grâce au développement backend et frontend.",
-      "Aujourd'hui, mon tronc commun terminé, j'ai trouvé une alternance de 2 ans pour préparer un RNCP6 Concepteur développeur de solutions informatiques, qui débutera en septembre 2026. En attendant, je travaille à temps plein au siège du Groupe Tressol-Chabrier à Montpellier depuis le 13 juillet 2026.",
-      "Mon objectif de fond reste inchangé : une fois ce RNCP6 obtenu, je souhaite enchaîner sur une alternance d'un an afin de décrocher un RNCP7 en IA et algorithmie. Je souhaite donc approfondir mes connaissances dans les domaines liés à ces deux titres, à commencer par le développement de solutions informatiques, puis l'IA et l'algorithmie pour la suite.",
-      "À plus long terme, mon ambition est de contribuer à la recherche en intelligence artificielle, avec l'objectif de participer aux avancées vers une IA générale (AGI), et au-delà.",
-      "En complément de mon poste actuel, je continue de m'exercer sur des domaines que je n'ai pas encore eu l'occasion d'approfondir, comme Python appliqué à l'IA, l'utilisation de LLMs, ainsi que les différents outils utilisés en data science, machine learning et deep learning.",
-      "Je me laisse aussi tenter par des projets passion qui étendent mon champ de connaissances et de compétences, comme ce portfolio, qui m'apprend le développement frontend avec HTML, JavaScript et CSS."
-    ]
-  },
-  "journey": {
-    "h2": "Mon parcours de développeur",
-    "paragraphs": [
-      "J'ai humblement commencé dans le code durant ma première piscine à 42. Oui, oui, je ne connaissais absolument rien à ce milieu avant de commencer la sélection de l'école. Je ne savais même pas ce qu'était un terminal ou un IDE.",
-      "On m'a parlé de l'école, de leur façon d'apprendre la programmation, des débouchés possibles après le tronc commun, et je me suis dit que cela avait l'air intéressant. J'ai donc tenté la piscine de 42 pour voir de quoi j'étais capable dans ce nouveau milieu.",
-      "Au final, il s'avère que je me suis découvert une véritable passion pendant cette sélection, même si partir de zéro n'a pas été simple.",
-      "Un moment m'a particulièrement marqué. Au début, je demandais de l'aide pour faire les premiers exercices à des personnes qui avaient déjà des connaissances en programmation. Puis, quand nous sommes passés sur du C pendant la majeure partie de la piscine, ce sont eux qui sont venus me demander de l'aide parce que j'avais avancé plus loin qu'eux dans les exercices.",
-      "C'est à ce moment-là que j'ai compris que j'avais peut-être un potentiel dans ce domaine et, surtout, que j'aimais énormément pratiquer et progresser dedans. Et oui, pour ceux qui se demandent, je les ai aidés avec plaisir. On m'avait aidé à me lancer, c'était donc naturel pour moi de les aider en retour.",
-      "Je n'ai malheureusement pas réussi ma première piscine du premier coup, même en ayant des résultats dans la moyenne des autres candidats. J'étais déçu, presque triste, mais je suis rentré chez moi avec un nouvel objectif : retenter une piscine et intégrer cette école.",
-      "J'étais donc prêt à me préparer de mon côté pour réussir la sélection la fois suivante, mais le destin en a décidé autrement. Quelques jours après les résultats, j'ai reçu un message du directeur de l'école me proposant de participer à la piscine suivante, qui arrivait seulement trois semaines plus tard, alors qu'en temps normal il faut attendre un an avant de pouvoir retenter.",
-      "Évidemment, je n'ai pas hésité une seconde. Je me suis empressé d'accepter et j'étais extrêmement heureux de pouvoir revenir aussi vite sur le champ de bataille.",
-      "Le début n'a pas été simple, car je devais terminer mon préavis dans la restauration pendant les premiers jours de cette nouvelle piscine. Malgré cela, j'ai réussi à me préparer à temps pour l'examen de la première semaine, obtenir la note maximale et rattraper tout mon retard durant le week-end, tout en participant au projet de groupe débloqué uniquement pendant les week-ends de piscine.",
-      "Après avoir donné mon maximum durant cette seconde piscine, j'ai finalement été accepté, à mon plus grand bonheur et soulagement. J'ai donc commencé mon aventure dans la programmation en novembre 2024, au début de la rentrée des étudiants de 42 Perpignan.",
-      "Nous avions désormais, en théorie, trois ans devant nous pour terminer le tronc commun. De mon côté, je voulais me donner à fond dans mon apprentissage du code. J'ai donc choisi de me challenger en réalisant tous les bonus possibles sur les projets que je sélectionnais.",
-      "Je voulais également avancer rapidement tout en gardant un travail de qualité, car aller vite sans rien apprendre n'aurait eu aucun intérêt. C'est ce que j'ai essayé de faire pendant tout mon cursus.",
-      "Même si je n'ai pas été aussi rapide que certains amis rencontrés pendant mes piscines, qui ont terminé le cursus en six mois, j'ai tout de même réussi à finir tous les projets du tronc commun en un an et demi, avec les bonus lorsque cela était possible.",
-      "J'en ai également profité pour tester différents outils d'apprentissage en participant à certains événements proposés par l'école, notamment les Coding Games. Pour ma part, je n'ai pas vraiment apprécié le format du site, et on m'a alors parlé d'une autre plateforme plus adaptée à ce que je recherchais.",
-      "Ce site s'appelle <strong>Codewars</strong> (<a href=\"https://www.codewars.com/users/Sung-Jinw00\">Mon profil</a>). Il propose un système de niveaux, de classement et d'expérience, tout en permettant de voir les solutions proposées par la communauté une fois un exercice terminé.",
-      "Grâce à cette plateforme, j'ai découvert de nombreuses façons de résoudre des problèmes en C, C++ et Python, ainsi que des outils dont j'ignorais totalement l'existence. J'étais souvent impressionné de voir à quel point certains développeurs pouvaient résoudre des problèmes complexes avec des solutions courtes et élégantes.",
-      "C'est également là, après avoir appris les bases grâce à des tutoriels, que j'ai réellement commencé à développer mes compétences en Python.",
-      "À présent, je me consacre à des projets que je considère utiles, soit pour progresser vers mes objectifs futurs dans la programmation, soit parce qu'ils peuvent apporter quelque chose d'utile à d'autres personnes ou à moi-même.",
-      "Depuis que j'ai terminé le tronc commun, j'ai rejoint le siège du Groupe Tressol-Chabrier à Montpellier en tant que développeur à temps plein. J'y participe à la conception d'applications internes (recherche de données, tableaux de bord, back-office d'administration), aussi bien côté frontend que backend, ce qui me permet de mettre en pratique mes compétences dans des conditions réelles en attendant de démarrer mon alternance en septembre 2026.",
-      "Vous pourrez retrouver les projets sur lesquels j'ai travaillé ou sur lesquels je travaille actuellement dans la rubrique \"Mes projets\"."
-    ]
-  },
-  "skills": {
-    "h2": "Mes compétences",
-    "intro": "En termes de compétences, j'ai acquis plusieurs qualités dans différents domaines :",
-    "categories": [
-      {
-        "title": "Les langages de programmation :",
-        "items": ["Bash (Intermédiaire)", "C (Avancé)", "C++ (Avancé)", "Python (Intermédiaire)", "PHP (Débutant)", "JavaScript (Intermédiaire)"]
-      },
-      {
-        "title": "Les langages de balisage :",
-        "items": ["HTML", "CSS"]
-      },
-      {
-        "title": "Outils de développement :",
-        "items": ["Makefiles", "Git", "GitHub"]
-      },
-      {
-        "title": "Concurrence et systèmes :",
-        "items": ["Threads / sémaphores", "Mutex et processus enfants"]
-      },
-      {
-        "title": "Réseau et bases de données :",
-        "items": ["WebSockets", "APIs", "SQL / PDO", "Elasticsearch"]
-      },
-      {
-        "title": "Sécurité :",
-        "items": ["Sécurité web (injection SQL, XSS, CSRF, sessions)"]
-      },
-      {
-        "title": "Data science et IA :",
-        "items": ["Numpy", "Matplotlib", "PyTorch"]
-      },
-      {
-        "title": "Les outils :",
-        "items": [
-          "VirtualBox (création de machines virtuelles)",
-          "MinilibX (rendu graphique)",
-          "Valgrind (débogage)",
-          "Docker (applications stables et scalables)",
-          "VS Code (mon éditeur au quotidien)"
-        ]
-      }
-    ],
-    "outro": "Et d'autres compétences sont encore à venir.",
-    "linkIntro": "Pour une vue plus complète et détaillée de mes connaissances en développement, vous pouvez consulter",
-    "link": { "href": "https://louis-cagnion.github.io/Devpedia/", "label": "Devpedia" }
-  },
-  "projects": {
-    "h2": "Mes projets",
-    "professional": {
-      "h3": "Mes projets professionnels",
-      "intro": "Depuis que je travaille au siège du Groupe Tressol-Chabrier, je participe au développement de plusieurs applications et pipelines de données internes. Pour des raisons de confidentialité, je reste ici volontairement général sur le fonctionnement métier et ne mentionne que l'aspect technique du code produit.",
-      "list": [
+    "mission": "Mission en cours : de la piscine 42 à l'intelligence artificielle",
+    "name": "Louis Cagnion",
+    "pitch": "Développeur au Groupe Tressol-Chabrier, formé à 42 Perpignan. Parti de zéro en 2024, je conçois des applications et des pipelines de données en production.",
+    "ctas": { "projects": "Voir mes projets", "contact": "Me contacter" },
+    "telemetry": {
+      "title": "Télémétrie",
+      "rows": [
+        { "label": "Décollage", "value": "Piscine 42, 2024", "live": false },
+        { "label": "Tronc commun 42", "value": "Terminé en 18 mois", "live": false },
         {
-          "id": "search_tool",
-          "h4": "Un outil de recherche conversationnelle",
-          "paragraphs": [
-            "Je participe au développement d'un outil de recherche conversationnelle permettant d'interroger le stock de véhicules du groupe en langage naturel. Une requête utilisateur est d'abord interprétée par un LLM, qui en extrait les critères et la reformule, avant de construire une requête Elasticsearch adaptée.",
-            "J'y ai notamment mis en place un système d'authentification par token signé HMAC, qui résout automatiquement le contexte (concession, source de données) sans configuration manuelle par concession. J'ai également corrigé plusieurs bugs de qualité de données (problèmes d'encodage, champs vides, filtres trop permissifs sur la marque ou le type de véhicule).",
-            "Côté performance, j'ai réduit le poids d'un écran de chargement de plusieurs méga-octets à quelques dizaines de kilo-octets, réactivé la mise en cache navigateur, et fait passer le temps de réponse d'un point d'entrée critique de plus d'une seconde à moins de 50 millisecondes.",
-            "L'application est pensée pour fonctionner sur plusieurs concessions : l'identifiant de concession est fixé côté serveur à la validation du token puis injecté dans chaque requête, sans que le client puisse le modifier. J'y ai également ajouté une limitation de débit par adresse IP, une protection CSRF sur les requêtes qui modifient des données et une application web installable (PWA) avec saisie vocale. Une campagne de crash-test m'a permis d'identifier et de corriger une trentaine de bugs et de failles."
-          ],
-          "links": [],
-          "media": []
+          "label": "Position actuelle",
+          "value": "Groupe Tressol-Chabrier, alternance RNCP6 de 2 ans",
+          "live": true
         },
-        {
-          "id": "dashboards",
-          "h4": "Des tableaux de bord de pilotage",
-          "paragraphs": [
-            "Je contribue à plusieurs tableaux de bord internes permettant de visualiser et filtrer des données commerciales par concession (ventes de véhicules d'occasion, qualité, suivi de stock), avec une intégration Power BI sur l'un d'entre eux.",
-            "J'ai notamment travaillé sur la refonte de l'interface (filtres, barre latérale, mise en page) pour la rendre utilisable aussi bien sur ordinateur que sur mobile.",
-            "J'ai également développé un tableau de bord de direction couvrant plusieurs domaines (ventes de véhicules neufs et d'occasion, appels, NPS, qualité, événements). Il s'appuie sur 17 endpoints d'API et des graphiques ECharts, et propose une carte du réseau dont les adresses sont géocodées par lot puis mises en cache. Un cache fichier à écriture atomique permet de continuer à servir le dernier état connu si la base est momentanément indisponible."
-          ],
-          "links": [],
-          "media": []
-        },
-        {
-          "id": "nps_scores",
-          "h4": "Les scores NPS, de la donnée à l'écran",
-          "paragraphs": [
-            "J'ai développé le pipeline quotidien qui alimente les scores NPS (véhicules neufs et après-vente) par concession. Il part d'un classeur Google Sheets trimestriel et aboutit à une table de faits consommée par Power BI, en trois couches (Staging, Silver, Gold) sur SQL Server, au sein de la plateforme de données du groupe.",
-            "Le pipeline normalise les marques, détecte les décalages de colonnes du classeur source, rapproche chaque concession du référentiel du groupe et regroupe les différentes orthographes d'une même commune. Chaque couche est validée par un test de cohérence SQL (par exemple, un score NPS doit rester compris entre -100 et 100) et le déploiement passe par Azure Pipelines, avec une exécution quotidienne planifiée.",
-            "Côté back-office, j'ai aussi réalisé le module PHP qui affiche ces scores par trimestre, marque et site, avec une calculette de simulation des objectifs. L'accès aux données est résilient : si l'entrepôt est indisponible, le module bascule sur une copie de staging, puis sur un JSON statique, plutôt que de planter, et un cache fichier limite le nombre de requêtes."
-          ],
-          "links": [],
-          "media": []
-        },
-        {
-          "id": "audit_infomediaires",
-          "h4": "Un audit nocturne des boutiques en ligne",
-          "paragraphs": [
-            "J'ai développé un pipeline Python qui vérifie chaque nuit que les boutiques de véhicules d'occasion du groupe sont bien visibles sur plusieurs plateformes d'annonces. Il compte les annonces réellement affichées, détecte les doublons de véhicules et mesure l'écart avec le stock de référence. L'extraction repose sur Playwright, en parallèle par plateforme, avec gestion des bandeaux cookies et des contrôles anti-robot.",
-            "Le pipeline s'arrête volontairement lorsqu'une boutique n'affiche aucune annonce ou qu'un doublon est confirmé, et se termine « avec avertissements » si certaines boutiques n'ont pas pu être lues. Il est déployé via Azure Pipelines (validation avec Ruff et pytest, environnements de préproduction et de production) et couvert par plusieurs centaines de tests.",
-            "Les résultats sont consultables dans un module du back-office que j'ai également développé : tableau filtrable et triable par boutique et par plateforme, export CSV, cartes « à traiter en priorité » et alerte dédiée aux boutiques non lues, avec la cause de l'échec."
-          ],
-          "links": [],
-          "media": []
-        },
-        {
-          "id": "pdf_parser",
-          "h4": "Un parseur de politiques commerciales PDF",
-          "paragraphs": [
-            "J'ai développé un outil Python qui convertit des PDF de politiques commerciales de constructeurs en JSON structuré et versionné par marque (titres, texte, listes à puces et tableaux dont les cellules sont typées : date, pourcentage, montant, entier). Il est conçu pour alimenter un chatbot en aval.",
-            "La détection des tableaux fonctionne en cascade : texte natif du PDF d'abord, contrôle croisé avec img2table lorsqu'une cellule paraît suspecte, puis repli sur l'OCR (PaddleOCR) uniquement si rien n'a été trouvé. Les valeurs douteuses sont marquées « suspectes » plutôt que passées sous silence.",
-            "Côté performance, j'ai réduit le temps de traitement d'environ 30 % en abaissant la résolution de rendu, et parallélisé le repli OCR en fonction de la mémoire disponible. L'outil est couvert par environ 170 tests et a été éprouvé sur une vingtaine de documents couvrant plus de dix marques."
-          ],
-          "links": [],
-          "media": []
-        },
-        {
-          "id": "admin_backoffice",
-          "h4": "Un back-office d'administration",
-          "paragraphs": [
-            "Enfin, je travaille sur un back-office d'administration commun à plusieurs applications internes, avec authentification HTTP, limitation de débit pour se prémunir des attaques par force brute, et protection CSRF basée sur un token de session.",
-            "J'ai également développé un client HTTP natif en PHP (au-dessus de cURL) pour communiquer avec des services externes, avec une gestion structurée des erreurs réseau et applicatives, et de la validation de certificats SSL.",
-            "Dans ce back-office (PHP 8 avec Slim 4, SQL Server en PDO, une base par module, droits d'accès par module et par profil, authentification OAuth2/OIDC en complément de la connexion native, tests PHPUnit), j'ai développé les modules de scores NPS et d'audit des boutiques en ligne décrits ci-dessus."
-          ],
-          "links": [],
-          "media": []
-        }
+        { "label": "Prochaine étape", "value": "RNCP7 en IA, alternance 1 an", "live": false },
+        { "label": "Destination", "value": "Recherche en IA", "live": false }
       ]
     },
-    "personal": {
-      "h3": "Mes projets personnels",
-      "list": [
+    "dossier": {
+      "kicker": "Dossier du pilote",
+      "title": "Je me présente",
+      "entries": [
         {
-          "id": "portfolio",
-          "h4": "Ce portfolio",
-          "paragraphs": ["Et oui, ça compte."],
-          "links": [],
-          "media": []
+          "label": "Formation",
+          "html": "Je m'appelle Louis Cagnion et je suis étudiant à 42 Perpignan. Au cours de mon tronc commun à l'école, j'ai réalisé différents projets qui m'ont permis d'apprendre le C et le C++, ainsi que plusieurs outils pratiques comme la MinilibX pour le rendu graphique, Docker pour partager des applications compatibles avec la plupart des environnements, ou encore le fonctionnement des réseaux et des API. J'ai également appris à gérer des données sur un site web visité par des utilisateurs grâce au développement backend et frontend."
         },
         {
-          "id": "chatbot",
-          "h4": "Un chatbot IA",
-          "paragraphs": [
-            "En termes d'IA et de Python, j'ai créé un petit projet de chatbot relié par adresse IP à un mini LLM de Mistral AI via Ollama. Pour l'instant, le projet reste assez basique, mais je compte l'améliorer prochainement."
-          ],
-          "links": [
-            { "href": "https://louis-cagnion.github.io/Chatbot/", "label": "ici" }
-          ],
-          "linkIntro": "Vous pouvez y jeter un œil",
-          "media": []
+          "label": "Entraînement en cours",
+          "html": "En complément de mon poste, je m'exerce sur des domaines que je n'ai pas encore eu l'occasion d'approfondir, comme Python appliqué à l'IA, l'utilisation de LLMs, ainsi que les différents outils utilisés en data science, machine learning et deep learning."
         },
         {
-          "id": "wiki",
-          "h4": "Un wiki complet de jeu vidéo",
-          "paragraphs": [
-            "Grâce à HTML, CSS et JavaScript, qui me permettent aujourd'hui de raconter mon parcours à travers ce portfolio, je travaille actuellement sur un projet de wiki autour du jeu <strong>Heartopia</strong>.",
-            "À travers ce projet, je souhaite aider la communauté francophone, ainsi que moi-même, à mieux comprendre les mécaniques du jeu, obtenir des ressources, réussir certains succès et progresser plus facilement.",
-            "Mon objectif est de proposer des comparaisons, des observations et différentes astuces afin de simplifier la vie des joueurs dans un jeu qui possède énormément de mécaniques et de systèmes cachés."
-          ],
-          "links": [
-            { "href": "https://louis-cagnion.github.io/Heartopia_map_tracking/", "label": "ce lien" }
-          ],
-          "linkIntro": "Vous pouvez retrouver ce projet gratuitement en ligne via",
-          "media": []
-        },
-        {
-          "id": "devpedia",
-          "h4": "Devpedia, une encyclopédie du développement",
-          "paragraphs": [
-            "Devpedia est un site que j'ai créé pour documenter, expliquer et partager mes connaissances sur différents sujets liés au développement logiciel. Ce projet m'aide à approfondir ma compréhension par la recherche et la pédagogie, à m'entraîner à construire des interfaces web modernes, et à rendre ces connaissances accessibles à toute personne intéressée.",
-            "Le site couvre aujourd'hui plusieurs langages de programmation (C, C++, PHP, Python — y compris la data science et l'IA avec NumPy, pandas, Matplotlib, scikit-learn, les réseaux de neurones, PyTorch, le NLP et les LLMs —, JavaScript), les langages de balisage (HTML, CSS), des langages spécifiques comme Regex et SQL, plusieurs shells (Bash, PowerShell, Zsh), ainsi que Git, du fonctionnement quotidien jusqu'à son modèle interne.",
-            "Chaque chapitre est un simple fichier Markdown, dont le rendu est assuré par un parseur que j'ai écrit moi-même pour ce projet plutôt que par une librairie existante. Le site est également traduit automatiquement en anglais, espagnol et portugais via l'API DeepL."
-          ],
-          "links": [
-            { "href": "https://louis-cagnion.github.io/Devpedia/", "label": "ici" }
-          ],
-          "linkIntro": "Vous pouvez consulter le site",
-          "media": []
-        }
-      ]
-    },
-    "school": {
-      "h3": "Mes projets d'école",
-      "intro": "Durant mon cursus, j'ai eu l'occasion de réaliser plusieurs projets solo et de groupe particulièrement intéressants.",
-      "list": [
-        {
-          "id": "push_swap",
-          "h4": "Push_swap",
-          "paragraphs": [
-            "Le but de ce projet était de coder un algorithme de tri le plus efficace possible afin de trier jusqu'à 500 nombres.",
-            "Pour obtenir la note maximale, il fallait réussir à trier une liste aléatoire de 500 entiers en moins de 5500 opérations avec des mouvements très limités.",
-            "En résumé, imaginez deux listes : la seconde est vide, et vous ne pouvez interagir qu'avec le premier ou le dernier élément de chaque liste afin de déplacer les nombres.",
-            "J'avais réussi à développer un algorithme qui effectuait le tri en environ 5700 coups en moyenne. J'étais fier de cette méthode trouvée après avoir testé plusieurs approches différentes, même si j'ai finalement dû m'inspirer d'un algorithme existant pour passer sous la barre des 5500 opérations.",
-            "Le bonus consistait à créer un \"Checker\" permettant de vérifier qu'une suite d'opérations donnait bien, à la fin, une liste triée dans l'ordre croissant."
-          ],
-          "media": []
-        },
-        {
-          "id": "fract-ol",
-          "h4": "Fract-ol",
-          "paragraphs": [
-            "Ce projet était plus artistique. Le but était d'utiliser la MinilibX afin de créer un rendu graphique de fractales.",
-            "Pour ceux qui ne savent pas ce qu'est une fractale : il s'agit d'un motif qui se répète à l'infini lorsqu'on zoome dessus. Le chou romanesco est d'ailleurs un excellent exemple de fractale naturelle.",
-            "Les bonus consistaient à :"
-          ],
-          "bonuses": [
-            "Créer une troisième fractale en plus de Julia et Mandelbrot",
-            "Faire suivre le zoom avec la position de la souris",
-            "Déplacer la caméra avec les flèches directionnelles",
-            "Modifier dynamiquement les couleurs de la fractale"
-          ],
-          "media": []
-        },
-        {
-          "id": "minishell",
-          "h4": "Minishell",
-          "paragraphs": [
-            "Le but de ce premier projet de groupe était de recréer un mini shell (mais nan !).",
-            "Il fallait notamment :"
-          ],
-          "requirements": [
-            "Pouvoir naviguer dans différents niveaux du shell",
-            "Recréer plusieurs commandes Bash comme cd, echo, pwd, export ou exit",
-            "Gérer l'historique",
-            "Implémenter les redirections (<, >, <<, >>)",
-            "Gérer les variables d'environnement",
-            "Gérer les signaux clavier comme Ctrl+C, Ctrl+D et Ctrl+/ "
-          ],
-          "bonusParagraphs": [
-            "Les bonus consistaient à ajouter les opérateurs logiques '&&' et '||', ainsi qu'une gestion des priorités avec des parenthèses.",
-            "C'est moi qui me suis occupé de cette partie. Cela m'a permis de travailler sur des arbres binaires et toute la logique d'exécution liée aux priorités des commandes."
-          ],
-          "media": []
-        },
-        {
-          "id": "philosophers",
-          "h4": "Philosophers",
-          "paragraphs": [
-            "Pour ce projet, il fallait réussir à faire survivre des philosophes.",
-            "Ces philosophes possédaient plusieurs états :"
-          ],
-          "states": [
-            "Un temps pour manger",
-            "Un temps pour réfléchir",
-            "Un temps pour dormir",
-            "Un nombre de repas à atteindre (optionnel)"
-          ],
-          "stateParagraphs": [
-            "Ils possédaient également un temps de vie limité. Le but était de fournir différents paramètres de temps et différents nombres de philosophes, puis d'être suffisamment précis pour réussir à les maintenir en vie selon les contraintes données.",
-            "Les temps étaient exprimés en millisecondes, donc le moindre mauvais calibrage se remarquait immédiatement.",
-            "En plus de cela, il fallait afficher précisément le moment auquel chaque philosophe effectuait une action, avec une marge d'erreur inférieure à 10 ms.",
-            "La particularité de ce projet venait du fait que les philosophes ne pouvaient manger que si deux fourchettes étaient disponibles. Cependant, chaque philosophe ne possédait qu'une seule fourchette. Il fallait donc organiser correctement les accès afin d'éviter les blocages, les conflits et les morts prématurées.",
-            "Les bonus consistaient à refaire le même exercice en remplaçant les threads par des processus enfants et les mutex par des sémaphores."
-          ],
-          "media": []
-        },
-        {
-          "id": "cub3d",
-          "h4": "Cub3D",
-          "paragraphs": [
-            "Le but de ce second projet de groupe était de créer un jeu inspiré de <a href=\"https://search.brave.com/images?q=Wolfenstein+3D+gameplay\">Wolfenstein</a>.",
-            "Les bonus consistaient notamment à :"
-          ],
-          "bonuses": [
-            "Ajouter la gestion des collisions",
-            "Implémenter une minimap",
-            "Ajouter des portes",
-            "Créer des sprites animés",
-            "Gérer les mouvements de caméra avec la souris"
-          ],
-          "outroParagraphs": [
-            "La personne avec qui j'ai travaillé sur ce projet a même ajouté une caméra verticale alors que le moteur utilisait de la fausse 2D.",
-            "Il a également été remarquable durant le projet, car même lorsque j'étais moins disponible, il a continué à faire avancer énormément de choses de son côté. Cela mérite largement des remerciements."
-          ],
-          "media": []
-        },
-        {
-          "id": "inception",
-          "h4": "Inception",
-          "paragraphs": [
-            "Dans ce projet, il fallait créer ses propres Dockerfiles et docker-compose en utilisant Nginx, MariaDB et WordPress.",
-            "Le conteneur devait être créé et fonctionner sur une machine virtuelle.",
-            "Les bonus consistaient notamment à :"
-          ],
-          "bonuses": [
-            "Ajouter un cache Redis à WordPress",
-            "Configurer un serveur FTP pointant sur le volume WordPress",
-            "Créer un site web statique hors PHP",
-            "Configurer Adminer",
-            "Ajouter un service supplémentaire jugé utile"
-          ],
-          "outroParagraphs": [
-            "C'est probablement le projet que j'ai le moins apprécié et celui avec lequel j'ai eu le plus de difficultés."
-          ],
-          "media": []
-        },
-        {
-          "id": "webserv",
-          "h4": "Webserv",
-          "paragraphs": [
-            "L'avant-dernier projet de groupe du tronc commun consistait à réaliser notre propre serveur HTTP.",
-            "Le serveur devait notamment :"
-          ],
-          "requirements": [
-            "Être configuré avec un fichier de configuration créé de zéro",
-            "Être non bloquant",
-            "Utiliser un seul appel à poll",
-            "Faire en sorte que tous les read et write soient exécutés après poll",
-            "Éviter l'utilisation directe de errno après un read ou write",
-            "Gérer les boucles infinies pour éviter de bloquer le serveur",
-            "Fonctionner correctement sur un navigateur",
-            "Avoir des pages d'erreurs",
-            "Retourner les bons codes HTTP",
-            "Utiliser des CGI",
-            "Gérer les méthodes GET, POST et DELETE",
-            "Permettre l'upload de fichiers",
-            "Écouter sur plusieurs ports avec différents contenus"
-          ],
-          "outroParagraphs": [
-            "C'était déjà un énorme morceau pour la partie obligatoire.",
-            "Pour les bonus, il fallait gérer les sessions des clients et les cookies, ainsi qu'ajouter plusieurs types de CGI."
-          ],
-          "media": []
-        },
-        {
-          "id": "transcendence",
-          "h4": "Transcendence",
-          "paragraphs": [
-            "Pour ce dernier projet du tronc commun, qui était également un projet de groupe, le but était de créer une véritable application web complète.",
-            "Le projet devait contenir :"
-          ],
-          "components": ["Un frontend", "Un backend", "Une base de données"],
-          "componentParagraphs": [
-            "Comme nous étions nombreux à travailler dessus, il fallait également garder une organisation claire avec des commits propres et compréhensibles.",
-            "L'application devait pouvoir être lancée via une seule commande à l'intérieur d'un conteneur, fonctionner correctement sur navigateur, ne produire aucune erreur dans la console, et inclure une politique de confidentialité ainsi que des conditions d'utilisation.",
-            "Concernant la stack technique, il fallait notamment :"
-          ],
-          "techStack": [
-            "Créer un frontend clair, réactif et responsive",
-            "Utiliser un framework CSS",
-            "Stocker les informations sensibles dans un fichier .env ignoré par Git",
-            "Créer une base de données bien structurée",
-            "Mettre en place une authentification sécurisée",
-            "Valider les données côté frontend et backend",
-            "Utiliser HTTPS côté backend"
-          ],
-          "moduleParagraphs": [
-            "Ensuite, nous pouvions choisir différents modules à ajouter au projet.",
-            "Certains modules étaient mineurs et rapportaient un point, tandis que d'autres étaient majeurs et rapportaient deux points.",
-            "Le but était de totaliser 14 points pour valider la partie obligatoire, puis 19 points pour valider les bonus.",
-            "Pour ma part, je me suis occupé de deux modules majeurs :"
-          ],
-          "myModules": [
-            "Créer une IA capable d'affronter les joueurs",
-            "Créer une version 3D du jeu"
-          ],
-          "links": [
-            { "href": "https://github.com/Louis-Cagnion/Transcendence125/blob/main/README.MD", "label": "le README" }
-          ],
-          "linkIntro": "Pour plus de détails sur l'organisation de notre équipe, je vous invite à consulter",
-          "media": []
+          "label": "Projets passion",
+          "html": "Je me laisse aussi tenter par des projets passion qui étendent mon champ de connaissances et de compétences, comme ce portfolio, qui m'apprend le développement frontend avec HTML, JavaScript et CSS."
         }
       ]
     }
   },
+  "journey": {
+    "title": "Mon parcours",
+    "lede": {
+      "pointer": "Choisis une escale pour faire voyager le vaisseau et lire son récit.",
+      "arrows": "Utilise les flèches pour changer d'escale."
+    },
+    "counter": "escale {n} sur {total}",
+    "prev": "Étape précédente",
+    "next": "Étape suivante",
+    "stopsLabel": "Étapes du parcours",
+    "stops": [
+      {
+        "id": "piscine",
+        "body": "earth",
+        "at": 0,
+        "now": false,
+        "title": "Première piscine",
+        "when": "2024",
+        "paragraphs": [
+          "J'ai humblement commencé dans le code durant ma première piscine à 42. Oui, oui, je ne connaissais absolument rien à ce milieu avant de commencer la sélection de l'école. Je ne savais même pas ce qu'était un terminal ou un IDE.",
+          "On m'a parlé de l'école, de leur façon d'apprendre la programmation, des débouchés possibles après le tronc commun, et je me suis dit que cela avait l'air intéressant. J'ai donc tenté la piscine de 42 pour voir de quoi j'étais capable dans ce nouveau milieu.",
+          "Au final, il s'avère que je me suis découvert une véritable passion pendant cette sélection, même si partir de zéro n'a pas été simple.",
+          "Un moment m'a particulièrement marqué. Au début, je demandais de l'aide pour faire les premiers exercices à des personnes qui avaient déjà des connaissances en programmation. Puis, quand nous sommes passés sur du C pendant la majeure partie de la piscine, ce sont eux qui sont venus me demander de l'aide parce que j'avais avancé plus loin qu'eux dans les exercices.",
+          "C'est à ce moment-là que j'ai compris que j'avais peut-être un potentiel dans ce domaine et, surtout, que j'aimais énormément pratiquer et progresser dedans. Et oui, pour ceux qui se demandent, je les ai aidés avec plaisir. On m'avait aidé à me lancer, c'était donc naturel pour moi de les aider en retour.",
+          "Je n'ai malheureusement pas réussi ma première piscine du premier coup, même en ayant des résultats dans la moyenne des autres candidats. J'étais déçu, presque triste, mais je suis rentré chez moi avec un nouvel objectif : retenter une piscine et intégrer cette école."
+        ]
+      },
+      {
+        "id": "second-chance",
+        "body": "moon",
+        "at": 0.12,
+        "now": false,
+        "title": "Seconde chance",
+        "when": "2024",
+        "paragraphs": [
+          "J'étais donc prêt à me préparer de mon côté pour réussir la sélection la fois suivante, mais le destin en a décidé autrement. Quelques jours après les résultats, j'ai reçu un message du directeur de l'école me proposant de participer à la piscine suivante, qui arrivait seulement trois semaines plus tard, alors qu'en temps normal il faut attendre un an avant de pouvoir retenter.",
+          "Évidemment, je n'ai pas hésité une seconde. Je me suis empressé d'accepter et j'étais extrêmement heureux de pouvoir revenir aussi vite sur le champ de bataille.",
+          "Le début n'a pas été simple, car je devais terminer mon préavis dans la restauration pendant les premiers jours de cette nouvelle piscine. Malgré cela, j'ai réussi à me préparer à temps pour l'examen de la première semaine, obtenir la note maximale et rattraper tout mon retard durant le week-end, tout en participant au projet de groupe débloqué uniquement pendant les week-ends de piscine.",
+          "Après avoir donné mon maximum durant cette seconde piscine, j'ai finalement été accepté, à mon plus grand bonheur et soulagement. J'ai donc commencé mon aventure dans la programmation en novembre 2024, au début de la rentrée des étudiants de 42 Perpignan."
+        ]
+      },
+      {
+        "id": "core",
+        "body": "mars",
+        "at": 0.25,
+        "now": false,
+        "title": "Tronc commun",
+        "when": "nov. 2024 à 2026",
+        "paragraphs": [
+          "Nous avions désormais, en théorie, trois ans devant nous pour terminer le tronc commun. De mon côté, je voulais me donner à fond dans mon apprentissage du code. J'ai donc choisi de me challenger en réalisant tous les bonus possibles sur les projets que je sélectionnais.",
+          "Je voulais également avancer rapidement tout en gardant un travail de qualité, car aller vite sans rien apprendre n'aurait eu aucun intérêt. C'est ce que j'ai essayé de faire pendant tout mon cursus.",
+          "Même si je n'ai pas été aussi rapide que certains amis rencontrés pendant mes piscines, qui ont terminé le cursus en six mois, j'ai tout de même réussi à finir tous les projets du tronc commun en un an et demi, avec les bonus lorsque cela était possible."
+        ]
+      },
+      {
+        "id": "codewars",
+        "body": "asteroids",
+        "at": 0.37,
+        "now": false,
+        "title": "Codewars",
+        "when": "pendant le cursus",
+        "paragraphs": [
+          "J'en ai également profité pour tester différents outils d'apprentissage en participant à certains événements proposés par l'école, notamment les Coding Games. Pour ma part, je n'ai pas vraiment apprécié le format du site, et on m'a alors parlé d'une autre plateforme plus adaptée à ce que je recherchais.",
+          "Ce site s'appelle <strong>Codewars</strong> (<a href=\"https://www.codewars.com/users/Sung-Jinw00\">Mon profil</a>). Il propose un système de niveaux, de classement et d'expérience, tout en permettant de voir les solutions proposées par la communauté une fois un exercice terminé.",
+          "Grâce à cette plateforme, j'ai découvert de nombreuses façons de résoudre des problèmes en C, C++ et Python, ainsi que des outils dont j'ignorais totalement l'existence. J'étais souvent impressionné de voir à quel point certains développeurs pouvaient résoudre des problèmes complexes avec des solutions courtes et élégantes.",
+          "C'est également là, après avoir appris les bases grâce à des tutoriels, que j'ai réellement commencé à développer mes compétences en Python."
+        ]
+      },
+      {
+        "id": "tressol",
+        "body": "station",
+        "at": 0.5,
+        "now": true,
+        "title": "Tressol-Chabrier",
+        "when": "depuis juillet 2026",
+        "paragraphs": [
+          "Je me consacre à des projets que je considère utiles, soit pour progresser vers mes objectifs futurs dans la programmation, soit parce qu'ils peuvent apporter quelque chose d'utile à d'autres personnes ou à moi-même.",
+          "Une fois le tronc commun terminé, j'ai rejoint le siège du Groupe Tressol-Chabrier à Montpellier en tant que développeur à temps plein. J'y ai participé à la conception d'applications internes (recherche de données, tableaux de bord, back-office d'administration), aussi bien côté frontend que backend, ce qui m'a permis de mettre en pratique mes compétences dans des conditions réelles.",
+          "Vous pourrez retrouver les projets sur lesquels j'ai travaillé dans la rubrique \"Mes projets\"."
+        ]
+      },
+      {
+        "id": "rncp6",
+        "body": "saturn",
+        "at": 0.66,
+        "now": false,
+        "title": "Alternance RNCP6",
+        "when": "sept. 2026 à 2028",
+        "paragraphs": [
+          "Mon tronc commun terminé, j'ai rejoint à temps plein le siège du Groupe Tressol-Chabrier à Montpellier le 13 juillet 2026. J'y ai commencé en septembre 2026 une alternance de deux ans pour le titre RNCP6 Concepteur développeur de solutions informatiques."
+        ]
+      },
+      {
+        "id": "rncp7",
+        "body": "nebula",
+        "at": 0.83,
+        "now": false,
+        "title": "RNCP7 IA",
+        "when": "ensuite",
+        "paragraphs": [
+          "Mon objectif de fond reste inchangé : une fois ce RNCP6 obtenu, je souhaite enchaîner sur une alternance d'un an afin de décrocher un RNCP7 en IA et algorithmie. Je souhaite donc approfondir mes connaissances dans les domaines liés à ces deux titres, à commencer par le développement de solutions informatiques, puis l'IA et l'algorithmie pour la suite."
+        ]
+      },
+      {
+        "id": "research",
+        "body": "galaxy",
+        "at": 1,
+        "now": false,
+        "title": "Recherche en IA",
+        "when": "horizon",
+        "paragraphs": [
+          "À plus long terme, mon ambition est de contribuer à la recherche en intelligence artificielle, avec l'objectif de participer aux avancées vers une IA générale (AGI), et au-delà."
+        ]
+      }
+    ]
+  },
+  "skills": {
+    "title": "Mes compétences",
+    "lede": "Chaque constellation regroupe un domaine. Choisis-en une pour l'explorer étoile par étoile.",
+    "hint": "Sélectionne une constellation pour zoomer dessus.",
+    "back": "Toutes les compétences",
+    "explore": "Explorer : {name}",
+    "chipsLabel": "Compétences de la constellation",
+    "prev": "Étoile précédente",
+    "next": "Étoile suivante",
+    "related": "Projets liés",
+    "legend": "Chaque compétence est un astre : plus il est vaste, plus je la maîtrise.",
+    "levels": {
+      "advanced": "Avancé",
+      "intermediate": "Intermédiaire",
+      "beginner": "Débutant",
+      "unknown": "Niveau à préciser"
+    },
+    "bodies": {
+      "advanced": "Galaxie",
+      "intermediate": "Nébuleuse",
+      "beginner": "Géante jaune",
+      "unknown": "Étoile en fusion"
+    },
+    "link": {
+      "intro": "Pour une vue plus complète et détaillée de mes connaissances en développement, vous pouvez consulter",
+      "label": "Devpedia",
+      "href": "https://louis-cagnion.github.io/Devpedia/"
+    },
+    "groups": [
+      {
+        "id": "languages",
+        "title": "Langages de programmation",
+        "short": "Langages",
+        "items": [
+          {
+            "id": "c",
+            "name": "C",
+            "level": "advanced",
+            "projects": [
+              "libft",
+              "push_swap",
+              "fract-ol",
+              "minishell",
+              "philosophers",
+              "cub3d",
+              "codewars"
+            ],
+            "description": "Mon langage de base : les projets C du tronc commun de 42, des algorithmes de tri de Push_swap au moteur graphique de Cub3D, avec les bonus dès que c'était possible, jusqu'à un Skyscraper de niveau Kyu 1 sur Codewars."
+          },
+          {
+            "id": "cpp",
+            "name": "C++",
+            "level": "intermediate",
+            "projects": ["cpp_modules", "webserv"],
+            "description": "Appris avec les dix modules C++ de 42, de la programmation orientée objet aux templates et à la STL, puis mis en pratique dans Webserv, un serveur HTTP écrit de zéro en C++98."
+          },
+          {
+            "id": "python",
+            "name": "Python",
+            "level": "intermediate",
+            "projects": [
+              "audit_infomediaires",
+              "pdf_parser",
+              "client_migration",
+              "codewars",
+              "chatbot"
+            ],
+            "description": "Appris par des tutoriels puis par Codewars, et utilisé en production avec l'assistance de Claude Code : un pipeline d'audit nocturne couvert par plusieurs centaines de tests et un parseur de PDF avec OCR."
+          },
+          {
+            "id": "javascript",
+            "name": "JavaScript",
+            "level": "intermediate",
+            "projects": ["portfolio", "devpedia", "wiki", "supermarket_compare", "dashboards"],
+            "description": "Sans framework : ce portfolio, Devpedia et son parseur Markdown fait maison, le wiki Heartopia et, avec l'assistance de Claude Code, les graphiques ECharts des tableaux de bord professionnels."
+          },
+          {
+            "id": "bash",
+            "name": "Bash",
+            "level": "intermediate",
+            "projects": ["shell00", "shell01", "minishell"],
+            "description": "Scripts de la Piscine et scripts de mesure de mes solveurs, et surtout Minishell, qui m'a fait reproduire en C le comportement de Bash : redirections, variables d'environnement, signaux, opérateurs logiques et priorités."
+          },
+          {
+            "id": "php",
+            "name": "PHP",
+            "level": "intermediate",
+            "projects": ["admin_backoffice", "nps_scores", "audit_infomediaires", "call_resolution"],
+            "description": "Utilisé au Groupe Tressol-Chabrier : quatre modules de back-office (PHP 8 avec Slim 4) : scores NPS, audit, suivi et résolution des appels, développés avec l'assistance de Claude Code."
+          },
+          {
+            "id": "typescript",
+            "name": "TypeScript",
+            "level": "beginner",
+            "projects": ["transcendence"],
+            "description": "Le Pong de Transcendence : l'IA adverse côté serveur et le rendu 3D côté client."
+          }
+        ]
+      },
+      {
+        "id": "markup",
+        "title": "Langages de balisage",
+        "short": "Balisage",
+        "items": [
+          {
+            "id": "html",
+            "name": "HTML",
+            "level": "intermediate",
+            "projects": ["portfolio", "devpedia", "wiki"],
+            "description": "La structure de mes sites : ce portfolio, Devpedia et le wiki Heartopia."
+          },
+          {
+            "id": "css",
+            "name": "CSS",
+            "level": "intermediate",
+            "projects": ["portfolio", "devpedia", "dashboards"],
+            "description": "Mise en page responsive de mes sites et, avec l'assistance de Claude Code, refonte de l'interface des tableaux de bord professionnels pour un usage aussi bien sur ordinateur que sur mobile."
+          }
+        ]
+      },
+      {
+        "id": "devtools",
+        "title": "Outils de développement",
+        "short": "Outils de dev",
+        "items": [
+          {
+            "id": "makefiles",
+            "name": "Makefiles",
+            "level": "intermediate",
+            "projects": ["minishell", "cub3d", "philosophers", "c09"],
+            "description": "Chaque projet C du tronc commun de 42 se compile avec son propre Makefile."
+          },
+          {
+            "id": "git",
+            "name": "Git",
+            "level": "intermediate",
+            "projects": ["transcendence"],
+            "description": "Versionnement de tous mes projets ; Transcendence a exigé des commits propres et compréhensibles pour toute une équipe."
+          },
+          {
+            "id": "github",
+            "name": "GitHub",
+            "level": "intermediate",
+            "projects": ["devpedia", "wiki", "portfolio"],
+            "description": "Hébergement de mon code et de mes sites, publiés sur GitHub Pages."
+          },
+          {
+            "id": "js-tests",
+            "name": "Tests unitaires JavaScript",
+            "level": "beginner",
+            "projects": ["wiki", "supermarket_compare"],
+            "description": "Vitest pour le wiki Heartopia, node --test pour le comparateur de courses."
+          },
+          {
+            "id": "azure-pipelines",
+            "name": "Azure DevOps Pipelines",
+            "level": "beginner",
+            "projects": ["nps_scores", "audit_infomediaires"],
+            "description": "Déploiement planifié des pipelines NPS et d'audit, avec Ruff et pytest, mis en place avec l'assistance de Claude Code."
+          },
+          {
+            "id": "playwright",
+            "name": "Playwright",
+            "level": "beginner",
+            "projects": ["audit_infomediaires"],
+            "description": "Extraction en parallèle par plateforme dans l'audit nocturne des boutiques en ligne, réalisée avec l'assistance de Claude Code."
+          }
+        ]
+      },
+      {
+        "id": "systems",
+        "title": "Concurrence et systèmes",
+        "short": "Systèmes",
+        "items": [
+          {
+            "id": "concurrency",
+            "name": "Threads, mutex et sémaphores",
+            "level": "intermediate",
+            "projects": ["philosophers"],
+            "description": "Philosophers : maintenir des philosophes en vie à la milliseconde près, avec des threads et des mutex, puis des processus et des sémaphores en bonus."
+          },
+          {
+            "id": "processes",
+            "name": "Processus, pipes et signaux",
+            "level": "advanced",
+            "projects": ["pipex", "minishell", "minitalk", "philosophers"],
+            "description": "fork, pipe, dup2 et execve dans Pipex puis dans les pipes de Minishell, signaux UNIX dans Minitalk, processus et sémaphores dans le bonus de Philosophers."
+          }
+        ]
+      },
+      {
+        "id": "network",
+        "title": "Réseau et bases de données",
+        "short": "Réseau et BDD",
+        "items": [
+          {
+            "id": "sockets-http",
+            "name": "Sockets TCP et HTTP/1.1",
+            "level": "intermediate",
+            "projects": ["webserv"],
+            "description": "Webserv : requêtes GET, POST et DELETE, codes de statut, cookies et sessions, CGI, sur un serveur non bloquant écrit de zéro."
+          },
+          {
+            "id": "ip-networking",
+            "name": "Réseau IP",
+            "level": "intermediate",
+            "projects": ["netpractice", "born2beroot"],
+            "description": "Adresses, masques de sous-réseau et routage appris avec Netpractice, pare-feu et SSH configurés dans Born2beroot."
+          },
+          {
+            "id": "apis",
+            "name": "APIs",
+            "level": "intermediate",
+            "projects": ["dashboards", "client_migration", "chatbot", "devpedia"],
+            "description": "Le tableau de bord de direction s'appuie sur 17 endpoints d'API, et j'ai contribué à une intégration Power BI ; les fiches clients sont envoyées par l'API du nouveau logiciel, le chatbot appelle l'API locale d'Ollama, et j'avais intégré l'API DeepL pour traduire Devpedia automatiquement. Le travail professionnel a été réalisé avec l'assistance de Claude Code."
+          },
+          {
+            "id": "sql-pdo",
+            "name": "SQL / PDO",
+            "level": "intermediate",
+            "projects": ["admin_backoffice", "nps_scores"],
+            "description": "Back-office sur SQL Server via PDO avec une base par module, et pipeline NPS en trois couches (Staging, Silver, Gold) validées par des tests de cohérence SQL, avec l'assistance de Claude Code."
+          },
+          {
+            "id": "elasticsearch",
+            "name": "Elasticsearch",
+            "level": "beginner",
+            "projects": ["search_tool"],
+            "description": "L'outil de recherche conversationnelle transforme une question en langage naturel en requête Elasticsearch sur le stock de véhicules. Le moteur de recherche existait avant ma reprise du projet : j'y ai corrigé les filtres et la qualité des données, avec l'assistance de Claude Code."
+          }
+        ]
+      },
+      {
+        "id": "security",
+        "title": "Sécurité",
+        "short": "Sécurité",
+        "items": [
+          {
+            "id": "web-security",
+            "name": "Sécurité web",
+            "level": "intermediate",
+            "projects": ["search_tool"],
+            "description": "Token signé HMAC, limitation de débit par adresse IP, protection CSRF, contrôle d'accès par concession, en-têtes CSP et fixation de session corrigés : une campagne de crash-test a permis de corriger une trentaine de bugs et de failles, avec l'assistance de Claude Code."
+          }
+        ]
+      },
+      {
+        "id": "data",
+        "title": "Data science et IA",
+        "short": "Data et IA",
+        "items": [
+          {
+            "id": "numpy",
+            "name": "NumPy",
+            "level": "beginner",
+            "projects": ["chatbot"],
+            "description": "Mes expériences d'IA : statistiques, standardisation et valeurs manquantes."
+          },
+          {
+            "id": "matplotlib",
+            "name": "Matplotlib",
+            "level": "beginner",
+            "projects": ["chatbot"],
+            "description": "Courbes d'apprentissage et affichage d'images dans mes expériences d'IA."
+          },
+          {
+            "id": "keras",
+            "name": "TensorFlow / Keras",
+            "level": "beginner",
+            "projects": ["chatbot"],
+            "description": "Mes premiers pas en deep learning : un réseau de neurones linéaire avec Keras dont je suis l'apprentissage, et la détection du GPU avec TensorFlow."
+          }
+        ]
+      },
+      {
+        "id": "tools",
+        "title": "Outils",
+        "short": "Outils",
+        "items": [
+          {
+            "id": "virtualbox",
+            "name": "VirtualBox",
+            "level": "intermediate",
+            "projects": ["born2beroot", "inception"],
+            "description": "Debian installée et durcie dans Born2beroot, puis base d'Inception, dont l'infrastructure de conteneurs devait tourner dans une machine virtuelle."
+          },
+          {
+            "id": "minilibx",
+            "name": "MinilibX",
+            "level": "intermediate",
+            "projects": ["fract-ol", "cub3d"],
+            "description": "Tout le rendu de Fract-ol, puis la minimap, les déplacements et les collisions de Cub3D."
+          },
+          {
+            "id": "valgrind",
+            "name": "Valgrind",
+            "level": "intermediate",
+            "projects": ["minishell", "philosophers"],
+            "description": "Traque des fuites mémoire et des erreurs d'accès dans mes projets C, où la moindre fuite fait échouer l'évaluation."
+          },
+          {
+            "id": "docker",
+            "name": "Docker",
+            "level": "beginner",
+            "projects": ["inception"],
+            "description": "Dockerfiles et docker-compose écrits à la main pour Nginx, MariaDB et WordPress dans Inception."
+          },
+          {
+            "id": "threejs",
+            "name": "Three.js",
+            "level": "beginner",
+            "projects": ["transcendence"],
+            "description": "La version 3D du Pong de Transcendence : modèles, éclairage et caméra animée."
+          }
+        ]
+      }
+    ]
+  },
+  "projects": {
+    "title": "Mes projets",
+    "lede": "Quatre systèmes stellaires, un par univers : chaque planète en orbite est un projet. Sélectionne un système pour t'en approcher, ou directement une planète pour ouvrir son projet.",
+    "back": "Tous les systèmes",
+    "count": "{n} projets",
+    "approach": "Approcher le système {name}",
+    "systemOf": "Système {name}",
+    "listLabel": "Liste des projets",
+    "systems": [
+      {
+        "id": "pro",
+        "name": "Tressol-Chabrier",
+        "intro": "Au siège du Groupe Tressol-Chabrier, j'ai participé au développement de plusieurs applications et pipelines de données internes. Pour des raisons de confidentialité, je reste ici volontairement général sur le fonctionnement métier et ne mentionne que l'aspect technique du code produit. Ces projets ont été réalisés avec l'assistance de Claude Code : j'en ai conçu, dirigé, relu et testé chaque changement.",
+        "projects": [
+          {
+            "id": "search_tool",
+            "title": "Un outil de recherche conversationnelle",
+            "summary": "Interroger le stock de véhicules du groupe en langage naturel, grâce à un LLM qui construit la requête Elasticsearch.",
+            "tags": ["LLM", "Elasticsearch", "HMAC"],
+            "blocks": [
+              {
+                "type": "text",
+                "html": "J'ai repris le développement d'un outil de recherche conversationnelle, lancé par un collègue, qui permet d'interroger le stock de véhicules du groupe en langage naturel. Une requête utilisateur est d'abord interprétée par un LLM, qui en extrait les critères et la reformule, avant de construire une requête Elasticsearch adaptée."
+              },
+              {
+                "type": "text",
+                "html": "J'y ai notamment mis en place un système d'authentification par token signé HMAC, qui résout automatiquement le contexte (concession, source de données) sans configuration manuelle par concession. J'ai également corrigé plusieurs bugs de qualité de données (problèmes d'encodage, champs vides, filtres trop permissifs sur la marque ou le type de véhicule)."
+              },
+              {
+                "type": "text",
+                "html": "Côté performance, j'ai réduit le poids d'un écran de chargement de plus de 5 Mo à moins de 10 Ko, réactivé la mise en cache navigateur, et fait passer le temps de réponse d'un point d'entrée critique de plus d'une seconde à moins de 50 millisecondes."
+              },
+              {
+                "type": "text",
+                "html": "L'application est pensée pour fonctionner sur plusieurs concessions : l'identifiant de concession est fixé côté serveur à la validation du token puis injecté dans chaque requête, sans que le client puisse le modifier. J'y ai également ajouté une limitation de débit par adresse IP et une protection CSRF sur les requêtes qui modifient des données. Une campagne de crash-test m'a permis d'identifier et de corriger une trentaine de bugs et de failles."
+              }
+            ],
+            "links": [],
+            "media": []
+          },
+          {
+            "id": "dashboards",
+            "title": "Des tableaux de bord de pilotage",
+            "summary": "Tableaux de bord internes pour visualiser et filtrer des données commerciales par concession, dont un tableau de bord de direction.",
+            "tags": ["ECharts", "Power BI", "API"],
+            "blocks": [
+              {
+                "type": "text",
+                "html": "J'ai contribué à plusieurs tableaux de bord internes permettant de visualiser et filtrer des données commerciales par concession (ventes de véhicules d'occasion, qualité, suivi de stock), avec une intégration Power BI sur l'un d'entre eux."
+              },
+              {
+                "type": "text",
+                "html": "J'ai notamment travaillé sur la refonte de l'interface (filtres, barre latérale, mise en page) pour la rendre utilisable aussi bien sur ordinateur que sur mobile."
+              },
+              {
+                "type": "text",
+                "html": "J'ai également développé un tableau de bord de direction couvrant plusieurs domaines (ventes de véhicules neufs et d'occasion, appels, NPS, qualité, événements). Il s'appuie sur 17 endpoints d'API et des graphiques ECharts, et propose une carte du réseau dont les adresses sont géocodées par lot puis mises en cache. Un cache fichier à écriture atomique permet de continuer à servir le dernier état connu si la base est momentanément indisponible. Il permet de sélectionner plusieurs concessions à la fois et couvre aussi le centre d'appels et la qualité."
+              }
+            ],
+            "links": [],
+            "media": []
+          },
+          {
+            "id": "nps_scores",
+            "title": "Les scores NPS, de la donnée à l'écran",
+            "summary": "Du classeur trimestriel jusqu'au tableau de bord : pipeline en trois couches et module de back-office.",
+            "tags": ["SQL Server", "Power BI", "PHP", "Azure Pipelines"],
+            "blocks": [
+              {
+                "type": "text",
+                "html": "J'ai développé le pipeline quotidien qui alimente les scores NPS (véhicules neufs et après-vente) par concession. Il part d'un classeur Google Sheets trimestriel et aboutit à une table de faits consommée par Power BI, en trois couches (Staging, Silver, Gold) sur SQL Server, au sein de la plateforme de données du groupe."
+              },
+              {
+                "type": "text",
+                "html": "Le pipeline normalise les marques, détecte les décalages de colonnes du classeur source, rapproche chaque concession du référentiel du groupe et regroupe les différentes orthographes d'une même commune. Chaque couche est validée par un test de cohérence SQL (par exemple, un score NPS doit rester compris entre -100 et 100) et le déploiement passe par Azure Pipelines, avec une exécution quotidienne planifiée."
+              },
+              {
+                "type": "text",
+                "html": "Côté back-office, j'ai aussi réalisé le module PHP qui affiche ces scores par trimestre, marque et site, avec une calculette de simulation des objectifs. L'accès aux données est résilient : si l'entrepôt est indisponible, le module bascule sur une copie de staging, puis sur un JSON statique, plutôt que de planter, et un cache fichier limite le nombre de requêtes."
+              }
+            ],
+            "links": [],
+            "media": []
+          },
+          {
+            "id": "audit_infomediaires",
+            "title": "Un audit nocturne des boutiques en ligne",
+            "summary": "Pipeline Python qui vérifie chaque nuit la visibilité des boutiques en ligne du groupe sur les plateformes d'annonces.",
+            "tags": ["Python", "Playwright", "pytest", "Azure Pipelines"],
+            "blocks": [
+              {
+                "type": "text",
+                "html": "J'ai développé un pipeline Python qui vérifie chaque nuit que les boutiques de véhicules d'occasion du groupe sont bien visibles sur plusieurs plateformes d'annonces. Il compte les annonces réellement affichées, détecte les doublons de véhicules et mesure l'écart avec le stock de référence. L'extraction repose sur Playwright, en parallèle par plateforme, avec gestion des bandeaux cookies et des contrôles anti-robot."
+              },
+              {
+                "type": "text",
+                "html": "Le pipeline s'arrête volontairement lorsqu'une boutique n'affiche aucune annonce ou qu'un doublon est confirmé, et se termine « avec avertissements » si certaines boutiques n'ont pas pu être lues. Il est déployé via Azure Pipelines (validation avec Ruff et pytest, environnements de préproduction et de production) et couvert par plusieurs centaines de tests."
+              },
+              {
+                "type": "text",
+                "html": "Les résultats sont consultables dans un module du back-office que j'ai également développé : tableau filtrable et triable par boutique et par plateforme, export CSV, cartes « à traiter en priorité » et alerte dédiée aux boutiques non lues, avec la cause de l'échec."
+              }
+            ],
+            "links": [],
+            "media": []
+          },
+          {
+            "id": "pdf_parser",
+            "title": "Un parseur de politiques commerciales PDF",
+            "summary": "Convertir des PDF de politiques commerciales de constructeurs en JSON structuré et versionné par marque.",
+            "tags": ["Python", "OCR", "PaddleOCR", "img2table"],
+            "blocks": [
+              {
+                "type": "text",
+                "html": "J'ai développé un outil Python qui convertit des PDF de politiques commerciales de constructeurs en JSON structuré et versionné par marque (titres, texte, listes à puces et tableaux dont les cellules sont typées : date, pourcentage, montant, entier). Il est conçu pour alimenter un chatbot en aval."
+              },
+              {
+                "type": "text",
+                "html": "La détection des tableaux fonctionne en cascade : texte natif du PDF d'abord, contrôle croisé avec img2table lorsqu'une cellule paraît suspecte, puis repli sur l'OCR (PaddleOCR) uniquement si rien n'a été trouvé. Les valeurs douteuses sont marquées « suspectes » plutôt que passées sous silence."
+              },
+              {
+                "type": "text",
+                "html": "Côté performance, j'ai réduit le temps de traitement d'environ 30 % en abaissant la résolution de rendu, et parallélisé le repli OCR en fonction de la mémoire disponible. L'outil est couvert par environ 170 tests et a été éprouvé sur une vingtaine de documents couvrant plus de dix marques."
+              }
+            ],
+            "links": [],
+            "media": []
+          },
+          {
+            "id": "admin_backoffice",
+            "title": "Un back-office d'administration",
+            "summary": "Des modules de scores NPS, d'audit et de suivi des appels dans le back-office commun à plusieurs applications internes.",
+            "tags": ["PHP 8", "Slim 4", "SQL Server", "PDO"],
+            "blocks": [
+              {
+                "type": "text",
+                "html": "J'ai développé des modules dans le back-office d'administration commun à plusieurs applications internes : PHP 8 avec Slim 4, SQL Server en PDO, une base par module et des droits d'accès par module et par profil."
+              },
+              {
+                "type": "text",
+                "html": "J'y ai réalisé les modules de scores NPS et d'audit des boutiques en ligne décrits ci-dessus, et j'ai refondu le module de suivi des appels."
+              }
+            ],
+            "links": [],
+            "media": []
+          },
+          {
+            "id": "call_resolution",
+            "title": "La résolution des appels",
+            "summary": "Porter dans le back-office l'outil de résolution des appels du centre d'appels, prototypé par un collègue en Python avec Streamlit.",
+            "tags": ["PHP", "Back-office"],
+            "blocks": [
+              {
+                "type": "text",
+                "html": "J'ai porté dans le back-office l'outil de résolution des appels du centre d'appels, qu'un collègue avait prototypé en Python avec Streamlit. Le module lit l'entrepôt de données, permet de rattacher chaque appel à la bonne concession et calcule la facturation des appels, sur six onglets pensés pour être utilisables sans jargon technique, jusque sur téléphone. Il est couvert par 151 tests, dont 38 d'intégration."
+              }
+            ],
+            "links": [],
+            "media": []
+          },
+          {
+            "id": "client_migration",
+            "title": "Une migration de fiches clients",
+            "summary": "Préparer et envoyer plus de 430 000 fiches clients d'un ancien logiciel vers l'API du nouveau.",
+            "tags": ["Python", "API"],
+            "blocks": [
+              {
+                "type": "text",
+                "html": "J'ai réalisé les scripts Python qui ont préparé puis envoyé plus de 430 000 fiches clients d'un ancien logiciel vers l'API du nouveau, par lots, avec point de reprise, journaux d'envoi et rapport des fiches refusées."
+              }
+            ],
+            "links": [],
+            "media": []
+          }
+        ]
+      },
+      {
+        "id": "perso",
+        "name": "Projets perso",
+        "intro": "Des projets que je considère utiles, soit pour progresser vers mes objectifs futurs dans la programmation, soit parce qu'ils peuvent apporter quelque chose d'utile à d'autres personnes ou à moi-même.",
+        "projects": [
+          {
+            "id": "portfolio",
+            "title": "Ce portfolio",
+            "summary": "Ce site, écrit en HTML, CSS et JavaScript sans framework.",
+            "tags": ["HTML", "CSS", "JavaScript"],
+            "blocks": [
+              {
+                "type": "text",
+                "html": "Et oui, ça compte. Sa refonte spatiale a été réalisée avec l'assistance de Claude Code."
+              }
+            ],
+            "links": [],
+            "media": []
+          },
+          {
+            "id": "chatbot",
+            "title": "Un chatbot IA",
+            "summary": "Un chatbot qui dialogue avec un modèle Mistral exécuté en local par Ollama.",
+            "tags": ["JavaScript", "Express", "Ollama", "Mistral"],
+            "blocks": [
+              {
+                "type": "text",
+                "html": "En termes d'IA, j'ai créé un chatbot qui dialogue avec un modèle Mistral exécuté en local par Ollama : une interface web en JavaScript et un petit serveur Express qui relaie les messages, sans aucune API externe. J'ai aussi mené des expériences dans un dépôt dédié : statistiques et standardisation de données avec NumPy, traitement d'images, graphiques avec Matplotlib et un premier réseau de neurones avec Keras."
+              }
+            ],
+            "links": [
+              {
+                "intro": "Vous pouvez y jeter un œil",
+                "label": "ici",
+                "href": "https://louis-cagnion.github.io/Chatbot/"
+              }
+            ],
+            "media": []
+          },
+          {
+            "id": "wiki",
+            "title": "Un wiki complet de jeu vidéo",
+            "summary": "Un wiki interactif autour du jeu Heartopia : carte, suivi de progression et recettes avec calculateur de profit.",
+            "tags": ["HTML", "CSS", "JavaScript", "Vitest"],
+            "blocks": [
+              {
+                "type": "text",
+                "html": "Grâce à HTML, CSS et JavaScript, qui me permettent de raconter mon parcours à travers ce portfolio, j'ai créé un wiki interactif autour du jeu <strong>Heartopia</strong> : une carte où situer les objets à collectionner et la faune, suivre sa progression et parcourir les recettes, avec un calculateur de profit."
+              },
+              {
+                "type": "text",
+                "html": "À travers ce projet, je souhaite aider la communauté francophone, ainsi que moi-même, à mieux comprendre les mécaniques du jeu, obtenir des ressources, réussir certains succès et progresser plus facilement."
+              },
+              {
+                "type": "text",
+                "html": "Mon objectif est de proposer des comparaisons, des observations et différentes astuces afin de simplifier la vie des joueurs dans un jeu qui possède énormément de mécaniques et de systèmes cachés."
+              },
+              {
+                "type": "text",
+                "html": "Un panneau d'administration permet de modifier les données directement depuis le navigateur. Le projet a été développé avec l'assistance de Claude Code et il est couvert par des tests unitaires."
+              }
+            ],
+            "links": [
+              {
+                "intro": "Vous pouvez retrouver ce projet gratuitement en ligne via",
+                "label": "ce lien",
+                "href": "https://louis-cagnion.github.io/Heartopia_map_tracking/"
+              }
+            ],
+            "media": []
+          },
+          {
+            "id": "devpedia",
+            "title": "Devpedia, une encyclopédie du développement",
+            "summary": "Encyclopédie du développement logiciel, rendue par un parseur Markdown écrit à la main et traduite en trois langues.",
+            "tags": ["JavaScript", "Markdown"],
+            "blocks": [
+              {
+                "type": "text",
+                "html": "Devpedia est un site que j'ai créé pour documenter, expliquer et partager mes connaissances sur différents sujets liés au développement logiciel. Ce projet m'aide à approfondir ma compréhension par la recherche et la pédagogie, à m'entraîner à construire des interfaces web modernes, et à rendre ces connaissances accessibles à toute personne intéressée."
+              },
+              {
+                "type": "text",
+                "html": "Le site couvre plusieurs langages de programmation (C, C++, PHP, Python avec la data science et l'IA : NumPy, pandas, Matplotlib, scikit-learn, les réseaux de neurones, PyTorch, le NLP et les LLMs, ainsi que JavaScript), les langages de balisage (HTML, CSS), des langages spécifiques comme Regex et SQL, plusieurs shells (Bash, PowerShell, Zsh), ainsi que Git, du fonctionnement quotidien jusqu'à son modèle interne."
+              },
+              {
+                "type": "text",
+                "html": "J'ai écrit la base du site, dont le parseur Markdown qui assure le rendu de chaque chapitre, et j'y avais intégré l'API DeepL pour traduire automatiquement chaque page. Son quota gratuit d'un million de caractères n'a pas tenu longtemps : j'ai alors passé le relais à Claude Code, qui en a rédigé l'essentiel du contenu, ajouté les nouvelles fonctionnalités et traduit chaque page en anglais, espagnol et portugais. Chaque page peut aussi être écoutée, grâce à une lecture audio générée dans les quatre langues."
+              }
+            ],
+            "links": [
+              {
+                "intro": "Vous pouvez consulter le site",
+                "label": "ici",
+                "href": "https://louis-cagnion.github.io/Devpedia/"
+              }
+            ],
+            "media": []
+          },
+          {
+            "id": "codewars",
+            "title": "Codewars",
+            "summary": "Mes solutions aux exercices de Codewars, en C et en Python, dont un Skyscraper de niveau Kyu 1.",
+            "tags": ["C", "Python"],
+            "blocks": [
+              {
+                "type": "text",
+                "html": "Mes solutions aux exercices de Codewars, en C et en Python. La plus difficile est un Skyscraper de niveau Kyu 1, le plus haut du site, que j'ai fini par résoudre en 0,5 s sur une grille 6×6, puis en 0,01 s en 7×7 après avoir élagué les possibilités dès les indices. On y trouve aussi un interpréteur d'assembleur écrit en C et la série RoboScript, un petit langage à interpréter en Python."
+              }
+            ],
+            "links": [],
+            "media": []
+          },
+          {
+            "id": "ultimate_libft",
+            "title": "Ultimate libft",
+            "summary": "La suite de ma libft : plus de 150 fonctions C rangées par thème.",
+            "tags": ["C"],
+            "blocks": [
+              {
+                "type": "text",
+                "html": "La suite de ma libft : plus de 150 fonctions C rangées par thème (chaînes, listes chaînées, mathématiques et conversions de bases, mémoire, fichiers, affichage en couleurs, vérifications), réutilisées dans chacun de mes projets C."
+              }
+            ],
+            "links": [],
+            "media": []
+          },
+          {
+            "id": "supermarket_compare",
+            "title": "Un comparateur de courses",
+            "summary": "Une application web qui compare les prix de plusieurs supermarchés, toujours ramenés au kilo ou au litre.",
+            "tags": ["JavaScript", "node --test"],
+            "blocks": [
+              {
+                "type": "text",
+                "html": "Une application web qui compare les prix de plusieurs supermarchés, toujours ramenés au kilo ou au litre pour ne pas se faire piéger par la taille des paquets. Elle génère la liste de courses magasin par magasin en limitant le nombre d'arrêts, accepte une liste collée depuis une application de notes, et tourne entièrement dans le navigateur. Développée avec l'assistance de Claude Code, chaque changement étant relu et dirigé par moi, et couverte par des tests unitaires."
+              }
+            ],
+            "links": [],
+            "media": []
+          },
+          {
+            "id": "creativity_box",
+            "title": "Creativity box",
+            "summary": "Ma boîte à expériences : trois variantes de printf recodées, un système solaire en C++ et quelques utilitaires.",
+            "tags": ["C", "C++"],
+            "blocks": [
+              {
+                "type": "text",
+                "html": "Ma boîte à expériences, où je m'autorise tout, surtout la manière la plus compliquée : trois variantes de printf recodées de zéro (fprintf, sprintf, asprintf), un système solaire modélisé en C++ orienté objet qui classe les planètes par masse, diamètre, température ou gravité, et quelques utilitaires du quotidien, comme un convertisseur de couleurs RGB vers Pantone ou un suivi de séances de sport."
+              }
+            ],
+            "links": [],
+            "media": []
+          },
+          {
+            "id": "games",
+            "title": "Des outils pour mes jeux",
+            "summary": "De petits programmes, surtout en C++, pour les jeux auxquels je joue.",
+            "tags": ["C++", "C"],
+            "blocks": [
+              {
+                "type": "text",
+                "html": "De petits programmes, surtout en C++, pour les jeux auxquels je joue : calculateurs de multiplicateurs de types pour Pokémon et Temtem, un calcul de score pour Balatro, un catalogue des ballons de Bloons TD 6, un solveur pour Tusmo, un jeu textuel en C inspiré de Solo Leveling avec sauvegarde des joueurs, et le premier prototype de la carte de Heartopia, devenu ensuite le wiki."
+              }
+            ],
+            "links": [],
+            "media": []
+          }
+        ]
+      },
+      {
+        "id": "school",
+        "name": "42 Perpignan",
+        "intro": "Durant mon cursus, j'ai eu l'occasion de réaliser plusieurs projets solo et de groupe particulièrement intéressants.",
+        "projects": [
+          {
+            "id": "libft",
+            "title": "Libft",
+            "summary": "Recréer une quarantaine de fonctions de la bibliothèque standard du C, puis des listes chaînées en bonus.",
+            "tags": ["C"],
+            "blocks": [
+              {
+                "type": "text",
+                "html": "Le tout premier projet du cursus : recréer une quarantaine de fonctions de la bibliothèque standard du C (manipulation de chaînes et de mémoire, conversions, affichage), puis, en bonus, une petite boîte à outils de listes chaînées. Cette bibliothèque m'a ensuite suivi dans tous mes projets C, au point de devenir l'Ultimate libft."
+              }
+            ],
+            "links": [],
+            "media": []
+          },
+          {
+            "id": "ft_printf",
+            "title": "Ft_printf",
+            "summary": "Recréer la fonction printf et ses options de mise en forme.",
+            "tags": ["C"],
+            "blocks": [
+              {
+                "type": "text",
+                "html": "Recréer la fonction printf avec les conversions c, s, p, d, i, u, x, X et %. Les bonus ajoutaient les options de mise en forme : largeur, précision et les drapeaux -, 0, ., #, + et espace, dont toutes les combinaisons doivent se comporter exactement comme l'original."
+              }
+            ],
+            "links": [],
+            "media": []
+          },
+          {
+            "id": "get_next_line",
+            "title": "Get_next_line",
+            "summary": "Une fonction qui renvoie un fichier ligne par ligne, quelle que soit la taille du tampon de lecture.",
+            "tags": ["C"],
+            "blocks": [
+              {
+                "type": "text",
+                "html": "Écrire une fonction qui renvoie un fichier ligne par ligne, quelle que soit la taille du tampon de lecture choisie à la compilation, sans fuite de mémoire. Le bonus demandait de lire plusieurs fichiers en même temps sans mélanger leurs lignes."
+              }
+            ],
+            "links": [],
+            "media": []
+          },
+          {
+            "id": "born2beroot",
+            "title": "Born2beroot",
+            "summary": "Mon premier serveur : une machine virtuelle Debian installée et durcie à la main.",
+            "tags": ["Debian", "VirtualBox", "LVM", "SSH", "UFW"],
+            "blocks": [
+              {
+                "type": "text",
+                "html": "Mon premier serveur : une machine virtuelle Debian installée et durcie à la main, avec des partitions chiffrées sous LVM, SSH sur un port dédié, un pare-feu UFW, une politique de mots de passe stricte, sudo journalisé et un script de supervision lancé toutes les dix minutes par cron. En bonus, j'y ai ajouté un site WordPress servi par lighttpd avec MariaDB et PHP, ainsi qu'un service supplémentaire de mon choix."
+              }
+            ],
+            "links": [],
+            "media": []
+          },
+          {
+            "id": "push_swap",
+            "title": "Push_swap",
+            "summary": "Trier une liste aléatoire de 500 entiers en moins de 5500 opérations, avec deux listes et des mouvements très limités.",
+            "tags": ["C", "Algorithmes de tri"],
+            "blocks": [
+              {
+                "type": "text",
+                "html": "Le but de ce projet était de coder un algorithme de tri le plus efficace possible afin de trier jusqu'à 500 nombres."
+              },
+              {
+                "type": "text",
+                "html": "Pour obtenir la note maximale, il fallait réussir à trier une liste aléatoire de 500 entiers en moins de 5500 opérations avec des mouvements très limités."
+              },
+              {
+                "type": "text",
+                "html": "En résumé, imaginez deux listes : la seconde est vide, et vous ne pouvez interagir qu'avec le premier ou le dernier élément de chaque liste afin de déplacer les nombres."
+              },
+              {
+                "type": "text",
+                "html": "J'avais réussi à développer un algorithme qui effectuait le tri en environ 5700 coups en moyenne. J'étais fier de cette méthode trouvée après avoir testé plusieurs approches différentes, même si j'ai finalement dû m'inspirer d'un algorithme existant pour passer sous la barre des 5500 opérations."
+              },
+              {
+                "type": "text",
+                "html": "Le bonus consistait à créer un \"Checker\" permettant de vérifier qu'une suite d'opérations donnait bien, à la fin, une liste triée dans l'ordre croissant."
+              }
+            ],
+            "links": [],
+            "media": []
+          },
+          {
+            "id": "pipex",
+            "title": "Pipex",
+            "summary": "Reproduire en C une chaîne de commandes reliées par des pipes, avec fork, pipe, dup2 et execve.",
+            "tags": ["C", "Processus", "Pipes"],
+            "blocks": [
+              {
+                "type": "text",
+                "html": "Reproduire en C le comportement de < fichier cmd1 | cmd2 > fichier avec fork, pipe, dup2 et execve. Les bonus ajoutaient un nombre quelconque de commandes enchaînées et le here_doc, qui lit l'entrée jusqu'à un mot limite et écrit à la suite du fichier de sortie."
+              }
+            ],
+            "links": [],
+            "media": []
+          },
+          {
+            "id": "minitalk",
+            "title": "Minitalk",
+            "summary": "Faire dialoguer un client et un serveur avec deux signaux seulement, SIGUSR1 et SIGUSR2.",
+            "tags": ["C", "Signaux UNIX"],
+            "blocks": [
+              {
+                "type": "text",
+                "html": "Faire dialoguer un client et un serveur avec deux signaux seulement, SIGUSR1 et SIGUSR2 : chaque caractère est envoyé bit par bit, et le serveur accuse réception de chacun, ce qui évite d'en perdre en route."
+              }
+            ],
+            "links": [],
+            "media": []
+          },
+          {
+            "id": "fract-ol",
+            "title": "Fract-ol",
+            "summary": "Un rendu graphique de fractales avec la MinilibX.",
+            "tags": ["C", "MinilibX"],
+            "blocks": [
+              {
+                "type": "text",
+                "html": "Ce projet était plus artistique. Le but était d'utiliser la MinilibX afin de créer un rendu graphique de fractales."
+              },
+              {
+                "type": "text",
+                "html": "Pour ceux qui ne savent pas ce qu'est une fractale : il s'agit d'un motif qui se répète à l'infini lorsqu'on zoome dessus. Le chou romanesco est d'ailleurs un excellent exemple de fractale naturelle."
+              },
+              { "type": "text", "html": "Les bonus consistaient à :" },
+              {
+                "type": "list",
+                "items": [
+                  "Créer une troisième fractale, Multibrot, en plus de Julia et Mandelbrot",
+                  "Faire suivre le zoom avec la position de la souris",
+                  "Déplacer la caméra avec les flèches directionnelles",
+                  "Modifier dynamiquement les couleurs de la fractale"
+                ]
+              }
+            ],
+            "links": [],
+            "media": []
+          },
+          {
+            "id": "minishell",
+            "title": "Minishell",
+            "summary": "Recréer un shell en groupe ; j'y ai écrit les pipes, des builtins et les opérateurs logiques avec leurs priorités.",
+            "tags": ["C", "Arbres binaires"],
+            "blocks": [
+              {
+                "type": "text",
+                "html": "Le but de ce premier projet de groupe était de recréer un mini shell (mais nan !)."
+              },
+              { "type": "text", "html": "Il fallait notamment :" },
+              {
+                "type": "list",
+                "items": [
+                  "Pouvoir naviguer dans différents niveaux du shell",
+                  "Recréer plusieurs commandes Bash comme cd, echo, pwd, export ou exit",
+                  "Gérer l'historique",
+                  "Implémenter les redirections (<, >, <<, >>)",
+                  "Gérer les variables d'environnement",
+                  "Gérer les signaux clavier comme Ctrl+C, Ctrl+D et Ctrl+\\"
+                ]
+              },
+              {
+                "type": "text",
+                "html": "Les bonus consistaient à ajouter les opérateurs logiques '&&' et '||', les priorités avec des parenthèses et les wildcards '*'."
+              },
+              {
+                "type": "text",
+                "html": "De mon côté, j'ai écrit les pipes, les builtins cd, env, exit et pwd, ainsi que toute la partie bonus des opérateurs logiques et des priorités : un arbre binaire qui porte l'ordre d'exécution des commandes."
+              }
+            ],
+            "links": [],
+            "media": []
+          },
+          {
+            "id": "philosophers",
+            "title": "Philosophers",
+            "summary": "Maintenir des philosophes en vie à la milliseconde près, avec des threads et des mutex.",
+            "tags": ["C", "Threads", "Mutex", "Sémaphores"],
+            "blocks": [
+              {
+                "type": "text",
+                "html": "Pour ce projet, il fallait réussir à faire survivre des philosophes."
+              },
+              { "type": "text", "html": "Ces philosophes possédaient plusieurs états :" },
+              {
+                "type": "list",
+                "items": [
+                  "Un temps pour manger",
+                  "Un temps pour réfléchir",
+                  "Un temps pour dormir",
+                  "Un nombre de repas à atteindre (optionnel)"
+                ]
+              },
+              {
+                "type": "text",
+                "html": "Ils possédaient également un temps de vie limité. Le but était de fournir différents paramètres de temps et différents nombres de philosophes, puis d'être suffisamment précis pour réussir à les maintenir en vie selon les contraintes données."
+              },
+              {
+                "type": "text",
+                "html": "Les temps étaient exprimés en millisecondes, donc le moindre mauvais calibrage se remarquait immédiatement."
+              },
+              {
+                "type": "text",
+                "html": "En plus de cela, il fallait afficher précisément le moment auquel chaque philosophe effectuait une action, avec une marge d'erreur inférieure à 10 ms."
+              },
+              {
+                "type": "text",
+                "html": "La particularité de ce projet venait du fait que les philosophes ne pouvaient manger que si deux fourchettes étaient disponibles. Cependant, chaque philosophe ne possédait qu'une seule fourchette. Il fallait donc organiser correctement les accès afin d'éviter les blocages, les conflits et les morts prématurées."
+              },
+              {
+                "type": "text",
+                "html": "Les bonus consistaient à refaire le même exercice en remplaçant les threads par des processus enfants et les mutex par des sémaphores."
+              }
+            ],
+            "links": [],
+            "media": []
+          },
+          {
+            "id": "netpractice",
+            "title": "Netpractice",
+            "summary": "Dix niveaux de petits réseaux à configurer : adresses IP, masques de sous-réseau, passerelles et routage.",
+            "tags": ["Réseau IP", "Sous-réseaux", "Routage"],
+            "blocks": [
+              {
+                "type": "text",
+                "html": "Dix niveaux de configuration de petits réseaux à faire fonctionner : adresses IP, masques de sous-réseau, passerelles et tables de routage, sans aucune ligne de code mais avec beaucoup de calcul binaire."
+              }
+            ],
+            "links": [],
+            "media": []
+          },
+          {
+            "id": "cub3d",
+            "title": "Cub3D",
+            "summary": "Un jeu inspiré de Wolfenstein 3D, avec un moteur en raycasting ; j'y ai écrit le parseur des cartes, les collisions, la minimap et les déplacements.",
+            "tags": ["C", "MinilibX", "Raycasting"],
+            "blocks": [
+              {
+                "type": "text",
+                "html": "Le but de ce second projet de groupe était de créer un jeu inspiré de <a href=\"https://search.brave.com/images?q=Wolfenstein+3D+gameplay\">Wolfenstein 3D</a>, avec un moteur en raycasting : une carte en deux dimensions projetée en pseudo-3D."
+              },
+              {
+                "type": "text",
+                "html": "De mon côté, j'ai écrit le parseur des cartes, la collision avec les murs, la minimap, ainsi que les déplacements du personnage et la gestion de sa vitesse. Mon binôme s'est chargé du raycasting, des textures des murs, des entités et de la vue haut-bas des bonus."
+              },
+              { "type": "text", "html": "Les bonus consistaient notamment à :" },
+              {
+                "type": "list",
+                "items": [
+                  "Ajouter la gestion des collisions",
+                  "Implémenter une minimap",
+                  "Ajouter des portes",
+                  "Créer des sprites animés",
+                  "Gérer les mouvements de caméra avec la souris"
+                ]
+              },
+              {
+                "type": "text",
+                "html": "La personne avec qui j'ai travaillé sur ce projet a même ajouté une caméra verticale alors que le moteur utilisait de la fausse 2D."
+              },
+              {
+                "type": "text",
+                "html": "Il a également été remarquable durant le projet, car même lorsque j'étais moins disponible, il a continué à faire avancer énormément de choses de son côté. Cela mérite largement des remerciements."
+              }
+            ],
+            "links": [],
+            "media": []
+          },
+          {
+            "id": "cpp_modules",
+            "title": "Les modules C++",
+            "summary": "Dix modules pour passer du C au C++ orienté objet (C++98), des classes aux templates et à la STL.",
+            "tags": ["C++98", "POO", "Templates", "STL"],
+            "blocks": [
+              {
+                "type": "text",
+                "html": "Dix modules pour passer du C au C++ orienté objet (C++98) :"
+              },
+              {
+                "type": "list",
+                "items": [
+                  "Classes et premiers pas (00), mémoire, références et pointeurs sur membres (01)",
+                  "Forme canonique et surcharge d'opérateurs avec un nombre à virgule fixe (02)",
+                  "Héritage, y compris en diamant (03), polymorphisme, classes abstraites et interfaces (04)",
+                  "Exceptions (05), conversions de types et sérialisation (06)",
+                  "Templates (07), conteneurs, itérateurs et algorithmes de la STL (08)",
+                  "Un dernier module d'exercices complets : un convertisseur de cours du Bitcoin, une calculatrice en notation polonaise inversée et le tri de Ford-Johnson (09)"
+                ]
+              }
+            ],
+            "links": [],
+            "media": []
+          },
+          {
+            "id": "inception",
+            "title": "Inception",
+            "summary": "Créer ses propres Dockerfiles et docker-compose avec Nginx, MariaDB et WordPress, dans une machine virtuelle.",
+            "tags": ["Docker", "Nginx", "MariaDB", "WordPress"],
+            "blocks": [
+              {
+                "type": "text",
+                "html": "Dans ce projet, il fallait créer ses propres Dockerfiles et docker-compose en utilisant Nginx, MariaDB et WordPress."
+              },
+              {
+                "type": "text",
+                "html": "Le conteneur devait être créé et fonctionner sur une machine virtuelle."
+              },
+              { "type": "text", "html": "Les bonus consistaient notamment à :" },
+              {
+                "type": "list",
+                "items": [
+                  "Ajouter un cache Redis à WordPress",
+                  "Configurer un serveur FTP pointant sur le volume WordPress",
+                  "Créer un site web statique hors PHP",
+                  "Configurer Adminer",
+                  "Ajouter un service supplémentaire jugé utile"
+                ]
+              },
+              {
+                "type": "text",
+                "html": "C'est probablement le projet que j'ai le moins apprécié et celui avec lequel j'ai eu le plus de difficultés."
+              }
+            ],
+            "links": [],
+            "media": []
+          },
+          {
+            "id": "webserv",
+            "title": "Webserv",
+            "summary": "Un serveur HTTP non bloquant écrit de zéro en C++98 ; j'y ai écrit la configuration, GET, POST, DELETE, les cookies et les sessions.",
+            "tags": ["C++98", "HTTP", "CGI", "poll"],
+            "blocks": [
+              {
+                "type": "text",
+                "html": "L'avant-dernier projet de groupe du tronc commun consistait à réaliser notre propre serveur HTTP."
+              },
+              { "type": "text", "html": "Le serveur devait notamment :" },
+              {
+                "type": "list",
+                "items": [
+                  "Être configuré avec un fichier de configuration créé de zéro",
+                  "Être non bloquant",
+                  "Utiliser un seul appel à poll",
+                  "Faire en sorte que tous les read et write soient exécutés après poll",
+                  "Éviter l'utilisation directe de errno après un read ou write",
+                  "Gérer les boucles infinies pour éviter de bloquer le serveur",
+                  "Fonctionner correctement sur un navigateur",
+                  "Avoir des pages d'erreurs",
+                  "Retourner les bons codes HTTP",
+                  "Utiliser des CGI",
+                  "Gérer les méthodes GET, POST et DELETE",
+                  "Permettre l'upload de fichiers",
+                  "Écouter sur plusieurs ports avec différents contenus"
+                ]
+              },
+              {
+                "type": "text",
+                "html": "C'était déjà un énorme morceau pour la partie obligatoire. Pour les bonus, il fallait gérer les sessions des clients et les cookies, ainsi que plusieurs types de CGI."
+              },
+              {
+                "type": "text",
+                "html": "Mon binôme a pris en charge les sockets et la boucle poll. J'ai écrit le parsing du fichier de configuration, avec un message d'erreur pour chaque directive mal formée, l'autoindex, le traitement des requêtes GET, POST et DELETE, et les cookies et sessions : chaque visiteur dispose de son propre dossier d'upload. Les CGI, nous les avons écrits à deux."
+              }
+            ],
+            "links": [],
+            "media": []
+          },
+          {
+            "id": "transcendence",
+            "title": "Transcendence",
+            "summary": "Application web complète en équipe, autour du Pong ; j'y ai réalisé l'IA adverse et la version 3D du jeu.",
+            "tags": ["React", "TypeScript", "NestJS", "Docker", "Three.js"],
+            "blocks": [
+              {
+                "type": "text",
+                "html": "Pour ce dernier projet du tronc commun, qui était également un projet de groupe, le but était de créer une véritable application web complète autour du jeu Pong, à jouer contre une IA ou contre un autre joueur sur le même clavier."
+              },
+              { "type": "text", "html": "Le projet devait contenir :" },
+              {
+                "type": "list",
+                "items": ["Un frontend", "Un backend", "Une base de données"]
+              },
+              {
+                "type": "text",
+                "html": "Comme nous étions nombreux à travailler dessus, il fallait également garder une organisation claire avec des commits propres et compréhensibles."
+              },
+              {
+                "type": "text",
+                "html": "L'application devait pouvoir être lancée via une seule commande à l'intérieur d'un conteneur, fonctionner correctement sur navigateur, ne produire aucune erreur dans la console, et inclure une politique de confidentialité ainsi que des conditions d'utilisation."
+              },
+              { "type": "text", "html": "Concernant la stack technique, il fallait notamment :" },
+              {
+                "type": "list",
+                "items": [
+                  "Créer un frontend clair, réactif et responsive",
+                  "Utiliser un framework CSS",
+                  "Stocker les informations sensibles dans un fichier .env ignoré par Git",
+                  "Créer une base de données bien structurée",
+                  "Mettre en place une authentification sécurisée",
+                  "Valider les données côté frontend et backend",
+                  "Utiliser HTTPS côté backend"
+                ]
+              },
+              {
+                "type": "text",
+                "html": "L'application repose sur React et TypeScript côté client, et sur des microservices NestJS côté serveur, le tout dans des conteneurs Docker."
+              },
+              {
+                "type": "text",
+                "html": "Ensuite, nous pouvions choisir différents modules à ajouter au projet."
+              },
+              {
+                "type": "text",
+                "html": "Certains modules étaient mineurs et rapportaient un point, tandis que d'autres étaient majeurs et rapportaient deux points."
+              },
+              {
+                "type": "text",
+                "html": "Le but était de totaliser 14 points pour valider la partie obligatoire, puis 19 points pour valider les bonus."
+              },
+              {
+                "type": "text",
+                "html": "Pour ma part, je me suis occupé de deux modules majeurs :"
+              },
+              {
+                "type": "list",
+                "items": [
+                  "Créer une IA capable d'affronter les joueurs au Pong : elle prédit la trajectoire de la balle, rebonds compris, ne réagit que lorsque la balle entre dans sa zone et perd en précision au fil d'un long échange, comme un joueur fatigué. Je l'ai rendue plus humaine en analysant mes propres parties contre elle.",
+                  "Créer une version 3D du Pong avec Three.js : modèles, éclairage et palette, une caméra qui s'anime pendant le décompte puis tourne autour de la table au clavier, et un choix entre 2D et 3D avec un aperçu avant la partie."
+                ]
+              }
+            ],
+            "links": [
+              {
+                "intro": "Pour plus de détails sur l'organisation de notre équipe, je vous invite à consulter",
+                "label": "le README",
+                "href": "https://github.com/Louis-Cagnion/Transcendence125/blob/main/README.MD"
+              }
+            ],
+            "media": []
+          }
+        ]
+      },
+      {
+        "id": "piscine",
+        "name": "Piscine 42",
+        "intro": "La Piscine est le mois de sélection de 42, avant le cursus : chaque planète de ce système est l'un de ses modules. J'en ai validé une partie pendant la Piscine, et terminé le reste après, pour le plaisir, jusqu'à 100 %.",
+        "projects": [
+          {
+            "id": "shell00",
+            "title": "Shell00",
+            "summary": "Premiers pas dans le terminal.",
+            "tags": ["Shell", "Git", "SSH"],
+            "blocks": [
+              {
+                "type": "text",
+                "html": "Premiers pas dans le terminal : droits des fichiers, liens, archives, Git et clés SSH."
+              }
+            ],
+            "links": [],
+            "media": []
+          },
+          {
+            "id": "shell01",
+            "title": "Shell01",
+            "summary": "Premiers scripts shell.",
+            "tags": ["Bash", "sed"],
+            "blocks": [
+              {
+                "type": "text",
+                "html": "Premiers scripts : recherche et comptage de fichiers, adresse MAC, lecture de /etc/passwd avec sed et rev, calcul dans des bases inventées, et un fichier au nom volontairement piégé."
+              }
+            ],
+            "links": [],
+            "media": []
+          },
+          {
+            "id": "c00",
+            "title": "C00",
+            "summary": "Premiers programmes en C avec la seule fonction write.",
+            "tags": ["C", "write"],
+            "blocks": [
+              {
+                "type": "text",
+                "html": "Premiers programmes en C avec une seule fonction autorisée, write : alphabet, nombres et combinaisons."
+              }
+            ],
+            "links": [],
+            "media": []
+          },
+          {
+            "id": "c01",
+            "title": "C01",
+            "summary": "Les pointeurs en C.",
+            "tags": ["C", "Pointeurs"],
+            "blocks": [
+              {
+                "type": "text",
+                "html": "Les pointeurs : échange de valeurs, division, inversion et tri d'un tableau."
+              }
+            ],
+            "links": [],
+            "media": []
+          },
+          {
+            "id": "c02",
+            "title": "C02",
+            "summary": "Les chaînes de caractères en C.",
+            "tags": ["C", "Chaînes"],
+            "blocks": [
+              {
+                "type": "text",
+                "html": "Les chaînes de caractères : copie, tests, majuscules, et un affichage de la mémoire à la manière de hexdump."
+              }
+            ],
+            "links": [],
+            "media": []
+          },
+          {
+            "id": "c03",
+            "title": "C03",
+            "summary": "Comparer, concaténer et chercher dans des chaînes.",
+            "tags": ["C", "Chaînes"],
+            "blocks": [
+              { "type": "text", "html": "Comparer, concaténer et chercher dans des chaînes." }
+            ],
+            "links": [],
+            "media": []
+          },
+          {
+            "id": "c04",
+            "title": "C04",
+            "summary": "Convertir du texte en nombre et inversement, dans n'importe quelle base.",
+            "tags": ["C", "Conversions"],
+            "blocks": [
+              {
+                "type": "text",
+                "html": "Convertir du texte en nombre et inversement, dans n'importe quelle base."
+              }
+            ],
+            "links": [],
+            "media": []
+          },
+          {
+            "id": "c05",
+            "title": "C05",
+            "summary": "Récursivité et mathématiques en C.",
+            "tags": ["C", "Récursivité"],
+            "blocks": [
+              {
+                "type": "text",
+                "html": "Récursivité et mathématiques : factorielle, puissance, Fibonacci, nombres premiers et le problème des dix dames."
+              }
+            ],
+            "links": [],
+            "media": []
+          },
+          {
+            "id": "c06",
+            "title": "C06",
+            "summary": "Les arguments de la ligne de commande.",
+            "tags": ["C", "Arguments"],
+            "blocks": [
+              {
+                "type": "text",
+                "html": "Les arguments de la ligne de commande, jusqu'à les trier."
+              }
+            ],
+            "links": [],
+            "media": []
+          },
+          {
+            "id": "c07",
+            "title": "C07",
+            "summary": "L'allocation dynamique en C.",
+            "tags": ["C", "Allocation dynamique"],
+            "blocks": [
+              {
+                "type": "text",
+                "html": "L'allocation dynamique : duplication, concaténation, conversion de base et découpage d'une chaîne."
+              }
+            ],
+            "links": [],
+            "media": []
+          },
+          {
+            "id": "c08",
+            "title": "C08",
+            "summary": "En-têtes, macros et structures.",
+            "tags": ["C", "Macros", "Structures"],
+            "blocks": [
+              { "type": "text", "html": "En-têtes, macros et structures." }
+            ],
+            "links": [],
+            "media": []
+          },
+          {
+            "id": "c09",
+            "title": "C09",
+            "summary": "Ma première bibliothèque statique et mon premier Makefile.",
+            "tags": ["C", "Makefile"],
+            "blocks": [
+              {
+                "type": "text",
+                "html": "Ma première bibliothèque statique et mon premier Makefile."
+              }
+            ],
+            "links": [],
+            "media": []
+          },
+          {
+            "id": "c10",
+            "title": "C10",
+            "summary": "Lire des fichiers en recréant cat, tail et hexdump.",
+            "tags": ["C", "Fichiers"],
+            "blocks": [
+              { "type": "text", "html": "Lire des fichiers en recréant cat, tail et hexdump." }
+            ],
+            "links": [],
+            "media": []
+          },
+          {
+            "id": "c11",
+            "title": "C11",
+            "summary": "Les pointeurs sur fonctions.",
+            "tags": ["C", "Pointeurs sur fonctions"],
+            "blocks": [
+              {
+                "type": "text",
+                "html": "Les pointeurs sur fonctions : map, foreach, tri générique et une calculatrice."
+              }
+            ],
+            "links": [],
+            "media": []
+          },
+          {
+            "id": "c12",
+            "title": "C12",
+            "summary": "Les listes chaînées.",
+            "tags": ["C", "Listes chaînées"],
+            "blocks": [
+              { "type": "text", "html": "Les listes chaînées." }
+            ],
+            "links": [],
+            "media": []
+          },
+          {
+            "id": "c13",
+            "title": "C13",
+            "summary": "Les arbres binaires.",
+            "tags": ["C", "Arbres binaires"],
+            "blocks": [
+              {
+                "type": "text",
+                "html": "Les arbres binaires : insertion, recherche et parcours (préfixe, infixe, suffixe, par niveau)."
+              }
+            ],
+            "links": [],
+            "media": []
+          },
+          {
+            "id": "rush00",
+            "title": "Rush00",
+            "summary": "Dessiner un rectangle en caractères, en équipe et en un week-end.",
+            "tags": ["C", "Travail en équipe"],
+            "blocks": [
+              {
+                "type": "text",
+                "html": "Dessiner un rectangle en caractères selon un motif imposé, en équipe et en un week-end."
+              }
+            ],
+            "links": [],
+            "media": []
+          },
+          {
+            "id": "rush01",
+            "title": "Rush01",
+            "summary": "Résoudre un Skyscraper 4×4, repris plus tard jusqu'aux grilles 9×9.",
+            "tags": ["C", "Propagation de contraintes", "Retour arrière"],
+            "blocks": [
+              {
+                "type": "text",
+                "html": "Résoudre un Skyscraper 4×4. Je l'ai repris bien après, jusqu'aux grilles 9×9 ; Claude m'a aidé à améliorer mon algorithme (propagation de contraintes, retour arrière sur la ligne la plus contrainte), mais le code est le mien, et un bilan de recherche rédigé avec lui explore ensuite des tailles bien plus grandes."
+              }
+            ],
+            "links": [],
+            "media": []
+          },
+          {
+            "id": "rush02",
+            "title": "Rush02",
+            "summary": "Écrire un nombre en toutes lettres à partir d'un dictionnaire.",
+            "tags": ["C", "Dictionnaire"],
+            "blocks": [
+              {
+                "type": "text",
+                "html": "Écrire un nombre en toutes lettres à partir d'un dictionnaire."
+              }
+            ],
+            "links": [],
+            "media": []
+          },
+          {
+            "id": "bsq",
+            "title": "BSQ",
+            "summary": "Trouver le plus grand carré libre dans une carte d'obstacles.",
+            "tags": ["C", "Algorithme"],
+            "blocks": [
+              {
+                "type": "text",
+                "html": "Le projet final : trouver le plus vite possible le plus grand carré libre dans une carte d'obstacles."
+              }
+            ],
+            "links": [],
+            "media": []
+          }
+        ]
+      }
+    ]
+  },
   "contact": {
-    "h2": "Me contacter",
-    "intro": "Si vous souhaitez me contacter ou consulter mes différents réseaux, vous pouvez les retrouver ci-dessous :",
-    "links": [
-      { "href": "mailto:louis.cagnion.pro@gmail.com", "label": "Mon email" },
-      { "href": "https://www.linkedin.com/in/louis-cagnion-7249121a6/", "label": "Mon LinkedIn" },
-      { "href": "https://github.com/Louis-Cagnion", "label": "Mon GitHub" },
-      { "href": "https://www.codewars.com/users/Sung-Jinw00", "label": "Mon Codewars" }
+    "title": "Me contacter",
+    "question": "Une question, une opportunité, une envie d'échanger ?",
+    "message": "Comme le disque d'or embarqué sur les sondes Voyager, ce message attend que quelqu'un le trouve. Mon adresse email est gravée au centre du disque. Chaque sillon mène aussi à l'un de mes réseaux.",
+    "discLabel": "Disque d'or : adresse au centre, un réseau par sillon",
+    "copyHint": "COPIER L'EMAIL",
+    "copied": "EMAIL COPIÉ",
+    "copiedStatus": "Email copié",
+    "copyFailed": "Copie impossible : l'adresse est {mail}",
+    "groove": "Sillon {n} : {name}",
+    "armed": "Touche-le encore pour l'ouvrir.",
+    "tapHint": "Touche le disque pour choisir un contact",
+    "backHint": "Revenir au disque entier",
+    "channels": [
+      { "id": "mail", "name": "Écrire un e-mail", "href": "mailto:louis.cagnion.pro@gmail.com" },
+      {
+        "id": "linkedin",
+        "name": "LinkedIn",
+        "href": "https://www.linkedin.com/in/louis-cagnion-7249121a6/"
+      },
+      { "id": "github", "name": "GitHub", "href": "https://github.com/Louis-Cagnion" },
+      { "id": "codewars", "name": "Codewars", "href": "https://www.codewars.com/users/Sung-Jinw00" }
     ]
   }
 }

@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const here = __dirname;
-const fr = require(path.join(__dirname, '..', '..', '..', 'data', 'fr.json'));
+const fr = require(path.join(here, 'legacy-fr.json'));
 const skills = require(path.join(here, 'skills-draft.json'));
 const j = fr.journey.paragraphs;
 const a = fr.about.paragraphs;

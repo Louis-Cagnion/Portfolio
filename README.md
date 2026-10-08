@@ -1,6 +1,6 @@
 # Portfolio
 
-Personal developer portfolio built with Vanilla JavaScript, HTML and CSS — no frontend framework.
+Personal developer portfolio built with Vanilla JavaScript, HTML and CSS, with no frontend framework.
 
 🔗 You can access the website here:
 https://louis-cagnion.github.io/Portfolio/
