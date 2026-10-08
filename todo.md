@@ -1,4 +1,4 @@
-> Prochaine tâche : revue indépendante de S3 (étape 6/8, `analyst-opus-high`), S3 étant committée sans elle (agent interrompu par la limite hebdomadaire, vérification finie par le moniteur : Node 214/235, suite navigateur 394/0) ; y signaler la description statique de `index.html` coupée par un retour à la ligne dans l'attribut `content`. Puis S4 (`builder-opus-high`).
+> Prochaine tâche : revue indépendante de S3 (étape 6/8, `analyst-opus-high`), S3 étant committée sans elle (agent interrompu par la limite hebdomadaire, vérification finie par le moniteur : Node 214/235, suite navigateur 394/0). Critères : ligne S3 de `docs/design/plan.md`, `docs/design-checklist.md` (sections 1, 2, 4 à 9, Décisions de Louis), `docs/design/prototype/status-variants.html`, contrat en tête de `tests/browser/suite.js`. Y signaler la description statique de `index.html` coupée par un retour à la ligne dans l'attribut `content`. Puis S4 (`builder-opus-high`).
 
 ## Refonte spatiale
 

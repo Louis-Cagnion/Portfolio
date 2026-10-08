@@ -1,6 +1,6 @@
 # Récapitulatif du 08/10/2026 (session moniteur)
 
-Étape 4/8 close, S1 de l'étape 5/8 committée ; S2 committée en 2e session. Le journal ci-dessous retrace les décisions ; le lanceur headless de la suite navigateur est en annexe (sous Linux, servir sur le port 5510).
+Étape 4/8 close ; S1, S2 et S3 de l'étape 5/8 committées (S3 sans sa revue indépendante). Le journal ci-dessous retrace les décisions ; le lanceur headless de la suite navigateur est en annexe, vérifié sous Linux.
 
 ## Journal
 
@@ -46,7 +46,7 @@
 
 ## Annexe : lanceur headless de la suite navigateur
 
-À copier dans un fichier `.mjs`, serveur statique lancé à la racine : `node run-browser-suite.mjs http://127.0.0.1:5501/tests/browser/ resultat.json 600`.
+À copier dans un fichier `.mjs` hors du dépôt, serveur statique lancé à la racine (port 5501 sous Windows, 5510 sous Linux) : `node run-browser-suite.mjs http://127.0.0.1:5510/tests/browser/ resultat.json 600`. Résultat attendu après S3 : 394 réussites, 0 échec.
 
 ```js
 /*
