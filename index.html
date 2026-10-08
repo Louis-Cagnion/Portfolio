@@ -3,13 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Louis Cagnion Portfolio</title>
+    <meta name="description" content="Portfolio de Louis Cagnion, développeur au Groupe
+        Tressol-Chabrier formé à 42 Perpignan : parcours, compétences, projets et contact.">
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
-    <script type="module" src="js/script.js"></script>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Michroma&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="css/tokens.css">
+    <link rel="stylesheet" href="css/layout.css">
 </head>
+<script type="module" src="js/main.js" defer></script>
 <body>
-
+    <header class="bar">
+        <a class="brand" href="#home" data-go="home">
+            <i aria-hidden="true"></i>Louis Cagnion
+        </a>
+        <nav class="nav" aria-label="Sections"></nav>
+        <div class="lang" role="group" aria-label="Langue">
+            <button type="button" data-lang="fr" aria-pressed="true">FR</button>
+            <button type="button" data-lang="en" aria-pressed="false">EN</button>
+        </div>
+    </header>
+    <section class="status-screen" id="status" data-state="loading" role="status"
+        aria-live="polite">
+        <div class="status hud">
+            <h2 id="status-title" tabindex="-1">Louis Cagnion</h2>
+            <p id="status-message">Tentative de connexion avec le pilote…</p>
+            <noscript>
+                <p>
+                    Ce portfolio a besoin de JavaScript pour s'afficher : active-le, puis
+                    recharge la page.
+                </p>
+            </noscript>
+            <div class="status-bar" aria-hidden="true"><i></i></div>
+            <div class="status-actions">
+                <button type="button" class="btn primary" data-action="retry">
+                    Réessayer
+                </button>
+                <button type="button" class="btn" data-action="switch-lang">
+                    Voir le site en anglais
+                </button>
+            </div>
+        </div>
+        <template data-lang="fr">
+            <p data-key="loading">Tentative de connexion avec le pilote…</p>
+            <p data-key="errors.title">
+                Le centre de contrôle n'a pas pu établir la connexion avec le pilote
+            </p>
+            <p data-key="errors.network">
+                L'intrication quantique devait être instantanée, mais quelqu'un a regardé le
+                pilote et tout s'est effondré. Vérifie ta connexion, puis réessaie.
+            </p>
+            <p data-key="errors.timeout">
+                Le délai de chargement est dépassé. Réessaie dans un instant.
+            </p>
+            <p data-key="errors.http">
+                Nos particules intriquées se sont emmêlées : le pilote a reçu un chat à la fois
+                mort et vivant au lieu du site (code {status}).
+            </p>
+            <p data-key="errors.json">Le fichier de contenu est invalide (JSON illisible).</p>
+            <p data-key="errors.schema">
+                Le contenu est incomplet : le champ {path} est manquant ou invalide.
+            </p>
+            <p data-key="errors.retry">Réessayer</p>
+            <p data-key="errors.langSwitch">Voir le site en anglais</p>
+        </template>
+        <template data-lang="en">
+            <p data-key="loading">Attempting to connect with the pilot…</p>
+            <p data-key="errors.title">
+                Mission control could not establish the connection with the pilot
+            </p>
+            <p data-key="errors.network">
+                Quantum entanglement was supposed to be instant, but someone looked at the
+                pilot and everything collapsed. Check your connection, then try again.
+            </p>
+            <p data-key="errors.timeout">Loading timed out. Try again in a moment.</p>
+            <p data-key="errors.http">
+                Our entangled particles got tangled up: the pilot received a cat both dead and
+                alive instead of the site (code {status}).
+            </p>
+            <p data-key="errors.json">The content file is invalid (unreadable JSON).</p>
+            <p data-key="errors.schema">
+                The content is incomplete: the field {path} is missing or invalid.
+            </p>
+            <p data-key="errors.retry">Retry</p>
+            <p data-key="errors.langSwitch">View the site in French</p>
+        </template>
+    </section>
+    <main>
+        <section class="view" id="home"></section>
+        <section class="view" id="journey"></section>
+        <section class="view" id="skills"></section>
+        <section class="view" id="projects"></section>
+        <section class="view" id="contact"></section>
+    </main>
+    <nav class="tabbar" aria-label="Sections"></nav>
+    <div class="sheet-bg" id="sheetBg" hidden></div>
+    <aside class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sTitle"
+        hidden inert>
+        <button type="button" class="close" id="close" aria-label="Fermer">&#215;</button>
+        <span class="cat" id="sCat"></span>
+        <h3 id="sTitle"></h3>
+        <ul class="tags" id="sTags"></ul>
+        <div class="body" id="sBody"></div>
+    </aside>
 </body>
 </html>

@@ -1,0 +1,88 @@
+/*
+Jetons de design du site : seule source des couleurs, polices, rayons, empilements, ombres,
+courbes et durées des feuilles de style. Valeurs relevées dans la maquette validée
+(docs/design-checklist.md, section 1).
+*/
+
+:root {
+  /* ───── Couleurs ───── */
+  --void: #070d1f;
+  --panel: #0f1a38;
+  --line: rgba(220, 230, 255, 0.13);
+  --text: #e6ecff;
+  --dim: #9aa7cc;
+  --faint: #66739c;
+  --accent: #e8b45a;
+  --accent-ink: #070d1f;
+  --accent-soft: rgba(232, 180, 90, 0.15);
+  --accent-hover: #f6d08f;
+  --accent-edge: rgba(232, 180, 90, 0.55);
+  --live: #8fe3bf;
+  --star: 230, 236, 255;
+  --scrim: rgba(0, 0, 0, 0.55);
+
+  /* ───── Couleurs de décor ───── */
+  --label-bg: rgba(9, 16, 38, 0.92);
+  --orbit: rgba(220, 230, 255, 0.12);
+  --link: rgba(230, 236, 255, 0.24);
+  --link-sel: rgba(230, 236, 255, 0.35);
+  --trail: #ffc56b;
+  --groove: rgba(70, 45, 10, 0.35);
+  --groove-lit: rgba(255, 235, 180, 0.85);
+  --engrave: rgba(80, 52, 14, 0.75);
+  --engrave-text: rgba(80, 52, 14, 0.85);
+  --arc-ink: #3b2507;
+  --arc-halo: rgba(255, 240, 200, 0.55);
+  --lava: #ff7a2a;
+
+  /* ───── Polices ───── */
+  --display: "Michroma", system-ui, sans-serif;
+  --sans: "IBM Plex Sans", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, monospace;
+
+  /* ───── Espacements et rayons (--bar-h : repli, remplacé par la hauteur mesurée) ───── */
+  --gutter: clamp(16px, 4vw, 48px);
+  --content-max: 1200px;
+  --bar-h: 61px;
+  --radius-pill: 999px;
+  --radius-tabbar: 22px;
+  --radius-tab: 16px;
+  --radius-label: 4px;
+
+  /* ───── Empilement (--z-status : écran de chargement, entre le contenu et le saut) ───── */
+  --z-sky: 0;
+  --z-main: 1;
+  --z-status: 2;
+  --z-warp: 3;
+  --z-flash: 4;
+  --z-bar: 5;
+  --z-tabbar: 6;
+  --z-scrim: 20;
+  --z-sheet: 21;
+
+  /* ───── Ombres et flous ───── */
+  --blur: 12px;
+  --blur-strong: 14px;
+  --shadow-disc: 0 20px 40px rgba(0, 0, 0, 0.6);
+  --glow-disc: 0 0 18px rgba(232, 180, 90, 0.45);
+  --glow-ship: 0 0 4px rgba(232, 180, 90, 0.6);
+  --glow-stop: 0 0 6px rgba(232, 180, 90, 0.55);
+  --glow-planet: 0 0 8px rgba(232, 180, 90, 0.8);
+  --glow-sun: 0 0 10px rgba(232, 180, 90, 0.6);
+  --glow-live: 0 0 10px var(--live);
+
+  /* ───── Courbes et durées ───── */
+  --ease-inout: cubic-bezier(.65, 0, .35, 1);
+  --ease-out: cubic-bezier(.2, .8, .2, 1);
+  --ease-in: cubic-bezier(.5, 0, .75, .4);
+  --dur-fast: 0.2s;
+  --dur: 0.3s;
+  --dur-slow: 0.5s;
+  --dur-link: 0.25s;
+  --dur-sheet: 0.45s;
+  --dur-height: 0.7s;
+  --dur-warp-in: 0.55s;
+  --dur-warp-out: 0.45s;
+  --dur-sweep: 1.4s;
+  --dur-blink: 2.4s;
+}

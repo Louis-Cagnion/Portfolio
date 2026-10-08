@@ -1,0 +1,457 @@
+/*
+Mise en page commune : base, barre (marque, pilule, bascule de langue), rubriques, panneau HUD,
+boutons, liens en ligne, écran de chargement et d'erreur, barre d'onglets du bas.
+Valeurs : maquette validée (docs/design/prototype/prototype.template.html) et variante Console
+de docs/design/prototype/status-variants.html. Points de rupture : BREAKPOINTS de
+js/core/dom.js.
+*/
+
+/* ───── Base ───── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scrollbar-gutter: stable;
+  scroll-padding-top: calc(var(--bar-h) + 8px);
+  scroll-padding-bottom: 88px;
+}
+
+body {
+  margin: 0;
+  background: var(--void);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+h1 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(2.3rem, 6.6vw, 5.2rem);
+  line-height: 1.04;
+  letter-spacing: -0.01em;
+  margin: 0 0 26px;
+}
+
+h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(1.3rem, 3vw, 1.9rem);
+  margin: 56px 0 8px;
+}
+
+/* ───── Barre du haut ───── */
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-bar);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 12px var(--gutter);
+  background: color-mix(in srgb, var(--void) 82%, transparent);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  border-bottom: 1px solid var(--line);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--display);
+  font-size: 0.82rem;
+  color: var(--text);
+  text-decoration: none;
+  letter-spacing: 0.03em;
+}
+
+.brand i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--live);
+  box-shadow: var(--glow-live);
+  animation: blink var(--dur-blink) infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+/* Pilule : la pastille .pill glisse sous l'onglet actif (mesuré par js/ui/nav.js). */
+.nav {
+  position: relative;
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--panel) 70%, transparent);
+}
+
+.nav button {
+  position: relative;
+  z-index: 1;
+  border: 0;
+  background: none;
+  color: var(--dim);
+  font: 500 0.92rem var(--sans);
+  padding: 8px 16px;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: color var(--dur);
+}
+
+@media (hover: hover) {
+  .nav button:hover {
+    color: var(--text);
+  }
+}
+
+.nav button[aria-current="page"] {
+  color: var(--accent-ink);
+}
+
+.nav .pill {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  transition: left var(--dur-slow) var(--ease-inout), width var(--dur-slow) var(--ease-inout);
+}
+
+.lang {
+  display: flex;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+
+.lang button {
+  border: 0;
+  background: none;
+  color: var(--dim);
+  font: 500 0.8rem var(--mono);
+  padding: 7px 12px;
+  cursor: pointer;
+  transition: color var(--dur);
+}
+
+/* Le groupe rogne son contenu (overflow: hidden) : l'anneau de focus passe à l'intérieur. */
+.lang button:focus-visible {
+  outline-offset: -3px;
+}
+
+@media (hover: hover) {
+  .lang button:hover {
+    color: var(--text);
+  }
+}
+
+.lang button[aria-pressed="true"] {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+/* ───── Rubriques ───── */
+main {
+  position: relative;
+  z-index: var(--z-main);
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: 0 var(--gutter) 120px;
+}
+
+.view {
+  display: none;
+}
+
+.view.on {
+  display: block;
+}
+
+.lede {
+  color: var(--dim);
+  margin: 0 0 28px;
+  max-width: 60ch;
+}
+
+.body,
+.lede {
+  overflow-wrap: anywhere;
+}
+
+.body strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.body a,
+.lede a {
+  color: var(--accent);
+  text-decoration: none;
+  background: linear-gradient(currentColor, currentColor) 0 100% / 100% 1px no-repeat;
+  padding-bottom: 1px;
+  transition: background-size var(--dur-link), color var(--dur-fast);
+}
+
+.body a:focus-visible,
+.lede a:focus-visible {
+  background-size: 100% 2px;
+  color: var(--accent-hover);
+}
+
+@media (hover: hover) {
+  .body a:hover,
+  .lede a:hover {
+    background-size: 100% 2px;
+    color: var(--accent-hover);
+  }
+}
+
+/* ───── Panneau HUD : deux coins or, en haut à gauche et en bas à droite ───── */
+.hud {
+  position: relative;
+  border: 1px solid var(--line);
+  background: linear-gradient(var(--panel), color-mix(in srgb, var(--panel) 40%, transparent));
+}
+
+.hud::before,
+.hud::after {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--accent);
+  pointer-events: none;
+}
+
+.hud::before {
+  top: -2px;
+  left: -2px;
+  border-right: 0;
+  border-bottom: 0;
+}
+
+.hud::after {
+  bottom: -2px;
+  right: -2px;
+  border-left: 0;
+  border-top: 0;
+}
+
+/* ───── Boutons ───── */
+.btn {
+  padding: 13px 22px;
+  font: 600 0.95rem var(--sans);
+  border: 1px solid var(--line);
+  color: var(--text);
+  background: none;
+  cursor: pointer;
+  transition: border-color var(--dur-fast), transform var(--dur-fast);
+}
+
+.btn.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+
+@media (hover: hover) {
+  .btn:hover {
+    transform: translateY(-2px);
+  }
+
+  .btn:not(.primary):hover {
+    border-color: var(--accent);
+  }
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn:not(.primary):active {
+  border-color: var(--accent);
+}
+
+/* ───── Chargement et erreur (#status) : visible avant le JS, masqué une fois prêt ───── */
+.status-screen {
+  position: fixed;
+  inset: var(--bar-h) 0 0;
+  z-index: var(--z-status);
+  display: grid;
+  place-items: center;
+  padding: 24px 0;
+  overflow-y: auto;
+  background: var(--void);
+}
+
+.status-screen[data-state="ready"] {
+  display: none;
+}
+
+body:has(> .status-screen:not([data-state="ready"])) :is(.nav, .tabbar) {
+  visibility: hidden;
+}
+
+.status {
+  width: min(34rem, 100% - 2 * var(--gutter));
+  padding: 28px;
+}
+
+.status h2 {
+  font: 400 1.15rem var(--display);
+  margin: 0 0 10px;
+}
+
+.status p {
+  color: var(--dim);
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.status code {
+  font-family: var(--mono);
+  color: var(--text);
+}
+
+.status-bar {
+  position: relative;
+  height: 3px;
+  margin-top: 18px;
+  overflow: hidden;
+  background: var(--line);
+}
+
+.status-bar i {
+  position: absolute;
+  inset: 0;
+  width: 35%;
+  background: var(--accent);
+  animation: sweep var(--dur-sweep) var(--ease-inout) infinite;
+}
+
+[data-state="error"] .status-bar i {
+  width: 100%;
+  animation: none;
+  background: repeating-linear-gradient(90deg, var(--accent) 0 14px, transparent 14px 22px);
+  opacity: 0.55;
+}
+
+@keyframes sweep {
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(290%);
+  }
+}
+
+.status-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 22px;
+}
+
+[data-state="loading"] .status-actions {
+  display: none;
+}
+
+.status-actions .btn {
+  min-height: 44px;
+  padding-top: 11px;
+  padding-bottom: 11px;
+}
+
+/* Sans JavaScript : seul le message du <noscript> reste ; la bascule, inerte, disparaît. */
+@media (scripting: none) {
+  #status-message,
+  .status-bar,
+  .lang {
+    display: none;
+  }
+}
+
+/* ───── Barre d'onglets du bas (880 px et moins, à la place de la pilule) ───── */
+.tabbar {
+  display: none;
+}
+
+@media (max-width: 880px) {
+  .nav {
+    display: none;
+  }
+
+  .tabbar {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    position: fixed;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    z-index: var(--z-tabbar);
+    padding: 6px;
+    border-radius: var(--radius-tabbar);
+    border: 1px solid var(--line);
+    background: color-mix(in srgb, var(--panel) 90%, transparent);
+    backdrop-filter: blur(var(--blur-strong));
+    -webkit-backdrop-filter: blur(var(--blur-strong));
+  }
+
+  .tabbar button {
+    display: grid;
+    justify-items: center;
+    gap: 2px;
+    border: 0;
+    background: none;
+    color: var(--dim);
+    font: 500 0.68rem var(--sans);
+    padding: 6px 0;
+    border-radius: var(--radius-tab);
+    cursor: pointer;
+    transition: color var(--dur);
+  }
+
+  .tabbar svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .tabbar button[aria-current="page"] {
+    color: var(--accent);
+    background: var(--accent-soft);
+  }
+}
+
+@media (max-width: 880px) and (hover: hover) {
+  .tabbar button:not([aria-current="page"]):hover {
+    color: var(--text);
+  }
+}
+
+/* ───── Mouvement réduit : ni boucle décorative ni transition ───── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
