@@ -18,9 +18,9 @@
     "close": "Close",
     "errors": {
       "title": "Mission control could not establish the connection with the pilot",
-      "network": "The network seems unreachable. Check your connection, then try again.",
+      "network": "Quantum entanglement was supposed to be instant, but someone looked at the pilot and everything collapsed. Check your connection, then try again.",
       "timeout": "Loading timed out. Try again in a moment.",
-      "http": "Quantum entanglement was meant to link us to the pilot instantly, but the link could not be established (code {status}).",
+      "http": "Our entangled particles got tangled up: the pilot received a cat both dead and alive instead of the site (code {status}).",
       "json": "The content file is invalid (unreadable JSON).",
       "schema": "The content is incomplete: the field {path} is missing or invalid.",
       "retry": "Retry",
