@@ -254,7 +254,7 @@ h1 { font-family: var(--display); font-weight: 400; font-size: clamp(2.3rem, 6.6
 .zfocus .sys-head { opacity: 1; visibility: visible; transition: opacity 0.4s 0.5s, visibility 0s; }
 .sys-head .ctitle { margin: 0; }
 .sys-head .count { margin: 0; }
-.plist button.off { display: none; }
+.sys-layout.zfocus + .plist { display: none; }
 
 /* contact: Voyager-style golden record, one groove per channel */
 .record-wrap { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px; align-items: center; }
@@ -305,6 +305,7 @@ h1 { font-family: var(--display); font-weight: 400; font-size: clamp(2.3rem, 6.6
     .sheet { top: auto; height: 88vh; width: 100%; border-left: 0; border-top: 1px solid var(--line); transform: translateY(100%); }
     .sys-layout:not(.zfocus) .sys-head { display: none; }
     .sys-head { position: relative; margin-bottom: 8px; }
+    .sys.dim { opacity: 0; }
 }
 /* phones: the journey becomes a zoomed, swipeable camera on a vertical curve */
 @media (max-width: 700px) {
@@ -977,7 +978,8 @@ const TILT = 0.42, Z_SPEED = 0.00005, Z_PHONE_RATIO = 1.25, tiltFocus = () => na
 let planets = [], systems = [], zoomSys = -1, zMoving = false, sysHover = false;
 /* label width from canvas metrics: valid while the section is hidden (no DOM measurement) */
 function labelWidth(t) { measureCtx.font = '500 12.5px "IBM Plex Sans", sans-serif'; return measureCtx.measureText(t).width; }
-const sysDims = () => narrow.matches ? { w: 360, h: 1200 } : { w: 1100, h: 400 };
+/* phones stack the systems: a row just fits the outer orbit (cy - 84) down to the project count (cy + 136) */
+const PHONE_ROW = 270, sysDims = () => narrow.matches ? { w: 360, h: PHONE_ROW * 3 } : { w: 1100, h: 400 };
 /* phones: long titles break at the space nearest the middle */
 function splitTitle(t) {
     let best = -1;
@@ -1006,12 +1008,11 @@ function placeLabel(pl, x, y) {
 function buildSystems() {
     sysSvg.innerHTML = ''; planets = []; systems = []; zoomSys = -1;
     sysLayout.classList.remove('zfocus'); sysSvg.classList.remove('zoomed');
-    plist.querySelectorAll('button').forEach(b => b.classList.remove('off'));
-    const m = narrow.matches, { w, h } = sysDims(), cell = m ? 400 : w / 3;
+    const m = narrow.matches, { w, h } = sysDims(), cell = m ? PHONE_ROW : w / 3;
     sysSvg.style.height = ''; sysSvg.style.aspectRatio = `${w} / ${h}`; scam.set({ cx: w / 2, cy: h / 2, w });
     const defs = mk('defs', {}, sysSvg);
     SYS.forEach((s, i) => {
-        const cx = m ? w / 2 : cell * i + cell / 2, cy = m ? cell * i + cell / 2 - 10 : h / 2 - 10;
+        const cx = m ? w / 2 : cell * i + cell / 2, cy = m ? cell * i + cell / 2 - 26 : h / 2 - 10;
         const sg = mk('radialGradient', { id: `sun${i}` }, defs); mk('stop', { offset: 0, 'stop-color': s.sun[0] }, sg); mk('stop', { offset: 0.55, 'stop-color': s.sun[1] }, sg); mk('stop', { offset: 1, 'stop-color': s.sun[1], 'stop-opacity': 0 }, sg);
         const pg = mk('radialGradient', { id: `pl${i}`, cx: 0.35, cy: 0.3, r: 0.8 }, defs); mk('stop', { offset: 0, 'stop-color': s.planet[0] }, pg); mk('stop', { offset: 1, 'stop-color': s.planet[1] }, pg);
         const list = DATA.projects.filter(p => p.cat === s.cat), radii = [72, 120, 168];
@@ -1048,7 +1049,7 @@ function buildSystems() {
 }
 DATA.projects.forEach(p => {
     const s = SYS.find(x => x.cat === p.cat), b = document.createElement('button');
-    b.dataset.cat = p.cat; b.innerHTML = `<i style="background:${s.planet[1]}"></i>${p.title}`; b.addEventListener('click', () => openSheet(p, b)); plist.append(b);
+    b.innerHTML = `<i style="background:${s.planet[1]}"></i>${p.title}`; b.addEventListener('click', () => openSheet(p, b)); plist.append(b);
 });
 /* dt is capped so that a tab coming back from the background does not make the planets jump */
 let lastSpin = performance.now();
@@ -1085,7 +1086,6 @@ async function zoomTo(i) {
     sysSvg.classList.add('zoomed'); sysLayout.classList.add('zfocus');
     document.getElementById('sysHeadTitle').textContent = `Système ${s.name}`;
     document.getElementById('sysHeadCount').textContent = `${mine.length} projets`;
-    plist.querySelectorAll('button').forEach(b => b.classList.toggle('off', b.dataset.cat !== s.cat));
     setSysHeight(true);
     if (narrow.matches) scrollTo({ top: sysLayout.getBoundingClientRect().top + scrollY - document.querySelector('.bar').offsetHeight - 8, behavior: reduce() ? 'auto' : 'smooth' });
     /* planets drift to even spacing, then share one speed so labels never collide */
@@ -1099,7 +1099,6 @@ async function exitZoom() {
     const S = systems[zoomSys], t0 = S.tilt; zMoving = true;
     sysLayout.classList.remove('zfocus');
     systems.forEach(x => x.g.classList.remove('on', 'dim'));
-    plist.querySelectorAll('button').forEach(b => b.classList.remove('off'));
     setSysHeight(false);
     await scam.tween(overviewCamSys, 900, e => setTilt(S, lerp(t0, TILT, e)));
     zoomSys = -1; zMoving = false;

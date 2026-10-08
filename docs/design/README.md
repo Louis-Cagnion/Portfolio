@@ -38,7 +38,7 @@ Chaque proposition de design est montrée à Louis en pages réellement rendues 
 | Accueil | Ligne « Mission en cours », nom en Michroma, accroche, boutons, panneau de télémétrie ; dessous, repère « Dossier du pilote » puis section « Je me présente » (formation, entraînement en cours, projets passion) |
 | Parcours | Voyage en vaisseau de la Terre à une galaxie géante (8 escales), caméra posée sur la position actuelle ; courbe verticale zoomée et fiche translucide floutée sur mobile |
 | Compétences | Constellations organiques ; astres selon le niveau (galaxie, nébuleuse, géante jaune, étoile magmatique) ; clic : déploiement puis plongée plein champ sur l'astre choisi |
-| Projets | Trois systèmes orbitaux (Tressol-Chabrier, personnel, 42), planètes étiquetées sur fond, liste complète dessous, panneau de détail ; clic sur un système : zoom, orbites ouvertes, planètes réparties avec leur nom affiché et cliquable, liste filtrée sur le système |
+| Projets | Trois systèmes orbitaux (Tressol-Chabrier, personnel, 42), planètes étiquetées sur fond, liste complète dessous, panneau de détail ; clic sur un système : zoom, orbites ouvertes, planètes réparties avec leur nom affiché et cliquable, liste masquée (elle ne s'affiche qu'avec tous les systèmes) ; sur téléphone, systèmes empilés au plus près |
 | Contact | Disque d'or gravé façon Voyager, un sillon par canal |
 | Favicon | Trajectoire dorée avec point vert |
 
