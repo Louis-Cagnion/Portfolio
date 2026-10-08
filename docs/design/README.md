@@ -13,7 +13,7 @@ Avec Live Server (Louis l'utilise sur le port 5500) ou tout serveur statique lan
 | `docs/design/prototype/prototype.html` | Prototype complet des cinq rubriques et des transitions |
 | `docs/design/prototype/phones.html` | Le prototype dans trois cadres de téléphone (320, 390 et 430 px) |
 
-Le petit panneau gris en bas à gauche du prototype n'existe que dans la maquette : il choisit le point de départ du parcours et le placement de « Je me présente », encore à trancher (`?about=home`, `journey-top` ou `journey-end`). Le paramètre `?view=<rubrique>` ouvre directement une rubrique. Le texte reste en français seulement : la version anglaise sera traduite à l'implémentation. Les polices viennent de Google Fonts (connexion requise pour le bon rendu), et la maquette est publiée avec le site sur GitHub Pages tant qu'elle existe dans le dépôt.
+Le petit panneau gris en bas à gauche du prototype (choix du point de départ du parcours) et le paramètre `?view=<rubrique>`, qui ouvre directement une rubrique, n'existent que dans la maquette. Le texte reste en français seulement : la version anglaise sera traduite à l'implémentation. Les polices viennent de Google Fonts (connexion requise pour le bon rendu), et la maquette est publiée avec le site sur GitHub Pages tant qu'elle existe dans le dépôt.
 
 ## Régénérer après une modification
 
@@ -21,7 +21,7 @@ Le petit panneau gris en bas à gauche du prototype n'existe que dans la maquett
 node docs/design/prototype/build.js
 ```
 
-Le script injecte le contenu réel de `data/fr.json` et les descriptions de compétences provisoires de `skills-draft.json` dans `prototype.template.html`, et produit `prototype.html`. Les textes inventés pour la maquette (ligne de mission, télémétrie, titres d'escales, résumés de projets) vivent dans le gabarit et `build.js`, pas encore dans `data/*.json`.
+Le script injecte le contenu réel de `data/fr.json` et les descriptions de compétences provisoires de `skills-draft.json` dans `prototype.template.html`, et produit `prototype.html`. Les textes inventés pour la maquette (ligne de mission, télémétrie, titres d'escales, intitulés du dossier du pilote, résumés de projets) vivent dans le gabarit et `build.js`, pas encore dans `data/*.json`.
 
 ## Méthode de revue
 
@@ -35,7 +35,7 @@ Chaque proposition de design est montrée à Louis en pages réellement rendues 
 | Fond | Champ d'étoiles animé, poussière d'étoiles sur les marges en ordinateur |
 | Navigation | Une rubrique à la fois ; pilule glissante en ordinateur, barre d'onglets en bas sur mobile ; bascule FR/EN |
 | Transition | Saut en hyperespace en deux temps (la rubrique part puis la suivante arrive, depuis le centre), sens avant ou arrière selon l'ordre des rubriques, courbure FOV en barillet |
-| Accueil | Ligne « Mission en cours », nom en Michroma, accroche, boutons, panneau de télémétrie |
+| Accueil | Ligne « Mission en cours », nom en Michroma, accroche, boutons, panneau de télémétrie ; dessous, repère « Dossier du pilote » puis section « Je me présente » (formation, entraînement en cours, projets passion) |
 | Parcours | Voyage en vaisseau de la Terre à une galaxie géante (8 escales), caméra posée sur la position actuelle ; courbe verticale zoomée et fiche translucide floutée sur mobile |
 | Compétences | Constellations organiques ; astres selon le niveau (galaxie, nébuleuse, géante jaune, étoile magmatique) ; clic : déploiement puis plongée plein champ sur l'astre choisi |
 | Projets | Trois systèmes orbitaux (Tressol-Chabrier, personnel, 42), planètes étiquetées sur fond, liste complète dessous, panneau de détail ; clic sur un système : zoom, orbites ouvertes, planètes réparties avec leur nom affiché et cliquable, liste filtrée sur le système |
@@ -61,5 +61,6 @@ Chaque proposition de design est montrée à Louis en pages réellement rendues 
 | Projets | Missions avec écussons brodés, grille de cartes | Systèmes orbitaux préférés |
 | Projets | Zoom avec panneau latéral listant les projets du système | Noms affichés sur les planètes préférés |
 | Je me présente | Paragraphes fondus dans les escales du parcours, sans section dédiée | Une section « Je me présente » visible est attendue |
+| Je me présente | Section en haut ou en bas du parcours | Sous l'accueil préféré |
 | Contact | Canal de transmission (oscilloscope), antenne et satellites, amarrage du vaisseau, carte d'embarquement | Disque d'or préféré |
 | Favicon | Monogramme LC, orbite, viseur | Trajectoire préférée |

@@ -79,14 +79,13 @@ h1 { font-family: var(--display); font-weight: 400; font-size: clamp(2.3rem, 6.6
 .rows dd { margin: 0; font-family: var(--mono); text-align: right; }
 .rows dd.live { color: var(--live); }
 
-/* mockup option ?about=home: the remaining « Je me présente » paragraphs as a pilot file under the hero */
+/* home: the « Je me présente » paragraphs the journey does not use, as a pilot file under the hero */
 .cue { display: flex; flex-direction: column; align-items: center; gap: 2px; width: max-content; margin: 4px auto 0; color: var(--faint); font: 400 0.8rem var(--mono); text-decoration: none; transition: color 0.2s; }
 .cue span { animation: cue 2s ease-in-out infinite; }
 @keyframes cue { 50% { transform: translateY(4px); } }
 .cue:hover { color: var(--accent); }
 .kicker { font: 400 0.85rem var(--mono); color: var(--accent); margin: 80px 0 0; }
 .dossier h2 { margin: 6px 0 22px; }
-.dossier.top .kicker { margin-top: 56px; }
 .dossier-body { margin: 0; padding: 6px 28px; }
 .dossier-body div { display: grid; grid-template-columns: 200px 1fr; gap: 24px; padding: 18px 0; border-bottom: 1px dashed var(--line); }
 .dossier-body div:last-child { border-bottom: 0; }
@@ -354,8 +353,8 @@ h1 { font-family: var(--display); font-weight: 400; font-size: clamp(2.3rem, 6.6
                 </dl>
             </aside>
         </div>
-        <a class="cue" id="cue" href="#dossier" hidden>Dossier du pilote<span aria-hidden="true">&#8595;</span></a>
-        <section class="dossier" id="dossier" hidden>
+        <a class="cue" id="cue" href="#dossier">Dossier du pilote<span aria-hidden="true">&#8595;</span></a>
+        <section class="dossier" id="dossier">
             <p class="kicker">Dossier du pilote</p>
             <h2>Je me présente</h2>
             <dl class="hud dossier-body" id="dossierBody"></dl>
@@ -364,7 +363,6 @@ h1 { font-family: var(--display); font-weight: 400; font-size: clamp(2.3rem, 6.6
     <section class="view" id="journey">
         <h2>Mon parcours</h2>
         <p class="lede" id="jLede"></p>
-        <div class="jflow">
         <div class="jstage" id="jStage">
             <svg class="traj" id="traj" role="group" aria-label="Étapes du parcours">
                 <path id="track" class="track"/>
@@ -379,7 +377,6 @@ h1 { font-family: var(--display); font-weight: 400; font-size: clamp(2.3rem, 6.6
             <header><div><h3 id="dTitle"></h3><span class="when" id="dWhen"></span><span class="count" id="dCount"></span></div><div class="arrows"><button id="prev" aria-label="Étape précédente">&#8592;</button><button id="next" aria-label="Étape suivante">&#8594;</button></div></header>
             <div class="body" id="dBody"></div>
         </article>
-        </div>
     </section>
     <section class="view" id="skills">
         <h2>Mes compétences</h2>
@@ -461,8 +458,8 @@ h1 { font-family: var(--display); font-weight: 400; font-size: clamp(2.3rem, 6.6
 </div>
 <script>
 const DATA = /*DATA*/;
-/* mockup options compared in separate tabs: ?about=home|journey-top|journey-end, ?view=<section> */
-const OPT = new URLSearchParams(location.search), ABOUT = ['home', 'journey-top', 'journey-end'].includes(OPT.get('about')) ? OPT.get('about') : 'none';
+/* mockup only: ?view=<section> opens a section directly */
+const OPT = new URLSearchParams(location.search);
 const SECTIONS = [['home', 'Accueil', 'M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z'], ['journey', 'Parcours', 'M4 19c4-1 6-5 8-9s5-6 8-6'], ['skills', 'Compétences', 'M12 3l2.6 5.6L20 9.3l-4 4 1 5.7-5-2.8-5 2.8 1-5.7-4-4 5.4-.7z'], ['projects', 'Projets', 'M3 6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM3 9h18'], ['contact', 'Contact', 'M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM3 7l9 6 9-6']];
 const ORDER = SECTIONS.map(s => s[0]);
 const NS = 'http://www.w3.org/2000/svg';
@@ -1152,24 +1149,8 @@ document.getElementById('copyMail').addEventListener('click', async () => {
     catch { msg.textContent = 'Copie impossible : sélectionne l\'adresse ci-dessus'; }
     msg.classList.add('on'); setTimeout(() => msg.classList.remove('on'), 2200);
 });
-/* ?about=: the pilot file sits under the home hero, or at the top or the end of the journey */
-if (ABOUT !== 'none') {
-    const ds = document.getElementById('dossier'), journey = document.getElementById('journey');
-    ds.hidden = false;
-    document.getElementById('dossierBody').innerHTML = [['Formation', 0], ['Entraînement en cours', 4], ['Projets passion', 5]].map(([k, n]) => `<div><dt>${k}</dt><dd>${DATA.about[n]}</dd></div>`).join('');
-    if (ABOUT === 'journey-top') journey.prepend(ds);
-    if (ABOUT === 'journey-end') journey.append(ds);
-    ds.classList.toggle('top', ABOUT === 'journey-top');
-    if (ABOUT === 'home') {
-        const cue = document.getElementById('cue'); cue.hidden = false;
-        cue.addEventListener('click', e => { e.preventDefault(); ds.scrollIntoView({ behavior: reduce() ? 'auto' : 'smooth' }); });
-    }
-}
-/* mockup-only switch: each choice reloads the page with its query string, on the current section */
-const ABOUT_OPTS = [['none', 'Absent'], ['home', 'Sous l\'accueil'], ['journey-top', 'Haut du parcours'], ['journey-end', 'Bas du parcours']];
-document.querySelector('.opts').insertAdjacentHTML('beforeend', `<b>Je me présente</b><div class="row">${ABOUT_OPTS.map(([v, t]) => `<button aria-pressed="${v === ABOUT}" data-about="${v}">${t}</button>`).join('')}</div>`);
-document.querySelectorAll('[data-about]').forEach(b => b.addEventListener('click', () => { OPT.set('about', b.dataset.about); OPT.set('view', current); location.search = OPT; }));
-if (ABOUT !== 'none') document.title = `Prototype, ${ABOUT_OPTS.find(o => o[0] === ABOUT)[1].toLowerCase()}`;
+document.getElementById('dossierBody').innerHTML = [['Formation', 0], ['Entraînement en cours', 4], ['Projets passion', 5]].map(([k, n]) => `<div><dt>${k}</dt><dd>${DATA.about[n]}</dd></div>`).join('');
+document.getElementById('cue').addEventListener('click', e => { e.preventDefault(); document.getElementById('dossier').scrollIntoView({ behavior: reduce() ? 'auto' : 'smooth' }); });
 show(ORDER.includes(OPT.get('view')) ? OPT.get('view') : 'home', false);
 document.fonts.ready.then(() => { const a = nav.querySelector('[aria-current]'); pill.style.left = a.offsetLeft + 'px'; pill.style.width = a.offsetWidth + 'px'; });
 if (window.self !== window.top) document.querySelector('.opts').remove();
