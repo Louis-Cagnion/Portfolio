@@ -17,7 +17,7 @@
     "loading": "Attempting to connect with the pilot…",
     "close": "Close",
     "errors": {
-      "title": "Mission control could not connect to the pilot's ship",
+      "title": "Mission control could not establish the connection with the pilot",
       "network": "The network seems unreachable. Check your connection, then try again.",
       "timeout": "Loading timed out. Try again in a moment.",
       "http": "The server answered with an error (HTTP {status}).",
