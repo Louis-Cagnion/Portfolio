@@ -240,7 +240,7 @@ h1 { font-family: var(--display); font-weight: 400; font-size: clamp(2.3rem, 6.6
 .systems { transition: height 0.7s cubic-bezier(.65, 0, .35, 1); }
 .systems.zoomed { overflow: hidden; }
 .sys { transition: opacity 0.6s; }
-.sys.dim { opacity: 0.06; pointer-events: none; }
+.sys.dim { opacity: 0; pointer-events: none; }
 .sys-hit { fill: transparent; cursor: zoom-in; }
 .sys.on .sys-hit, .sys.on .sun-btn { cursor: default; }
 .sun-btn { cursor: zoom-in; }
@@ -312,7 +312,6 @@ h1 { font-family: var(--display); font-weight: 400; font-size: clamp(2.3rem, 6.6
     .sheet { top: auto; height: 88vh; width: 100%; border-left: 0; border-top: 1px solid var(--line); transform: translateY(100%); }
     .sys-layout:not(.zfocus) .sys-head { display: none; }
     .sys-head { position: relative; margin-bottom: 8px; }
-    .sys.dim { opacity: 0; }
 }
 /* phones: the journey becomes a zoomed, swipeable camera on a vertical curve */
 @media (max-width: 700px) {
