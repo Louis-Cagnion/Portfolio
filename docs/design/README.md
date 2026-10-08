@@ -13,7 +13,7 @@ Avec Live Server (Louis l'utilise sur le port 5500) ou tout serveur statique lan
 | `docs/design/prototype/prototype.html` | Prototype complet des cinq rubriques et des transitions |
 | `docs/design/prototype/phones.html` | Le prototype dans trois cadres de téléphone (320, 390 et 430 px) |
 
-Le petit panneau gris en bas à gauche du prototype (choix du point de départ du parcours) n'existe que dans la maquette. Le texte reste en français seulement : la version anglaise sera traduite à l'implémentation. Les polices viennent de Google Fonts (connexion requise pour le bon rendu), et la maquette est publiée avec le site sur GitHub Pages tant qu'elle existe dans le dépôt.
+Le petit panneau gris en bas à gauche du prototype n'existe que dans la maquette : il choisit le point de départ du parcours et le placement de « Je me présente », encore à trancher (`?about=home`, `journey-top` ou `journey-end`). Le paramètre `?view=<rubrique>` ouvre directement une rubrique. Le texte reste en français seulement : la version anglaise sera traduite à l'implémentation. Les polices viennent de Google Fonts (connexion requise pour le bon rendu), et la maquette est publiée avec le site sur GitHub Pages tant qu'elle existe dans le dépôt.
 
 ## Régénérer après une modification
 
@@ -38,7 +38,7 @@ Chaque proposition de design est montrée à Louis en pages réellement rendues 
 | Accueil | Ligne « Mission en cours », nom en Michroma, accroche, boutons, panneau de télémétrie |
 | Parcours | Voyage en vaisseau de la Terre à une galaxie géante (8 escales), caméra posée sur la position actuelle ; courbe verticale zoomée et fiche translucide floutée sur mobile |
 | Compétences | Constellations organiques ; astres selon le niveau (galaxie, nébuleuse, géante jaune, étoile magmatique) ; clic : déploiement puis plongée plein champ sur l'astre choisi |
-| Projets | Trois systèmes orbitaux (Tressol-Chabrier, personnel, 42), planètes étiquetées sur fond, liste complète dessous, panneau de détail |
+| Projets | Trois systèmes orbitaux (Tressol-Chabrier, personnel, 42), planètes étiquetées sur fond, liste complète dessous, panneau de détail ; clic sur un système : zoom, orbites ouvertes, planètes réparties avec leur nom affiché et cliquable, liste filtrée sur le système |
 | Contact | Disque d'or gravé façon Voyager, un sillon par canal |
 | Favicon | Trajectoire dorée avec point vert |
 
@@ -59,5 +59,7 @@ Chaque proposition de design est montrée à Louis en pages réellement rendues 
 | Parcours | Anneau comme marqueur | Remplacé par le vaisseau |
 | Transition | Zoom en un seul temps avec glissement vertical | Remplacé par le saut en deux temps centré |
 | Projets | Missions avec écussons brodés, grille de cartes | Systèmes orbitaux préférés |
+| Projets | Zoom avec panneau latéral listant les projets du système | Noms affichés sur les planètes préférés |
+| Je me présente | Paragraphes fondus dans les escales du parcours, sans section dédiée | Une section « Je me présente » visible est attendue |
 | Contact | Canal de transmission (oscilloscope), antenne et satellites, amarrage du vaisseau, carte d'embarquement | Disque d'or préféré |
 | Favicon | Monogramme LC, orbite, viseur | Trajectoire préférée |

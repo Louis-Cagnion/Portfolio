@@ -26,6 +26,8 @@ a { color: #9cf; }
 </div>
 <script>
 if (location.search) document.querySelectorAll('iframe').forEach(f => { f.src = 'prototype.html' + location.search; });
+const opts = [...new URLSearchParams(location.search)].filter(([k]) => k !== 'view').map(([k, v]) => `${k} ${v}`);
+if (opts.length) document.title = `Téléphones, ${opts.join(', ')}`;
 document.querySelectorAll('[data-start]').forEach(b => b.addEventListener('click', () => {
     document.querySelectorAll('iframe').forEach(f => f.contentWindow.setStart && f.contentWindow.setStart(b.dataset.start));
 }));

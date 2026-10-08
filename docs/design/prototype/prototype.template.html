@@ -86,6 +86,7 @@ h1 { font-family: var(--display); font-weight: 400; font-size: clamp(2.3rem, 6.6
 .cue:hover { color: var(--accent); }
 .kicker { font: 400 0.85rem var(--mono); color: var(--accent); margin: 80px 0 0; }
 .dossier h2 { margin: 6px 0 22px; }
+.dossier.top .kicker { margin-top: 56px; }
 .dossier-body { margin: 0; padding: 6px 28px; }
 .dossier-body div { display: grid; grid-template-columns: 200px 1fr; gap: 24px; padding: 18px 0; border-bottom: 1px dashed var(--line); }
 .dossier-body div:last-child { border-bottom: 0; }
@@ -234,9 +235,9 @@ h1 { font-family: var(--display); font-weight: 400; font-size: clamp(2.3rem, 6.6
 .sheet .body { color: var(--dim); }
 .close { float: right; width: 44px; height: 44px; border: 1px solid var(--line); background: none; color: var(--text); font-size: 1.2rem; cursor: pointer; }
 
-/* mockup option ?zoom=panel|labels: a click on a system zooms the camera onto it */
+/* zoom on one system: a click on it brings the camera closer and names its planets */
 .sys-layout { position: relative; }
-.systems.cam { transition: height 0.7s cubic-bezier(.65, 0, .35, 1); }
+.systems { transition: height 0.7s cubic-bezier(.65, 0, .35, 1); }
 .systems.zoomed { overflow: hidden; }
 .sys { transition: opacity 0.6s; }
 .sys.dim { opacity: 0.06; pointer-events: none; }
@@ -249,22 +250,11 @@ h1 { font-family: var(--display); font-weight: 400; font-size: clamp(2.3rem, 6.6
 .sun-btn:focus-visible .sun-label { text-decoration: underline; }
 .sys .sun-label, .sys .sun-sub { transition: opacity 0.4s; }
 .sys.on .sun-label, .sys.on .sun-sub { opacity: 0; }
-.systems.labels .sys.on .pl-label, .planet.hl .pl-label { opacity: 1; }
-.planet.hl .pl-body { filter: brightness(1.35) drop-shadow(0 0 8px rgba(232, 180, 90, 0.8)); }
+.sys.on .pl-label { opacity: 1; pointer-events: auto; cursor: pointer; }
 .sys-head { position: absolute; top: 0; left: 0; z-index: 1; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; opacity: 0; visibility: hidden; transition: opacity 0.4s, visibility 0s 0.4s; }
 .zfocus .sys-head { opacity: 1; visibility: visible; transition: opacity 0.4s 0.5s, visibility 0s; }
 .sys-head .ctitle { margin: 0; }
 .sys-head .count { margin: 0; }
-.sys-panel { position: absolute; top: 0; right: 0; bottom: 0; width: min(46%, 540px); overflow-x: hidden; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--line) transparent; padding: 22px 24px; background: color-mix(in srgb, var(--panel) 52%, transparent); backdrop-filter: blur(12px); opacity: 0; visibility: hidden; transform: translateX(24px); transition: opacity 0.5s, transform 0.5s, visibility 0s 0.5s; }
-.zfocus .sys-panel { opacity: 1; visibility: visible; transform: none; transition: opacity 0.5s 0.4s, transform 0.5s 0.4s, visibility 0s; }
-.sys-panel .ctitle { margin-bottom: 2px; }
-.sys-count { font: 400 0.85rem var(--mono); color: var(--faint); margin: 0 0 14px; }
-.pcards { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
-.pcard { display: flex; gap: 12px; align-items: flex-start; width: 100%; padding: 10px 12px; border: 1px solid transparent; background: none; color: var(--text); font: inherit; text-align: left; cursor: pointer; transition: border-color 0.25s, background 0.25s; }
-.pcard:hover, .pcard:focus-visible, .pcard.hl { border-color: color-mix(in srgb, var(--accent) 50%, transparent); background: var(--accent-soft); }
-.pcard i { width: 10px; height: 10px; border-radius: 50%; flex: none; margin-top: 8px; }
-.pcard b { display: block; font-weight: 600; font-size: 0.95rem; }
-.pcard small { display: block; color: var(--dim); font-size: 0.88rem; line-height: 1.5; margin-top: 2px; }
 .plist button.off { display: none; }
 
 /* contact: Voyager-style golden record, one groove per channel */
@@ -314,9 +304,8 @@ h1 { font-family: var(--display); font-weight: 400; font-size: clamp(2.3rem, 6.6
     .tabbar svg { width: 20px; height: 20px; }
     .tabbar button[aria-current="page"] { color: var(--accent); background: var(--accent-soft); }
     .sheet { top: auto; height: 88vh; width: 100%; border-left: 0; border-top: 1px solid var(--line); transform: translateY(100%); }
-    .sys-layout:not(.zfocus) .sys-panel, .sys-layout:not(.zfocus) .sys-head { display: none; }
+    .sys-layout:not(.zfocus) .sys-head { display: none; }
     .sys-head { position: relative; margin-bottom: 8px; }
-    .sys-panel { position: relative; inset: auto; width: auto; margin-top: 12px; overflow: visible; padding: 18px 16px; transform: translateY(16px); }
 }
 /* phones: the journey becomes a zoomed, swipeable camera on a vertical curve */
 @media (max-width: 700px) {
@@ -375,6 +364,7 @@ h1 { font-family: var(--display); font-weight: 400; font-size: clamp(2.3rem, 6.6
     <section class="view" id="journey">
         <h2>Mon parcours</h2>
         <p class="lede" id="jLede"></p>
+        <div class="jflow">
         <div class="jstage" id="jStage">
             <svg class="traj" id="traj" role="group" aria-label="Étapes du parcours">
                 <path id="track" class="track"/>
@@ -389,6 +379,7 @@ h1 { font-family: var(--display); font-weight: 400; font-size: clamp(2.3rem, 6.6
             <header><div><h3 id="dTitle"></h3><span class="when" id="dWhen"></span><span class="count" id="dCount"></span></div><div class="arrows"><button id="prev" aria-label="Étape précédente">&#8592;</button><button id="next" aria-label="Étape suivante">&#8594;</button></div></header>
             <div class="body" id="dBody"></div>
         </article>
+        </div>
     </section>
     <section class="view" id="skills">
         <h2>Mes compétences</h2>
@@ -413,16 +404,10 @@ h1 { font-family: var(--display); font-weight: 400; font-size: clamp(2.3rem, 6.6
     </section>
     <section class="view" id="projects">
         <h2>Mes projets</h2>
-        <p class="lede" id="pLede">Trois systèmes stellaires, un par univers : chaque planète en orbite est un projet. Sélectionne une planète, ou un titre de la liste, pour ouvrir son détail.</p>
+        <p class="lede" id="pLede">Trois systèmes stellaires, un par univers : chaque planète en orbite est un projet. Sélectionne un système pour t'en approcher, ou directement une planète pour ouvrir son projet.</p>
         <div class="sys-layout" id="sysLayout">
-            <div class="sys-head" id="sysHead"><button class="back" data-back><span aria-hidden="true">&#8592;</span>Tous les systèmes</button><p class="ctitle" id="sysHeadTitle"></p><span class="count" id="sysHeadCount"></span></div>
+            <div class="sys-head" id="sysHead"><button class="back" id="sysBack"><span aria-hidden="true">&#8592;</span>Tous les systèmes</button><p class="ctitle" id="sysHeadTitle"></p><span class="count" id="sysHeadCount"></span></div>
             <svg class="systems" id="systems" role="group" aria-label="Systèmes de projets"></svg>
-            <div class="sys-panel hud" id="sysPanel">
-                <button class="back" data-back><span aria-hidden="true">&#8592;</span>Tous les systèmes</button>
-                <p class="ctitle" id="sysTitle"></p>
-                <p class="sys-count" id="sysCount"></p>
-                <ul class="pcards" id="pcards"></ul>
-            </div>
         </div>
         <div class="plist" id="plist" aria-label="Liste des projets"></div>
     </section>
@@ -476,8 +461,8 @@ h1 { font-family: var(--display); font-weight: 400; font-size: clamp(2.3rem, 6.6
 </div>
 <script>
 const DATA = /*DATA*/;
-/* mockup options compared in separate tabs: ?zoom=none|panel|labels, ?about=none|home|journey, ?view=<section> */
-const OPT = new URLSearchParams(location.search), ZOOM = OPT.get('zoom') || 'none', ABOUT = OPT.get('about') || 'none';
+/* mockup options compared in separate tabs: ?about=home|journey-top|journey-end, ?view=<section> */
+const OPT = new URLSearchParams(location.search), ABOUT = ['home', 'journey-top', 'journey-end'].includes(OPT.get('about')) ? OPT.get('about') : 'none';
 const SECTIONS = [['home', 'Accueil', 'M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z'], ['journey', 'Parcours', 'M4 19c4-1 6-5 8-9s5-6 8-6'], ['skills', 'Compétences', 'M12 3l2.6 5.6L20 9.3l-4 4 1 5.7-5-2.8-5 2.8 1-5.7-4-4 5.4-.7z'], ['projects', 'Projets', 'M3 6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM3 9h18'], ['contact', 'Contact', 'M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM3 7l9 6 9-6']];
 const ORDER = SECTIONS.map(s => s[0]);
 const NS = 'http://www.w3.org/2000/svg';
@@ -608,12 +593,6 @@ const traj = document.getElementById('traj'), stage = document.getElementById('j
 const STEPS = DATA.steps, NOW = STEPS.findIndex(s => s.now), LAST = STEPS.length - 1, jcam = makeCamera(traj), JZOOM = 1.3, GAP = 130, FOCUS_Y = 0.36;
 const STOP_R = { earth: 9, moon: 7, mars: 9, asteroids: 12, station: 13, saturn: 15, nebula: 22, galaxy: 30 };
 let lens = [], len = 0, cur = NOW, shipPos = 0, shipRaf = 0, startAt = 'now', jMoving = false, shipDir = 1, particles = [], trailRaf = 0;
-/* ?about=journey: the unused « Je me présente » paragraphs join the matching stops (the intro sentence is dropped) */
-if (ABOUT === 'journey') {
-    const add = (body, at, ps) => { const s = STEPS.find(x => x.body === body); s.paragraphs.splice(at ?? s.paragraphs.length, 0, ...ps); };
-    add('mars', null, [DATA.about[0].replace(/^[^.]*\.\s*/, '')]);
-    add('station', 2, [DATA.about[4], DATA.about[5]]);
-}
 const vertical = () => mobile.matches;
 const J_ARMS = (() => {
     let out = '';
@@ -995,10 +974,10 @@ const SYS = [
     { cat: 'school', name: '42 Perpignan', sun: ['#dcfff8', '#4fd1c5'], planet: ['#b8f5ec', '#25857c'] },
 ];
 const sysSvg = document.getElementById('systems'), measureCtx = document.createElement('canvas').getContext('2d');
-const sysLayout = document.getElementById('sysLayout'), plist = document.getElementById('plist');
+const sysLayout = document.getElementById('sysLayout'), plist = document.getElementById('plist'), scam = makeCamera(sysSvg);
 const plainTitle = t => t.replace(/<[^>]+>/g, '');
-const TILT = 0.42, Z_SPEED = 0.00005, Z_PHONE_RATIO = 1.25, tiltFocus = () => narrow.matches ? 0.9 : 0.62, scam = ZOOM === 'none' ? null : makeCamera(sysSvg);
-let planets = [], systems = [], zoomSys = -1, zMoving = false;
+const TILT = 0.42, Z_SPEED = 0.00005, Z_PHONE_RATIO = 1.25, tiltFocus = () => narrow.matches ? 0.9 : 0.62;
+let planets = [], systems = [], zoomSys = -1, zMoving = false, sysHover = false;
 /* label width from canvas metrics: valid while the section is hidden (no DOM measurement) */
 function labelWidth(t) { measureCtx.font = '500 12.5px "IBM Plex Sans", sans-serif'; return measureCtx.measureText(t).width; }
 const sysDims = () => narrow.matches ? { w: 360, h: 1200 } : { w: 1100, h: 400 };
@@ -1016,7 +995,7 @@ function placePlanet(pl) {
 }
 /* labels keep their screen size (--u); in a zoomed system they point away from the sun and stay in frame */
 function placeLabel(pl, x, y) {
-    const u = scam ? parseFloat(sysSvg.style.getPropertyValue('--u')) || 1 : 1, lw = pl.lw * u, lh = pl.lh * u, d = pl.size + 6 * u;
+    const u = parseFloat(sysSvg.style.getPropertyValue('--u')) || 1, lw = pl.lw * u, lh = pl.lh * u, d = pl.size + 6 * u;
     let bx = x + d, by = y - lh / 2;
     if (zoomSys === pl.si) {
         const c = Math.cos(pl.a), s = Math.sin(pl.a), left = scam.cx - scam.w / 2 + 4 * u, right = scam.cx + scam.w / 2 - 4 * u;
@@ -1032,8 +1011,7 @@ function buildSystems() {
     sysLayout.classList.remove('zfocus'); sysSvg.classList.remove('zoomed');
     plist.querySelectorAll('button').forEach(b => b.classList.remove('off'));
     const m = narrow.matches, { w, h } = sysDims(), cell = m ? 400 : w / 3;
-    if (scam) { sysSvg.classList.add('cam'); sysSvg.classList.toggle('labels', ZOOM === 'labels'); sysSvg.style.height = ''; sysSvg.style.aspectRatio = `${w} / ${h}`; scam.set({ cx: w / 2, cy: h / 2, w }); }
-    else sysSvg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+    sysSvg.style.height = ''; sysSvg.style.aspectRatio = `${w} / ${h}`; scam.set({ cx: w / 2, cy: h / 2, w });
     const defs = mk('defs', {}, sysSvg);
     SYS.forEach((s, i) => {
         const cx = m ? w / 2 : cell * i + cell / 2, cy = m ? cell * i + cell / 2 - 10 : h / 2 - 10;
@@ -1042,17 +1020,18 @@ function buildSystems() {
         const list = DATA.projects.filter(p => p.cat === s.cat), radii = [72, 120, 168];
         const sysG = mk('g', { class: 'sys' }, sysSvg), S = { g: sysG, cx, cy, tilt: TILT, orbits: [] };
         systems.push(S);
-        if (scam) { mk('rect', { class: 'sys-hit', x: m ? 0 : cell * i, y: m ? cell * i : 0, width: m ? w : cell, height: m ? cell : h }, sysG); sysG.addEventListener('click', e => e.target.closest('.planet') || zoomTo(i)); }
+        mk('rect', { class: 'sys-hit', x: m ? 0 : cell * i, y: m ? cell * i : 0, width: m ? w : cell, height: m ? cell : h }, sysG);
+        sysG.addEventListener('click', e => e.target.closest('.planet') || zoomTo(i));
         radii.forEach(r => S.orbits.push(mk('ellipse', { class: 'orbit', cx, cy, rx: r, ry: r * TILT }, sysG)));
-        const sun = mk('g', scam ? { class: 'sun-btn', tabindex: 0, role: 'button', 'aria-label': `Approcher le système ${s.name}` } : {}, sysG);
+        const sun = mk('g', { class: 'sun-btn', tabindex: 0, role: 'button', 'aria-label': `Approcher le système ${s.name}` }, sysG);
         mk('circle', { class: 'sun-glow', cx, cy, r: 44, fill: `url(#sun${i})` }, sun);
         mk('circle', { cx, cy, r: 16, fill: s.sun[0] }, sun);
         mk('text', { class: 'sun-label', x: cx, y: cy + 112 }, sun).textContent = s.name;
         mk('text', { class: 'sun-sub', x: cx, y: cy + 132 }, sun).textContent = `${list.length} projets`;
-        if (scam) sun.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); zoomTo(i); } });
+        sun.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); zoomTo(i); } });
         list.forEach((p, j) => {
             const r = radii[j % 3], size = 7 + Math.min(6, p.paragraphs.length * 1.4), title = plainTitle(p.title);
-            const lines = m && scam && title.length > 20 ? splitTitle(title) : [title], lw = Math.max(...lines.map(labelWidth)) + 16, lh = 8 + 14 * lines.length;
+            const lines = m && title.length > 20 ? splitTitle(title) : [title], lw = Math.max(...lines.map(labelWidth)) + 16, lh = 8 + 14 * lines.length;
             const g = mk('g', { class: 'planet', tabindex: 0, role: 'button', 'aria-label': title }, sysG);
             mk('circle', { class: 'pl-hit', r: size + 10 }, g);
             mk('circle', { class: 'pl-body', r: size, fill: `url(#pl${i})` }, g);
@@ -1060,10 +1039,10 @@ function buildSystems() {
             mk('rect', { class: 'pl-bg', x: 0, y: 0, width: lw, height: lh, rx: 4 }, lg);
             const tx = mk('text', { class: 'pl-name', x: 8, y: 15 }, lg);
             lines.forEach((t, k) => { mk('tspan', { x: 8, dy: k ? 14 : 0 }, tx).textContent = t; });
-            const pl = { g, lg, lw, lh, size, si: i, p, r, a: j * 2.4 + i, sp: 0.00012 * (180 / r), card: null };
-            const raise = () => { sysG.append(g); pl.card && pl.card.classList.add('hl'); };
+            const pl = { g, lg, lw, lh, size, si: i, p, r, a: j * 2.4 + i, sp: 0.00012 * (180 / r) };
+            /* moving the hovered node again on every event would retarget the click to the system group */
+            const raise = () => sysG.lastElementChild === g || sysG.append(g);
             g.addEventListener('mouseenter', raise); g.addEventListener('focus', raise);
-            ['mouseleave', 'blur'].forEach(ev => g.addEventListener(ev, () => pl.card && pl.card.classList.remove('hl')));
             g.addEventListener('click', () => openSheet(p, g));
             g.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openSheet(p, g); } });
             placePlanet(pl); planets.push(pl);
@@ -1074,53 +1053,45 @@ DATA.projects.forEach(p => {
     const s = SYS.find(x => x.cat === p.cat), b = document.createElement('button');
     b.dataset.cat = p.cat; b.innerHTML = `<i style="background:${s.planet[1]}"></i>${p.title}`; b.addEventListener('click', () => openSheet(p, b)); plist.append(b);
 });
+/* dt is capped so that a tab coming back from the background does not make the planets jump */
 let lastSpin = performance.now();
 (function spin(now) {
-    const dt = now - lastSpin; lastSpin = now;
-    if (current === 'projects' && !reduce()) for (const pl of planets) { if (!pl.g.matches(':hover, :focus-visible') && !pl.g.classList.contains('hl')) pl.a += (pl.si === zoomSys ? Z_SPEED : pl.sp) * dt; placePlanet(pl); }
+    const dt = Math.min(now - lastSpin, 50); lastSpin = now;
+    const held = zoomSys >= 0 && (sysHover || !!sysSvg.querySelector('.sys.on .planet:focus-visible'));
+    if (current === 'projects' && !reduce()) for (const pl of planets) {
+        if (pl.si === zoomSys ? !held : !pl.g.matches(':hover, :focus-visible')) pl.a += (pl.si === zoomSys ? Z_SPEED : pl.sp) * dt;
+        placePlanet(pl);
+    }
     requestAnimationFrame(spin);
 })(lastSpin);
+/* a zoomed system holds still under the pointer, so a planet or its name is easy to click */
+sysSvg.addEventListener('pointerenter', () => { sysHover = true; });
+sysSvg.addEventListener('pointerleave', () => { sysHover = false; });
 
 /* zoom on one system: camera tween, orbits tilt open, the other systems fade out */
 function focusCamSys(i) {
     const S = systems[i];
-    if (narrow.matches) return { cx: S.cx, cy: S.cy, w: 370 };
-    const w = (ZOOM === 'panel' ? 340 : 300) / scam.ratio();
-    return { cx: S.cx + (ZOOM === 'panel' ? 0.23 * w : 0), cy: S.cy, w };
+    return { cx: S.cx, cy: S.cy, w: narrow.matches ? 370 : 300 / scam.ratio() };
 }
 const overviewCamSys = () => { const { w, h } = sysDims(); return { cx: w / 2, cy: h / 2, w }; };
 function setSysHeight(focus) {
     const W = sysSvg.clientWidth, { w, h } = sysDims();
     sysSvg.style.height = sysSvg.clientHeight + 'px'; sysSvg.style.aspectRatio = ''; void sysSvg.offsetHeight;
-    sysSvg.style.height = (focus ? (narrow.matches ? W * Z_PHONE_RATIO : ZOOM === 'panel' ? 540 : 520) : W * h / w) + 'px';
+    sysSvg.style.height = (focus ? (narrow.matches ? W * Z_PHONE_RATIO : 520) : W * h / w) + 'px';
 }
 function setTilt(S, t) { S.tilt = t; S.orbits.forEach(o => o.setAttribute('ry', (o.getAttribute('rx') * t).toFixed(1))); planets.forEach(pl => systems[pl.si] === S && placePlanet(pl)); }
-function fillZoomInfo(i) {
-    const s = SYS[i], list = planets.filter(pl => pl.si === i), count = `${list.length} projets`;
-    planets.forEach(pl => { pl.card = null; });
-    const pre = ZOOM === 'panel' ? 'sys' : 'sysHead';
-    document.getElementById(`${pre}Title`).textContent = `Système ${s.name}`; document.getElementById(`${pre}Count`).textContent = count;
-    plist.querySelectorAll('button').forEach(b => b.classList.toggle('off', ZOOM === 'labels' && b.dataset.cat !== s.cat));
-    if (ZOOM !== 'panel') return;
-    const ul = document.getElementById('pcards'); ul.innerHTML = '';
-    list.forEach(pl => {
-        const li = document.createElement('li'), b = document.createElement('button');
-        b.className = 'pcard'; b.innerHTML = `<i style="background:${s.planet[1]}"></i><span><b>${pl.p.title}</b><small>${pl.p.summary}</small></span>`;
-        b.addEventListener('click', () => openSheet(pl.p, b));
-        ['mouseenter', 'focus'].forEach(ev => b.addEventListener(ev, () => { pl.g.classList.add('hl'); systems[i].g.append(pl.g); }));
-        ['mouseleave', 'blur'].forEach(ev => b.addEventListener(ev, () => pl.g.classList.remove('hl')));
-        pl.card = b; li.append(b); ul.append(li);
-    });
-}
 async function zoomTo(i) {
-    if (!scam || zoomSys >= 0 || zMoving) return;
+    if (zoomSys >= 0 || zMoving) return;
     zoomSys = i; zMoving = true;
-    systems.forEach((S, k) => { S.g.classList.toggle('on', k === i); S.g.classList.toggle('dim', k !== i); });
+    const s = SYS[i], S = systems[i], t0 = S.tilt, mine = planets.filter(pl => pl.si === i), TAU = 2 * Math.PI;
+    systems.forEach((x, k) => { x.g.classList.toggle('on', k === i); x.g.classList.toggle('dim', k !== i); });
     sysSvg.classList.add('zoomed'); sysLayout.classList.add('zfocus');
-    fillZoomInfo(i); setSysHeight(true);
+    document.getElementById('sysHeadTitle').textContent = `Système ${s.name}`;
+    document.getElementById('sysHeadCount').textContent = `${mine.length} projets`;
+    plist.querySelectorAll('button').forEach(b => b.classList.toggle('off', b.dataset.cat !== s.cat));
+    setSysHeight(true);
     if (narrow.matches) scrollTo({ top: sysLayout.getBoundingClientRect().top + scrollY - document.querySelector('.bar').offsetHeight - 8, behavior: reduce() ? 'auto' : 'smooth' });
     /* planets drift to even spacing, then share one speed so labels never collide */
-    const S = systems[i], t0 = S.tilt, mine = planets.filter(pl => pl.si === i), TAU = 2 * Math.PI;
     const shift = mine.map((pl, k) => { const dl = ((mine[0].a + k * TAU / mine.length - pl.a) % TAU + TAU) % TAU; return dl > Math.PI ? dl - TAU : dl; });
     let prev = 0;
     await scam.tween(() => focusCamSys(i), 1000, e => { mine.forEach((pl, k) => { pl.a += shift[k] * (e - prev); }); prev = e; setTilt(S, lerp(t0, tiltFocus(), e)); });
@@ -1128,7 +1099,7 @@ async function zoomTo(i) {
 }
 async function exitZoom() {
     if (zoomSys < 0 || zMoving) return;
-    const i = zoomSys, S = systems[i], t0 = S.tilt; zMoving = true;
+    const S = systems[zoomSys], t0 = S.tilt; zMoving = true;
     sysLayout.classList.remove('zfocus');
     systems.forEach(x => x.g.classList.remove('on', 'dim'));
     plist.querySelectorAll('button').forEach(b => b.classList.remove('off'));
@@ -1138,16 +1109,12 @@ async function exitZoom() {
     sysSvg.classList.remove('zoomed'); sysSvg.style.height = ''; const { w, h } = sysDims(); sysSvg.style.aspectRatio = `${w} / ${h}`;
     S.g.querySelector('.sun-btn').focus({ preventScroll: true });
 }
-['sysHead', 'sysPanel'].forEach(id => (ZOOM !== (id === 'sysHead' ? 'labels' : 'panel')) && document.getElementById(id).remove());
-document.querySelectorAll('[data-back]').forEach(b => b.addEventListener('click', exitZoom));
-if (scam) {
-    document.getElementById('pLede').textContent = 'Trois systèmes stellaires, un par univers : chaque planète en orbite est un projet. Sélectionne un système pour t\'en approcher, ou directement une planète pour ouvrir son projet.';
-    new ResizeObserver(() => {
-        if (scam.raf || zMoving) return;
-        if (zoomSys >= 0 && narrow.matches) sysSvg.style.height = sysSvg.clientWidth * Z_PHONE_RATIO + 'px';
-        scam.set(zoomSys >= 0 ? focusCamSys(zoomSys) : overviewCamSys());
-    }).observe(sysSvg);
-}
+document.getElementById('sysBack').addEventListener('click', exitZoom);
+new ResizeObserver(() => {
+    if (scam.raf || zMoving) return;
+    if (zoomSys >= 0 && narrow.matches) sysSvg.style.height = sysSvg.clientWidth * Z_PHONE_RATIO + 'px';
+    scam.set(zoomSys >= 0 ? focusCamSys(zoomSys) : overviewCamSys());
+}).observe(sysSvg);
 buildSystems();
 narrow.addEventListener('change', buildSystems);
 
@@ -1185,21 +1152,24 @@ document.getElementById('copyMail').addEventListener('click', async () => {
     catch { msg.textContent = 'Copie impossible : sélectionne l\'adresse ci-dessus'; }
     msg.classList.add('on'); setTimeout(() => msg.classList.remove('on'), 2200);
 });
-/* ?about=home: pilot file under the hero */
-if (ABOUT === 'home') {
-    document.getElementById('cue').hidden = document.getElementById('dossier').hidden = false;
+/* ?about=: the pilot file sits under the home hero, or at the top or the end of the journey */
+if (ABOUT !== 'none') {
+    const ds = document.getElementById('dossier'), journey = document.getElementById('journey');
+    ds.hidden = false;
     document.getElementById('dossierBody').innerHTML = [['Formation', 0], ['Entraînement en cours', 4], ['Projets passion', 5]].map(([k, n]) => `<div><dt>${k}</dt><dd>${DATA.about[n]}</dd></div>`).join('');
-    document.getElementById('cue').addEventListener('click', e => { e.preventDefault(); document.getElementById('dossier').scrollIntoView({ behavior: reduce() ? 'auto' : 'smooth' }); });
+    if (ABOUT === 'journey-top') journey.prepend(ds);
+    if (ABOUT === 'journey-end') journey.append(ds);
+    ds.classList.toggle('top', ABOUT === 'journey-top');
+    if (ABOUT === 'home') {
+        const cue = document.getElementById('cue'); cue.hidden = false;
+        cue.addEventListener('click', e => { e.preventDefault(); ds.scrollIntoView({ behavior: reduce() ? 'auto' : 'smooth' }); });
+    }
 }
-/* mockup-only switches: each choice reloads the page with its query string, on the current section */
-const OPTS = [['zoom', 'Projets, clic sur un système', [['none', 'Sans zoom'], ['panel', 'Zoom et panneau'], ['labels', 'Zoom et étiquettes']]], ['about', 'Je me présente', [['none', 'Absent'], ['home', 'Sous l\'accueil'], ['journey', 'Dans le parcours']]]];
-OPTS.forEach(([key, label, vals]) => {
-    const now = OPT.get(key) || 'none', box = document.querySelector('.opts');
-    box.insertAdjacentHTML('beforeend', `<b>${label}</b><div class="row">${vals.map(([v, t]) => `<button aria-pressed="${v === now}" data-opt="${key}=${v}">${t}</button>`).join('')}</div>`);
-});
-document.querySelectorAll('[data-opt]').forEach(b => b.addEventListener('click', () => { const [k, v] = b.dataset.opt.split('='); OPT.set(k, v); OPT.set('view', current); location.search = OPT; }));
-const optTitle = OPTS.map(([key, , vals]) => OPT.get(key) !== 'none' && (vals.find(v => v[0] === OPT.get(key)) || [])[1]).filter(Boolean).map(t => t.toLowerCase());
-if (optTitle.length) document.title = `Prototype, ${optTitle.join(', ')}`;
+/* mockup-only switch: each choice reloads the page with its query string, on the current section */
+const ABOUT_OPTS = [['none', 'Absent'], ['home', 'Sous l\'accueil'], ['journey-top', 'Haut du parcours'], ['journey-end', 'Bas du parcours']];
+document.querySelector('.opts').insertAdjacentHTML('beforeend', `<b>Je me présente</b><div class="row">${ABOUT_OPTS.map(([v, t]) => `<button aria-pressed="${v === ABOUT}" data-about="${v}">${t}</button>`).join('')}</div>`);
+document.querySelectorAll('[data-about]').forEach(b => b.addEventListener('click', () => { OPT.set('about', b.dataset.about); OPT.set('view', current); location.search = OPT; }));
+if (ABOUT !== 'none') document.title = `Prototype, ${ABOUT_OPTS.find(o => o[0] === ABOUT)[1].toLowerCase()}`;
 show(ORDER.includes(OPT.get('view')) ? OPT.get('view') : 'home', false);
 document.fonts.ready.then(() => { const a = nav.querySelector('[aria-current]'); pill.style.left = a.offsetLeft + 'px'; pill.style.width = a.offsetWidth + 'px'; });
 if (window.self !== window.top) document.querySelector('.opts').remove();
