@@ -33,5 +33,5 @@ const projects = Object.entries(CAT).flatMap(([src, cat]) => fr.projects[src].li
 }));
 
 const tpl = fs.readFileSync(path.join(here, 'prototype.template.html'), 'utf8');
-fs.writeFileSync(path.join(here, 'prototype.html'), tpl.replace('/*DATA*/', JSON.stringify({ steps, projects, skills, about: a })));
+fs.writeFileSync(path.join(here, 'prototype.html'), tpl.replace('/*DATA*/', JSON.stringify({ steps, projects, skills, about: a, contact: fr.contact.links })));
 console.log('built', projects.length, 'projects,', skills.length, 'skill groups');

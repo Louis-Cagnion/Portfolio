@@ -13,7 +13,7 @@ Avec Live Server (Louis l'utilise sur le port 5500) ou tout serveur statique lan
 | `docs/design/prototype/prototype.html` | Prototype complet des cinq rubriques et des transitions |
 | `docs/design/prototype/phones.html` | Le prototype dans trois cadres de téléphone (320, 390 et 430 px) |
 
-Le petit panneau gris en bas à gauche du prototype (choix du point de départ du parcours) et le paramètre `?view=<rubrique>`, qui ouvre directement une rubrique, n'existent que dans la maquette. Le texte reste en français seulement : la version anglaise sera traduite à l'implémentation. Les polices viennent de Google Fonts (connexion requise pour le bon rendu), et la maquette est publiée avec le site sur GitHub Pages tant qu'elle existe dans le dépôt.
+Le paramètre `?view=<rubrique>`, qui ouvre directement une rubrique, n'existe que dans la maquette. Le texte reste en français seulement : la version anglaise sera traduite à l'implémentation. Les polices viennent de Google Fonts (connexion requise pour le bon rendu), et la maquette est publiée avec le site sur GitHub Pages tant qu'elle existe dans le dépôt.
 
 ## Régénérer après une modification
 
@@ -36,10 +36,10 @@ Chaque proposition de design est montrée à Louis en pages réellement rendues 
 | Navigation | Une rubrique à la fois ; pilule glissante en ordinateur, barre d'onglets en bas sur mobile ; bascule FR/EN |
 | Transition | Saut en hyperespace en deux temps (la rubrique part puis la suivante arrive, depuis le centre), sens avant ou arrière selon l'ordre des rubriques, courbure FOV en barillet |
 | Accueil | Ligne « Mission en cours », nom en Michroma, accroche, boutons, panneau de télémétrie ; dessous, repère « Dossier du pilote » (il s'efface une fois la section à l'écran) puis section « Je me présente » (formation, entraînement en cours, projets passion) |
-| Parcours | Voyage en vaisseau de la Terre à une galaxie géante (8 escales), caméra posée sur la position actuelle ; courbe verticale zoomée et fiche translucide floutée sur mobile |
+| Parcours | Voyage en vaisseau de la Terre à une galaxie géante (8 escales), ouverture et caméra sur la position actuelle ; courbe verticale zoomée et fiche translucide floutée sur mobile |
 | Compétences | Constellations organiques ; astres selon le niveau (galaxie, nébuleuse, géante jaune, étoile magmatique) ; clic : déploiement puis plongée plein champ sur l'astre choisi |
 | Projets | Trois systèmes orbitaux (Tressol-Chabrier, personnel, 42), planètes étiquetées sur fond, liste complète dessous, panneau de détail ; clic sur un système : zoom, orbites ouvertes, planètes réparties avec leur nom affiché et cliquable, liste masquée (elle ne s'affiche qu'avec tous les systèmes) ; sur téléphone, systèmes empilés au plus près |
-| Contact | Disque d'or gravé façon Voyager, un sillon par canal |
+| Contact | Disque d'or gravé façon Voyager, seule commande de contact : le centre copie l'adresse, chaque sillon ouvre un canal ; au survol (premier toucher sur téléphone, le second ouvre), le sillon s'allume et son nom se grave en arc ; au survol du centre « COPIER L'EMAIL », puis « EMAIL COPIÉ » après le clic, sans jamais toucher à l'adresse gravée ; texte de la rubrique : question, phrase Voyager, mode d'emploi du disque |
 | Favicon | Trajectoire dorée avec point vert |
 
 ## Options écartées
@@ -57,10 +57,13 @@ Chaque proposition de design est montrée à Louis en pages réellement rendues 
 | Compétences | Étoile, planète, lune, étoile morte | Remplacées par galaxie, nébuleuse, géante jaune, étoile en roche magmatique craquelée |
 | Parcours | Courbe horizontale sur mobile | Trop fine et trop petite |
 | Parcours | Anneau comme marqueur | Remplacé par le vaisseau |
+| Parcours | Ouverture sur la première escale | Position actuelle préférée |
 | Transition | Zoom en un seul temps avec glissement vertical | Remplacé par le saut en deux temps centré |
 | Projets | Missions avec écussons brodés, grille de cartes | Systèmes orbitaux préférés |
 | Projets | Zoom avec panneau latéral listant les projets du système | Noms affichés sur les planètes préférés |
 | Je me présente | Paragraphes fondus dans les escales du parcours, sans section dédiée | Une section « Je me présente » visible est attendue |
 | Je me présente | Section en haut ou en bas du parcours | Sous l'accueil préféré |
 | Contact | Canal de transmission (oscilloscope), antenne et satellites, amarrage du vaisseau, carte d'embarquement | Disque d'or préféré |
+| Contact | Adresse, boutons et liste des réseaux en texte à côté du disque (et ses variantes téléphone : sans sillons, disque collant, disque à côté) | Le disque seul porte les contacts, pour inviter à le manipuler |
+| Contact | Adresse gravée remplacée par « ADRESSE COPIÉE » au clic, ligne d'état visible sous le texte | L'adresse gravée reste intacte et le disque suffit (la ligne d'état n'existe plus que pour les lecteurs d'écran) |
 | Favicon | Monogramme LC, orbite, viseur | Trajectoire préférée |

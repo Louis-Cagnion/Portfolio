@@ -257,35 +257,34 @@ h1 { font-family: var(--display); font-weight: 400; font-size: clamp(2.3rem, 6.6
 .sys-head .count { margin: 0; }
 .sys-layout.zfocus + .plist { display: none; }
 
-/* contact: Voyager-style golden record, one groove per channel */
-.record-wrap { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px; align-items: center; }
-.disc { width: 100%; max-width: 460px; justify-self: center; overflow: visible; filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.6)); }
+/* contact: Voyager-style golden record, the only contact control (label copies, each groove opens a channel) */
+.record-wrap { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-areas: "disc msg"; gap: 0 48px; align-items: center; margin-top: 28px; }
+.disc { grid-area: disc; width: 100%; max-width: 460px; justify-self: center; overflow: visible; filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.6)); }
 .grooves { animation: turn 60s linear infinite; transform-origin: 0 0; }
 @keyframes turn { to { transform: rotate(360deg); } }
 .groove-track { fill: none; stroke: rgba(70, 45, 10, 0.35); stroke-width: 7; transition: stroke 0.35s, filter 0.35s; }
 .groove-track.lit { stroke: rgba(255, 235, 180, 0.85); filter: drop-shadow(0 0 6px #ffd27a); }
 .engrave { fill: none; stroke: rgba(80, 52, 14, 0.75); stroke-width: 1.1; stroke-linecap: round; }
 .engrave-text { fill: rgba(80, 52, 14, 0.85); font: 600 9.5px var(--mono); letter-spacing: 1.5px; }
+.arc-name { fill: #3b2507; font: 700 15px var(--mono); letter-spacing: 2.5px; dominant-baseline: central; paint-order: stroke; stroke: rgba(255, 240, 200, 0.55); stroke-width: 2px; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+.arc-name.on { opacity: 1; }
+.rec-hit { cursor: pointer; }
+.rec-hit:focus { outline: none; }
+.rec-hit .ring { fill: none; stroke: transparent; pointer-events: stroke; }
+.rec-hit .core { fill: transparent; }
+.rec-hit:focus-visible .core { stroke: #fff3cf; stroke-width: 2; }
+.rec-label { transition: filter 0.25s; }
+.rec-label.hot { filter: brightness(1.12); }
+.msg { grid-area: msg; }
 .msg h3 { font-family: var(--display); font-weight: 400; font-size: 1.15rem; margin: 0 0 10px; line-height: 1.5; }
-.msg p { color: var(--dim); margin: 0 0 22px; }
-.msg .email { display: block; font-family: var(--display); font-size: clamp(0.95rem, 2.4vw, 1.3rem); color: var(--text); text-decoration: none; margin: 0 0 16px; overflow-wrap: anywhere; }
-.msg .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 26px; }
-.msg .btn { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; }
-.copied { font: 500 0.85rem var(--mono); color: var(--live); opacity: 0; transition: opacity 0.3s; align-self: center; }
-.copied.on { opacity: 1; }
-.channels-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
-.channels-list a { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 14px; border: 1px solid var(--line); color: var(--text); text-decoration: none; transition: border-color 0.25s, background 0.25s; }
-.channels-list a:hover, .channels-list a:focus-visible { border-color: var(--accent); background: var(--accent-soft); }
-.channels-list small { font: 400 0.78rem var(--mono); color: var(--faint); }
-@media (max-width: 820px) { .record-wrap { grid-template-columns: 1fr; } .disc { max-width: 320px; } }
+.msg p { color: var(--dim); margin: 0 0 14px; }
+/* screen readers only: the engraved arcs already tell sighted visitors where a groove leads */
+.rec-status { position: absolute; width: 1px; height: 1px; margin: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+@media (max-width: 820px) {
+    .record-wrap { grid-template-columns: 1fr; grid-template-areas: "msg" "disc"; gap: 12px; }
+    .disc { max-width: 320px; }
+}
 
-/* mockup-only options */
-.opts { position: fixed; left: 16px; bottom: 16px; z-index: 30; padding: 10px 12px; background: #1e2128; color: #ddd; border: 1px solid #3a3f4a; border-radius: 10px; font: 12px system-ui, sans-serif; }
-.opts b { display: block; margin-bottom: 6px; }
-.opts b:not(:first-child) { margin-top: 10px; }
-.opts .row { display: flex; gap: 6px; }
-.opts .row button { padding: 5px 9px; border: 1px solid #4a505d; background: #2a2e37; color: #ddd; border-radius: 6px; cursor: pointer; font: inherit; }
-.opts .row button[aria-pressed="true"] { border-color: #9cf; color: #fff; }
 
 .tabbar { display: none; }
 .flash { position: fixed; inset: 0; z-index: 4; pointer-events: none; opacity: 0; background: radial-gradient(circle, rgba(var(--star), 0.22), transparent 60%); transition: opacity 0.3s; }
@@ -298,7 +297,6 @@ h1 { font-family: var(--display); font-weight: 400; font-size: clamp(2.3rem, 6.6
     .focus .viz-wrap { position: sticky; top: var(--bar-h); z-index: 0; }
     .focus-panel { position: relative; z-index: 1; width: auto; margin-top: -34vw; overflow: visible; transform: translateY(24px); }
     .focus .focus-panel { transform: none; }
-    .opts { bottom: 86px; left: 8px; }
     .tabbar { display: grid; grid-template-columns: repeat(5, 1fr); position: fixed; left: 10px; right: 10px; bottom: 10px; z-index: 6; padding: 6px; border-radius: 22px; border: 1px solid var(--line); background: color-mix(in srgb, var(--panel) 90%, transparent); backdrop-filter: blur(14px); }
     .tabbar button { display: grid; justify-items: center; gap: 2px; border: 0; background: none; color: var(--dim); font: 500 0.68rem var(--sans); padding: 6px 0; border-radius: 16px; cursor: pointer; }
     .tabbar svg { width: 20px; height: 20px; }
@@ -412,9 +410,8 @@ h1 { font-family: var(--display); font-weight: 400; font-size: clamp(2.3rem, 6.6
     </section>
     <section class="view" id="contact">
         <h2>Me contacter</h2>
-        <p class="lede">Comme le disque d'or embarqué sur les sondes Voyager, ce message attend que quelqu'un le trouve.</p>
         <div class="record-wrap">
-            <svg class="disc" viewBox="-250 -250 500 500" aria-hidden="true">
+            <svg class="disc" viewBox="-250 -250 500 500" role="group" aria-label="Disque d'or : adresse au centre, un réseau par sillon">
                 <defs>
                     <radialGradient id="recGold" cx=".42" cy=".38" r=".75"><stop offset="0" stop-color="#ffe7a8"/><stop offset=".45" stop-color="#e8b45a"/><stop offset=".8" stop-color="#b47a2a"/><stop offset="1" stop-color="#7a4f17"/></radialGradient>
                     <linearGradient id="recSheen" x1="0" y1="0" x2="1" y2="1"><stop offset=".3" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".35"/><stop offset=".7" stop-color="#fff" stop-opacity="0"/></linearGradient>
@@ -424,27 +421,19 @@ h1 { font-family: var(--display); font-weight: 400; font-size: clamp(2.3rem, 6.6
                 <g class="grooves" id="recGrooves"></g>
                 <g id="recTracks"></g>
                 <circle r="240" fill="url(#recSheen)" opacity=".6"/>
-                <circle r="92" fill="#d9a54d" stroke="rgba(80,52,14,.6)" stroke-width="1.5"/>
+                <circle class="rec-label" r="92" fill="#d9a54d" stroke="rgba(80,52,14,.6)" stroke-width="1.5"/>
                 <circle r="8" fill="#5a3b10"/>
                 <text class="engrave-text"><textPath href="#recLabelRing">LOUIS.CAGNION.PRO@GMAIL.COM  ✶  </textPath></text>
                 <g class="engrave" transform="translate(-30 -30)"><circle r="6"/><circle cx="16" r="6"/><path d="M6 0h4"/></g>
                 <g class="engrave" transform="translate(16 18)"><path d="M0 0L-24-12M0 0L-28 4M0 0L-20 16M0 0L-6 24M0 0L14 22M0 0L26 8M0 0L24-10M0 0L10-24"/><circle r="2.5" fill="rgba(80,52,14,.75)"/></g>
+                <g id="recLabels"></g>
+                <g id="recHits"></g>
             </svg>
             <section class="msg">
                 <h3>Une question, une opportunité, une envie d'échanger ?</h3>
-                <p>Mon adresse est gravée au centre du disque. Chaque sillon mène aussi à l'un de mes réseaux.</p>
-                <a class="email" href="mailto:louis.cagnion.pro@gmail.com" data-track="0">louis.cagnion.pro@gmail.com</a>
-                <div class="actions">
-                    <button class="btn primary" id="copyMail" data-track="0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>Copier l'adresse</button>
-                    <a class="btn" href="mailto:louis.cagnion.pro@gmail.com" data-track="0">Écrire un e-mail</a>
-                    <span class="copied" id="copiedMail" role="status">Adresse copiée</span>
-                </div>
-                <ul class="channels-list">
-                    <li><a href="#" data-track="1">LinkedIn<small>sillon 2</small></a></li>
-                    <li><a href="#" data-track="2">GitHub<small>sillon 3</small></a></li>
-                    <li><a href="#" data-track="3">Codewars<small>sillon 4</small></a></li>
-                </ul>
+                <p>Comme le disque d'or embarqué sur les sondes Voyager, ce message attend que quelqu'un le trouve. Mon adresse email est gravée au centre du disque. Chaque sillon mène aussi à l'un de mes réseaux.</p>
             </section>
+            <p class="rec-status" id="recStatus" role="status"></p>
         </div>
     </section>
 </main>
@@ -454,9 +443,6 @@ h1 { font-family: var(--display); font-weight: 400; font-size: clamp(2.3rem, 6.6
 <div class="flash" aria-hidden="true"></div>
 <div id="warpStage" aria-hidden="true"></div>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="fov" x="0" y="0" width="1" height="1" primitiveUnits="objectBoundingBox" color-interpolation-filters="sRGB"><feImage id="fovMap" x="0" y="0" width="1" height="1" preserveAspectRatio="none" result="map"/><feDisplacementMap id="fovDisp" in="SourceGraphic" in2="map" scale="0" xChannelSelector="R" yChannelSelector="G"/></filter></svg>
-<div class="opts" aria-label="Options de maquette">
-    <b>Départ du parcours</b>
-    <div class="row"><button aria-pressed="false" data-start="first">Début</button><button aria-pressed="true" data-start="now">Position actuelle</button></div>
 </div>
 <script>
 const DATA = /*DATA*/;
@@ -591,7 +577,7 @@ document.addEventListener('click', e => { const b = e.target.closest('[data-go]'
 const traj = document.getElementById('traj'), stage = document.getElementById('jStage'), track = document.getElementById('track'), done = document.getElementById('done'), shipG = document.getElementById('ship'), wps = document.getElementById('wps'), trailG = document.getElementById('trail');
 const STEPS = DATA.steps, NOW = STEPS.findIndex(s => s.now), LAST = STEPS.length - 1, jcam = makeCamera(traj), JZOOM = 1.3, GAP = 130, FOCUS_Y = 0.36;
 const STOP_R = { earth: 9, moon: 7, mars: 9, asteroids: 12, station: 13, saturn: 15, nebula: 22, galaxy: 30 };
-let lens = [], len = 0, cur = NOW, shipPos = 0, shipRaf = 0, startAt = 'now', jMoving = false, shipDir = 1, particles = [], trailRaf = 0;
+let lens = [], len = 0, cur = NOW, shipPos = 0, shipRaf = 0, jMoving = false, shipDir = 1, particles = [], trailRaf = 0;
 const vertical = () => mobile.matches;
 const J_ARMS = (() => {
     let out = '';
@@ -757,11 +743,6 @@ stage.addEventListener('wheel', e => {
 }, { passive: false });
 function refreshJourney() { requestAnimationFrame(() => { if (vertical() && !jcam.raf) jcam.set(camFor(lens[cur])); }); }
 new ResizeObserver(() => { if (vertical() && !jcam.raf && !drag) jcam.set(camFor(lens[cur])); }).observe(stage);
-document.querySelectorAll('.opts [data-start]').forEach(b => b.addEventListener('click', () => {
-    startAt = b.dataset.start; document.querySelectorAll('.opts [data-start]').forEach(x => x.setAttribute('aria-pressed', x === b));
-    if (current !== 'journey') show('journey');
-    select(startAt === 'now' ? NOW : 0, true);
-}));
 buildJourney(); select(NOW);
 
 /* skills: zoomable constellations; in focus the stars spread out and turn into celestial bodies */
@@ -1134,21 +1115,73 @@ addEventListener('keydown', e => {
     else if (current === 'projects') exitZoom();
 });
 
-/* contact: golden record grooves (rotating) and one wider groove per channel, lit on hover */
+/* contact: decorative grooves turn; each channel gets a lit track, an engraved name and a wide hit ring */
 const recGrooves = document.getElementById('recGrooves'), recTracks = document.getElementById('recTracks');
 for (let r = 100; r < 236; r += 2.2) mk('circle', { r: r.toFixed(1), fill: 'none', stroke: `rgba(90,58,16,${(0.16 + 0.12 * Math.sin(r * 0.7)).toFixed(2)})`, 'stroke-width': 0.7 }, recGrooves);
-const trackEls = [118, 150, 182, 214].map(r => mk('circle', { r, class: 'groove-track' }, recTracks));
-document.querySelectorAll('[data-track]').forEach(el => {
-    const t = trackEls[el.dataset.track];
-    ['mouseenter', 'focus'].forEach(ev => el.addEventListener(ev, () => t.classList.add('lit')));
-    ['mouseleave', 'blur'].forEach(ev => el.addEventListener(ev, () => t.classList.remove('lit')));
+/* hit rings split the disc between the tracks: label up to 100, then one ring per channel up to the rim */
+const REC_TRACKS = [118, 150, 182, 214], REC_EDGES = [100, 134, 166, 198, 240];
+const CHANNEL_NAMES = ['Écrire un e-mail', 'LinkedIn', 'GitHub', 'Codewars'], MAIL = DATA.contact[0].href.replace('mailto:', '');
+const disc = document.querySelector('.disc'), recHits = document.getElementById('recHits'), recLabels = document.getElementById('recLabels');
+const recStatus = document.getElementById('recStatus'), recLabel = document.querySelector('.rec-label');
+let armed = -1, lastPointer = 'mouse', copyTimer = 0;
+const say = text => { recStatus.textContent = text; };
+const tracks = REC_TRACKS.map((r, k) => {
+    const lit = mk('circle', { r, class: 'groove-track' }, recTracks), R = r + 16;
+    mk('path', { id: `recArc${k}`, d: `M${-R} 0A${R} ${R} 0 1 1 ${R} 0A${R} ${R} 0 1 1 ${-R} 0`, fill: 'none' }, recLabels);
+    const name = mk('text', { class: 'arc-name' }, recLabels);
+    mk('textPath', { href: `#recArc${k}`, startOffset: '25%', 'text-anchor': 'middle' }, name).textContent = CHANNEL_NAMES[k].toUpperCase();
+    const a = mk('a', { href: DATA.contact[k].href, class: 'rec-hit', 'aria-label': `Sillon ${k + 1} : ${CHANNEL_NAMES[k]}` }, recHits);
+    if (k) { a.setAttribute('target', '_blank'); a.setAttribute('rel', 'noopener'); }
+    mk('circle', { class: 'ring', r: (REC_EDGES[k] + REC_EDGES[k + 1]) / 2, 'stroke-width': REC_EDGES[k + 1] - REC_EDGES[k] }, a);
+    return { lit, name, a };
 });
-document.getElementById('copyMail').addEventListener('click', async () => {
-    const msg = document.getElementById('copiedMail');
-    try { await navigator.clipboard.writeText('louis.cagnion.pro@gmail.com'); msg.textContent = 'Adresse copiée'; }
-    catch { msg.textContent = 'Copie impossible : sélectionne l\'adresse ci-dessus'; }
-    msg.classList.add('on'); setTimeout(() => msg.classList.remove('on'), 2200);
+/* one groove is shown at a time, whether it comes from the pointer, the keyboard or a first tap */
+let shown = -1;
+function preview(k) {
+    if (shown >= 0) { tracks[shown].lit.classList.remove('lit'); tracks[shown].name.classList.remove('on'); }
+    shown = k;
+    if (k >= 0) { tracks[k].lit.classList.add('lit'); tracks[k].name.classList.add('on'); }
+}
+const grooveText = k => `Sillon ${k + 1} : ${CHANNEL_NAMES[k]}`, armedText = k => `${grooveText(k)}. Touche-le encore pour l'ouvrir.`;
+function disarm() { armed = -1; preview(-1); say(''); }
+tracks.forEach(({ a }, k) => {
+    ['mouseenter', 'focus'].forEach(ev => a.addEventListener(ev, () => { preview(k); say(armed === k ? armedText(k) : grooveText(k)); }));
+    ['mouseleave', 'blur'].forEach(ev => a.addEventListener(ev, () => { if (shown !== k || armed === k) return; preview(armed); say(armed >= 0 ? armedText(armed) : ''); }));
+    /* touch has no hover: the first tap shows where the groove leads, the second one follows it */
+    a.addEventListener('click', e => {
+        if (lastPointer !== 'touch' && lastPointer !== 'pen' || armed === k) { armed = -1; say(grooveText(k)); return; }
+        e.preventDefault(); armed = k; preview(k); say(armedText(k));
+    });
 });
+disc.addEventListener('pointerdown', e => { lastPointer = e.pointerType; });
+disc.addEventListener('keydown', () => { lastPointer = 'keyboard'; });
+document.addEventListener('pointerdown', e => { if (armed >= 0 && !disc.contains(e.target)) disarm(); });
+/* the label copies the address; the status line confirms, and keeps the address readable if the copy fails */
+const recCore = mk('g', { class: 'rec-hit', tabindex: 0, role: 'button', 'aria-label': 'Copier l\'adresse e-mail' }, recHits);
+mk('circle', { class: 'core', r: REC_EDGES[0] }, recCore);
+/* its hint is engraved between the label (92) and the first track (118), like the groove names */
+mk('path', { id: 'recArcCore', d: 'M-104 0A104 104 0 1 1 104 0A104 104 0 1 1 -104 0', fill: 'none' }, recLabels);
+const coreName = mk('text', { class: 'arc-name' }, recLabels);
+const CORE_HINT = 'COPIER L\'EMAIL', coreText = mk('textPath', { href: '#recArcCore', startOffset: '25%', 'text-anchor': 'middle' }, coreName);
+coreText.textContent = CORE_HINT;
+['mouseenter', 'focus'].forEach(ev => recCore.addEventListener(ev, () => { preview(-1); recLabel.classList.add('hot'); coreName.classList.add('on'); if (!copyTimer) say('Copier l\'email'); }));
+['mouseleave', 'blur'].forEach(ev => recCore.addEventListener(ev, () => { if (copyTimer) return; recLabel.classList.remove('hot'); coreName.classList.remove('on'); coreText.textContent = CORE_HINT; say(''); }));
+recCore.addEventListener('click', copyMail);
+recCore.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); copyMail(); } });
+async function copyMail() {
+    disarm();
+    let ok = true;
+    try { await navigator.clipboard.writeText(MAIL); } catch { ok = false; }
+    recLabel.classList.add('hot');
+    say(ok ? 'Email copié' : `Copie impossible : l'adresse est ${MAIL}`);
+    coreText.textContent = ok ? 'EMAIL COPIÉ' : 'COPIE IMPOSSIBLE'; coreName.classList.add('on');
+    clearTimeout(copyTimer); copyTimer = 0;
+    if (ok) copyTimer = setTimeout(() => {
+        copyTimer = 0; coreText.textContent = CORE_HINT;
+        const over = recCore.matches(':hover, :focus-visible');
+        say(over ? 'Copier l\'email' : ''); recLabel.classList.toggle('hot', over); coreName.classList.toggle('on', over);
+    }, 2200);
+}
 document.getElementById('dossierBody').innerHTML = [['Formation', 0], ['Entraînement en cours', 4], ['Projets passion', 5]].map(([k, n]) => `<div><dt>${k}</dt><dd>${DATA.about[n]}</dd></div>`).join('');
 const cue = document.getElementById('cue'), dossier = document.getElementById('dossier');
 cue.addEventListener('click', e => { e.preventDefault(); dossier.scrollIntoView({ behavior: reduce() ? 'auto' : 'smooth' }); });
@@ -1156,8 +1189,6 @@ cue.addEventListener('click', e => { e.preventDefault(); dossier.scrollIntoView(
 new IntersectionObserver(([e]) => cue.classList.toggle('gone', e.isIntersecting), { rootMargin: '0px 0px -15% 0px' }).observe(dossier);
 show(ORDER.includes(OPT.get('view')) ? OPT.get('view') : 'home', false);
 document.fonts.ready.then(() => { const a = nav.querySelector('[aria-current]'); pill.style.left = a.offsetLeft + 'px'; pill.style.width = a.offsetWidth + 'px'; });
-if (window.self !== window.top) document.querySelector('.opts').remove();
-window.setStart = mode => { startAt = mode; if (current !== 'journey') show('journey', false); select(mode === 'now' ? NOW : 0, true); };
 </script>
 </body>
 </html>

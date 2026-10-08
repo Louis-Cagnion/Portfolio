@@ -5,9 +5,7 @@
 <title>Prototype, vue téléphones</title>
 <style>
 body { margin: 0; background: #1b1d22; color: #ddd; font: 14px system-ui, sans-serif; }
-.tools { display: flex; justify-content: center; align-items: center; gap: 8px; padding: 8px; }
-.tools button { padding: 5px 10px; border: 1px solid #4a505d; background: #2a2e37; color: #ddd; border-radius: 6px; cursor: pointer; font: inherit; }
-.row { display: flex; justify-content: center; align-items: flex-start; gap: 30px; padding: 0 24px; flex-wrap: wrap; }
+.row { display: flex; justify-content: center; align-items: flex-start; gap: 30px; padding: 16px 24px 0; flex-wrap: wrap; }
 figure { margin: 0; text-align: center; }
 iframe { height: 600px; border: 10px solid #000; border-radius: 36px; background: #000; }
 figcaption { margin-top: 6px; }
@@ -15,10 +13,6 @@ a { color: #9cf; }
 </style>
 </head>
 <body>
-<div class="tools">Départ du parcours :
-    <button data-start="first">Début</button>
-    <button data-start="now">Position actuelle</button>
-</div>
 <div class="row">
     <figure><iframe src="prototype.html" style="width:340px" title="E, 320 px"></iframe><figcaption>Petit téléphone, 320 px</figcaption></figure>
     <figure><iframe src="prototype.html" style="width:410px" title="E, 390 px"></iframe><figcaption>Téléphone courant, 390 px</figcaption></figure>
@@ -26,11 +20,6 @@ a { color: #9cf; }
 </div>
 <script>
 if (location.search) document.querySelectorAll('iframe').forEach(f => { f.src = 'prototype.html' + location.search; });
-const opts = [...new URLSearchParams(location.search)].filter(([k]) => k !== 'view').map(([k, v]) => `${k} ${v}`);
-if (opts.length) document.title = `Téléphones, ${opts.join(', ')}`;
-document.querySelectorAll('[data-start]').forEach(b => b.addEventListener('click', () => {
-    document.querySelectorAll('iframe').forEach(f => f.contentWindow.setStart && f.contentWindow.setStart(b.dataset.start));
-}));
 </script>
 </body>
 </html>
