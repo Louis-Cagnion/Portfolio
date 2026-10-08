@@ -351,7 +351,7 @@ body {
 <body>
 <div class="page">
   <h1>Chargement et erreur : trois variantes</h1>
-  <p>Même panneau HUD centré sur le fond de la maquette (checklist, section 8). Seuls l'indicateur et l'illustration de l'erreur changent. L'exemple d'erreur est la cause HTTP ; les messages sont provisoires (S2 les fixe dans les données).</p>
+  <p>Même panneau HUD centré sur le fond de la maquette (checklist, section 8). Seuls l'indicateur et l'illustration de l'erreur changent. L'exemple d'erreur est la cause HTTP, avec les textes de <code>data/fr.json</code>.</p>
 
   <section class="variant">
     <h2>A · CONSOLE</h2>
@@ -371,12 +371,12 @@ body {
         <p class="frame-label">Erreur</p>
         <div class="frame">
           <div class="status hud" role="alert">
-            <h3 tabindex="-1">Chargement impossible</h3>
-            <p>Le serveur a répondu avec le statut <code>503</code>. Réessayez dans un instant.</p>
+            <h3 tabindex="-1">Impossible d'afficher le site</h3>
+            <p>Le serveur a répondu avec une erreur (HTTP <code>503</code>).</p>
             <div class="bar-track broken"><i></i></div>
             <div class="actions">
               <button class="btn primary" type="button">Réessayer</button>
-              <button class="btn" type="button">Read in English</button>
+              <button class="btn" type="button">Voir le site en anglais</button>
             </div>
           </div>
         </div>
@@ -403,11 +403,11 @@ body {
         <div class="frame">
           <div class="status hud center" role="alert">
             <div class="orbit broken" aria-hidden="true"><span></span></div>
-            <h3 tabindex="-1">Chargement impossible</h3>
-            <p>Le serveur a répondu avec le statut <code>503</code>. Réessayez dans un instant.</p>
+            <h3 tabindex="-1">Impossible d'afficher le site</h3>
+            <p>Le serveur a répondu avec une erreur (HTTP <code>503</code>).</p>
             <div class="actions">
               <button class="btn primary" type="button">Réessayer</button>
-              <button class="btn" type="button">Read in English</button>
+              <button class="btn" type="button">Voir le site en anglais</button>
             </div>
           </div>
         </div>
@@ -441,11 +441,11 @@ body {
               <li class="ok"><span>Balise</span><b>OK</b></li>
               <li class="fail"><span>Données de bord</span><b>503</b></li>
             </ul>
-            <h3 tabindex="-1">Chargement impossible</h3>
-            <p>Le serveur a répondu avec le statut <code>503</code>. Réessayez dans un instant.</p>
+            <h3 tabindex="-1">Impossible d'afficher le site</h3>
+            <p>Le serveur a répondu avec une erreur (HTTP <code>503</code>).</p>
             <div class="actions">
               <button class="btn primary" type="button">Réessayer</button>
-              <button class="btn" type="button">Read in English</button>
+              <button class="btn" type="button">Voir le site en anglais</button>
             </div>
           </div>
         </div>
