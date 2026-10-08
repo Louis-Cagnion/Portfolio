@@ -96,7 +96,7 @@ Identique en FR et en EN. Les champs non textuels (identifiants, ordre, `href`, 
 
 ## Tests
 
-- `node --test tests/` (Node 24 lit les `.js` ESM sans `package.json`), écrits à l'étape 4 et rouges avant l'implémentation.
+- `node --test` depuis la racine (Node 24 trouve les `*.test.mjs` récursivement et lit les `.js` ESM sans `package.json` ; `node --test tests/` prend le dossier pour un fichier et échoue), écrits à l'étape 4 et rouges avant l'implémentation.
   - Données : conformité à `schema.js`, parité FR/EN, une seule escale `now`, références de projets existantes, identifiants uniques, aucune chaîne vide, HTML limité à la liste blanche, aucun tiret cadratin (U+2014) dans `data/`, `js/`, `css/`, `index.html`, `README.md`.
   - Modules purs : langue initiale, `format()`, `animate()` immédiat si mouvement réduit, `hashId` stable, placement des constellations indépendant de la langue, une erreur `loadLocale` par cause avec un `fetch` simulé.
 - `tests/browser/` (Live Server, Chrome) : le site en cadres de 320, 390, 430, 768 et 1280 px.

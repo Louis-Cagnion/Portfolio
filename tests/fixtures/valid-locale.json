@@ -1,0 +1,161 @@
+{
+  "meta": { "lang": "fr", "title": "Titre", "description": "Description du site" },
+  "ui": {
+    "nav": {
+      "home": "Accueil", "journey": "Parcours", "skills": "Compétences",
+      "projects": "Projets", "contact": "Contact"
+    },
+    "language": "Langue",
+    "sections": "Sections",
+    "loading": "Chargement…",
+    "close": "Fermer",
+    "errors": {
+      "title": "Erreur", "network": "Réseau", "timeout": "Délai dépassé",
+      "http": "HTTP {status}", "json": "JSON invalide", "schema": "Champ {path} manquant",
+      "retry": "Réessayer", "langSwitch": "Changer de langue"
+    }
+  },
+  "home": {
+    "mission": "Mission",
+    "name": "Louis Cagnion",
+    "pitch": "Développeur",
+    "ctas": { "projects": "Voir mes projets", "contact": "Me contacter" },
+    "telemetry": {
+      "title": "Télémétrie",
+      "rows": [
+        { "label": "Décollage", "value": "Piscine 42, 2024", "live": false },
+        { "label": "Tronc commun", "value": "Terminé en 18 mois", "live": false },
+        { "label": "Position actuelle", "value": "Groupe Tressol-Chabrier", "live": true }
+      ]
+    },
+    "dossier": {
+      "kicker": "Dossier du pilote",
+      "title": "Je me présente",
+      "entries": [
+        { "label": "Formation", "html": "<strong>42 Perpignan</strong>, tronc commun." },
+        { "label": "Passion", "html": "Voir <a href=\"https://example.com/x\">le site</a>." }
+      ]
+    }
+  },
+  "journey": {
+    "title": "Mon parcours",
+    "lede": { "pointer": "Choisis une escale.", "arrows": "Utilise les flèches." },
+    "counter": "escale {n} sur {total}",
+    "prev": "Étape précédente",
+    "next": "Étape suivante",
+    "stopsLabel": "Étapes du parcours",
+    "stops": [
+      {
+        "id": "piscine", "body": "earth", "at": 0, "now": false,
+        "title": "Première piscine", "when": "2024",
+        "paragraphs": ["Un premier paragraphe.", "Un <em>second</em> paragraphe."]
+      },
+      {
+        "id": "tressol", "body": "station", "at": 0.5, "now": true,
+        "title": "Tressol-Chabrier", "when": "depuis juillet 2026",
+        "paragraphs": ["Un paragraphe."]
+      }
+    ]
+  },
+  "skills": {
+    "title": "Compétences",
+    "lede": "Chaque constellation regroupe un domaine.",
+    "hint": "Sélectionne une constellation.",
+    "back": "Toutes les compétences",
+    "explore": "Explorer : {name}",
+    "chipsLabel": "Constellations",
+    "prev": "Étoile précédente",
+    "next": "Étoile suivante",
+    "related": "Projets liés",
+    "legend": "Chaque compétence est un astre.",
+    "levels": {
+      "advanced": "Avancé", "intermediate": "Intermédiaire",
+      "beginner": "Débutant", "unknown": "Niveau à préciser"
+    },
+    "link": { "intro": "Mes notes :", "label": "Devpedia", "href": "https://example.com/dev" },
+    "groups": [
+      {
+        "id": "languages", "title": "Langages de programmation", "short": "Langages",
+        "items": [
+          {
+            "id": "c", "name": "C", "level": "advanced",
+            "projects": ["push_swap"], "description": "Mon langage de base."
+          },
+          {
+            "id": "cpp", "name": "C++", "level": "intermediate",
+            "projects": ["push_swap", "portfolio"], "description": "Approfondi à 42."
+          }
+        ]
+      },
+      {
+        "id": "web", "title": "Développement web", "short": "Web",
+        "items": [
+          {
+            "id": "js", "name": "JavaScript", "level": "beginner",
+            "projects": ["portfolio"], "description": "Sans framework."
+          }
+        ]
+      }
+    ]
+  },
+  "projects": {
+    "title": "Projets",
+    "lede": "Quatre systèmes stellaires.",
+    "back": "Tous les systèmes",
+    "count": "{n} projets",
+    "approach": "Approcher le système {name}",
+    "systemOf": "Système {name}",
+    "listLabel": "Liste des projets",
+    "systems": [
+      {
+        "id": "school", "name": "42", "intro": "Les projets de 42.",
+        "projects": [
+          {
+            "id": "push_swap", "title": "Push_swap", "summary": "Trier une pile.",
+            "tags": ["C"],
+            "blocks": [
+              { "type": "text", "html": "Un <strong>algorithme</strong> de tri." },
+              { "type": "list", "items": ["Premier point", "Second <em>point</em>"] }
+            ],
+            "links": [
+              { "intro": "Code :", "label": "GitHub", "href": "https://github.com/x/y" }
+            ],
+            "media": []
+          }
+        ]
+      },
+      {
+        "id": "perso", "name": "Perso", "intro": "Projets personnels.",
+        "projects": [
+          {
+            "id": "portfolio", "title": "Portfolio", "summary": "Ce site.",
+            "tags": ["JavaScript"],
+            "blocks": [{ "type": "text", "html": "Un site sans framework." }],
+            "links": [
+              { "intro": "Code :", "label": "GitHub", "href": "https://github.com/x/z" }
+            ],
+            "media": []
+          }
+        ]
+      }
+    ]
+  },
+  "contact": {
+    "title": "Contact",
+    "question": "Une question ?",
+    "message": "Comme le disque d'or des sondes Voyager.",
+    "discLabel": "Disque d'or",
+    "copyHint": "COPIER L'EMAIL",
+    "copied": "EMAIL COPIÉ",
+    "copiedStatus": "Email copié",
+    "copyFailed": "Copie impossible : l'adresse est {mail}",
+    "groove": "Sillon {n} : {name}",
+    "armed": "Touche-le encore pour l'ouvrir.",
+    "tapHint": "Touche le disque",
+    "backHint": "Revenir au disque entier",
+    "channels": [
+      { "id": "mail", "name": "Écrire un e-mail", "href": "mailto:louis@example.com" },
+      { "id": "github", "name": "GitHub", "href": "https://github.com/x" }
+    ]
+  }
+}
