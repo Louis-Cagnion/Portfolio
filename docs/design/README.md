@@ -39,7 +39,7 @@ Chaque proposition de design est montrée à Louis en pages réellement rendues 
 | Parcours | Voyage en vaisseau de la Terre à une galaxie géante (8 escales), ouverture et caméra sur la position actuelle ; courbe verticale zoomée et fiche translucide floutée sur mobile |
 | Compétences | Constellations organiques ; astres selon le niveau (galaxie, nébuleuse, géante jaune, étoile magmatique) ; clic : déploiement puis plongée plein champ sur l'astre choisi |
 | Projets | Trois systèmes orbitaux (Tressol-Chabrier, personnel, 42), planètes étiquetées sur fond, liste complète dessous, panneau de détail ; clic sur un système : zoom, orbites ouvertes, planètes réparties avec leur nom affiché et cliquable, liste masquée (elle ne s'affiche qu'avec tous les systèmes) ; sur téléphone, systèmes empilés au plus près |
-| Contact | Disque d'or gravé façon Voyager, seule commande de contact : le centre copie l'adresse, chaque sillon ouvre un canal ; au survol (premier toucher sur téléphone, le second ouvre), le sillon s'allume et son nom se grave en arc ; au survol du centre « COPIER L'EMAIL », puis « EMAIL COPIÉ » après le clic, sans jamais toucher à l'adresse gravée ; texte de la rubrique : question, phrase Voyager, mode d'emploi du disque |
+| Contact | Disque d'or gravé façon Voyager, seule commande de contact : le centre copie l'adresse, chaque sillon ouvre un canal ; au survol, le sillon s'allume et son nom se grave en arc ; sur téléphone, le disque est d'abord verrouillé avec une invitation à le toucher, puis la vue zoome sur sa moitié haute, tous les noms gravés en permanence, et un toucher suffit (bouton de retour au disque entier) ; au survol du centre « COPIER L'EMAIL », puis « EMAIL COPIÉ » après le clic, sans jamais toucher à l'adresse gravée ; texte de la rubrique : question, phrase Voyager, mode d'emploi du disque |
 | Favicon | Trajectoire dorée avec point vert |
 
 ## Options écartées
@@ -66,4 +66,5 @@ Chaque proposition de design est montrée à Louis en pages réellement rendues 
 | Contact | Canal de transmission (oscilloscope), antenne et satellites, amarrage du vaisseau, carte d'embarquement | Disque d'or préféré |
 | Contact | Adresse, boutons et liste des réseaux en texte à côté du disque (et ses variantes téléphone : sans sillons, disque collant, disque à côté) | Le disque seul porte les contacts, pour inviter à le manipuler |
 | Contact | Adresse gravée remplacée par « ADRESSE COPIÉE » au clic, ligne d'état visible sous le texte | L'adresse gravée reste intacte et le disque suffit (la ligne d'état n'existe plus que pour les lecteurs d'écran) |
+| Contact | Sur téléphone, sillons du disque entier touchés directement (premier toucher pour voir, second pour ouvrir) | Anneaux trop fins (environ 20 px) : le disque s'ouvre d'abord sur sa moitié haute agrandie |
 | Favicon | Monogramme LC, orbite, viseur | Trajectoire préférée |
