@@ -840,8 +840,8 @@ function buildConst() {
         const exs = stars.map(s => s.ex), eys = stars.map(s => s.ey);
         geo.push({ g, stars, links, ebw: Math.max(...exs) - Math.min(...exs), ebh: Math.max(...eys) - Math.min(...eys) });
         layoutStars(geo[i], 0);
-        g.addEventListener('click', () => focusCat < 0 && enterFocus(i));
-        g.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && focusCat < 0) { e.preventDefault(); enterFocus(i); } });
+        g.addEventListener('click', () => focusCat < 0 && !moving && enterFocus(i));
+        g.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && focusCat < 0 && !moving) { e.preventDefault(); enterFocus(i); } });
     });
     marker = mk('circle', { class: 'marker', r: 12 }, svgC);
     setHeight(false); ccam.set(overviewCam());
@@ -904,15 +904,16 @@ async function goStar(j) {
     await dive(focusCat, j, fromStar);
     moving = false; showSkill();
 }
+/* moving stays set during the pull-back: the height change would otherwise let recentre() snap to the overview mid-flight */
 async function exitFocus() {
-    if (focusCat < 0) return;
-    const i = focusCat, g = geo[i]; focusCat = -1;
+    if (focusCat < 0 || moving) return;
+    const i = focusCat, g = geo[i]; focusCat = -1; moving = true;
     layout.classList.remove('focus'); svgC.classList.remove('focused');
     geo.forEach(x => { x.g.classList.remove('sel', 'dim'); x.links.forEach(l => l.classList.remove('walk')); x.stars.forEach(s => s.el.classList.remove('cur')); });
     setHeight(false);
-    const from = { cx: ccam.cx, cy: ccam.cy, w: ccam.w }, bs0 = curBS, to = overviewCam();
-    await animate(1200, k => { const e = ease(k); ccam.set({ cx: lerp(from.cx, to.cx, e), cy: lerp(from.cy, to.cy, e), w: lerp(from.w, to.w, e) }); setBS(lerp(bs0, bsOverview(), e)); layoutStars(g, 1 - e); });
-    setBodyT(0); layoutStars(g, 0);
+    const from = { cx: ccam.cx, cy: ccam.cy, w: ccam.w }, bs0 = curBS;
+    await animate(1200, k => { const e = ease(k), to = overviewCam(); ccam.set({ cx: lerp(from.cx, to.cx, e), cy: lerp(from.cy, to.cy, e), w: lerp(from.w, to.w, e) }); setBS(lerp(bs0, bsOverview(), e)); layoutStars(g, 1 - e); });
+    moving = false; ccam.set(overviewCam()); setBodyT(0); layoutStars(g, 0);
     g.g.focus({ preventScroll: true });
 }
 document.getElementById('back').addEventListener('click', exitFocus);
