@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Écrans de chargement et d'erreur</title>
+<title>Écran de chargement retenu</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Michroma&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
@@ -186,13 +186,6 @@ body {
   }
 }
 
-.kicker {
-  font: 400 0.8rem var(--mono);
-  color: var(--accent);
-  letter-spacing: 0.08em;
-  margin: 0 0 12px;
-}
-
 /* ───── A : console ───── */
 .bar-track {
   position: relative;
@@ -227,117 +220,6 @@ body {
   }
 }
 
-/* ───── B : orbite ───── */
-.status.center {
-  text-align: center;
-}
-
-.status.center .actions {
-  justify-content: center;
-}
-
-.orbit {
-  position: relative;
-  width: 64px;
-  height: 64px;
-  margin: 0 auto 18px;
-  border: 1px solid var(--line);
-  border-radius: 50%;
-}
-
-.orbit::before {
-  content: "";
-  position: absolute;
-  inset: 26px;
-  border-radius: 50%;
-  background: var(--dim);
-}
-
-.orbit span {
-  position: absolute;
-  inset: -1px;
-  animation: spin 1.6s linear infinite;
-}
-
-.orbit span::after {
-  content: "";
-  position: absolute;
-  top: -4px;
-  left: calc(50% - 4px);
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 10px var(--accent);
-}
-
-.orbit.broken {
-  border-style: dashed;
-  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
-}
-
-.orbit.broken span {
-  animation: none;
-  transform: rotate(130deg) translateY(-14px);
-}
-
-.orbit.broken span::after {
-  box-shadow: none;
-  opacity: 0.6;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* ───── C : télémétrie ───── */
-.log {
-  margin: 0 0 16px;
-  padding: 0;
-  list-style: none;
-  font: 400 0.85rem var(--mono);
-  color: var(--dim);
-}
-
-.log li {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 4px 0;
-  border-bottom: 1px solid var(--line);
-}
-
-.log b {
-  font-weight: 500;
-  color: var(--text);
-}
-
-.log .ok {
-  color: var(--dim);
-}
-
-.log .wait b,
-.log .fail b {
-  color: var(--accent);
-}
-
-.caret {
-  display: inline-block;
-  width: 8px;
-  height: 1em;
-  vertical-align: -2px;
-  background: var(--accent);
-  animation: blink 1s steps(1) infinite;
-}
-
-@keyframes blink {
-  50% {
-    opacity: 0;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -350,12 +232,12 @@ body {
 </head>
 <body>
 <div class="page">
-  <h1>Chargement et erreur : trois variantes</h1>
-  <p>Même panneau HUD centré sur le fond de la maquette (checklist, section 8). Seuls l'indicateur et l'illustration de l'erreur changent. L'exemple d'erreur est la cause HTTP, avec les textes de <code>data/fr.json</code>.</p>
+  <h1>Chargement et erreur : variante retenue</h1>
+  <p>Même panneau HUD centré sur le fond de la maquette (checklist, section 8). Variante Console choisie par Louis le 08/10/2026. L'exemple d'erreur est la cause HTTP, avec les textes de <code>data/fr.json</code>.</p>
 
   <section class="variant">
     <h2>A · CONSOLE</h2>
-    <p>Barre or indéterminée sous le titre ; à l'erreur, la barre se fige en pointillés. La plus sobre, aucun texte en plus.</p>
+    <p>Barre or indéterminée sous le titre ; à l'erreur, la barre se fige en pointillés.</p>
     <div class="frames">
       <div>
         <p class="frame-label">Chargement</p>
@@ -371,7 +253,7 @@ body {
         <p class="frame-label">Erreur</p>
         <div class="frame">
           <div class="status hud" role="alert">
-            <h3 tabindex="-1">Impossible d'afficher le site</h3>
+            <h3 tabindex="-1">Le centre de contrôle n'a pas pu se connecter au vaisseau du pilote</h3>
             <p>Le serveur a répondu avec une erreur (HTTP <code>503</code>).</p>
             <div class="bar-track broken"><i></i></div>
             <div class="actions">
@@ -384,74 +266,6 @@ body {
     </div>
   </section>
 
-  <section class="variant">
-    <h2>B · ORBITE</h2>
-    <p>Un point or tourne autour d'un astre ; à l'erreur, l'orbite devient pointillée et le point décroche. Rappelle le ciel et les systèmes de la maquette. Panneau centré.</p>
-    <div class="frames">
-      <div>
-        <p class="frame-label">Chargement</p>
-        <div class="frame">
-          <div class="status hud center" role="status" aria-live="polite">
-            <div class="orbit" aria-hidden="true"><span></span></div>
-            <h3>Louis Cagnion</h3>
-            <p>Chargement…</p>
-          </div>
-        </div>
-      </div>
-      <div>
-        <p class="frame-label">Erreur</p>
-        <div class="frame">
-          <div class="status hud center" role="alert">
-            <div class="orbit broken" aria-hidden="true"><span></span></div>
-            <h3 tabindex="-1">Impossible d'afficher le site</h3>
-            <p>Le serveur a répondu avec une erreur (HTTP <code>503</code>).</p>
-            <div class="actions">
-              <button class="btn primary" type="button">Réessayer</button>
-              <button class="btn" type="button">Voir le site en anglais</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="variant">
-    <h2>C · TÉLÉMÉTRIE</h2>
-    <p>Journal de liaison en Mono, comme le panneau de télémétrie de l'accueil ; la ligne en attente porte un curseur, la ligne en échec passe en or. Ajoute trois libellés courts à traduire.</p>
-    <div class="frames">
-      <div>
-        <p class="frame-label">Chargement</p>
-        <div class="frame">
-          <div class="status hud" role="status" aria-live="polite">
-            <p class="kicker">LIAISON</p>
-            <ul class="log" aria-hidden="true">
-              <li class="ok"><span>Balise</span><b>OK</b></li>
-              <li class="wait"><span>Données de bord</span><b><span class="caret"></span></b></li>
-            </ul>
-            <p>Chargement…</p>
-          </div>
-        </div>
-      </div>
-      <div>
-        <p class="frame-label">Erreur</p>
-        <div class="frame">
-          <div class="status hud" role="alert">
-            <p class="kicker">SIGNAL PERDU</p>
-            <ul class="log" aria-hidden="true">
-              <li class="ok"><span>Balise</span><b>OK</b></li>
-              <li class="fail"><span>Données de bord</span><b>503</b></li>
-            </ul>
-            <h3 tabindex="-1">Impossible d'afficher le site</h3>
-            <p>Le serveur a répondu avec une erreur (HTTP <code>503</code>).</p>
-            <div class="actions">
-              <button class="btn primary" type="button">Réessayer</button>
-              <button class="btn" type="button">Voir le site en anglais</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
 </div>
 </body>
 </html>

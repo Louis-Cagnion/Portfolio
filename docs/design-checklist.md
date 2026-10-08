@@ -322,12 +322,12 @@ Points de rupture de la maquette (mêmes valeurs en CSS et en JS, définies une 
 
 ## 8. Chargement et erreurs
 
-Le bloc `#status` est statique dans `index.html` et stylé par `layout.css`, donc visible avant que le JavaScript ait chargé.
+Le bloc `#status` est statique dans `index.html` et stylé par `layout.css`, donc visible avant que le JavaScript ait chargé. Variante « Console » choisie par Louis le 08/10/2026, référence rendue : `docs/design/prototype/status-variants.html`.
 
-- [ ] Chargement : panneau HUD centré (largeur `min(34rem, 100% - 2 × var(--gutter))`, **proposé** : sans source dans la maquette) sur fond `--void`, texte `ui.loading` en `--dim`, titre en Display, indicateur en or (`--accent`) animé en `transform` seulement ; jamais le vert `--live`. `role="status"` et `aria-live="polite"`.
+- [ ] Chargement : panneau HUD centré (largeur `min(34rem, 100% - 2 × var(--gutter))`, **proposé** : sans source dans la maquette) sur fond `--void`, texte `ui.loading` en `--dim`, titre en Display, indicateur : barre de 3px sur fond `--line`, segment or (`--accent`) de 35 % qui balaie en `transform` seulement (1,4s, `--ease-inout`) ; jamais le vert `--live`. `role="status"` et `aria-live="polite"`.
 - [ ] Le texte statique est en français (langue par défaut) et il est remplacé dès que la langue est connue.
 - [ ] Une balise `<noscript>` affiche un message dans le même panneau.
-- [ ] Erreur : même panneau HUD, titre `ui.errors.title` (Display 1.15rem, `--text`), un message distinct par cause, en `--dim` : `network`, `timeout` (délai de 10 s), `http` (avec `{status}`), `json`, `schema` (avec `{path}`). `role="alert"`.
+- [ ] Erreur : même panneau HUD, titre `ui.errors.title` (Display 1.15rem, `--text`), barre figée en pointillés or (14px pleins, 8px vides, opacité 0,55) entre le message et les boutons, un message distinct par cause, en `--dim` : `network`, `timeout` (délai de 10 s), `http` (avec `{status}`), `json`, `schema` (avec `{path}`). `role="alert"`.
 - [ ] Bouton **Réessayer** (`ui.errors.retry`) en bouton primaire, 44 × 44px au moins ; un clic remet l'état de chargement, relance `loadLocale` et ne laisse pas le focus sur un bouton retiré du DOM. Le lien `ui.errors.langSwitch` est un bouton secondaire.
 - [ ] À l'apparition de l'erreur, le focus va au titre du panneau (`tabindex="-1"`).
 - [ ] Le chemin du champ (`{path}`) et le statut sont en Mono, avec `overflow-wrap: anywhere`.

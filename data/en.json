@@ -17,7 +17,7 @@
     "loading": "Loading…",
     "close": "Close",
     "errors": {
-      "title": "The site could not be displayed",
+      "title": "Mission control could not connect to the pilot's ship",
       "network": "The network seems unreachable. Check your connection, then try again.",
       "timeout": "Loading timed out. Try again in a moment.",
       "http": "The server answered with an error (HTTP {status}).",
