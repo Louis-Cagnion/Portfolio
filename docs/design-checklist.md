@@ -4,6 +4,8 @@ Cette checklist fixe les valeurs de design relevées dans la maquette `docs/desi
 
 Les valeurs viennent de la maquette (variable ou sélecteur cité). Quand une valeur de la maquette ne passe pas un critère, la règle retenue est écrite à côté et marquée **écart**.
 
+Décision de Louis du 08/10/2026 : le rendu de la maquette est validé et fait foi. Un écart qui changerait l'apparence au repos (couleur, taille, espacement, hauteur de barre) ne s'applique pas : la maquette est reprise telle quelle et le contrôle concerné devient une exception listée (section « Décisions de Louis »). Seuls s'appliquent les ajouts invisibles au repos : clavier, focus, mouvement réduit, états de survol et actif, technique.
+
 ## Sommaire
 
 - [1. Jetons de design](#1-jetons-de-design)
@@ -15,7 +17,7 @@ Les valeurs viennent de la maquette (variable ou sélecteur cité). Quand une va
 - [7. Navigation clavier](#7-navigation-clavier)
 - [8. Chargement et erreurs](#8-chargement-et-erreurs)
 - [9. Pièges de la maquette](#9-pièges-de-la-maquette)
-- [Décisions à valider par Louis](#décisions-à-valider-par-louis)
+- [Décisions de Louis](#décisions-de-louis)
 - [Vérification de la checklist](#vérification-de-la-checklist)
 
 ## 1. Jetons de design
@@ -31,7 +33,7 @@ Tous les jetons vivent dans `css/tokens.css` (sélecteur `:root`). Aucune couleu
 | `--line` | `rgba(220, 230, 255, 0.13)` | `:root --line` | bordures et séparateurs |
 | `--text` | `#e6ecff` | `:root --text` | texte principal, titres |
 | `--dim` | `#9aa7cc` | `:root --dim` | texte secondaire, corps des panneaux |
-| `--faint` | `#7a88b0` | `:root --faint` vaut `#66739c` | mentions discrètes (compteurs, aides, légendes). **Écart** : `#66739c` donne 3,67:1 à 4,14:1, voir section 3 |
+| `--faint` | `#66739c` | `:root --faint` | mentions discrètes (compteurs, aides, légendes) ; 3,67:1 à 4,14:1, conservé (section 3) |
 | `--accent` | `#e8b45a` | `:root --accent` | or : actions, coins HUD, focus, état actif |
 | `--accent-ink` | `#070d1f` | `:root --accent-ink` | texte posé sur l'or |
 | `--accent-soft` | `rgba(232, 180, 90, 0.15)` | `:root --accent-soft` | fond de l'élément actif (bascule de langue, onglet) |
@@ -53,7 +55,7 @@ Couleurs de décor (CSS de la maquette, valeurs relevées telles quelles) :
 | `--groove` | `rgba(70, 45, 10, 0.35)` | `.groove-track` | piste d'un sillon |
 | `--groove-lit` | `rgba(255, 235, 180, 0.85)` | `.groove-track.lit` | sillon allumé (halo `#ffd27a`) |
 | `--engrave` | `rgba(80, 52, 14, 0.75)` | `.engrave` (stroke) | gravure du disque |
-| `--engrave-text` | `#3b2507` | `.engrave-text` vaut `rgba(80, 52, 14, 0.85)` | texte gravé de l'étiquette. **Écart** : voir section 3 |
+| `--engrave-text` | `rgba(80, 52, 14, 0.85)` | `.engrave-text` | texte gravé de l'étiquette ; 3,91:1, conservé (section 3) |
 | `--arc-ink` | `#3b2507` | `.arc-name` (fill) | nom gravé d'un sillon |
 | `--arc-halo` | `rgba(255, 240, 200, 0.55)` | `.arc-name` (stroke de 2px) | halo clair du nom gravé |
 | `--lava` | `#ff7a2a` | `@keyframes lava` | lueur de la planète de lave |
@@ -107,7 +109,7 @@ Couleurs de décor (CSS de la maquette, valeurs relevées telles quelles) :
 ### Espacements, rayons, hauteur de barre
 
 - [ ] Gouttière horizontale : `--gutter: clamp(16px, 4vw, 48px)` (barre et `main`). Largeur de contenu : `--content-max: 1200px`.
-- [ ] Hauteur de la barre : `--bar-h` n'est pas une constante. La maquette fixe `61px` ; la barre mesure en réalité 58px sur mobile et 70px sur ordinateur (boutons de langue de 31px, groupe de 33px), donc 61px est une valeur approchée de la maquette. Avec des cibles de 44px la barre mobile mesure 71px. Le JS affecte `--bar-h` à la hauteur réelle de la barre (`ResizeObserver`), et les éléments collants (`top`) et les défilements s'en servent.
+- [ ] Hauteur de la barre : `--bar-h` n'est pas une constante. La maquette fixe `61px` ; la barre mesure en réalité 58px sur mobile et 70px sur ordinateur (boutons de langue de 31px, groupe de 33px), donc 61px est une valeur approchée de la maquette. Le JS affecte `--bar-h` à la hauteur réelle de la barre (`ResizeObserver`), et les éléments collants (`top`) et les défilements s'en servent.
 - [ ] Valeurs d'espacement employées par la maquette, à reprendre sans inventer d'autres : 2, 3, 4, 6, 7, 8, 10, 11, 12, 13, 14, 16, 18, 22, 24, 26, 28, 32, 48, 56, 80 et 120 px (bas de `main`).
 - [ ] Remplissages de panneau : `.detail` 26px 28px (22px 18px sous 880 px) ; `.telemetry` 22px ; `.dossier-body` 6px 28px (4px 18px sous 700 px) ; `.sheet` 32px ; `.focus-panel` 22px 24px.
 - [ ] Rayons : `--radius-pill: 999px` (pilule, bascule), `--radius-tabbar: 22px`, `--radius-tab: 16px`, `--radius-label: 4px` (fond d'étiquette de planète). Panneaux, boutons, flèches, puces, tags et fiche ont des angles droits (0) : c'est l'identité HUD.
@@ -166,7 +168,7 @@ Règle commune : tout élément interactif a un état par défaut, survol, focus
 
 - [ ] Groupe `role="group"` avec `aria-label` = `ui.language`, deux boutons `FR` et `EN` en 0.8rem Mono 500, bordure `--line`, rayon `--radius-pill`, `overflow: hidden`.
 - [ ] Bouton de la langue courante : `aria-pressed="true"`, fond `--accent-soft`, texte `--accent`. L'autre : texte `--dim`.
-- [ ] Chaque bouton mesure au moins 44 × 44px (la maquette : 7px 12px, soit 31px de haut mesurés, 33px pour le groupe).
+- [ ] Chaque bouton garde la taille de la maquette (7px 12px, soit 31px de haut, 33px pour le groupe), en exception de la suite navigateur.
 - [ ] Un changement de langue met à jour `lang` de `<html>`, `<title>` et la description, sans reconstruire la barre : le bouton pressé garde le focus.
 
 ### Fiche projet
@@ -215,27 +217,22 @@ Ratios calculés avec la formule WCAG 2.x (luminance relative sRGB, `(L1 + 0,05)
 | **`--faint` de la maquette sur `--panel`** | `#66739c` / `#0f1a38` | **3,67** | **sous 4,5** |
 | **`--faint` de la maquette sur bas de HUD** | `#66739c` / `#0a1229` | **3,97** | **sous 4,5** |
 | **`--faint` de la maquette sur fiche mobile** | `#66739c` / `#0b142c` | **3,91** | **sous 4,5** |
-| `--faint` retenu sur `--void` | `#7a88b0` / `#070d1f` | 5,50 | réussi |
-| `--faint` retenu sur `--panel` | `#7a88b0` / `#0f1a38` | 4,88 | réussi |
-| `--faint` retenu sur bas de HUD | `#7a88b0` / `#0a1229` | 5,28 | réussi |
-| `--faint` retenu sur fiche mobile | `#7a88b0` / `#0b142c` | 5,19 | réussi |
 | Nom gravé du disque (`.arc-name` `#3b2507`) sur or clair | `#3b2507` / `#ffe7a8` | 11,87 | réussi |
 | Nom gravé sur or `#e8b45a` | `#3b2507` / `#e8b45a` | 7,64 | réussi |
 | Nom gravé sur sillon allumé | `#3b2507` / `#fce3a7` | 11,48 | réussi |
 | Nom gravé mesuré au rendu, sillons 1 à 4 (`.arc-name` `#3b2507`, centré en haut du disque par `startOffset: 25%`) | `#3b2507` / fond rendu | 7,65 ; 6,91 ; 6,19 ; 5,72 | réussi (minimum 5,72) |
 | Nom gravé mesuré au rendu, cœur | `#3b2507` / fond rendu | 8,27 | réussi |
 | **Texte gravé de l'étiquette (`.engrave-text`)** | `#654517` / `#d9a54d` | **3,91** | **sous 4,5** |
-| Texte gravé retenu `#3b2507` sur l'étiquette | `#3b2507` / `#d9a54d` | 6,49 | réussi |
 
 Notes de lecture :
 
-- Le fond d'un panneau HUD va de `--panel` (haut) à `--panel` à 40 % sur le ciel (bas) : un texte réussit si la paire passe sur les deux extrêmes, ce qui est le cas pour `--dim` et le `--faint` retenu.
+- Le fond d'un panneau HUD va de `--panel` (haut) à `--panel` à 40 % sur le ciel (bas) : un texte réussit si la paire passe sur les deux extrêmes, ce qui est le cas pour `--dim`.
 - Les fonds du disque sont estimés par le dégradé radial `recGold` (stops `#ffe7a8`, `#e8b45a`, `#b47a2a`, `#7a4f17`). Les fonds translucides du tableau sont estimés sur `--void` : les astres qui passent derrière peuvent les éclaircir, donc la mesure au rendu fait foi.
 
 Paires de texte sous le seuil dans la maquette : `--faint` sur les quatre fonds (usages : `.count`, `.cue`, `.hint`, `.legend`, `.related p`, `.sun-sub`, `.traj .wp text.y`, `.todo`) ; texte gravé de l'étiquette (`.engrave-text`). Les noms gravés `.arc-name` de la maquette passent (au moins 5,7:1 mesuré au rendu).
 
-- [ ] `--faint` vaut `#7a88b0` dans `tokens.css` (ou plus clair) : aucune paire de la table ne passe sous 4,5:1.
-- [ ] `.arc-name` garde l'encre `#3b2507` de la maquette et `.engrave-text` utilise `#3b2507` ; contraste des noms gravés des quatre sillons et du cœur vérifié au rendu (outil de mesure du navigateur, au moins 4,5:1 ; la maquette donne 5,72 au minimum).
+- [ ] `--faint` (`#66739c`) et `.engrave-text` gardent les valeurs de la maquette (décision de Louis) : ce sont les seules paires de texte admises sous 4,5:1.
+- [ ] `.arc-name` garde l'encre `#3b2507` de la maquette ; contraste des noms gravés des quatre sillons et du cœur vérifié au rendu (outil de mesure du navigateur, au moins 4,5:1 ; la maquette donne 5,72 au minimum).
 - [ ] Tout nouveau texte ajouté dans l'implémentation (messages d'erreur, annonces, système de la Piscine) est vérifié avec la même formule avant d'être validé.
 
 ### Composants graphiques et états (3:1)
@@ -263,24 +260,22 @@ Composants sous le seuil dans la maquette : anneau de focus du disque, sillon al
 
 ## 4. Zones cliquables
 
-La suite navigateur mesure tout `a[href]`, `button`, `[role="button"]`, `[role="link"]`, `[tabindex]` et `[data-go]` visible (plus, pour l'ordre et l'inertie, la constante `INTERACTIVE` : `[tabindex]:not([tabindex="-1"])`, `input`, `select`, `textarea`, `summary`, `[role="tab"]`), à toutes les largeurs et dans les deux langues : 44 × 44px au minimum (`MIN_TARGET` de `tests/browser/checks.js`, tolérance 0,5px).
+La suite navigateur mesure tout `a[href]`, `button`, `[role="button"]`, `[role="link"]`, `[tabindex]` et `[data-go]` visible (plus, pour l'ordre et l'inertie, la constante `INTERACTIVE` : `[tabindex]:not([tabindex="-1"])`, `input`, `select`, `textarea`, `summary`, `[role="tab"]`), à toutes les largeurs et dans les deux langues : 44 × 44px au minimum (`MIN_TARGET` de `tests/browser/checks.js`, tolérance 0,5px). Deux exceptions non bloquantes, codées dans `exceptionLabel` du même fichier :
 
-- [ ] Exemption unique, déjà codée dans `isInlineTextLink` : un `a` en `display: inline` dans un `p` ou un `li`, entouré d'autre texte (WCAG 2.5.8). Aucun lien qui forme à lui seul un bloc, un bouton ou une entrée de liste n'en profite.
+- [ ] Lien en ligne (`isInlineTextLink`) : un `a` en `display: inline` dans un `p` ou un `li`, entouré d'autre texte (WCAG 2.5.8). Aucun lien qui forme à lui seul un bloc, un bouton ou une entrée de liste n'en profite.
 - [ ] Les liens en ligne sont donc rédigés dans des `p` ou des `li`, y compris dans le dossier du pilote et les listes de la fiche projet.
-- [ ] Les éléments suivants de la maquette sont sous 44px et reçoivent `min-height: 44px` et `min-width: 44px` (hauteurs de la maquette, à confirmer au rendu) : onglets de la pilule (environ 35px de haut), boutons FR/EN (31px), `.back` (environ 36px), puces `.chips button` (environ 32px), entrées `.plist button` (31,5px), repère `.cue`, lien de marque `.brand` (140,4px de large), bouton `.rec-hint` (déjà `min-height: 44px`).
+- [ ] Composants que la maquette dessine sous 44px (`MOCKUP_SIZED`) : ils gardent sa taille (décision de Louis) et l'implémentation garde exactement ces sélecteurs, sans quoi la suite les compte en échec : onglets de la pilule `.nav button` (environ 35px de haut), `.lang button` (31px), `.back` (environ 36px), `.chips button` (environ 32px), `.plist button` (31,5px), `.cue`, `.brand`. Le bouton `.rec-hint` a déjà `min-height: 44px`.
 - [ ] Les boutons de 44 × 44px de la maquette restent tels quels : flèches (`.arrows button`, `.stage-arrows button`), `.close`.
-- [ ] Zones cliquables SVG : le rayon de la zone transparente se compte en pixels d'écran, donc multiplié par `--u` en zoom : rayon d'au moins 22 px d'écran. Rayon des escales : `max(22 ou 30, R + 6)`. La maquette : escales 22 ou 30 (`.traj .hit`), étoiles 18 (`s.hit`), planètes `size + 10` (17 à 23), tous en unités du dessin, donc sous 44px de diamètre dès que le dessin est réduit.
-- [ ] Espacement entre cibles voisines : au moins 8px entre deux boutons (puces 6px dans la maquette : passer à 8px).
-- [ ] Un bouton plus grand que son dessin garde le dessin centré (zone invisible plutôt que dessin agrandi).
-- [ ] Tant que le point du disque à 320 px (section « Décisions à valider par Louis ») n'est pas tranché, les sillons du disque à 320 px sont rangés en exception non bloquante par la suite (`GROOVE_LABEL`), rien d'autre.
+- [ ] Zones cliquables SVG (tout élément interactif dans un `svg`, en exception) : rayons de la maquette en unités du dessin, escales 22 ou 30 (`.traj .hit`), étoiles 18 (`s.hit`), planètes `size + 10` (17 à 23), sillons et cœur du disque (37 à 39px de large à 320 px).
+- [ ] Espacement entre cibles voisines : celui de la maquette (6px entre les puces).
 
 ## 5. Largeurs et points de rupture
 
 Largeurs de contrôle : 320, 390, 430, 768 et 1280 px, en français et en anglais, pour chaque rubrique.
 
 - [ ] `documentElement.scrollWidth <= clientWidth` à chacune de ces largeurs et dans chaque rubrique ; aucun élément visible ne sort du viewport ; aucun défilement horizontal (`scrollWidth > clientWidth + 1`) sur un élément, l'`overflow-y: auto` de la fiche restant permis ; aucun `overflow-x: auto` ni `scroll` (la maquette met `body { overflow-x: clip }`, qui masque le défaut sans le corriger : ne pas s'en servir pour passer le test).
-- [ ] En-tête à 320 px : marque 140,4px + bascule (2 × 44px + bordures) + intervalle 24px + gouttières 32px tiennent en 286px, soit 34px de marge : aucune règle de repli n'est nécessaire.
-- [ ] Barre d'onglets à 320 px : chaque colonne d'onglet mesure 57,2px (`320 - 2 × 10 - 2 × 6 - 2 = 286`, divisé par 5) ; le libellé « Compétences » en 0.68rem 500 mesure 68,3px, soit 11px de débordement : l'interlettrage seul ne suffit pas. La règle impose à 320 px un libellé court, une taille réduite ou l'icône seule (avec `aria-label`), choix à mesurer au rendu en français et en anglais ; aucun libellé ne déborde de sa colonne.
+- [ ] En-tête à 320 px : marque 140,4px + bascule de la maquette (moins de 2 × 44px) + intervalle 24px + gouttières 32px tiennent en 286px : aucune règle de repli n'est nécessaire.
+- [ ] Barre d'onglets à 320 px : la grille `repeat(5, 1fr)` de la maquette élargit la colonne « Compétences » à 68,2px et ramène les autres à 54,4px (mesuré au rendu de la maquette, 48px de haut) : aucun débordement, rien à changer. Vérifier aussi en anglais.
 
 Points de rupture de la maquette (mêmes valeurs en CSS et en JS, définies une fois) :
 
@@ -292,7 +287,7 @@ Points de rupture de la maquette (mêmes valeurs en CSS et en JS, définies une 
 
 - [ ] Aucun point de rupture n'est ajouté sans mise à jour de ce tableau.
 - [ ] La plage 701 à 880 px (dont 768 px) combine la barre d'onglets et le parcours horizontal : vérifier les deux ensemble.
-- [ ] **Écart** : à 768 px le parcours horizontal (`viewBox 0 0 1100 300`) est réduit à 0,64 (contenu de 706px) ; ses textes de 14px et 12px s'affichent à environ 9px et 7,7px. Compenser par l'échelle `--u` comme sur téléphone, pour que ces textes mesurent au moins 12px à l'écran (à 1280px l'échelle vaut 1,0).
+- Non appliqué (décision de Louis) : à 768 px le parcours horizontal (`viewBox 0 0 1100 300`) est réduit à 0,64 (contenu de 706px) ; ses textes de 14px et 12px s'affichent à environ 9px et 7,7px. Le rendu de la maquette est conservé.
 - [ ] Au-dessus de 880 px : le contenu s'arrête à `--content-max` (1200px) centré ; à 1280px la poussière d'étoiles borde les marges (`band = max(140, (W - 1200) / 2 + 160)`).
 - [ ] À la fin de chaque rubrique, les cinq largeurs sont examinées en rendu réel dans Chrome, téléphones compris.
 
@@ -312,7 +307,7 @@ Points de rupture de la maquette (mêmes valeurs en CSS et en JS, définies une 
 ## 7. Navigation clavier
 
 - [ ] Ordre de tabulation, dans l'ordre du DOM : marque, pilule (au-dessus de 880 px), bascule FR puis EN, contenu de la rubrique affichée, barre d'onglets du bas (880 px et moins), fiche projet seulement quand elle est ouverte. Les rubriques non affichées (`display: none`) et la scène du saut (`pointer-events: none`) ne reçoivent pas le focus : la vue qui sort est `inert` pendant le saut.
-- [ ] Boutons et lien de marque s'activent par Entrée ; les `button` et `[role="button"]` aussi par Espace. Les groupes SVG focalisables (escales, constellations, soleils, planètes, cœur du disque) portent `tabindex="0"`, `role="button"`, `aria-label` et gèrent Entrée et Espace comme dans la maquette. Les étoiles `.st-g` n'ont ni `tabindex` ni `role` dans la maquette : les rendre focalisables est une décision à valider par Louis (voir la dernière section).
+- [ ] Boutons et lien de marque s'activent par Entrée ; les `button` et `[role="button"]` aussi par Espace. Les groupes SVG focalisables (escales, constellations, soleils, planètes, cœur du disque) portent `tabindex="0"`, `role="button"`, `aria-label` et gèrent Entrée et Espace comme dans la maquette. Les étoiles `.st-g` n'ont ni `tabindex` ni `role` dans la maquette : elles le deviennent (ajout validé, section « Décisions de Louis »).
 - [ ] Flèches : la maquette n'installe aucun raccourci `ArrowLeft/Right/Up/Down`. Les flèches sont des boutons à l'écran, atteints par Tab ; ne pas ajouter de raccourci global sans décision de Louis.
 - [ ] Un bouton flèche qui devient désactivé (première ou dernière escale ou étoile) ne laisse pas le focus tomber sur `body` : le focus passe à l'autre flèche.
 - [ ] Les éléments masqués visuellement par un zoom (`.sys.dim`, `.const .group.dim`, opacité 0 ou 0,06) sortent aussi de l'ordre de tabulation (`tabindex="-1"` ou `inert`) ; la maquette les laisse focalisables.
@@ -354,27 +349,25 @@ Commandes de contrôle :
 - [ ] Le caractère U+2014 (tiret cadratin) est absent de `index.html`, `css/`, `js/`, `data/` et `README.md`.
 - [ ] Aucun texte du site ne date une situation par un mot de temps relatif (« en cours », « actuellement », « aujourd'hui ») : `grep -rniE "en cours|actuellement|aujourd" index.html data/ README.md` ne renvoie rien. L'accroche de la maquette (`.pitch`) en contient un, absent du texte validé du plan.
 
-## Décisions à valider par Louis
+## Décisions de Louis
 
-- **Disque d'or sur téléphone.** À 320 px, les anneaux cliquables du disque ouvert font 37 à 39 px de large, soit moins que les 44 px de la règle ; dès 390 px ils font 46 à 51 px. Tant que Louis ne tranche pas, la suite navigateur le range en exception non bloquante (`GROOVE_LABEL` dans `tests/browser/suite.js`).
+Tranchées le 08/10/2026 : le rendu de la maquette fait foi.
 
-Décisions sans source dans la maquette :
+Écarts non appliqués (apparence de la maquette conservée) :
 
-- `--faint` : `#66739c` devient `#7a88b0`.
-- Encres du disque : `.engrave-text`, anneau de focus `#3b2507`, trait sombre du sillon focalisé.
-- Focus sur le h2 (`tabindex="-1"`) après un changement de rubrique.
-- Bordures `--line` traitées comme décoratives.
-- Anneau de 2 px en `:focus-visible` sur les éléments SVG.
+- `--faint` (`#66739c`) et encre de `.engrave-text`, sous 4,5:1.
+- Cibles sous 44px de la maquette (`MOCKUP_SIZED` et zones SVG, disque à 320 px compris), hauteurs de barre de la maquette, 6px entre les puces.
+- Textes du parcours à 768 px (environ 9px et 7,7px).
+
+Ajouts appliqués (invisibles au repos) :
+
+- Focus : anneau de 2px en `:focus-visible` sur les éléments SVG, anneau sombre `#3b2507` du disque et trait du sillon focalisé, focus sur le h2 (`tabindex="-1"`) après un changement de rubrique, étoiles `.st-g` focalisables, éléments `.dim` sortis de la tabulation.
+- Fiche avec `inert` et boucle de focus ; `scroll-padding-bottom: 88px` et `--bar-h` mesuré.
 - Mouvement réduit en `animation: none` et `transition: none`, ciel figé.
-- Cibles de 44 px et barres plus hautes (71 px sur mobile, environ 79 px sur ordinateur).
-- Texte minimal de 12 px à 768 px.
-- `scroll-padding-bottom: 88px` et `--bar-h` dynamique.
-- Fiche avec `inert` et boucle de focus.
-- Éléments `.dim` sortis de la tabulation.
-- Une boucle `requestAnimationFrame` par rubrique.
-- États `:active` et `@media (hover: hover)`.
-- Panneaux de chargement et d'erreur.
-- Étoiles `.st-g` focalisables.
+- États `:active` et survol sous `@media (hover: hover)` ; bordures `--line` traitées comme décoratives.
+- Une boucle `requestAnimationFrame` par rubrique ; graisses 600 et 700 de la Mono chargées.
+
+Reste à concevoir avec Louis (maquettes rendues dans Chrome) : panneaux de chargement et d'erreur.
 
 ## Vérification de la checklist
 
