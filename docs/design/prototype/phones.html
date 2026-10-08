@@ -25,6 +25,7 @@ a { color: #9cf; }
     <figure><iframe src="prototype.html" style="width:450px" title="E, 430 px"></iframe><figcaption>Grand téléphone, 430 px (<a href="prototype.html">version bureau</a>)</figcaption></figure>
 </div>
 <script>
+if (location.search) document.querySelectorAll('iframe').forEach(f => { f.src = 'prototype.html' + location.search; });
 document.querySelectorAll('[data-start]').forEach(b => b.addEventListener('click', () => {
     document.querySelectorAll('iframe').forEach(f => f.contentWindow.setStart && f.contentWindow.setStart(b.dataset.start));
 }));
