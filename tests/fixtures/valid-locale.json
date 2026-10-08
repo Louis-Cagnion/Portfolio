@@ -72,6 +72,10 @@
       "advanced": "Avancé", "intermediate": "Intermédiaire",
       "beginner": "Débutant", "unknown": "Niveau à préciser"
     },
+    "bodies": {
+      "advanced": "Galaxie", "intermediate": "Nébuleuse",
+      "beginner": "Géante jaune", "unknown": "Étoile en fusion"
+    },
     "link": { "intro": "Mes notes :", "label": "Devpedia", "href": "https://example.com/dev" },
     "groups": [
       {

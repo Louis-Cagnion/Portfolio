@@ -51,8 +51,10 @@ function list(lang, path) {
 }
 
 // ---------- Détecteurs (purs, vérifiés plus bas) ----------
-const NON_TEXT_KEYS = new Set(
-  ['id', 'href', 'level', 'body', 'at', 'now', 'type', 'live', 'projects']);
+const NON_TEXT_KEYS = new Set(['id', 'href', 'level', 'body', 'at', 'now', 'type', 'live']);
+/* `projects` ne désigne des références (identiques en FR et EN) que dans un tableau ;
+ailleurs (ui.nav.projects, home.ctas.projects) c'est un libellé traduit. */
+const isProjectRef = (node, path) => node.key === 'projects' && path.endsWith(']');
 
 /** Écarts entre deux langues : { structure: string[], values: string[] }. */
 function compareLocales(a, b) {
@@ -68,7 +70,9 @@ function compareLocales(a, b) {
       structure.push(`${path} : type ${typeA} (fr), ${typeB} (en)`);
       continue;
     }
-    const fixed = typeA !== 'string' || NON_TEXT_KEYS.has(nodeA.key);
+    const fixed = typeA !== 'string'
+      || NON_TEXT_KEYS.has(nodeA.key)
+      || isProjectRef(nodeA, path);
     const leaf = typeA !== 'array' && typeA !== 'object';
     if (leaf && fixed && path !== 'meta.lang' && nodeA.value !== nodeB.value) {
       const [va, vb] = [JSON.stringify(nodeA.value), JSON.stringify(nodeB.value)];
