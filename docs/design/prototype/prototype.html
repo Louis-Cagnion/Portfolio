@@ -316,7 +316,7 @@ h1 { font-family: var(--display); font-weight: 400; font-size: clamp(2.3rem, 6.6
 }
 /* phones: the journey becomes a zoomed, swipeable camera on a vertical curve */
 @media (max-width: 700px) {
-    .jstage { position: sticky; top: var(--bar-h); height: 58svh; overflow: hidden; touch-action: none; }
+    .jstage { position: sticky; top: var(--bar-h); height: 58svh; overflow: hidden; }
     .jstage .traj { position: absolute; inset: 0; height: 100%; }
     .traj.vertical .track { stroke-width: calc(3px * var(--u, 1)); }
     .traj.vertical .done { stroke-width: calc(3.5px * var(--u, 1)); }
@@ -641,7 +641,7 @@ function buildJourney() {
     wps.innerHTML = '';
     const v = vertical();
     traj.classList.toggle('vertical', v);
-    document.getElementById('jLede').textContent = v ? 'Glisse sur la trajectoire ou utilise les flèches pour changer d\'escale.' : 'Choisis une escale pour faire voyager le vaisseau et lire son récit.';
+    document.getElementById('jLede').textContent = v ? 'Utilise les flèches pour changer d\'escale.' : 'Choisis une escale pour faire voyager le vaisseau et lire son récit.';
     let pts;
     if (v) { pts = STEPS.map((s, i) => [56 + 22 * Math.sin(i * 1.3), 50 + i * GAP + (i === LAST ? 40 : 0)]); track.setAttribute('d', catmull(pts)); }
     else { traj.setAttribute('viewBox', '0 0 1100 300'); track.setAttribute('d', 'M40 250 C 340 250, 640 220, 990 120'); traj.style.removeProperty('--u'); }
@@ -662,7 +662,7 @@ function buildJourney() {
         else { const below = i % 2 === 0; x = p.x - 12; y1 = below ? p.y + R + 22 : p.y - R - 26; y2 = y1 + 17; }
         mk('text', { x, y: y1, 'text-anchor': anchor }, g).textContent = s.title;
         mk('text', { class: 'y', x, y: y2, 'text-anchor': anchor }, g).textContent = s.when;
-        g.addEventListener('click', () => { if (!dragged) select(i, true); });
+        g.addEventListener('click', () => select(i, true));
         g.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select(i, true); } });
     });
     wps.after(trailG); trailG.after(shipG);
@@ -721,37 +721,8 @@ async function select(i, user) {
 ['prev', 'sUp'].forEach(id => document.getElementById(id).onclick = () => select(cur - 1, true));
 ['next', 'sDown'].forEach(id => document.getElementById(id).onclick = () => select(cur + 1, true));
 
-/* drag on the curve: finger down = go up the curve (previous), finger up = go down (next) */
-let drag = null, dragged = false, wheelAcc = 0, wheelLock = 0;
-stage.addEventListener('pointerdown', e => { if (!vertical() || jMoving || e.target.closest('button')) return; drag = { y: e.clientY, cy: jcam.cy, id: e.pointerId }; dragged = false; });
-stage.addEventListener('pointermove', e => {
-    if (!drag || e.pointerId !== drag.id) return;
-    const dy = e.clientY - drag.y;
-    if (Math.abs(dy) > 6 && !dragged) { dragged = true; stage.setPointerCapture(drag.id); document.getElementById('jTitle').classList.add('out'); }
-    if (dragged) jcam.set({ cy: drag.cy - dy / JZOOM });
-});
-function endDrag(e) {
-    if (!drag) return;
-    const dy = e.clientY - drag.y; drag = null;
-    if (!dragged) return;
-    const focusY = jcam.cy - (0.5 - FOCUS_Y) * jcam.w * jcam.ratio();
-    let best = 0; lens.forEach((l, k) => { if (Math.abs(track.getPointAtLength(l).y - focusY) < Math.abs(track.getPointAtLength(lens[best]).y - focusY)) best = k; });
-    if (best === cur && Math.abs(dy) > 40) best = cur + (dy < 0 ? 1 : -1);
-    best = Math.max(0, Math.min(STEPS.length - 1, best));
-    if (best === cur) jcam.tween(() => camFor(lens[cur]), 350).then(() => document.getElementById('jTitle').classList.remove('out'));
-    else select(best, false);
-    setTimeout(() => { dragged = false; }, 0);
-}
-stage.addEventListener('pointerup', endDrag); stage.addEventListener('pointercancel', endDrag);
-stage.addEventListener('wheel', e => {
-    if (!vertical()) return;
-    e.preventDefault();
-    if (performance.now() < wheelLock) return;
-    wheelAcc += e.deltaY;
-    if (Math.abs(wheelAcc) > 60) { select(cur + (wheelAcc > 0 ? 1 : -1), false); wheelAcc = 0; wheelLock = performance.now() + 650; }
-}, { passive: false });
 function refreshJourney() { requestAnimationFrame(() => { if (vertical() && !jcam.raf) jcam.set(camFor(lens[cur])); }); }
-new ResizeObserver(() => { if (vertical() && !jcam.raf && !drag) jcam.set(camFor(lens[cur])); }).observe(stage);
+new ResizeObserver(() => { if (vertical() && !jcam.raf) jcam.set(camFor(lens[cur])); }).observe(stage);
 buildJourney(); select(NOW);
 
 /* skills: zoomable constellations; in focus the stars spread out and turn into celestial bodies */
