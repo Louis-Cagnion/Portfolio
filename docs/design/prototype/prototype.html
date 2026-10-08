@@ -969,8 +969,8 @@ const TILT = 0.42, Z_SPEED = 0.00005, Z_PHONE_RATIO = 1.25, tiltFocus = () => na
 let planets = [], systems = [], zoomSys = -1, zMoving = false, sysHover = false;
 /* label width from canvas metrics: valid while the section is hidden (no DOM measurement) */
 function labelWidth(t) { measureCtx.font = '500 12.5px "IBM Plex Sans", sans-serif'; return measureCtx.measureText(t).width; }
-/* phones stack the systems: a row just fits the outer orbit (cy - 84) down to the project count (cy + 136) */
-const PHONE_ROW = 270, sysDims = () => narrow.matches ? { w: 360, h: PHONE_ROW * 3 } : { w: 1100, h: 400 };
+/* a system row just fits the outer orbit (cy - 84) down to the project count (cy + 136); phones stack three rows */
+const SYS_ROW = 270, sysDims = () => narrow.matches ? { w: 360, h: SYS_ROW * 3 } : { w: 1100, h: SYS_ROW };
 /* phones: long titles break at the space nearest the middle */
 function splitTitle(t) {
     let best = -1;
@@ -999,11 +999,11 @@ function placeLabel(pl, x, y) {
 function buildSystems() {
     sysSvg.innerHTML = ''; planets = []; systems = []; zoomSys = -1;
     sysLayout.classList.remove('zfocus'); sysSvg.classList.remove('zoomed');
-    const m = narrow.matches, { w, h } = sysDims(), cell = m ? PHONE_ROW : w / 3;
+    const m = narrow.matches, { w, h } = sysDims(), cell = m ? SYS_ROW : w / 3;
     sysSvg.style.height = ''; sysSvg.style.aspectRatio = `${w} / ${h}`; scam.set({ cx: w / 2, cy: h / 2, w });
     const defs = mk('defs', {}, sysSvg);
     SYS.forEach((s, i) => {
-        const cx = m ? w / 2 : cell * i + cell / 2, cy = m ? cell * i + cell / 2 - 26 : h / 2 - 10;
+        const cx = m ? w / 2 : cell * i + cell / 2, cy = (m ? cell * i : 0) + SYS_ROW / 2 - 26;
         const sg = mk('radialGradient', { id: `sun${i}` }, defs); mk('stop', { offset: 0, 'stop-color': s.sun[0] }, sg); mk('stop', { offset: 0.55, 'stop-color': s.sun[1] }, sg); mk('stop', { offset: 1, 'stop-color': s.sun[1], 'stop-opacity': 0 }, sg);
         const pg = mk('radialGradient', { id: `pl${i}`, cx: 0.35, cy: 0.3, r: 0.8 }, defs); mk('stop', { offset: 0, 'stop-color': s.planet[0] }, pg); mk('stop', { offset: 1, 'stop-color': s.planet[1] }, pg);
         const list = DATA.projects.filter(p => p.cat === s.cat), radii = [72, 120, 168];
