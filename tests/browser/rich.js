@@ -1,5 +1,5 @@
-// setRich(el, html, field) de js/core/dom.js : liste blanche <strong>, <em>, <a href> en
-// https: ou mailto: ; tout le reste en texte, avec console.error qui nomme le champ.
+/* setRich(el, html, field) de js/core/dom.js : liste blanche <strong>, <em>, <a href> en
+https: ou mailto: ; tout le reste en texte, avec console.error qui nomme le champ. */
 import { ROOT } from './harness.js';
 import { test } from './runner.js';
 

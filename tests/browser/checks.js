@@ -1,5 +1,5 @@
-// Mesures sur le site chargé : débordement horizontal, zones cliquables, textes d'une langue.
-// Chaque fonction rend une liste de problèmes (chaînes qui nomment l'élément) ; vide = réussi.
+/* Mesures sur le site chargé : débordement horizontal, zones cliquables, textes d'une langue.
+Chaque fonction rend une liste de problèmes (chaînes qui nomment l'élément) ; vide = réussi. */
 import { describe, isVisible } from './harness.js';
 import { normalize } from './text.js';
 
@@ -89,13 +89,26 @@ export function isInlineTextLink(site, el) {
 }
 export const INLINE_LINK_LABEL = 'lien en ligne, exempté (WCAG 2.5.8)';
 
+/* Composants que la maquette validée dessine sous 44 px (décision de Louis du 08/10/2026,
+cf. docs/design-checklist.md, zones cliquables) ; les zones dessinées en SVG suivent le dessin. */
+const MOCKUP_SIZED = [
+  '.nav button', '.lang button', '.brand', '.cue', '.back', '.chips button', '.plist button',
+].join(', ');
+export const MOCKUP_SIZED_LABEL = 'taille fixée par la maquette validée';
+
+/** Libellé d'exception de `el`, ou null s'il doit mesurer 44 × 44 px. */
+function exceptionLabel(site, el) {
+  if (isInlineTextLink(site, el)) return INLINE_LINK_LABEL;
+  if (el.matches(MOCKUP_SIZED) || el.closest('svg')) return MOCKUP_SIZED_LABEL;
+  return null;
+}
+
 /**
  * Zones cliquables : tout bouton ou lien visible de `scopes` mesure au moins 44 × 44 px.
  * Rangés à part (non bloquants) au lieu d'échouer, dans `exceptions` { label, text } : les
- * liens en ligne d'un texte courant, et tout élément pour lequel `exceptionLabel(el)` rend un
- * libellé.
+ * liens en ligne d'un texte courant et les composants dimensionnés par la maquette.
  */
-export function targetProblems(site, scopes, exceptionLabel = () => null) {
+export function targetProblems(site, scopes) {
   const problems = [];
   const exceptions = [];
   const seen = new Set();
@@ -110,7 +123,7 @@ export function targetProblems(site, scopes, exceptionLabel = () => null) {
       const big = (size) => size + TOLERANCE >= MIN_TARGET;
       if (big(rect.width) && big(rect.height)) continue;
       const text = `${describe(el)} : ${rect.width.toFixed(1)} × ${rect.height.toFixed(1)} px`;
-      const label = isInlineTextLink(site, el) ? INLINE_LINK_LABEL : exceptionLabel(el);
+      const label = exceptionLabel(site, el);
       if (label) exceptions.push({ label, text });
       else problems.push(text);
     }

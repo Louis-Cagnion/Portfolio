@@ -1,5 +1,5 @@
-// Fonctions pures de la suite navigateur (aucun DOM) : chaînes propres à une langue.
-// Chargeables dans Node pour vérification : import('./text.js').
+/* Fonctions pures de la suite navigateur (aucun DOM) : chaînes propres à une langue.
+Chargeables dans Node pour vérification : import('./text.js'). */
 
 const ENTITIES = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ' };
 

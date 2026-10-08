@@ -1,5 +1,5 @@
-// Bascule de langue : attributs, mémorisation, état conservé, aucun texte de l'autre langue,
-// relecture au rechargement, cas limites (stockage, bascules rapides).
+/* Bascule de langue : attributs, mémorisation, état conservé, aucun texte de l'autre langue,
+relecture au rechargement, cas limites (stockage, bascules rapides). */
 import {
   activeViews, click, goTo, makeStorage, openSite, readJson, realDataFetch, settle,
   throwingStorage, waitFor, waitStatus,

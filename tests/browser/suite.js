@@ -268,11 +268,6 @@ async function runHashOnLoad(width) {
 const MATRIX_CASES = ['aucun débordement horizontal', 'zones cliquables d\'au moins 44 px',
   'aucun texte de l\'autre langue visible'];
 
-/** Exception provisoire, à trancher par Louis : sillons du disque de contact à 320 px. */
-const GROOVE_LABEL = 'sillons du disque de contact sous 44 px';
-const grooveLabel = (width) => (el) =>
-  (width === 320 && el.closest('#contact svg') ? GROOVE_LABEL : null);
-
 async function runMatrix(width, lang) {
   const ctx = { group: 'Matrice', width, lang };
   let site;
@@ -306,7 +301,7 @@ async function runMatrix(width, lang) {
       await test(at, MATRIX_CASES[0], () => overflowProblems(site));
       await test(at, MATRIX_CASES[1], () => {
         const scopes = sectionScopes(site, section, section === 'home');
-        const { problems, exceptions } = targetProblems(site, scopes, grooveLabel(width));
+        const { problems, exceptions } = targetProblems(site, scopes);
         recordExceptions(at, exceptions);
         return problems;
       });

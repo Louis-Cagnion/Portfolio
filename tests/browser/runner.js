@@ -1,6 +1,6 @@
 // Enregistrement des cas : chaque cas rend une liste de problèmes (vide = réussi) ou lève.
 import { errorText } from './harness.js';
-import { INLINE_LINK_LABEL } from './checks.js';
+import { INLINE_LINK_LABEL, MOCKUP_SIZED_LABEL } from './checks.js';
 
 let report = null;
 
@@ -34,18 +34,16 @@ export function skip(ctx, names, reason) {
   }
 }
 
-/**
- * Range à part, sans échec, les exceptions { label, text } d'une mesure : une ligne par
- * libellé. Lien en ligne : exempté ; tout autre libellé : à trancher par Louis.
- */
+const NOTES = { [INLINE_LINK_LABEL]: 'exempté', [MOCKUP_SIZED_LABEL]: 'validé par Louis' };
+
+/** Range à part, sans échec, les exceptions { label, text } d'une mesure : une ligne par libellé. */
 export function recordExceptions(ctx, exceptions) {
   const byLabel = new Map();
   for (const { label, text } of exceptions) {
     byLabel.set(label, [...(byLabel.get(label) || []), text]);
   }
   for (const [label, texts] of byLabel) {
-    const note = label === INLINE_LINK_LABEL ? 'exempté' : 'à trancher par Louis';
-    report.exception({ ...ctx, name: label, detail: texts.join(' ; '), note });
+    report.exception({ ...ctx, name: label, detail: texts.join(' ; '), note: NOTES[label] });
   }
 }
 

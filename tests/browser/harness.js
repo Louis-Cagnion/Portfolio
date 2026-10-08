@@ -1,5 +1,5 @@
-// Harnais de la suite navigateur : site chargé en iframe, faux fetch, faux stockage, attentes
-// bornées. Aucune attente infinie : chaque attente a un délai maximal et un libellé d'échec.
+/* Harnais de la suite navigateur : site chargé en iframe, faux fetch, faux stockage, attentes
+bornées. Aucune attente infinie : chaque attente a un délai maximal et un libellé d'échec. */
 
 export const ROOT = new URL('../../', import.meta.url).href;
 export const SECTIONS = ['home', 'journey', 'skills', 'projects', 'contact'];

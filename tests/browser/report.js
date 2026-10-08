@@ -44,7 +44,7 @@ export function createReport(root = document.getElementById('report')) {
   const start = performance.now();
   const summary = document.getElementById('summary');
   const exceptionsBody = table(document.getElementById('exceptions'),
-    'Exceptions (non bloquantes) : exemptées ou à trancher par Louis');
+    'Exceptions (non bloquantes) : exemptées ou validées par Louis');
   const body = table(root, 'Résultats');
 
   const refresh = () => {
