@@ -20,7 +20,7 @@
       "title": "Mission control could not establish the connection with the pilot",
       "network": "The network seems unreachable. Check your connection, then try again.",
       "timeout": "Loading timed out. Try again in a moment.",
-      "http": "The server answered with an error (HTTP {status}).",
+      "http": "Quantum entanglement was meant to link us to the pilot instantly, but the link could not be established (code {status}).",
       "json": "The content file is invalid (unreadable JSON).",
       "schema": "The content is incomplete: the field {path} is missing or invalid.",
       "retry": "Retry",

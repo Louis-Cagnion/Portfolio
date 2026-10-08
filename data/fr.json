@@ -20,7 +20,7 @@
       "title": "Le centre de contrôle n'a pas pu établir la connexion avec le pilote",
       "network": "Le réseau semble inaccessible. Vérifie ta connexion, puis réessaie.",
       "timeout": "Le délai de chargement est dépassé. Réessaie dans un instant.",
-      "http": "Le serveur a répondu avec une erreur (HTTP {status}).",
+      "http": "L'intrication quantique devait nous relier instantanément au pilote, mais la liaison n'a pas pu s'établir (code {status}).",
       "json": "Le fichier de contenu est invalide (JSON illisible).",
       "schema": "Le contenu est incomplet : le champ {path} est manquant ou invalide.",
       "retry": "Réessayer",
