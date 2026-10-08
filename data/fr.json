@@ -1093,7 +1093,7 @@
             "blocks": [
               {
                 "type": "text",
-                "html": "Le but de ce second projet de groupe était de créer un jeu inspiré de <a href=\"https://search.brave.com/images?q=Wolfenstein+3D+gameplay\">Wolfenstein 3D</a>, avec un moteur en raycasting : une carte en deux dimensions projetée en pseudo-3D."
+                "html": "Le but de ce second projet de groupe était de créer un jeu inspiré de <a href=\"https://fr.wikipedia.org/wiki/Wolfenstein_3D\">Wolfenstein 3D</a>, avec un moteur en raycasting : une carte en deux dimensions projetée en pseudo-3D."
               },
               {
                 "type": "text",
@@ -1112,7 +1112,7 @@
               },
               {
                 "type": "text",
-                "html": "La personne avec qui j'ai travaillé sur ce projet a même ajouté une caméra verticale alors que le moteur utilisait de la fausse 2D."
+                "html": "La personne avec qui j'ai travaillé sur ce projet a même ajouté une caméra verticale, alors que le raycasting ne projette qu'une carte en deux dimensions, sans regard vers le haut ni vers le bas."
               },
               {
                 "type": "text",

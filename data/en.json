@@ -1093,7 +1093,7 @@
             "blocks": [
               {
                 "type": "text",
-                "html": "The goal of this second group project was to create a game inspired by <a href=\"https://search.brave.com/images?q=Wolfenstein+3D+gameplay\">Wolfenstein 3D</a>, with a raycasting engine: a two-dimensional map projected in pseudo-3D."
+                "html": "The goal of this second group project was to create a game inspired by <a href=\"https://en.wikipedia.org/wiki/Wolfenstein_3D\">Wolfenstein 3D</a>, with a raycasting engine: a two-dimensional map projected in pseudo-3D."
               },
               {
                 "type": "text",
@@ -1112,7 +1112,7 @@
               },
               {
                 "type": "text",
-                "html": "The person I worked with on this project even added a vertical camera despite the engine using fake 2D."
+                "html": "The person I worked with on this project even added a vertical camera, although raycasting only projects a two-dimensional map, with no looking up or down."
               },
               {
                 "type": "text",
