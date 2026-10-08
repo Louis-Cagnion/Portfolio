@@ -80,7 +80,8 @@ h1 { font-family: var(--display); font-weight: 400; font-size: clamp(2.3rem, 6.6
 .rows dd.live { color: var(--live); }
 
 /* home: the « Je me présente » paragraphs the journey does not use, as a pilot file under the hero */
-.cue { display: flex; flex-direction: column; align-items: center; gap: 2px; width: max-content; margin: 4px auto 0; color: var(--faint); font: 400 0.8rem var(--mono); text-decoration: none; transition: color 0.2s; }
+.cue { display: flex; flex-direction: column; align-items: center; gap: 2px; width: max-content; margin: 4px auto 0; color: var(--faint); font: 400 0.8rem var(--mono); text-decoration: none; transition: color 0.2s, opacity 0.4s, visibility 0s; }
+.cue.gone { opacity: 0; visibility: hidden; transition: opacity 0.4s, visibility 0s 0.4s; }
 .cue span { animation: cue 2s ease-in-out infinite; }
 @keyframes cue { 50% { transform: translateY(4px); } }
 .cue:hover { color: var(--accent); }
@@ -1149,7 +1150,10 @@ document.getElementById('copyMail').addEventListener('click', async () => {
     msg.classList.add('on'); setTimeout(() => msg.classList.remove('on'), 2200);
 });
 document.getElementById('dossierBody').innerHTML = [['Formation', 0], ['Entraînement en cours', 4], ['Projets passion', 5]].map(([k, n]) => `<div><dt>${k}</dt><dd>${DATA.about[n]}</dd></div>`).join('');
-document.getElementById('cue').addEventListener('click', e => { e.preventDefault(); document.getElementById('dossier').scrollIntoView({ behavior: reduce() ? 'auto' : 'smooth' }); });
+const cue = document.getElementById('cue'), dossier = document.getElementById('dossier');
+cue.addEventListener('click', e => { e.preventDefault(); dossier.scrollIntoView({ behavior: reduce() ? 'auto' : 'smooth' }); });
+/* the cue only invites to scroll: it fades once the pilot file is on screen, and returns above it */
+new IntersectionObserver(([e]) => cue.classList.toggle('gone', e.isIntersecting), { rootMargin: '0px 0px -15% 0px' }).observe(dossier);
 show(ORDER.includes(OPT.get('view')) ? OPT.get('view') : 'home', false);
 document.fonts.ready.then(() => { const a = nav.querySelector('[aria-current]'); pill.style.left = a.offsetLeft + 'px'; pill.style.width = a.offsetWidth + 'px'; });
 if (window.self !== window.top) document.querySelector('.opts').remove();

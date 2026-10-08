@@ -35,7 +35,7 @@ Chaque proposition de design est montrée à Louis en pages réellement rendues 
 | Fond | Champ d'étoiles animé, poussière d'étoiles sur les marges en ordinateur |
 | Navigation | Une rubrique à la fois ; pilule glissante en ordinateur, barre d'onglets en bas sur mobile ; bascule FR/EN |
 | Transition | Saut en hyperespace en deux temps (la rubrique part puis la suivante arrive, depuis le centre), sens avant ou arrière selon l'ordre des rubriques, courbure FOV en barillet |
-| Accueil | Ligne « Mission en cours », nom en Michroma, accroche, boutons, panneau de télémétrie ; dessous, repère « Dossier du pilote » puis section « Je me présente » (formation, entraînement en cours, projets passion) |
+| Accueil | Ligne « Mission en cours », nom en Michroma, accroche, boutons, panneau de télémétrie ; dessous, repère « Dossier du pilote » (il s'efface une fois la section à l'écran) puis section « Je me présente » (formation, entraînement en cours, projets passion) |
 | Parcours | Voyage en vaisseau de la Terre à une galaxie géante (8 escales), caméra posée sur la position actuelle ; courbe verticale zoomée et fiche translucide floutée sur mobile |
 | Compétences | Constellations organiques ; astres selon le niveau (galaxie, nébuleuse, géante jaune, étoile magmatique) ; clic : déploiement puis plongée plein champ sur l'astre choisi |
 | Projets | Trois systèmes orbitaux (Tressol-Chabrier, personnel, 42), planètes étiquetées sur fond, liste complète dessous, panneau de détail ; clic sur un système : zoom, orbites ouvertes, planètes réparties avec leur nom affiché et cliquable, liste masquée (elle ne s'affiche qu'avec tous les systèmes) ; sur téléphone, systèmes empilés au plus près |
