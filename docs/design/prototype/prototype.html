@@ -662,8 +662,8 @@ function buildJourney() {
         else { const below = i % 2 === 0; x = p.x - 12; y1 = below ? p.y + R + 22 : p.y - R - 26; y2 = y1 + 17; }
         mk('text', { x, y: y1, 'text-anchor': anchor }, g).textContent = s.title;
         mk('text', { class: 'y', x, y: y2, 'text-anchor': anchor }, g).textContent = s.when;
-        g.addEventListener('click', () => select(i, true));
-        g.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select(i, true); } });
+        g.addEventListener('click', () => pickStop(i));
+        g.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pickStop(i); } });
     });
     wps.after(trailG); trailG.after(shipG);
     shipPos = dock(cur); placeShip(shipPos, false); markSteps();
@@ -685,6 +685,12 @@ function emitTrail(x, y) {
 function trailLoop() {
     particles = particles.filter(pt => { pt.life -= 0.035; if (pt.life <= 0) { pt.el.remove(); return false; } pt.el.setAttribute('r', (0.6 + 1.8 * pt.life).toFixed(2)); pt.el.setAttribute('opacity', (pt.life * 0.8).toFixed(2)); return true; });
     trailRaf = particles.length ? requestAnimationFrame(trailLoop) : 0;
+}
+/* phones: the stop where the ship already is leads down to its story instead of replaying the trip */
+function pickStop(i) {
+    if (!vertical() || i !== cur || jMoving) { select(i, true); return; }
+    const top = document.getElementById('jDetail').getBoundingClientRect().top + scrollY - document.querySelector('.bar').offsetHeight - 8;
+    scrollTo({ top, behavior: reduce() ? 'auto' : 'smooth' });
 }
 function markSteps() { wps.querySelectorAll('.wp').forEach((g, k) => g.classList.toggle('sel', k === cur)); }
 function setTitle(i) { document.getElementById('jtName').textContent = STEPS[i].title; document.getElementById('jtWhen').textContent = STEPS[i].when; }
