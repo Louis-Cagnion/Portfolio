@@ -181,8 +181,10 @@ main {
   display: none;
 }
 
+/* flow-root : la marge haute du premier enfant ne fusionne plus avec celle de la rubrique,
+elle reste la même au repos et pendant le saut (rubrique en position: absolute). */
 .view.on {
-  display: block;
+  display: flow-root;
 }
 
 .lede {
