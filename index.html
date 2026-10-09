@@ -15,6 +15,7 @@
 </head>
 <script type="module" src="js/main.js" defer></script>
 <body>
+    <canvas id="sky" aria-hidden="true"></canvas>
     <header class="bar">
         <a class="brand" href="#home" data-go="home">
             <i aria-hidden="true"></i>Louis Cagnion
@@ -106,6 +107,7 @@
         <section class="view" id="projects"></section>
         <section class="view" id="contact"></section>
     </main>
+    <div class="flash" aria-hidden="true"></div>
     <nav class="tabbar" aria-label="Sections"></nav>
     <div class="sheet-bg" id="sheetBg" hidden></div>
     <aside class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sTitle"
@@ -116,5 +118,14 @@
         <ul class="tags" id="sTags"></ul>
         <div class="body" id="sBody"></div>
     </aside>
+    <svg class="lens" width="0" height="0" aria-hidden="true" focusable="false">
+        <filter id="fov" x="0" y="0" width="1" height="1" primitiveUnits="objectBoundingBox"
+            color-interpolation-filters="sRGB">
+            <feImage id="fovMap" x="0" y="0" width="1" height="1" preserveAspectRatio="none"
+                result="map"/>
+            <feDisplacementMap id="fovDisp" in="SourceGraphic" in2="map" scale="0"
+                xChannelSelector="R" yChannelSelector="G"/>
+        </filter>
+    </svg>
 </body>
 </html>

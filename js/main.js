@@ -1,12 +1,14 @@
 /*
-Point d'entrée : charge la langue, rend la barre et les rubriques, gère la bascule FR/EN et
-l'écran #status. boot(env) est injectable (tests/browser/README.md) ; le module s'amorce seul,
-sauf sur <html data-noboot>.
+Point d'entrée : charge la langue, rend la barre et les rubriques, démarre le ciel et la
+navigation, gère la bascule FR/EN et l'écran #status. boot(env) est injectable
+(tests/browser/README.md) ; le module s'amorce seul, sauf sur <html data-noboot>.
 */
 import { cachedLocale, loadLocale, LocaleError } from './core/data.js';
 import { el, setRich } from './core/dom.js';
 import { initialLang, otherLang } from './core/i18n.js';
+import { createRouter, listViews } from './core/router.js';
 import { createNav } from './ui/nav.js';
+import { createSky } from './ui/starfield.js';
 import { createStatus } from './ui/status.js';
 
 const STORAGE_KEY = 'lang';
@@ -106,6 +108,20 @@ function mountHome(root) {
   };
 }
 
+/**
+ * @brief Démarre le ciel animé de canvas#sky ; son échec (décor seul) part en console.error.
+ *
+ * @returns {{ warp: Function, calm: Function } | null} commandes du ciel, null en cas d'échec
+ */
+function startSky() {
+  try {
+    return createSky(document.getElementById('sky'));
+  } catch (error) {
+    console.error('main : ciel #sky non affiché', error);
+    return null;
+  }
+}
+
 /* Contenu minimal de chaque rubrique, par identifiant de section.view, en attendant les
 modules js/sections/ (S5 à S9) : chaque montage insère sa structure d'un bloc, en dernier
 (rien s'il lève), et rend la mise à jour des textes. */
@@ -118,7 +134,8 @@ const MOUNTS = {
 };
 
 /**
- * @brief Amorce le site : langue initiale, chargement, rendu, bascule de langue.
+ * @brief Amorce le site : ciel, langue initiale, chargement, rendu, navigation, bascule de
+ *   langue.
  *
  * Seule la dernière demande de langue s'applique ; une langue déjà chargée s'affiche sans
  * écran de chargement, sauf par Réessayer. L'autre langue est préchargée après le premier
@@ -145,7 +162,7 @@ export function boot(env = {}) {
 
   /** @brief Monte le contenu minimal de chaque rubrique pas encore montée. */
   const mountSections = () => {
-    for (const view of document.querySelectorAll('main > section.view')) {
+    for (const view of listViews()) {
       if (app.updates.has(view)) continue;
       if (!Object.hasOwn(MOUNTS, view.id))
         throw new Error(`main : rubrique #${view.id} sans contenu prévu dans MOUNTS`);
@@ -194,10 +211,10 @@ export function boot(env = {}) {
     status.ready();
     if (!app.started) {
       app.started = true;
-      nav.start();
+      router.start();
       preload(otherLang(lang));
     }
-    if (hadFocus) nav.focusCurrent();
+    if (hadFocus) router.focusCurrent();
   };
 
   /**
@@ -222,8 +239,8 @@ export function boot(env = {}) {
   /**
    * @brief Demande une langue : affichage immédiat si elle est en cache, sinon chargement.
    *
-   * Crée la barre si elle n'existe pas encore. Toute exception, à cette création, au
-   * chargement ou à l'affichage, aboutit à l'erreur de cette langue.
+   * Crée la barre et le routeur s'ils n'existent pas encore. Toute exception, à ces
+   * créations, au chargement ou à l'affichage, aboutit à l'erreur de cette langue.
    *
    * @param {string} lang code de langue
    * @param {{ reload?: boolean }} [options] reload : passe par l'état de chargement même si
@@ -237,6 +254,7 @@ export function boot(env = {}) {
     app.wanted = lang;
     try {
       nav ??= createNav({ onLanguage });
+      router ??= createRouter({ onView: (id) => nav.markCurrent(id), sky });
       nav.pressLanguage(lang);
       const cached = reload ? null : cachedLocale(lang);
       if (!cached) status.loading(lang);
@@ -257,7 +275,8 @@ export function boot(env = {}) {
     if (lang !== app.wanted || status.state === 'error') request(lang);
   };
 
-  let nav = null; // créée par request() ; création rejouée tant qu'elle lève
+  let nav = null; // barre et routeur créés par request() ; création rejouée tant qu'elle lève
+  let router = null;
   let status;
   try {
     status = createStatus({
@@ -269,6 +288,7 @@ export function boot(env = {}) {
     console.error('main : panneau #status impossible à créer, site non affiché', error);
     return Promise.resolve();
   }
+  const sky = startSky();
   return request(initialLang(memory.read()));
 }
 

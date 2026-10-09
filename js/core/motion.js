@@ -13,6 +13,16 @@ export function reduced() {
 }
 
 /**
+ * @brief Suit la préférence « mouvement réduit » quand elle change en cours de session.
+ *
+ * @param {(still: boolean) => void} listener rappel de chaque changement, nouvelle valeur
+ */
+export function watchReduced(listener) {
+  if (typeof matchMedia !== 'function') return;
+  matchMedia(REDUCED_QUERY).addEventListener('change', (event) => listener(event.matches));
+}
+
+/**
  * @brief Courbe cubique d'accélération puis de freinage (maquette).
  *
  * @param {number} t progression entre 0 et 1

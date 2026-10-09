@@ -1,6 +1,7 @@
 /*
 Mise en page commune : base, barre (marque, pilule, bascule de langue), rubriques, panneau HUD,
-boutons, liens en ligne, écran de chargement et d'erreur, barre d'onglets du bas.
+boutons, liens en ligne, écran de chargement et d'erreur, barre d'onglets du bas, ciel, flash
+et saut en hyperespace.
 Valeurs : maquette validée (docs/design/prototype/prototype.template.html) et variante Console
 de docs/design/prototype/status-variants.html. Points de rupture : BREAKPOINTS de
 js/core/dom.js.
@@ -443,6 +444,110 @@ body:has(> .status-screen:not([data-state="ready"])) :is(.nav, .tabbar) {
 @media (max-width: 880px) and (hover: hover) {
   .tabbar button:not([aria-current="page"]):hover {
     color: var(--text);
+  }
+}
+
+/* ───── Ciel (js/ui/starfield.js) et flash du saut ───── */
+#sky {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-sky);
+  width: 100%;
+  height: 100%;
+}
+
+.flash {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-flash);
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(circle, rgba(var(--star), 0.22), transparent 60%);
+  transition: opacity var(--dur);
+}
+
+.flash.on {
+  opacity: 1;
+}
+
+.lens {
+  position: absolute;
+}
+
+/* ───── Saut en hyperespace (js/core/router.js) : main devient une scène fixe, courbée par
+#fov ; les deux rubriques y gardent leur place à l'écran (--warp-* mesurées) ───── */
+html[data-warp] main {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-warp);
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  pointer-events: none;
+  filter: url(#fov);
+}
+
+html[data-warp] main > .view.on {
+  --top: var(--bar-h);
+  position: absolute;
+  top: var(--top);
+  left: var(--warp-left);
+  width: var(--warp-width);
+  transform-origin: calc(var(--warp-cx) - var(--warp-left)) calc(var(--warp-cy) - var(--top));
+}
+
+html[data-warp] main > .view.leave {
+  --top: var(--warp-top);
+}
+
+/* Saut avant : la rubrique de départ passe devant, celle d'arrivée grandit depuis le fond. */
+html[data-warp="forward"] .view.leave {
+  z-index: 2;
+  animation: warp-out-forward var(--dur-warp-out) var(--ease-in) both;
+}
+
+html[data-warp="forward"] .view.enter {
+  z-index: 1;
+  animation: warp-in-forward var(--dur-warp-in) var(--ease-out) var(--dur-warp-out) both;
+}
+
+/* Saut arrière : la rubrique de départ recule, celle d'arrivée arrive de devant. */
+html[data-warp="backward"] .view.leave {
+  z-index: 1;
+  animation: warp-out-backward var(--dur-warp-out) var(--ease-in) both;
+}
+
+html[data-warp="backward"] .view.enter {
+  z-index: 2;
+  animation: warp-in-backward var(--dur-warp-in) var(--ease-out) var(--dur-warp-out) both;
+}
+
+@keyframes warp-out-forward {
+  to {
+    opacity: 0;
+    transform: scale(1.7);
+  }
+}
+
+@keyframes warp-in-forward {
+  from {
+    opacity: 0;
+    transform: scale(0.55);
+  }
+}
+
+@keyframes warp-out-backward {
+  to {
+    opacity: 0;
+    transform: scale(0.55);
+  }
+}
+
+@keyframes warp-in-backward {
+  from {
+    opacity: 0;
+    transform: scale(1.7);
   }
 }
 

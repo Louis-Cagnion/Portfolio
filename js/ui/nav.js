@@ -1,10 +1,10 @@
 /*
 Barre du site : pilule des rubriques (bureau), barre d'onglets (880 px et moins), bascule de
-langue et hauteur mesurée (--bar-h). Changement de rubrique simple par location.hash ; le saut
-animé et le retour arrière soigné relèvent du routeur (js/core/router.js, S4).
+langue et hauteur mesurée (--bar-h). Les changements de rubrique relèvent du routeur
+(js/core/router.js), qui signale la rubrique affichée par markCurrent.
 */
 import { el, svg } from '../core/dom.js';
-import { reduced } from '../core/motion.js';
+import { listViews } from '../core/router.js';
 
 /* Icônes de la barre d'onglets (tracés 24 × 24 de la maquette), par rubrique. */
 const ICONS = {
@@ -14,9 +14,6 @@ const ICONS = {
   projects: 'M3 6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM3 9h18',
   contact: 'M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM3 7l9 6 9-6',
 };
-
-/* Touches qui, au clic sur un lien, demandent son ouverture à part (onglet, fenêtre...). */
-const MODIFIER_KEYS = ['ctrlKey', 'metaKey', 'shiftKey', 'altKey'];
 
 /**
  * @brief Tient --bar-h à la hauteur réelle de la barre (58 à 70 px selon la largeur).
@@ -53,43 +50,21 @@ function icon(id) {
 }
 
 /**
- * @brief Rubrique et ancre désignées par un hash (`#skills`, `#dossier` dans #home...).
- *
- * @param {string} hash valeur de location.hash
- *
- * @returns {{ view: HTMLElement, anchor: HTMLElement | null } | null} rubrique qui contient
- *   la cible, ancre si la cible est intérieure ; null si le hash ne désigne aucune rubrique
- */
-function resolve(hash) {
-  let target = null;
-  try {
-    const id = hash.length > 1 ? decodeURIComponent(hash.slice(1)) : '';
-    target = id ? document.getElementById(id) : null;
-  } catch {
-    return null; // séquence %xx invalide : hash inconnu
-  }
-  const view = target?.closest('main > section.view');
-  return view ? { view, anchor: target === view ? null : target } : null;
-}
-
-/**
- * @brief Construit et pilote la barre et les changements de rubrique.
+ * @brief Construit et pilote la barre.
  *
  * Les rubriques et leur ordre viennent des section.view de main (index.html).
  *
  * @param {{ onLanguage: (lang: string) => void }} options rappel d'un bouton de langue
  *
- * @returns {object} { render(ui), pressLanguage(lang), start(), focusCurrent() }
+ * @returns {object} { render(ui), pressLanguage(lang), markCurrent(id) }
  */
 export function createNav({ onLanguage }) {
   const bar = document.querySelector('header.bar');
   const pillNav = bar.querySelector('nav.nav');
   const langGroup = bar.querySelector('.lang');
   const tabbar = document.querySelector('nav.tabbar');
-  const views = [...document.querySelectorAll('main > section.view')];
-  const ids = views.map((view) => view.id);
+  const ids = listViews().map((view) => view.id);
   const pill = el('span', { class: 'pill', 'aria-hidden': 'true' });
-  let current = null;
   let built = false;
 
   trackBarHeight(bar);
@@ -132,35 +107,6 @@ export function createNav({ onLanguage }) {
     built = true;
   };
 
-  const heading = (scope) => scope.querySelector('h1, h2');
-
-  const show = (view, { focus }) => {
-    current = view;
-    views.forEach((each) => each.classList.toggle('on', each === view));
-    goButtons().forEach((button) => {
-      if (button.dataset.go === view.id) button.setAttribute('aria-current', 'page');
-      else button.removeAttribute('aria-current');
-    });
-    placePill();
-    if (focus) heading(view)?.focus({ preventScroll: true });
-  };
-
-  const route = ({ initial = false } = {}) => {
-    const found = resolve(location.hash);
-    if (!found) {
-      history.replaceState(null, '', `#${ids[0]}`);
-      route({ initial });
-      return;
-    }
-    show(found.view, { focus: !initial && !found.anchor });
-    if (!found.anchor) {
-      scrollTo(0, 0);
-      return;
-    }
-    if (!initial) heading(found.anchor)?.focus({ preventScroll: true });
-    found.anchor.scrollIntoView({ behavior: reduced() ? 'auto' : 'smooth' });
-  };
-
   return {
     /**
      * @brief Crée les onglets au premier appel, puis met à jour leurs libellés.
@@ -187,26 +133,16 @@ export function createNav({ onLanguage }) {
         button.setAttribute('aria-pressed', String(button.dataset.lang === lang));
     },
 
-    /** @brief Affiche la rubrique du hash courant et suit les clics [data-go] et le hash. */
-    start() {
-      document.addEventListener('click', (event) => {
-        const trigger = event.target.closest?.('[data-go]');
-        if (!trigger || !ids.includes(trigger.dataset.go)) return;
-        const modified = MODIFIER_KEYS.some((key) => event[key]);
-        // lien ouvert à part (nouvel onglet, fenêtre...) : comportement natif du navigateur
-        if (trigger.matches('a[href]') && (modified || event.button !== 0)) return;
-        event.preventDefault();
-        const hash = `#${trigger.dataset.go}`;
-        if (location.hash === hash) route();
-        else location.hash = hash;
-      });
-      addEventListener('hashchange', () => route());
-      route({ initial: true });
-    },
-
-    /** @brief Donne le focus au titre de la rubrique affichée. */
-    focusCurrent() {
-      if (current) heading(current)?.focus({ preventScroll: true });
+    /**
+     * @brief Marque l'onglet de la rubrique affichée (aria-current) et y glisse la pastille.
+     *
+     * @param {string} id identifiant de rubrique
+     */
+    markCurrent(id) {
+      for (const button of goButtons())
+        if (button.dataset.go === id) button.setAttribute('aria-current', 'page');
+        else button.removeAttribute('aria-current');
+      placePill();
     },
   };
 }
