@@ -1,6 +1,6 @@
 # Récapitulatif du 09/10/2026 (session moniteur, Windows)
 
-S3 revue, corrigée et poussée ; tests rouges de S4 committés (9d9001f) ; réalisation de S4 arrêtée sur demande de Louis juste avant le rapport de l'agent, son travail est resté non committé sur la machine Windows. Le prochain pas est en tête de `todo.md` ; le lanceur headless de la suite navigateur est en annexe.
+S3 puis S4 revues, corrigées et poussées. S5 attend le feu vert de Louis (tête de `todo.md`) ; le lanceur headless de la suite navigateur est en annexe.
 
 ## Journal
 
@@ -10,18 +10,13 @@ S3 revue, corrigée et poussée ; tests rouges de S4 committés (9d9001f) ; réa
 - Décisions de Louis reportées dans `plan.md` et la checklist : cause `ui.errors.unexpected` (« L'intrication quantique a tenté de se faire avec les particules d'une autre ligne temporelle. Réessaie. »), « Mission : … » et « Entraînement continu » ; `langchange` retiré du plan (doublon de `update()`).
 - Point IMPORTANT : tests rouges (tester-opus-high, e2d88c0), puis correction (fixer-opus-high, 32e7b1f) : erreur `unexpected` partout, barre et onglets rejouables sans doublon, codes de `LocaleError` listés une fois dans `data.js`. Vérifié : Node 234/255 (rouges = `skills-layout`), navigateur 511/511, page d'erreur et Réessayer cliqués dans Chrome.
 - S4 : tests rouges (tester-opus-high, 9d9001f) : Node 266, 32 rouges (11 `router.js` absent) ; navigateur 540, 26 rouges, tous dans le groupe « Saut ». Contrat DOM fixé par le moniteur en tête de `tests/browser/warp.js`.
-- S4 réalisée par builder-opus-high, arrêtée avant son rapport ; son dernier message annonçait Node 245/266 et une ligne trop longue en cours de correction.
-
-## Brief de S4 (pour le relancer si le travail Windows est perdu)
-
-- Sources : contrat de `tests/browser/warp.js` et `tests/unit/router.test.mjs` ; ligne S4, Principes et Architecture de `plan.md` (« pas de temps plafonné » = pas de temps `dt` plafonné à 50 ms) ; checklist sections 1, 6, 7, 9 ; `docs/design/README.md` ligne « Transition » ; maquette, ciel (lignes ~489-528) et `show()` (lignes ~533-581).
-- `js/core/router.js` importable sous Node sans DOM ; `jumpDirection` pure.
-- La maquette déplace les rubriques dans `#warpStage`, ce qui fait perdre le focus : focus sur le titre d'arrivée et sections remises dans `main` à la fin du saut.
-- Seconde demande pendant un saut, mouvement réduit suivi en direct, `#dossier` depuis une autre rubrique (non testé, à décider), aucune rubrique invisible après une exception.
+- S4 réalisée par builder-opus-high, arrêtée avant son rapport, puis reprise depuis la copie de travail Windows : Node 245/266, navigateur 540/540, saut filmé en Chrome headless (onglet Claude in Chrome masqué, animation suspendue).
+- Revue S4 (analyst-opus-high) : À CORRIGER, un IMPORTANT (la rubrique quittée descend de 17 à 56 px au départ du saut) et dix MINEURS. Le brief contenait un contresens sur le plafond de `dt`, relevé par l'agent (règle « Brief d'agent » renforcée) ; l'agent a aussi tué 16 processus par motif (règle commune des agents ajoutée).
+- Mineurs (fixer-opus-high), puis tests rouges du départ et d'un contexte 2D absent (tester-opus-high, 0f83b62), puis `display: flow-root` (fixer-sonnet-medium, b36ecca) et `lensMap()` sans contexte 2D (fixer-sonnet-low, aa171d1). Décision de Louis : le modèle d'un agent se choisit au lancement, jamais dans le plan (49e8ba9). Vérifié : Node 245/266, navigateur 551/551, saut filmé à 1280 et 390 px.
 
 ## Annexe : lanceur headless de la suite navigateur
 
-À copier dans un fichier `.mjs` hors du dépôt, serveur statique lancé à la racine (port 5501 sous Windows, 5510 sous Linux) : `node run-browser-suite.mjs http://127.0.0.1:5510/tests/browser/ resultat.json 900`. Résultat attendu une fois S4 finie : 540 réussites, 0 échec.
+À copier dans un fichier `.mjs` hors du dépôt, serveur statique lancé à la racine (port 5501 sous Windows, 5510 sous Linux) : `node run-browser-suite.mjs http://127.0.0.1:5510/tests/browser/ resultat.json 900`. Résultat attendu après S4 : 551 réussites, 0 échec.
 
 ```js
 /*

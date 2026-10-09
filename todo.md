@@ -1,8 +1,10 @@
-> Prochaine tâche : finir S4 (étape 5/8, navigation, saut, ciel). Le `builder-opus-high` a été arrêté juste avant son rapport, son travail est NON COMMITTÉ sur la machine Windows (`js/core/router.js`, `js/ui/starfield.js`, `css/layout.css`, `index.html`, `js/core/motion.js`, `js/main.js`, `js/ui/nav.js`). À faire : vérifier qu'aucune ligne ne dépasse 95 caractères, `node --test` (attendu 245/266, rouges = `skills-layout`), suite navigateur (attendu 540/540, tests rouges du commit 9d9001f), choix de `#dossier` depuis une autre rubrique, puis vérification dans Chrome (saut avant et arrière, bouton retour, mouvement réduit), revue indépendante `analyst-opus-high` (étape 6/8), corrections, commit. Sous Linux ces fichiers sont absents : relancer `builder-opus-high` depuis le commit 9d9001f avec le brief de `RECAP-09-10.md`, ou attendre le retour sur la machine Windows (choix de Louis). Ensuite S5.
+> Prochaine tâche : S5 (étape 5/8, accueil et dossier du pilote), à ne lancer qu'au feu vert de Louis. Avant : tests rouges de S5 s'il en manque (relire la ligne S5 de `docs/design/plan.md` et les tests existants).
 
 ## Refonte spatiale
 
 - Suivre `docs/design/plan.md` (validé le 08/10/2026), étapes 4 à 8, sur la branche `redesign/space`.
+- `tests/browser/warp.js:28` fixe `WARP_MS = 1020` en dur alors que `js/core/router.js` lit la durée du saut dans `--dur-warp-out` et `--dur-warp-in` : faire lire au test les mêmes jetons.
+- Lanceur headless de l'annexe de `RECAP-09-10.md` : port CDP fixe 9333, deux suites lancées en même temps entrent en conflit ; prendre un port libre.
 - Brief S6 : `#sheet` est un `<aside role="dialog">` repris de la maquette (rôle non admis sur `aside`), à passer en `<div>` ou `<section>` ; le voile `.sheet-bg` transitionne en 0,35 s sans jeton correspondant.
 - S10 : `README.md` : le garder en anglais (choix de Louis du 08/10/2026), ajouter la section usage de l'IA et la liste des contributeurs (en dernier), décrire la nouvelle version.
 - Reporter dans `data/*.json` les réponses de Louis : ouverture de « Je me présente », relecture des descriptions provisoires et des textes écrits sans source par S2 (`meta.description`, `ui.errors.timeout`, `json`, `schema` et `langSwitch`, résumés des nouvelles cartes et des planètes de la Piscine).
