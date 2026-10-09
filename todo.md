@@ -1,8 +1,13 @@
-> Prochaine tâche : S5 (étape 5/8, accueil et dossier du pilote), à ne lancer qu'au feu vert de Louis. Avant : tests rouges de S5 s'il en manque (relire la ligne S5 de `docs/design/plan.md` et les tests existants).
+> Prochaine tâche : S5, étape 5/8 (réalisation de `js/sections/home.js` et `css/home.css` par un `builder`) contre les tests rouges de `tests/browser/home.js` et `cue.js` (groupe `accueil`, 48 rouges). Avant le brief : faire trancher par Louis le point ci-dessous sur `index.html`.
 
 ## Refonte spatiale
 
 - Suivre `docs/design/plan.md` (validé le 08/10/2026), étapes 4 à 8, sur la branche `redesign/space`.
+- S5, tests rouges : rejouer `node --test` et la suite navigateur complète (attendu : Node 245/266, navigateur 556 réussites et 48 rouges, tous du groupe `accueil`), mesures faites seulement par l'agent tester.
+- S5, à trancher par Louis : `plan.md:121` ne liste que `home.js` et `css/home.css`, or les tests exigent `css/home.css` chargé, ce qui demande un `<link>` dans `index.html` (`index.html:13-14`) ou une injection depuis `home.js`.
+- S5, brief de réalisation : les tests suivent les textes de `data/` (pas ceux de la maquette), le repère affiche `home.dossier.kicker` (aucune clé propre) et le mouvement réduit coupe l'animation `cue` (`docs/design-checklist.md:298`).
+- S5, vérification réelle dans Chrome (téléphones compris) : `.gone` du repère avec la marge `rootMargin` de -15 % (non mesurable dans l'iframe du banc), Entrée sur le repère, défilement fluide.
+- Hygiène des tests, un `fixer` : `tests/browser/warp.js` dépasse 750 lignes (784), sortir le groupe « Contexte 2D indisponible » (`runWithout2d` et ses aides) dans `tests/browser/no2d.js` ; en-tête de `tests/browser/home.js` de 25 lignes, à ramener à 15 (détail déplacé vers les fonctions ou une note). Suite navigateur inchangée ensuite (556 réussites, 48 rouges du groupe `accueil` tant que S5 n'est pas réalisée).
 - Brief S6 : `#sheet` est un `<aside role="dialog">` repris de la maquette (rôle non admis sur `aside`), à passer en `<div>` ou `<section>` ; le voile `.sheet-bg` transitionne en 0,35 s sans jeton correspondant.
 - S10 : `README.md` : le garder en anglais (choix de Louis du 08/10/2026), ajouter la section usage de l'IA et la liste des contributeurs (en dernier), décrire la nouvelle version.
 - Reporter dans `data/*.json` les réponses de Louis : ouverture de « Je me présente », relecture des descriptions provisoires et des textes écrits sans source par S2 (`meta.description`, `ui.errors.timeout`, `json`, `schema` et `langSwitch`, résumés des nouvelles cartes et des planètes de la Piscine).
