@@ -36,7 +36,7 @@ import { expectEqual, recordExceptions, skip, test, useReport } from './runner.j
 import { runStates } from './states.js';
 import { langAttrProblems, noForeignText, runLanguage, runLanguageEdges } from './language.js';
 import { runRich } from './rich.js';
-import { runReducedMotion, runWarp } from './warp.js';
+import { runReducedMotion, runWarp, runWithout2d } from './warp.js';
 
 const WIDTHS = [320, 390, 430, 768, 1280];
 // Maquette : @media (max-width: 880px) masque la pilule et affiche les onglets.
@@ -392,6 +392,7 @@ async function main() {
     if (groups.includes('saut')) {
       for (const width of warpWidths) await scenario(`saut ${width}`, () => runWarp(width));
       await scenario('mouvement réduit', () => runReducedMotion(mainWidth));
+      await scenario('saut sans contexte 2D', () => runWithout2d(mainWidth));
     }
     if (groups.includes('langue')) {
       for (const width of widths) await scenario(`langue ${width}`, () => runLanguage(width));

@@ -277,7 +277,7 @@ function withoutDescription() {
 }
 
 /** Garde les arguments de chaque appel à console.error du cadre dans `site.consoleErrors`. */
-function captureConsoleErrors(site) {
+export function captureConsoleErrors(site) {
   const original = site.win.console.error;
   site.consoleErrors = [];
   site.win.console.error = (...args) => {

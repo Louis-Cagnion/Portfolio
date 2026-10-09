@@ -20,10 +20,12 @@ import {
   openSite,
   settle,
   shownNavs,
+  statusState,
   waitFor,
   waitStatus,
 } from './harness.js';
 import { expectEqual, skip, test } from './runner.js';
+import { captureConsoleErrors } from './states.js';
 
 const WARP_MS = 1020; // durée totale du saut (checklist, section 1)
 const WARP_MARGIN_MS = 500; // marge du banc : sondage toutes les 25 ms, minuteurs du cadre
@@ -36,6 +38,9 @@ const ARRIVAL_MS = 6000; // attente d'une arrivée, la durée mesurée est jugé
 const SAMPLES = 6;
 const SAMPLE_GAP_MS = 100;
 const RESIZE_FRAMES_MAX = 2; // une image redessinée, un événement resize double toléré
+const SHIFT_MAX_PX = 1; // écart toléré entre la position au repos et celle au départ du saut
+const IDENTITY = new Set(['none', 'matrix(1, 0, 0, 1, 0, 0)']);
+const LOAD_MS = 10000; // fin du chargement : #status quitte data-state="loading"
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const root = (site) => site.doc.documentElement;
@@ -346,6 +351,50 @@ async function pendingSamples(site) {
   return counts;
 }
 
+/**
+ * Saut par la barre vers `id` : le premier enfant de la rubrique quittée garde sa position à
+ * l'écran (SHIFT_MAX_PX près) entre juste avant le clic et le départ, lu dans le rappel de
+ * l'observateur de html[data-warp] (avant toute image peinte, animation à t = 0) ; attend
+ * ensuite l'arrivée.
+ */
+async function departureProblems(run, id) {
+  const { site } = run;
+  const view = site.doc.getElementById(currentId(site));
+  const child = view?.firstElementChild;
+  if (!child) return [`#${currentId(site)} : aucun premier enfant à suivre`];
+  const before = child.getBoundingClientRect();
+  let start = null;
+  const observer = new site.win.MutationObserver(() => {
+    if (start || !root(site).hasAttribute('data-warp')) return;
+    const moved = [view, child]
+      .map((el) => [el, site.win.getComputedStyle(el).transform])
+      .filter(([, transform]) => !IDENTITY.has(transform));
+    start = { rect: child.getBoundingClientRect(), moved };
+  });
+  observer.observe(root(site), { attributes: true, attributeFilter: ['data-warp'] });
+  try {
+    clickGo(site, id);
+    await waitFor(() => start, WARP_MS, `départ du saut #${view.id} vers #${id}`);
+  } finally {
+    observer.disconnect();
+  }
+  const problems = start.moved.map(
+    ([el, transform]) => `mesure faussée : ${describe(el)} déjà transformé (${transform})`,
+  );
+  for (const side of ['top', 'left']) {
+    const shift = start.rect[side] - before[side];
+    if (Math.abs(shift) > SHIFT_MAX_PX)
+      problems.push(
+        `${describe(child)} : ${side} ${start.rect[side].toFixed(1)} px au départ du saut ` +
+          `vers #${id} au lieu de ${before[side].toFixed(1)} px (écart ${shift.toFixed(1)} ` +
+          `px, ${SHIFT_MAX_PX} px tolérés)`,
+      );
+  }
+  await arrival(site, id);
+  await settle(site, id);
+  return problems;
+}
+
 // ---------- Scénarios ----------
 
 /**
@@ -398,6 +447,18 @@ const WARP_CASES = {
   exceptions: 'aucune exception non rattrapée',
 };
 
+// Départs depuis l'accueil et depuis une autre rubrique, sauts avant et arrière.
+const DEPARTURE_CASES = [
+  ['home', 'journey'],
+  ['journey', 'skills'],
+  ['skills', 'home'],
+  ['contact', 'journey'],
+].map(([from, to]) => ({
+  from,
+  to,
+  name: `départ du saut #${from} vers #${to} : premier enfant de #${from} immobile`,
+}));
+
 /** Une demande pendant le saut vers `first`, la seconde vers `second` au bout de 300 ms. */
 async function interruptedProblems(run, first, second) {
   const { site, log, order } = run;
@@ -435,7 +496,11 @@ export async function runWarp(width) {
   try {
     run = await openRun(width);
   } catch (error) {
-    skip(ctx, Object.values(WARP_CASES), `ouverture du site impossible (${error.message})`);
+    skip(
+      ctx,
+      [...Object.values(WARP_CASES), ...DEPARTURE_CASES.map((departure) => departure.name)],
+      `ouverture du site impossible (${error.message})`,
+    );
     return;
   }
   const { site, log } = run;
@@ -517,6 +582,11 @@ export async function runWarp(width) {
         ...animated.map((problem) => `mouvement rétabli : ${problem}`),
       ];
     });
+    for (const { from, to, name } of DEPARTURE_CASES)
+      await test(at(from), name, async () => {
+        await reach(run, from);
+        return departureProblems(run, to);
+      });
     await test(ctx, exceptions, () => uncaught(site));
   } finally {
     run.motion.reduce = false;
@@ -601,6 +671,86 @@ export async function runReducedMotion(width) {
       return problems;
     });
     await test(ctx, exceptions, () => uncaught(site));
+  } finally {
+    site.close();
+  }
+}
+
+// ---------- Contexte 2D indisponible ----------
+/* Contrat : getContext('2d') rend null dans le cadre dès avant l'amorçage ; le site s'affiche
+et suit le hash, seul le décor est perdu, la courbure signalée par un seul console.error. */
+
+const NO_2D_CASES = [
+  'contexte 2D indisponible : site affiché (pas d\'écran d\'erreur, une .view.on)',
+  'contexte 2D indisponible : navigation par hash (#skills)',
+  'contexte 2D indisponible : un seul console.error nomme la courbure et le 2D',
+];
+const CURVE_CAUSE = [/#fovMap|courbure/i, /2D/i]; // texte exact libre, ces deux mentions
+
+/** Refuse le contexte 2D à tout canvas du cadre : getContext('2d') rend null. */
+function refuse2d(site) {
+  const proto = site.win.HTMLCanvasElement.prototype;
+  const original = proto.getContext;
+  proto.getContext = function getContext(type, ...rest) {
+    if (String(type).toLowerCase() === '2d') return null;
+    return original.call(this, type, ...rest);
+  };
+}
+
+/** Texte d'un appel à console.error : chaînes et messages des erreurs passées. */
+const consoleText = (args) => args.map((arg) => String(arg?.message ?? arg)).join(' ');
+
+/** Groupe « Saut », contexte 2D refusé avant l'amorçage, à la largeur `width`. */
+export async function runWithout2d(width) {
+  const ctx = { group: 'Saut', width, lang: 'fr', section: null };
+  const [shown, hashNav, logged] = NO_2D_CASES;
+  let site;
+  try {
+    site = await openSite({
+      width,
+      prepare: (frame) => {
+        captureConsoleErrors(frame);
+        refuse2d(frame);
+      },
+    });
+  } catch (error) {
+    skip(ctx, NO_2D_CASES, `ouverture du site impossible (${error.message})`);
+    return;
+  }
+  const errors = () => site.consoleErrors.map(consoleText);
+  try {
+    await test({ ...ctx, section: 'home' }, shown, async () => {
+      await waitFor(
+        () => site.doc.getElementById('status')?.dataset.state !== 'loading',
+        LOAD_MS,
+        'fin du chargement',
+        () => statusState(site),
+      );
+      const problems = [];
+      const state = site.doc.getElementById('status')?.dataset.state;
+      if (state !== 'ready')
+        problems.push(
+          `#status[data-state="${state}"] au lieu de "ready" ; ` +
+            `console.error : [${errors().join(' | ')}]`,
+        );
+      const views = activeViews(site).map((view) => `#${view.id}`);
+      if (views.length !== 1) problems.push(`.view.on : [${views}] au lieu d'une rubrique`);
+      return [...problems, ...uncaught(site)];
+    });
+    await test({ ...ctx, section: 'skills' }, hashNav, async () => {
+      site.win.location.hash = '#skills';
+      await arrival(site, 'skills');
+      await settle(site, 'skills');
+      return uncaught(site);
+    });
+    await test(ctx, logged, () => {
+      const named = errors().filter((text) => CURVE_CAUSE.every((cause) => cause.test(text)));
+      if (named.length === 1) return [];
+      return [
+        `${named.length} console.error nomment la courbure et le 2D au lieu d'un : ` +
+          `[${errors().join(' | ')}]`,
+      ];
+    });
   } finally {
     site.close();
   }
