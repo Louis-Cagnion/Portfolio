@@ -129,13 +129,15 @@ Ordre imposé par les dépendances : socle avant rubriques, fiche projet avant c
 
 Session moniteur : Opus, effort high. Elle découpe les briefs, relit chaque diff, joue les tests complets, fait les vérifications dans Chrome, présente le résultat à Louis et ne corrige rien elle-même. Un agent à la fois, sur la branche `redesign/space` (pas de worktree : un seul acteur écrit à la fois).
 
-| Étape | Agent |
+Le modèle et l'effort de chaque agent se choisissent au moment de le lancer, d'après la tâche et le contexte acquis ; ce plan n'en fixe aucun.
+
+| Étape | Rôle de l'agent |
 |---|---|
-| 4. Tests | `tester-sonnet-high` (données et modules purs), puis `tester-opus-high` (page navigateur) |
-| 5. Réalisation | `builder-sonnet-medium` : S1, S5, S10 ; `builder-sonnet-high` : S2, S9 ; `builder-opus-high` : S3, S4, S6, S7, S8 |
-| 6. Vérification | `analyst-sonnet-high` pour les sous-tâches Sonnet, `analyst-opus-high` pour les sous-tâches Opus |
-| 7. Correction | un `fixer` par problème, au niveau de la sous-tâche ; une relance au même niveau, puis niveau supérieur |
-| 8. Finalisation | `tester-opus-high` (suite complète), puis `crashtester-opus-high` (cas limites du site entier) |
+| 4. Tests | `tester` |
+| 5. Réalisation | `builder` |
+| 6. Vérification | `analyst` |
+| 7. Correction | un `fixer` par problème ; en cas d'échec, une relance au même niveau, puis au niveau supérieur |
+| 8. Finalisation | `tester` (suite complète), puis `crashtester` (cas limites du site entier) |
 
 ## Décisions de Louis
 
