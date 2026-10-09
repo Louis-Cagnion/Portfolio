@@ -13,18 +13,19 @@ S3 puis S4 revues, corrigées et poussées. S5 attend le feu vert de Louis (têt
 - S4 réalisée par builder-opus-high, arrêtée avant son rapport, puis reprise depuis la copie de travail Windows : Node 245/266, navigateur 540/540, saut filmé en Chrome headless (onglet Claude in Chrome masqué, animation suspendue).
 - Revue S4 (analyst-opus-high) : À CORRIGER, un IMPORTANT (la rubrique quittée descend de 17 à 56 px au départ du saut) et dix MINEURS. Le brief contenait un contresens sur le plafond de `dt`, relevé par l'agent (règle « Brief d'agent » renforcée) ; l'agent a aussi tué 16 processus par motif (règle commune des agents ajoutée).
 - Mineurs (fixer-opus-high), puis tests rouges du départ et d'un contexte 2D absent (tester-opus-high, 0f83b62), puis `display: flow-root` (fixer-sonnet-medium, b36ecca) et `lensMap()` sans contexte 2D (fixer-sonnet-low, aa171d1). Décision de Louis : le modèle d'un agent se choisit au lancement, jamais dans le plan (49e8ba9). Vérifié : Node 245/266, navigateur 551/551, saut filmé à 1280 et 390 px.
+- Fin de journée : `tests/browser/warp.js` lit la durée du saut dans les jetons, comme `router.js`, et un nouveau cas vérifie leur somme contre les 1000 ms de la checklist (rouge seul, message explicite, avec `--dur-warp-in: 0.6s`). Le lanceur headless prend le port choisi par Chrome. Vérifié : Node 245/266, navigateur 553/553.
 
 ## Annexe : lanceur headless de la suite navigateur
 
-À copier dans un fichier `.mjs` hors du dépôt, serveur statique lancé à la racine (port 5501 sous Windows, 5510 sous Linux) : `node run-browser-suite.mjs http://127.0.0.1:5510/tests/browser/ resultat.json 900`. Résultat attendu après S4 : 551 réussites, 0 échec.
+À copier dans un fichier `.mjs` hors du dépôt, serveur statique lancé à la racine (port 5501 sous Windows, 5510 sous Linux) : `node run-browser-suite.mjs http://127.0.0.1:5510/tests/browser/ resultat.json 900`. Résultat attendu : 553 réussites, 0 échec, en 4 min 30 environ. `?groups=saut&widths=1280` restreint la suite. Pour lancer deux suites à la fois, donner à chacune son serveur : deux Chrome sur un même `python -m http.server` ont laissé un chargement de module en suspens (2 essais sur 2), un serveur chacun a réussi 3 fois sur 3.
 
 ```js
 /*
-Joue tests/browser/ dans un Chrome headless (CDP) et écrit le bilan.
+Joue tests/browser/ dans un Chrome headless (CDP, port choisi par Chrome), écrit le bilan.
 Usage : node run-browser-suite.mjs <url> <fichier-json> [délai max en s]
 */
 import { spawn } from 'node:child_process';
-import { mkdtempSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
@@ -36,30 +37,37 @@ if (!url || !outFile) {
 const CHROME = process.platform === 'win32'
   ? 'C:/Program Files/Google/Chrome/Application/chrome.exe'
   : '/usr/bin/google-chrome';
-const PORT = 9333;
 const profile = mkdtempSync(join(tmpdir(), 'suite-chrome-'));
+const portFile = join(profile, 'DevToolsActivePort');
 const chrome = spawn(CHROME, [
   '--headless=new',
-  `--remote-debugging-port=${PORT}`,
+  '--remote-debugging-port=0',
   `--user-data-dir=${profile}`,
   '--window-size=1400,1000',
   '--no-first-run',
   'about:blank',
 ], { stdio: 'ignore' });
+chrome.on('error', (error) => {
+  console.error(`Chrome non lancé (${CHROME}) : ${error.message}`);
+  process.exit(2);
+});
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const deadline = Date.now() + Number(maxSeconds) * 1000;
 
+/* Port écrit par Chrome en première ligne de DevToolsActivePort (--remote-debugging-port=0),
+   ce qui permet de lancer plusieurs suites en même temps. */
 async function pageSocketUrl() {
   for (let i = 0; i < 50; i++) {
     try {
-      const list = await (await fetch(`http://127.0.0.1:${PORT}/json/list`)).json();
+      const port = readFileSync(portFile, 'utf8').split('\n')[0].trim();
+      const list = await (await fetch(`http://127.0.0.1:${port}/json/list`)).json();
       const page = list.find((target) => target.type === 'page');
       if (page) return page.webSocketDebuggerUrl;
     } catch { /* Chrome pas encore prêt */ }
     await sleep(200);
   }
-  throw new Error(`Chrome injoignable sur le port ${PORT}`);
+  throw new Error(`Chrome injoignable en 10 s : ${portFile} absent ou port fermé`);
 }
 
 let nextId = 0;
@@ -104,5 +112,8 @@ try {
   ws.close();
   chrome.kill();
 }
-console.log(status, results ? `passed=${results.passed} failed=${results.failed}` : 'aucun résultat');
+console.log(
+  status,
+  results ? `passed=${results.passed} failed=${results.failed}` : 'aucun résultat',
+);
 ```

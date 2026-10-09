@@ -27,11 +27,13 @@ import {
 import { expectEqual, skip, test } from './runner.js';
 import { captureConsoleErrors } from './states.js';
 
-const WARP_MS = 1020; // durée totale du saut (checklist, section 1)
+const BEND_MS = 1000; // courbure, --dur-warp-out + --dur-warp-in (checklist, section 1)
+const LAST_FRAME_MS = 20; // saut complet en 1020 ms (checklist, section 1)
+const CSS_TIME = /^(\d*\.?\d+)(m?s)$/;
 const WARP_MARGIN_MS = 500; // marge du banc : sondage toutes les 25 ms, minuteurs du cadre
 const FOV_MAX = 0.3;
 const EPSILON = 1e-6;
-const MID_MS = 450; // lecture au milieu de la courbure de 1000 ms
+const MID_SHARE = 0.45; // lecture au milieu de la courbure
 const SECOND_CLICK_MS = 300; // seconde demande, saut encore en cours
 const IMMEDIATE_MS = 250; // changement « immédiat » : tâche hashchange et sondage compris
 const ARRIVAL_MS = 6000; // attente d'une arrivée, la durée mesurée est jugée à part
@@ -178,6 +180,27 @@ function stillProblems(entries, label) {
 
 // ---------- État de la page ----------
 
+/**
+ * Durées du saut lues dans les jetons de html, comme js/core/router.js : { bend, total } en
+ * ms et `problems` ; jeton illisible : signalé, remplacé par les durées de la checklist.
+ */
+function warpTiming(site) {
+  const style = site.win.getComputedStyle(root(site));
+  const problems = [];
+  const tokenMs = (name) => {
+    const value = style.getPropertyValue(name).trim();
+    const match = CSS_TIME.exec(value);
+    const ms = match ? Number(match[1]) * (match[2] === 's' ? 1000 : 1) : NaN;
+    if (!(ms > 0)) problems.push(`jeton ${name} vaut "${value}", durée > 0 attendue`);
+    return ms;
+  };
+  const bend = tokenMs('--dur-warp-out') + tokenMs('--dur-warp-in');
+  if (problems.length) return { bend: BEND_MS, total: BEND_MS + LAST_FRAME_MS, problems };
+  if (Math.abs(bend - BEND_MS) > EPSILON)
+    problems.push(`--dur-warp-out + --dur-warp-in : ${bend} ms au lieu de ${BEND_MS} ms`);
+  return { bend, total: bend + LAST_FRAME_MS, problems };
+}
+
 /** Problèmes du ciel : canvas#sky aria-hidden dans body, hors de main. */
 function skyProblems(site) {
   const sky = site.doc.getElementById('sky');
@@ -288,13 +311,13 @@ async function reach(run, id) {
  * de html[data-warp] au milieu et tout du long, courbure, durée, état d'arrivée.
  */
 async function jumpProblems(run, id, trigger) {
-  const { site, log, order } = run;
+  const { site, log, order, warp } = run;
   const from = currentId(site);
   const expected = direction(order, from, id);
   const mark = log.length;
   const start = performance.now();
   trigger();
-  await sleep(MID_MS);
+  await sleep(warp.bend * MID_SHARE);
   const midWarp = root(site).getAttribute('data-warp');
   const midScale = fovDisp(site)?.getAttribute('scale') ?? null;
   await arrival(site, id);
@@ -309,10 +332,10 @@ async function jumpProblems(run, id, trigger) {
   if (wrong.length)
     problems.push(`html[data-warp] a pris ${wrong.join(', ')} (saut ${expected})`);
   const end = lastWarpEnd(entries);
-  if (end && end.at - start > WARP_MS + WARP_MARGIN_MS)
+  if (end && end.at - start > warp.total + WARP_MARGIN_MS)
     problems.push(
       `saut fini en ${Math.round(end.at - start)} ms ` +
-        `(${WARP_MS} ms, marge ${WARP_MARGIN_MS} ms)`,
+        `(${warp.total} ms, marge ${WARP_MARGIN_MS} ms)`,
     );
   if (!(Number(midScale) > EPSILON))
     problems.push(`#fovDisp[scale] vaut ${JSON.stringify(midScale)} au milieu du saut (> 0)`);
@@ -334,7 +357,7 @@ async function immediateProblems(run, id, trigger) {
     () => `vues [${activeViews(site).map((v) => v.id)}], hash "${site.win.location.hash}"`,
   );
   await settle(site, id);
-  await sleep(WARP_MS + WARP_MARGIN_MS - IMMEDIATE_MS); // un saut tardif serait vu
+  await sleep(run.warp.total + WARP_MARGIN_MS - IMMEDIATE_MS); // un saut tardif serait vu
   return [
     ...stillProblems(log.slice(mark), `vers #${id}`),
     ...arrivalProblems(site, id, order),
@@ -374,7 +397,7 @@ async function departureProblems(run, id) {
   observer.observe(root(site), { attributes: true, attributeFilter: ['data-warp'] });
   try {
     clickGo(site, id);
-    await waitFor(() => start, WARP_MS, `départ du saut #${view.id} vers #${id}`);
+    await waitFor(() => start, run.warp.total, `départ du saut #${view.id} vers #${id}`);
   } finally {
     observer.disconnect();
   }
@@ -399,7 +422,7 @@ async function departureProblems(run, id) {
 
 /**
  * Ouvre le site sur `hash` (accueil par défaut), mouvement réduit selon `reduce`, bouchons
- * posés ; rend { site, log, motion, order } une fois la première rubrique posée.
+ * posés ; rend { site, log, motion, order, warp } une fois la première rubrique posée.
  */
 async function openRun(width, { reduce = false, hash } = {}) {
   const run = { motion: { reduce } };
@@ -420,6 +443,7 @@ async function openRun(width, { reduce = false, hash } = {}) {
     throw error;
   }
   run.order = [...run.site.doc.querySelectorAll('main > section.view')].map((v) => v.id);
+  run.warp = warpTiming(run.site);
   return run;
 }
 
@@ -434,6 +458,7 @@ function firstDisplayProblems(run, id) {
 
 const WARP_CASES = {
   first: 'premier affichage : ciel et courbure en place, sans saut',
+  tokens: 'durées du saut : --dur-warp-out + --dur-warp-in = 1000 ms (checklist)',
   forward: 'saut avant par clic : #home vers #contact',
   back: 'retour arrière (history.back) : #contact vers #home, saut arrière',
   backward: 'saut arrière par clic : #skills vers #journey',
@@ -479,7 +504,7 @@ async function interruptedProblems(run, first, second) {
         `${JSON.stringify(firstWarp)} au lieu de "${expected}" : saut vers #${first} absent`,
     );
   const end = lastWarpEnd(entries);
-  if (end && end.at - start > WARP_MS + WARP_MARGIN_MS)
+  if (end && end.at - start > run.warp.total + WARP_MARGIN_MS)
     problems.push(`saut fini ${Math.round(end.at - start)} ms après la seconde demande`);
   await settle(site, second);
   return [
@@ -507,6 +532,7 @@ export async function runWarp(width) {
   const at = (section) => ({ ...ctx, section });
   const {
     first,
+    tokens,
     forward,
     back,
     backward,
@@ -521,6 +547,7 @@ export async function runWarp(width) {
   } = WARP_CASES;
   try {
     await test(at('home'), first, () => firstDisplayProblems(run, 'home'));
+    await test(ctx, tokens, () => run.warp.problems);
     await test(at('contact'), forward, async () => {
       await reach(run, 'home');
       return jumpProblems(run, 'contact', () => clickGo(site, 'contact'));
@@ -541,7 +568,7 @@ export async function runWarp(width) {
       await reach(run, 'home');
       const mark = log.length;
       site.win.location.hash = '#dossier';
-      await sleep(WARP_MS + WARP_MARGIN_MS);
+      await sleep(run.warp.total + WARP_MARGIN_MS);
       return [
         ...stillProblems(log.slice(mark), '#dossier'),
         ...arrivalProblems(site, 'home', run.order, { hash: '#dossier', focus: false }),
@@ -551,7 +578,7 @@ export async function runWarp(width) {
       await reach(run, 'journey');
       const mark = log.length;
       clickGo(site, 'journey');
-      await sleep(WARP_MS + WARP_MARGIN_MS);
+      await sleep(run.warp.total + WARP_MARGIN_MS);
       return [
         ...stillProblems(log.slice(mark), '#journey recliqué'),
         ...arrivalProblems(site, 'journey', run.order, { focus: false }),
