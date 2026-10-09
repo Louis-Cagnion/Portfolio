@@ -59,7 +59,7 @@ const direction = (order, from, to) => (
  * Bouchonne prefers-reduced-motion dans le cadre : réponse lue dans `motion.reduce` à chaque
  * appel ; `motion.set(reduce)` change le réglage et prévient les listes déjà rendues.
  */
-function stubMotion(site, motion) {
+export function stubMotion(site, motion) {
   const { win } = site;
   const original = win.matchMedia.bind(win);
   const lists = [];

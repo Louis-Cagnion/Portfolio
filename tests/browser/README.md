@@ -6,7 +6,7 @@ Suite sans dépendance qui charge le site dans des iframes de 320, 390, 430, 768
 
 1. Servir la racine du dépôt : Live Server (port 5500) ou `python -m http.server 5501`.
 2. Ouvrir `http://127.0.0.1:5501/tests/browser/` dans Chrome (ou le port 5500), onglet au premier plan jusqu'à la fin (plusieurs minutes une fois le site en place).
-3. Relance ciblée, paramètres facultatifs : `?widths=320,1280` et `?groups=contrat,setrich,etats,navigation,saut,langue,matrice`.
+3. Relance ciblée, paramètres facultatifs : `?widths=320,1280` et `?groups=contrat,setrich,etats,navigation,saut,langue,matrice,accueil`.
 
 ## Lire
 

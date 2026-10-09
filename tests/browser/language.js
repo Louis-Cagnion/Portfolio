@@ -67,7 +67,7 @@ export async function langAttrProblems(site, lang) {
 }
 
 /** Clique sur le bouton de langue `lang`, attend html[lang] et le titre de cette langue. */
-async function switchTo(site, lang) {
+export async function switchTo(site, lang) {
   const button = site.doc.querySelector(`header.bar .lang button[data-lang="${lang}"]`);
   if (!button) throw new Error(`header.bar .lang button[data-lang="${lang}"] absent`);
   const { data } = await languageTexts();

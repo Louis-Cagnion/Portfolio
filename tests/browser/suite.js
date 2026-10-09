@@ -36,6 +36,8 @@ import { expectEqual, recordExceptions, skip, test, useReport } from './runner.j
 import { runStates } from './states.js';
 import { langAttrProblems, noForeignText, runLanguage, runLanguageEdges } from './language.js';
 import { runRich } from './rich.js';
+import { runCue } from './cue.js';
+import { runHome } from './home.js';
 import { runReducedMotion, runWarp, runWithout2d } from './warp.js';
 
 const WIDTHS = [320, 390, 430, 768, 1280];
@@ -43,7 +45,16 @@ const WIDTHS = [320, 390, 430, 768, 1280];
 const TABBAR_MAX_WIDTH = 880;
 const MAIN_WIDTH = 390; // largeur des cas qui ne dépendent pas de la mise en page
 const SCENARIO_MAX_MS = 300000; // garde-fou d'un scénario entier
-const GROUPS = ['contrat', 'setrich', 'etats', 'navigation', 'saut', 'langue', 'matrice'];
+const GROUPS = [
+  'contrat',
+  'setrich',
+  'etats',
+  'navigation',
+  'saut',
+  'langue',
+  'matrice',
+  'accueil',
+];
 const PILL_WIDTH = 1280; // saut rejoué aussi par la pilule
 
 const params = new URLSearchParams(globalThis.location?.search ?? '');
@@ -402,6 +413,11 @@ async function main() {
       for (const width of widths)
         for (const lang of ['fr', 'en'])
           await scenario(`matrice ${width} ${lang}`, () => runMatrix(width, lang));
+    if (groups.includes('accueil')) {
+      await scenario('accueil', () => runHome(widths, mainWidth));
+      await scenario('repère', () => runCue(mainWidth, false));
+      await scenario('repère (mouvement réduit)', () => runCue(mainWidth, true));
+    }
   } catch (error) {
     skip({ group: 'Suite', section: null }, ['suite'], `erreur interne : ${errorText(error)}`);
   } finally {
