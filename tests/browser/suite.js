@@ -36,13 +36,15 @@ import { expectEqual, recordExceptions, skip, test, useReport } from './runner.j
 import { runStates } from './states.js';
 import { langAttrProblems, noForeignText, runLanguage, runLanguageEdges } from './language.js';
 import { runRich } from './rich.js';
+import { runReducedMotion, runWarp } from './warp.js';
 
 const WIDTHS = [320, 390, 430, 768, 1280];
 // Maquette : @media (max-width: 880px) masque la pilule et affiche les onglets.
 const TABBAR_MAX_WIDTH = 880;
 const MAIN_WIDTH = 390; // largeur des cas qui ne dépendent pas de la mise en page
 const SCENARIO_MAX_MS = 300000; // garde-fou d'un scénario entier
-const GROUPS = ['contrat', 'setrich', 'etats', 'navigation', 'langue', 'matrice'];
+const GROUPS = ['contrat', 'setrich', 'etats', 'navigation', 'saut', 'langue', 'matrice'];
+const PILL_WIDTH = 1280; // saut rejoué aussi par la pilule
 
 const params = new URLSearchParams(globalThis.location?.search ?? '');
 const listParam = (name, all, parse = (v) => v) => {
@@ -55,6 +57,7 @@ const nonEmpty = (list, all) => (list.length ? list : all); // paramètre invali
 const widths = nonEmpty(listParam('widths', WIDTHS, Number), WIDTHS);
 const groups = nonEmpty(listParam('groups', GROUPS), GROUPS);
 const mainWidth = widths.includes(MAIN_WIDTH) ? MAIN_WIDTH : widths[0];
+const warpWidths = [...new Set([mainWidth, PILL_WIDTH])].filter((w) => widths.includes(w));
 const navKind = (width) => (width > TABBAR_MAX_WIDTH ? 'pilule' : 'onglets');
 const uncaught = (site) => site.uncaught.map((e) => `exception non rattrapée : ${e}`);
 
@@ -386,6 +389,10 @@ async function main() {
     if (groups.includes('navigation'))
       for (const width of widths)
         await scenario(`navigation ${width}`, () => runNavigation(width));
+    if (groups.includes('saut')) {
+      for (const width of warpWidths) await scenario(`saut ${width}`, () => runWarp(width));
+      await scenario('mouvement réduit', () => runReducedMotion(mainWidth));
+    }
     if (groups.includes('langue')) {
       for (const width of widths) await scenario(`langue ${width}`, () => runLanguage(width));
       await scenario('langue (limites)', () => runLanguageEdges(mainWidth));
