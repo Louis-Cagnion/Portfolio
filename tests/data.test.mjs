@@ -20,9 +20,8 @@ import { assertLinear, importModule, ROOT, ROOT_URL } from './helpers.mjs';
 const LANGS = ['fr', 'en'];
 const cache = new Map();
 const locale = (lang) => {
-  if (!cache.has(lang)) {
+  if (!cache.has(lang))
     cache.set(lang, JSON.parse(readFileSync(new URL(`data/${lang}.json`, ROOT_URL), 'utf8')));
-  }
   return cache.get(lang);
 };
 
@@ -35,9 +34,8 @@ const typeOf = (v) => (v === null ? 'null' : Array.isArray(v) ? 'array' : typeof
 function walk(value, path = '', key = null, out = []) {
   if (path) out.push({ path, key, value });
   if (Array.isArray(value)) value.forEach((v, i) => walk(v, join(path, i), key, out));
-  else if (value && typeof value === 'object') {
+  else if (value && typeof value === 'object')
     for (const [k, v] of Object.entries(value)) walk(v, join(path, k), k, out);
-  }
   return out;
 }
 const get = (root, path) => path.split('.').reduce((node, k) => node?.[k], root);
@@ -45,8 +43,10 @@ const get = (root, path) => path.split('.').reduce((node, k) => node?.[k], root)
 /** Liste non vide à `path`, sinon échec qui nomme le fichier et le chemin attendu. */
 function list(lang, path) {
   const value = get(locale(lang), path);
-  assert.ok(Array.isArray(value) && value.length > 0,
-    `data/${lang}.json : ${path} absent ou vide (schéma du plan attendu)`);
+  assert.ok(
+    Array.isArray(value) && value.length > 0,
+    `data/${lang}.json : ${path} absent ou vide (schéma du plan attendu)`,
+  );
   return value;
 }
 
@@ -79,9 +79,8 @@ function compareLocales(a, b) {
       values.push(`${path} : ${va} (fr), ${vb} (en)`);
     }
   }
-  for (const path of nodesB.keys()) {
+  for (const path of nodesB.keys())
     if (!nodesA.has(path)) structure.push(`${path} : absent en fr, présent en en`);
-  }
   return { structure, values };
 }
 const gaps = (a, b) => {
@@ -96,7 +95,9 @@ const blankStrings = (tree) => walk(tree)
 const isHtmlField = (path) => /(^|\.)html$/.test(path) || /\.paragraphs\[\d+\]$/.test(path) ||
   /\.blocks\[\d+\]\.items\[\d+\]$/.test(path);
 const ALLOWED_TAG = [
-  /<(?:strong|em)>/y, /<\/(?:strong|em|a)>/y, /<a href="(?:https:\/\/|mailto:)[^"\s<>]+">/y,
+  /<(?:strong|em)>/y,
+  /<\/(?:strong|em|a)>/y,
+  /<a href="(?:https:\/\/|mailto:)[^"\s<>]+">/y,
 ];
 
 /** Balises hors liste blanche dans `html` : [{ path, excerpt }]. */
@@ -176,11 +177,14 @@ describe('parité FR/EN', () => {
 
   test('ordre identique des escales, groupes, étoiles, systèmes, projets et canaux', () => {
     const ids = (lang, path) => list(lang, path).map((item) => item.id);
-    const collections =
-      ['journey.stops', 'skills.groups', 'projects.systems', 'contact.channels'];
-    for (const path of collections) {
+    const collections = [
+      'journey.stops',
+      'skills.groups',
+      'projects.systems',
+      'contact.channels',
+    ];
+    for (const path of collections)
       assert.deepEqual(ids('en', path), ids('fr', path), `ordre différent pour ${path}`);
-    }
     const stars = (lang) => list(lang, 'skills.groups')
       .map((g) => [g.id, g.items.map((i) => i.id)]);
     assert.deepEqual(stars('en'), stars('fr'), 'étoiles différentes entre FR et EN');
@@ -194,13 +198,17 @@ describe('cohérence interne', () => {
   for (const lang of LANGS) {
     test(`${lang} : exactement une escale now: true`, () => {
       const now = list(lang, 'journey.stops').filter((s) => s.now === true).map((s) => s.id);
-      assert.equal(now.length, 1,
-        `data/${lang}.json : escales now: true = ${JSON.stringify(now)}`);
+      assert.equal(
+        now.length,
+        1,
+        `data/${lang}.json : escales now: true = ${JSON.stringify(now)}`,
+      );
     });
 
     test(`${lang} : chaque référence de projet des compétences existe`, () => {
-      const known = new Set(list(lang, 'projects.systems')
-        .flatMap((system) => system.projects.map((p) => p.id)));
+      const known = new Set(
+        list(lang, 'projects.systems').flatMap((system) => system.projects.map((p) => p.id)),
+      );
       assert.ok(known.size > 0, `data/${lang}.json : aucun projet défini`);
       let checked = 0;
       const unknown = [];
@@ -227,11 +235,14 @@ describe('cohérence interne', () => {
       const problems = [
         ...duplicates('journey.stops', ids('journey.stops')),
         ...duplicates('skills.groups', ids('skills.groups')),
-        ...list(lang, 'skills.groups').flatMap((g) =>
-          duplicates(`items du groupe ${g.id}`, g.items.map((i) => i.id))),
+        ...list(lang, 'skills.groups').flatMap(
+          (g) => duplicates(`items du groupe ${g.id}`, g.items.map((i) => i.id)),
+        ),
         ...duplicates('projects.systems', ids('projects.systems')),
-        ...duplicates('projets (tous systèmes confondus)',
-          list(lang, 'projects.systems').flatMap((s) => s.projects.map((p) => p.id))),
+        ...duplicates(
+          'projets (tous systèmes confondus)',
+          list(lang, 'projects.systems').flatMap((s) => s.projects.map((p) => p.id)),
+        ),
         ...duplicates('contact.channels', ids('contact.channels')),
       ];
       assert.deepEqual(problems, [], `data/${lang}.json : doublons : ${problems.join(' ; ')}`);
@@ -240,10 +251,16 @@ describe('cohérence interne', () => {
     test(`${lang} : un seul canal mailto: dans contact, avec une adresse`, () => {
       const channels = list(lang, 'contact.channels');
       const mail = channels.filter((c) => String(c.href).startsWith('mailto:'));
-      assert.equal(mail.length, 1,
-        `data/${lang}.json : canaux mailto: = ${JSON.stringify(mail.map((c) => c.id))}`);
-      assert.match(mail[0].href, /^mailto:[^@\s]+@[^@\s]+\.[^@\s]+$/,
-        `data/${lang}.json : adresse mailto: invalide (${mail[0].href})`);
+      assert.equal(
+        mail.length,
+        1,
+        `data/${lang}.json : canaux mailto: = ${JSON.stringify(mail.map((c) => c.id))}`,
+      );
+      assert.match(
+        mail[0].href,
+        /^mailto:[^@\s]+@[^@\s]+\.[^@\s]+$/,
+        `data/${lang}.json : adresse mailto: invalide (${mail[0].href})`,
+      );
     });
   }
 });
@@ -269,11 +286,9 @@ describe('aucun tiret cadratin (U+2014)', () => {
   const targets = ['data', 'js', 'css', 'index.html', 'README.md'];
   test('data/, js/, css/, index.html et README.md en sont exempts', () => {
     const found = [];
-    for (const file of targets.flatMap(filesUnder)) {
-      for (const { line, excerpt } of emDashLines(readFileSync(ROOT + file, 'utf8'))) {
+    for (const file of targets.flatMap(filesUnder))
+      for (const { line, excerpt } of emDashLines(readFileSync(ROOT + file, 'utf8')))
         found.push(`${file}:${line}: ${excerpt}`);
-      }
-    }
     assert.deepEqual(found, [], `tirets cadratins trouvés :\n${found.join('\n')}`);
   });
 });
@@ -281,29 +296,43 @@ describe('aucun tiret cadratin (U+2014)', () => {
 // ---------- Vérification des détecteurs ----------
 describe('détecteurs : html', () => {
   const accepted = [
-    'Texte simple', '<strong>gras</strong> et <em>italique</em>', 'a < b et 5 <3',
-    '<a href="https://example.com/x?y=1&z=2">lien</a>', '<a href="mailto:a@b.fr">écrire</a>',
-    '<strong><em>mêlés</em></strong>', '',
+    'Texte simple',
+    '<strong>gras</strong> et <em>italique</em>',
+    'a < b et 5 <3',
+    '<a href="https://example.com/x?y=1&z=2">lien</a>',
+    '<a href="mailto:a@b.fr">écrire</a>',
+    '<strong><em>mêlés</em></strong>',
+    '',
   ];
   const refused = [
-    '<script>alert(1)</script>', '<img src=x onerror=alert(1)>', '<b>gras</b>', '<br/>',
-    '<a href="javascript:alert(1)">x</a>', '<a href="http://example.com">x</a>',
-    '<a href="https://x.fr" target="_blank">x</a>', "<a href='https://x.fr'>x</a>",
-    '<a onclick="x" href="https://x.fr">x</a>', '<STRONG>x</STRONG>', '<!-- note -->',
-    '<a href="data:text/html;base64,AA">x</a>', '<a>sans href</a>', '<em class="x">x</em>',
-    'ok <iframe src="https://x.fr"></iframe>', '<a href="https:">vide</a>', '</div>',
-    '<strong >x</strong>', '<?php ?>',
+    '<script>alert(1)</script>',
+    '<img src=x onerror=alert(1)>',
+    '<b>gras</b>',
+    '<br/>',
+    '<a href="javascript:alert(1)">x</a>',
+    '<a href="http://example.com">x</a>',
+    '<a href="https://x.fr" target="_blank">x</a>',
+    "<a href='https://x.fr'>x</a>",
+    '<a onclick="x" href="https://x.fr">x</a>',
+    '<STRONG>x</STRONG>',
+    '<!-- note -->',
+    '<a href="data:text/html;base64,AA">x</a>',
+    '<a>sans href</a>',
+    '<em class="x">x</em>',
+    'ok <iframe src="https://x.fr"></iframe>',
+    '<a href="https:">vide</a>',
+    '</div>',
+    '<strong >x</strong>',
+    '<?php ?>',
   ];
-  for (const text of accepted) {
+  for (const text of accepted)
     test(`accepte ${JSON.stringify(text)}`, () => {
       assert.deepEqual(htmlViolations(text, 'x.html'), []);
     });
-  }
-  for (const text of refused) {
+  for (const text of refused)
     test(`refuse ${JSON.stringify(text)}`, () => {
       assert.ok(htmlViolations(text, 'x.html').length > 0, `${text} aurait dû être refusé`);
     });
-  }
 
   test('seuls html, paragraphs[], blocks[].html et items[] admettent des balises', () => {
     const tree = {
@@ -312,7 +341,8 @@ describe('détecteurs : html', () => {
       projects: {
         systems: [{
           projects: [{
-            summary: '<strong>x</strong>', tags: ['<i>'],
+            summary: '<strong>x</strong>',
+            tags: ['<i>'],
             blocks: [
               { html: '<em>ok</em>' },
               { items: ['<strong>ok</strong>', '<u>non</u>'] },
@@ -322,12 +352,17 @@ describe('détecteurs : html', () => {
       },
     };
     const paths = [...new Set(treeHtmlViolations(tree).map((v) => v.path))].sort();
-    assert.deepEqual(paths, [
-      'home.dossier.entries[0].label', 'journey.stops[0].paragraphs[1]',
-      'journey.stops[0].title',
-      'projects.systems[0].projects[0].blocks[1].items[1]',
-      'projects.systems[0].projects[0].summary', 'projects.systems[0].projects[0].tags[0]',
-    ].sort());
+    assert.deepEqual(
+      paths,
+      [
+        'home.dossier.entries[0].label',
+        'journey.stops[0].paragraphs[1]',
+        'journey.stops[0].title',
+        'projects.systems[0].projects[0].blocks[1].items[1]',
+        'projects.systems[0].projects[0].summary',
+        'projects.systems[0].projects[0].tags[0]',
+      ].sort(),
+    );
   });
 
   test('le diagnostic nomme chemin et extrait', () => {
@@ -339,8 +374,16 @@ describe('détecteurs : html', () => {
 
 describe('détecteurs : tirets cadratins', () => {
   test('trouve le tiret brut, échappé ou en entité, avec le numéro de ligne', () => {
-    const text = ['propre', 'a \u2014 b', 'propre', '"\\u2014"', '&mdash;', '&#8212;',
-      '&#x2014;', '\\u{2014}'].join('\n');
+    const text = [
+      'propre',
+      'a \u2014 b',
+      'propre',
+      '"\\u2014"',
+      '&mdash;',
+      '&#8212;',
+      '&#x2014;',
+      '\\u{2014}',
+    ].join('\n');
     assert.deepEqual(emDashLines(text).map((l) => l.line), [2, 4, 5, 6, 7, 8]);
   });
 
@@ -360,7 +403,8 @@ describe('détecteurs : tirets cadratins', () => {
 
 describe('détecteurs : parité et chaînes vides', () => {
   const base = () => ({
-    meta: { lang: 'fr' }, journey: { stops: [{ id: 'a', at: 0, now: true, title: 'T' }] },
+    meta: { lang: 'fr' },
+    journey: { stops: [{ id: 'a', at: 0, now: true, title: 'T' }] },
     skills: { groups: [{ id: 'g', items: [{ id: 'c', projects: ['p'], name: 'C' }] }] },
   });
   const other = () => {
@@ -419,8 +463,12 @@ describe('détecteurs : volume (10 000 chaînes, temps linéaire)', () => {
   test('HTML', () => {
     // <b> et </b> : deux balises interdites par chaîne
     assert.equal(treeHtmlViolations(tree(10000, '<strong>a</strong> <b>x</b>')).length, 20000);
-    assertLinear(assert, 'treeHtmlViolations', (n) => tree(n, '<em>a</em> <script>'),
-      treeHtmlViolations);
+    assertLinear(
+      assert,
+      'treeHtmlViolations',
+      (n) => tree(n, '<em>a</em> <script>'),
+      treeHtmlViolations,
+    );
   });
 
   test('tirets cadratins', () => {
@@ -431,7 +479,12 @@ describe('détecteurs : volume (10 000 chaînes, temps linéaire)', () => {
   });
 
   test('parité', () => {
-    assertLinear(assert, 'compareLocales', (n) => [tree(n, 'x'), tree(n, 'y')],
-      ([a, b]) => gaps(a, b), { sizes: [2500, 5000, 10000] });
+    assertLinear(
+      assert,
+      'compareLocales',
+      (n) => [tree(n, 'x'), tree(n, 'y')],
+      ([a, b]) => gaps(a, b),
+      { sizes: [2500, 5000, 10000] },
+    );
   });
 });

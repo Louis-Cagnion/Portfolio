@@ -54,8 +54,10 @@ export function cachedLocale(lang) {
  * @returns {Promise<object>} JSON validé ; rejette avec une LocaleError par cause, ou une
  *   RangeError pour une langue non supportée
  */
-export function loadLocale(lang, { fetch = globalThis.fetch,
-  timeoutMs = DEFAULT_TIMEOUT_MS } = {}) {
+export function loadLocale(
+  lang,
+  { fetch = globalThis.fetch, timeoutMs = DEFAULT_TIMEOUT_MS } = {},
+) {
   if (!SUPPORTED.includes(lang)) {
     const shown = typeof lang === 'string' ? `"${lang}"` : String(lang);
     return Promise.reject(new RangeError(`loadLocale : langue non supportée ${shown}`));
@@ -88,8 +90,10 @@ async function fetchLocale(lang, fetchFn, timeoutMs) {
   const file = `data/${lang}.json`;
   const url = new URL(`../../${file}`, import.meta.url).href;
   const controller = new AbortController();
-  const timeout = new LocaleError('timeout', `${file} : aucune réponse complète en ` +
-    `${timeoutMs} ms`);
+  const timeout = new LocaleError(
+    'timeout',
+    `${file} : aucune réponse complète en ${timeoutMs} ms`,
+  );
   const expired = new Promise((_, reject) => {
     controller.signal.addEventListener('abort', () => reject(timeout), { once: true });
   });
@@ -100,32 +104,44 @@ async function fetchLocale(lang, fetchFn, timeoutMs) {
     let response;
     let body;
     try {
-      response = await withinDelay(Promise.resolve().then(() =>
-        fetchFn(url, { signal: controller.signal })));
-      if (!response.ok) {
-        throw new LocaleError('http', `${file} : réponse HTTP ${response.status}`,
-          { status: response.status });
-      }
+      response = await withinDelay(
+        Promise.resolve().then(() => fetchFn(url, { signal: controller.signal })),
+      );
+      if (!response.ok)
+        throw new LocaleError(
+          'http',
+          `${file} : réponse HTTP ${response.status}`,
+          { status: response.status },
+        );
       body = await withinDelay(response.text());
     } catch (error) {
       if (error instanceof LocaleError) throw error;
       if (controller.signal.aborted) throw timeout;
-      throw new LocaleError('network', `${file} : réseau injoignable (${error?.message})`,
-        { cause: error });
+      throw new LocaleError(
+        'network',
+        `${file} : réseau injoignable (${error?.message})`,
+        { cause: error },
+      );
     }
     let data;
     try {
       data = JSON.parse(body);
     } catch (error) {
-      throw new LocaleError('json', `${file} : JSON invalide (${error.message})`,
-        { cause: error });
+      throw new LocaleError(
+        'json',
+        `${file} : JSON invalide (${error.message})`,
+        { cause: error },
+      );
     }
     const faults = validateLocale(data);
     if (faults.length === 0 && data.meta.lang !== lang) faults.push('meta.lang');
-    if (faults.length) {
-      throw new LocaleError('schema', `${file} : champ ${faults[0]} manquant ou invalide ` +
-        `(${faults.length} champ(s) fautif(s))`, { path: faults[0] });
-    }
+    if (faults.length)
+      throw new LocaleError(
+        'schema',
+        `${file} : champ ${faults[0]} manquant ou invalide ` +
+          `(${faults.length} champ(s) fautif(s))`,
+        { path: faults[0] },
+      );
     return data;
   } finally {
     clearTimeout(timer);

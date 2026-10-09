@@ -10,9 +10,8 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 /** Message lisible d'une erreur quelconque. */
 export function errorText(error) {
-  if (error instanceof Error || (error && typeof error.message === 'string')) {
+  if (error instanceof Error || (error && typeof error.message === 'string'))
     return `${error.name || 'Error'} : ${error.message}`;
-  }
   return String(error);
 }
 
@@ -114,8 +113,14 @@ export function makeStorage(initial = {}) {
 /** Stockage indisponible (navigation privée stricte) : chaque appel lève. */
 export function throwingStorage() {
   const fail = () => { throw new DOMException('Stockage refusé', 'SecurityError'); };
-  return { getItem: fail, setItem: fail, removeItem: fail, clear: fail, key: fail,
-    get length() { return fail(); } };
+  return {
+    getItem: fail,
+    setItem: fail,
+    removeItem: fail,
+    clear: fail,
+    key: fail,
+    get length() { return fail(); },
+  };
 }
 
 /** Langue demandée par une URL de données (`.../fr.json`), ou null. */
@@ -174,8 +179,15 @@ const stage = () => document.getElementById('stage') || document.body;
  * `hash` (sans #) est posé avant l'amorçage, sans nouvelle entrée d'historique.
  */
 export async function openSite(options) {
-  const { width, height = 800, storage = makeStorage(), fetch: fakeFetch = realDataFetch(),
-    timeoutMs, hash, boot = true } = options;
+  const {
+    width,
+    height = 800,
+    storage = makeStorage(),
+    fetch: fakeFetch = realDataFetch(),
+    timeoutMs,
+    hash,
+    boot = true,
+  } = options;
   const site = { width, storage, fetch: fakeFetch, uncaught: [], bootError: null };
   fakeFetch.site = site;
   const frame = document.createElement('iframe');
@@ -186,9 +198,13 @@ export async function openSite(options) {
   site.close = () => frame.remove();
   stage().append(frame);
   try {
-    await waitFor(() => frame.contentWindow?.location.href === 'about:srcdoc' &&
-      frame.contentDocument?.readyState === 'complete', 15000, 'chargement de l\'iframe',
-    () => frame.contentDocument?.readyState);
+    await waitFor(
+      () => frame.contentWindow?.location.href === 'about:srcdoc' &&
+        frame.contentDocument?.readyState === 'complete',
+      15000,
+      'chargement de l\'iframe',
+      () => frame.contentDocument?.readyState,
+    );
     site.win = frame.contentWindow;
     site.doc = frame.contentDocument;
     site.win.addEventListener('error', (event) => {
@@ -239,12 +255,10 @@ async function bootSite(site, env) {
     (m) => { window.__suiteMain = m; }, (e) => { window.__suiteMainError = e; });`;
   doc.head.append(script);
   await waitFor(() => win.__suiteMain || win.__suiteMainError, 10000, 'import de js/main.js');
-  if (win.__suiteMainError) {
+  if (win.__suiteMainError)
     throw new Error(`import de js/main.js impossible : ${errorText(win.__suiteMainError)}`);
-  }
-  if (typeof win.__suiteMain.boot !== 'function') {
+  if (typeof win.__suiteMain.boot !== 'function')
     throw new Error('js/main.js n\'exporte pas de fonction boot');
-  }
   if (env.timeoutMs === undefined) delete env.timeoutMs;
   let result;
   try {
@@ -252,9 +266,8 @@ async function bootSite(site, env) {
   } catch (error) {
     throw new Error(`boot() a levé : ${errorText(error)}`);
   }
-  if (result && typeof result.then === 'function') {
+  if (result && typeof result.then === 'function')
     result.then(null, (error) => { site.bootError = error; });
-  }
 }
 
 // ---------- Lecture de l'état du site ----------
@@ -262,9 +275,8 @@ async function bootSite(site, env) {
 /** Visibilité réelle (display, visibility, opacité nulle comprises). */
 export function isVisible(el) {
   if (!el || !el.isConnected) return false;
-  if (typeof el.checkVisibility === 'function') {
+  if (typeof el.checkVisibility === 'function')
     if (!el.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true })) return false;
-  }
   const rect = el.getBoundingClientRect();
   return rect.width > 0 && rect.height > 0;
 }
@@ -277,9 +289,13 @@ export const statusState = (site) => {
 
 /** Attend `data-state` voulu sur #status. */
 export function waitStatus(site, state, ms = 10000) {
-  return waitFor(() => site.doc.getElementById('status')?.dataset.state === state, ms,
-    `#status[data-state="${state}"]`, () => statusState(site) +
-      (site.bootError ? ` ; boot a rejeté : ${errorText(site.bootError)}` : ''));
+  return waitFor(
+    () => site.doc.getElementById('status')?.dataset.state === state,
+    ms,
+    `#status[data-state="${state}"]`,
+    () => statusState(site) +
+      (site.bootError ? ` ; boot a rejeté : ${errorText(site.bootError)}` : ''),
+  );
 }
 
 export const activeViews = (site) => [...site.doc.querySelectorAll('.view.on')];
@@ -291,7 +307,9 @@ const viewState = (site) => {
 };
 
 const nextFrame = (win) => bounded(
-  new Promise((resolve) => win.requestAnimationFrame(resolve)), 500, 'requestAnimationFrame',
+  new Promise((resolve) => win.requestAnimationFrame(resolve)),
+  500,
+  'requestAnimationFrame',
 ).catch(() => {});
 
 /**
@@ -299,13 +317,23 @@ const nextFrame = (win) => bounded(
  * (si `checkHash`), animations CSS finies (au plus 3 s), polices prêtes, deux images peintes.
  */
 export async function settle(site, id, { checkHash = true, ms = 6000 } = {}) {
-  await waitFor(() => {
-    const views = activeViews(site);
-    return views.length === 1 && views[0].id === id &&
-      (!checkHash || site.win.location.hash === `#${id}`);
-  }, ms, `transition vers #${id}`, () => viewState(site));
-  await waitFor(() => !site.doc.getAnimations().some((a) => a.playState === 'running' &&
-    a.effect?.getComputedTiming().endTime !== Infinity), 3000, 'animations').catch(() => {});
+  await waitFor(
+    () => {
+      const views = activeViews(site);
+      return views.length === 1 && views[0].id === id &&
+        (!checkHash || site.win.location.hash === `#${id}`);
+    },
+    ms,
+    `transition vers #${id}`,
+    () => viewState(site),
+  );
+  await waitFor(
+    () => !site.doc.getAnimations().some(
+      (a) => a.playState === 'running' && a.effect?.getComputedTiming().endTime !== Infinity,
+    ),
+    3000,
+    'animations',
+  ).catch(() => {});
   await bounded(site.doc.fonts.ready, 5000, 'polices').catch(() => {});
   await nextFrame(site.win);
   await nextFrame(site.win);
@@ -316,9 +344,8 @@ export function shownNavs(site) {
   const shown = [];
   const pill = site.doc.querySelector('header.bar nav.nav');
   const tabs = site.doc.querySelector('nav.tabbar');
-  if (isVisible(pill)) {
+  if (isVisible(pill))
     shown.push({ kind: 'pilule', selector: 'header.bar nav.nav', el: pill });
-  }
   if (isVisible(tabs)) shown.push({ kind: 'onglets', selector: 'nav.tabbar', el: tabs });
   return shown;
 }
@@ -351,9 +378,8 @@ export function click(site, el) {
 /** Va sur la rubrique `id` par le `[data-go]` de la barre affichée, puis attend la fin. */
 export async function goTo(site, id) {
   const navs = shownNavs(site);
-  if (navs.length !== 1) {
+  if (navs.length !== 1)
     throw new Error(`barre de rubriques : ${navs.length} affichée(s) au lieu d'une`);
-  }
   const target = navs[0].el.querySelector(`[data-go="${id}"]`);
   if (!target) throw new Error(`${navs[0].selector} [data-go="${id}"] absent`);
   if (activeViews(site).length === 1 && activeViews(site)[0].id === id) return;

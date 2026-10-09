@@ -11,9 +11,7 @@ Lancer : node --test (depuis la racine du dépôt).
 */
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
-import {
-  assertLinear, clone, deepFreeze, importModule, readFixture,
-} from '../helpers.mjs';
+import { assertLinear, clone, deepFreeze, importModule, readFixture } from '../helpers.mjs';
 
 const MODULE = 'js/core/schema.js';
 const valid = readFixture('valid-locale.json');
@@ -25,17 +23,19 @@ const load = async () => {
 
 // --- Parcours de l'arbre : tous les nœuds avec leur chemin au format du contrat ---
 const toPath = (segs) =>
-  segs.reduce((acc, s) => {
-    if (typeof s === 'number') return `${acc}[${s}]`;
-    return acc ? `${acc}.${s}` : s;
-  }, '');
+  segs.reduce(
+    (acc, s) => {
+      if (typeof s === 'number') return `${acc}[${s}]`;
+      return acc ? `${acc}.${s}` : s;
+    },
+    '',
+  );
 
 function collectNodes(value, segs = [], out = []) {
   if (segs.length) out.push({ segs, path: toPath(segs), value });
   if (Array.isArray(value)) value.forEach((v, i) => collectNodes(v, [...segs, i], out));
-  else if (value && typeof value === 'object') {
+  else if (value && typeof value === 'object')
     for (const [k, v] of Object.entries(value)) collectNodes(v, [...segs, k], out);
-  }
   return out;
 }
 
@@ -56,16 +56,26 @@ const isSelfOrChild = (found, path) =>
 
 // Champs que le schéma peut raisonnablement laisser facultatifs : jamais testés en absence.
 const OPTIONAL_SHAPES = new Set([
-  'journey.stops[].now', 'home.telemetry.rows[].live', 'projects.systems[].projects[].media',
-  'projects.systems[].projects[].tags', 'projects.systems[].projects[].links',
+  'journey.stops[].now',
+  'home.telemetry.rows[].live',
+  'projects.systems[].projects[].media',
+  'projects.systems[].projects[].tags',
+  'projects.systems[].projects[].links',
   'skills.groups[].items[].projects',
 ]);
 // Listes qui doivent contenir au moins un élément.
 const NON_EMPTY_SHAPES = [
-  'journey.stops', 'skills.groups', 'skills.groups[].items', 'projects.systems',
-  'projects.systems[].projects', 'home.telemetry.rows', 'home.dossier.entries',
-  'contact.channels', 'journey.stops[].paragraphs',
-  'projects.systems[].projects[].blocks', 'projects.systems[].projects[].blocks[].items',
+  'journey.stops',
+  'skills.groups',
+  'skills.groups[].items',
+  'projects.systems',
+  'projects.systems[].projects',
+  'home.telemetry.rows',
+  'home.dossier.entries',
+  'contact.channels',
+  'journey.stops[].paragraphs',
+  'projects.systems[].projects[].blocks',
+  'projects.systems[].projects[].blocks[].items',
 ];
 
 function wrongValue(value) {
@@ -138,17 +148,19 @@ describe('validateLocale : champs fautifs nommés par leur chemin', () => {
     const misses = [];
     for (const node of nodes) {
       const found = validateLocale(mutate(node.segs, wrongValue(node.value)));
-      if (!found.some((p) => isSelfOrChild(p, node.path))) {
+      if (!found.some((p) => isSelfOrChild(p, node.path)))
         misses.push(`${node.path} -> ${JSON.stringify(wrongValue(node.value))}`);
-      }
     }
     assert.deepEqual(misses, [], `mauvais types non signalés : ${misses.join(' ; ')}`);
   });
 
   test('null à la place de chaque valeur est nommé', async () => {
     const validateLocale = await load();
-    const misses = nodes.filter((n) => !validateLocale(mutate(n.segs, null))
-      .some((p) => isSelfOrChild(p, n.path))).map((n) => n.path);
+    const misses = nodes
+      .filter(
+        (n) => !validateLocale(mutate(n.segs, null)).some((p) => isSelfOrChild(p, n.path)),
+      )
+      .map((n) => n.path);
     assert.deepEqual(misses, [], `null non signalé pour : ${misses.join(', ')}`);
   });
 
@@ -164,18 +176,21 @@ describe('validateLocale : champs fautifs nommés par leur chemin', () => {
   test('type de bloc inconnu : le chemin du champ type est nommé', async () => {
     const validateLocale = await load();
     const segs = ['projects', 'systems', 0, 'projects', 0, 'blocks', 0, 'type'];
-    for (const bad of ['video', '', 'TEXT', 1]) {
-      assert.ok(validateLocale(mutate(segs, bad)).includes(toPath(segs)),
-        `type de bloc ${JSON.stringify(bad)} non signalé`);
-    }
+    for (const bad of ['video', '', 'TEXT', 1])
+      assert.ok(
+        validateLocale(mutate(segs, bad)).includes(toPath(segs)),
+        `type de bloc ${JSON.stringify(bad)} non signalé`,
+      );
   });
 
   test('bloc list sans items : le chemin items est nommé', async () => {
     const validateLocale = await load();
     const base = ['projects', 'systems', 0, 'projects', 0, 'blocks', 0];
     const copy = mutate([...base, 'type'], 'list'); // le bloc texte devient une liste
-    assert.ok(validateLocale(copy).includes(toPath([...base, 'items'])),
-      'une liste sans items doit nommer projects.systems[0].projects[0].blocks[0].items');
+    assert.ok(
+      validateLocale(copy).includes(toPath([...base, 'items'])),
+      'une liste sans items doit nommer projects.systems[0].projects[0].blocks[0].items',
+    );
   });
 
   test('plusieurs fautes : tous les chemins sont rendus, sans doublon', async () => {
@@ -184,42 +199,54 @@ describe('validateLocale : champs fautifs nommés par leur chemin', () => {
     copy.journey.title = '';
     copy.contact.channels[1].href = 12;
     const found = validateLocale(copy);
-    const expected =
-      ['home.telemetry.rows[2].label', 'journey.title', 'contact.channels[1].href'];
-    for (const p of expected) {
+    const expected = [
+      'home.telemetry.rows[2].label',
+      'journey.title',
+      'contact.channels[1].href',
+    ];
+    for (const p of expected)
       assert.ok(found.includes(p), `chemin ${p} absent de ${JSON.stringify(found)}`);
-    }
     assert.equal(new Set(found).size, found.length, `doublons dans ${JSON.stringify(found)}`);
   });
 
   test('un seul défaut ne produit pas de faux positifs ailleurs', async () => {
     const validateLocale = await load();
-    assert.deepEqual(validateLocale(mutate(['skills', 'groups', 1, 'items', 0, 'name'], '')),
-      ['skills.groups[1].items[0].name']);
+    assert.deepEqual(
+      validateLocale(mutate(['skills', 'groups', 1, 'items', 0, 'name'], '')),
+      ['skills.groups[1].items[0].name'],
+    );
   });
 });
 
 describe('validateLocale : entrées limites', () => {
   for (const [name, input] of [
-    ['null', null], ['undefined', undefined], ['un nombre', 42], ['NaN', NaN],
-    ['une chaîne', 'fr'], ['une chaîne vide', ''], ['true', true], ['un tableau', []],
-    ['un tableau de la fixture', [valid]], ['un objet vide', {}],
+    ['null', null],
+    ['undefined', undefined],
+    ['un nombre', 42],
+    ['NaN', NaN],
+    ['une chaîne', 'fr'],
+    ['une chaîne vide', ''],
+    ['true', true],
+    ['un tableau', []],
+    ['un tableau de la fixture', [valid]],
+    ['un objet vide', {}],
   ]) {
     test(`${name} : renvoie des chemins sans lever`, async () => {
       const validateLocale = await load();
       const found = validateLocale(input);
       assert.ok(Array.isArray(found) && found.length > 0, `${name} doit être refusé`);
-      assert.ok(found.every((p) => typeof p === 'string' && p.length > 0),
-        `chemins invalides pour ${name} : ${JSON.stringify(found)}`);
+      assert.ok(
+        found.every((p) => typeof p === 'string' && p.length > 0),
+        `chemins invalides pour ${name} : ${JSON.stringify(found)}`,
+      );
     });
   }
 
   test('objet vide : chaque section racine manquante est nommée', async () => {
     const validateLocale = await load();
     const found = validateLocale({});
-    for (const section of Object.keys(valid)) {
+    for (const section of Object.keys(valid))
       assert.ok(found.includes(section), `section ${section} manquante non signalée`);
-    }
   });
 
   test('chaîne très longue et caractères exotiques acceptés', async () => {
@@ -273,13 +300,21 @@ describe('validateLocale : tableau de 10 000 chaînes', () => {
 
   test('temps linéaire quand la taille double (valide)', async () => {
     const validateLocale = await load();
-    assertLinear(assert, 'validateLocale (valide)', (n) => withParagraphs(n, 'texte'),
-      validateLocale);
+    assertLinear(
+      assert,
+      'validateLocale (valide)',
+      (n) => withParagraphs(n, 'texte'),
+      validateLocale,
+    );
   });
 
   test('temps linéaire quand la taille double (toutes fautives)', async () => {
     const validateLocale = await load();
-    assertLinear(assert, 'validateLocale (fautif)', (n) => withParagraphs(n, ''),
-      validateLocale);
+    assertLinear(
+      assert,
+      'validateLocale (fautif)',
+      (n) => withParagraphs(n, ''),
+      validateLocale,
+    );
   });
 });

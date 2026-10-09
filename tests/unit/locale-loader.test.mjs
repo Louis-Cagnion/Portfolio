@@ -44,8 +44,10 @@ function makeFetch(...plan) {
 }
 /** fetch qui ne répond jamais mais respecte `signal` (comme le vrai). */
 const hanging = (url, { signal } = {}) => new Promise((resolve, reject) => {
-  signal?.addEventListener('abort',
-    () => reject(new DOMException('The operation was aborted.', 'AbortError')));
+  signal?.addEventListener(
+    'abort',
+    () => reject(new DOMException('The operation was aborted.', 'AbortError')),
+  );
 });
 
 async function failure(promise) {
@@ -232,15 +234,20 @@ describe('loadLocale : une erreur par cause', () => {
       messages[code] = error.message;
     }
     const timeoutError = await failure(
-      loadLocale('fr', { fetch: makeFetch(hanging), timeoutMs: 30 }));
+      loadLocale('fr', { fetch: makeFetch(hanging), timeoutMs: 30 }),
+    );
     assert.equal(timeoutError.code, 'timeout');
     messages.timeout = timeoutError.message;
-    for (const [code, message] of Object.entries(messages)) {
-      assert.ok(typeof message === 'string' && message.trim() !== '',
-        `message vide pour ${code}`);
-    }
-    assert.equal(new Set(Object.values(messages)).size, 5,
-      `messages non distincts : ${JSON.stringify(messages)}`);
+    for (const [code, message] of Object.entries(messages))
+      assert.ok(
+        typeof message === 'string' && message.trim() !== '',
+        `message vide pour ${code}`,
+      );
+    assert.equal(
+      new Set(Object.values(messages)).size,
+      5,
+      `messages non distincts : ${JSON.stringify(messages)}`,
+    );
   });
 });
 
@@ -251,7 +258,7 @@ describe('loadLocale : un échec n\'est pas mis en cache', () => {
     json: () => new Response('{', { status: 200 }),
     schema: () => new Response('{}', { status: 200 }),
   };
-  for (const [code, failing] of Object.entries(retries)) {
+  for (const [code, failing] of Object.entries(retries))
     test(`après un échec ${code}, un nouvel essai refait fetch et peut réussir`, async () => {
       const { loadLocale } = await fresh();
       const fetch = makeFetch(failing, () => ok('fr'));
@@ -261,7 +268,6 @@ describe('loadLocale : un échec n\'est pas mis en cache', () => {
       assert.equal(fetch.calls.length, 2, `fetch appelé ${fetch.calls.length} fois`);
       assert.equal(data.meta.lang, 'fr');
     });
-  }
 
   test('après un timeout, un nouvel essai refait fetch et peut réussir', async () => {
     const { loadLocale } = await fresh();
@@ -283,16 +289,29 @@ describe('loadLocale : un échec n\'est pas mis en cache', () => {
 
   test("l'échec d'une langue n'empêche pas l'autre", async () => {
     const { loadLocale } = await fresh();
-    const fetch = makeFetch((url) => (String(url).includes('fr.json')
-      ? new Response('', { status: 500 }) : ok('en')));
+    const fetch = makeFetch((url) => (
+      String(url).includes('fr.json') ? new Response('', { status: 500 }) : ok('en')
+    ));
     await failure(loadLocale('fr', { fetch }));
     assert.equal((await loadLocale('en', { fetch })).meta.lang, 'en');
   });
 });
 
 describe('loadLocale : langue non supportée', () => {
-  for (const lang of ['de', '', 'FR', 'fr ', '../data/fr', 'fr.json', '__proto__', null,
-    undefined, 7, {}, ['fr']]) {
+  for (const lang of [
+    'de',
+    '',
+    'FR',
+    'fr ',
+    '../data/fr',
+    'fr.json',
+    '__proto__',
+    null,
+    undefined,
+    7,
+    {},
+    ['fr'],
+  ]) {
     const name = JSON.stringify(lang) ?? String(lang);
     test(`${name} : rejet immédiat, fetch non appelé`, async () => {
       const { loadLocale } = await fresh();

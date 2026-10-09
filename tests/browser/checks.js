@@ -7,12 +7,34 @@ const MAX_PROBLEMS = 8;
 const TOLERANCE = 0.5; // px : arrondis de sous-pixel
 export const MIN_TARGET = 44;
 const NON_RENDERED = [
-  'defs', 'clipPath', 'mask', 'symbol', 'pattern', 'marker', 'filter', 'linearGradient',
-  'radialGradient', 'title', 'desc', 'metadata', 'script', 'style', 'template', 'noscript',
+  'defs',
+  'clipPath',
+  'mask',
+  'symbol',
+  'pattern',
+  'marker',
+  'filter',
+  'linearGradient',
+  'radialGradient',
+  'title',
+  'desc',
+  'metadata',
+  'script',
+  'style',
+  'template',
+  'noscript',
 ].join(', ');
 const INTERACTIVE = [
-  'a[href]', 'button', 'input:not([type="hidden"])', 'select', 'textarea', 'summary',
-  '[role="button"]', '[role="link"]', '[role="tab"]', '[tabindex]:not([tabindex="-1"])',
+  'a[href]',
+  'button',
+  'input:not([type="hidden"])',
+  'select',
+  'textarea',
+  'summary',
+  '[role="button"]',
+  '[role="link"]',
+  '[role="tab"]',
+  '[tabindex]:not([tabindex="-1"])',
   '[data-go]',
 ].join(', ');
 
@@ -38,9 +60,8 @@ export function overflowProblems(site) {
   const { doc, win } = site;
   const root = doc.documentElement;
   const problems = [];
-  if (root.scrollWidth > root.clientWidth) {
+  if (root.scrollWidth > root.clientWidth)
     problems.push(`html : scrollWidth ${root.scrollWidth} > clientWidth ${root.clientWidth}`);
-  }
   const info = new Map(); // élément -> { clip de ses descendants, fixe ? }
   const open = { left: -Infinity, right: Infinity };
   const offenders = [];
@@ -61,17 +82,19 @@ export function overflowProblems(site) {
     const shift = fixed ? 0 : win.scrollX;
     const left = seen.left + shift;
     const right = seen.right + shift;
-    if (right > limit + TOLERANCE || left < -TOLERANCE) {
+    if (right > limit + TOLERANCE || left < -TOLERANCE)
       if (!offenders.some((o) => o.contains(el))) {
         offenders.push(el);
-        problems.push(`${describe(el)} : boîte de ${left.toFixed(1)} à ` +
-          `${right.toFixed(1)} px pour un viewport de ${limit} px`);
+        problems.push(
+          `${describe(el)} : boîte de ${left.toFixed(1)} à ` +
+            `${right.toFixed(1)} px pour un viewport de ${limit} px`,
+        );
       }
-    }
-    if (/auto|scroll/.test(style.overflowX) && el.scrollWidth > el.clientWidth + 1) {
-      inner.push(`${describe(el)} : défilement horizontal interne (scrollWidth ` +
-        `${el.scrollWidth} > clientWidth ${el.clientWidth})`);
-    }
+    if (/auto|scroll/.test(style.overflowX) && el.scrollWidth > el.clientWidth + 1)
+      inner.push(
+        `${describe(el)} : défilement horizontal interne (scrollWidth ` +
+          `${el.scrollWidth} > clientWidth ${el.clientWidth})`,
+      );
   }
   return capped([...problems, ...inner]);
 }
@@ -90,9 +113,16 @@ export function isInlineTextLink(site, el) {
 export const INLINE_LINK_LABEL = 'lien en ligne, exempté (WCAG 2.5.8)';
 
 /* Composants que la maquette validée dessine sous 44 px (décision de Louis du 08/10/2026,
-cf. docs/design-checklist.md, zones cliquables) ; les zones dessinées en SVG suivent le dessin. */
+cf. docs/design-checklist.md, zones cliquables) ; les zones dessinées en SVG suivent le
+dessin. */
 const MOCKUP_SIZED = [
-  '.nav button', '.lang button', '.brand', '.cue', '.back', '.chips button', '.plist button',
+  '.nav button',
+  '.lang button',
+  '.brand',
+  '.cue',
+  '.back',
+  '.chips button',
+  '.plist button',
 ].join(', ');
 export const MOCKUP_SIZED_LABEL = 'taille fixée par la maquette validée';
 
@@ -143,9 +173,8 @@ function visibleTexts(site) {
   };
   for (let node = walker.nextNode(); node; node = walker.nextNode()) {
     const text = normalize(node.data);
-    if (text && node.parentElement && shown(node.parentElement)) {
+    if (text && node.parentElement && shown(node.parentElement))
       entries.push({ text: text.toLowerCase(), el: node.parentElement, where: 'texte' });
-    }
   }
   const attrs = ['aria-label', 'title', 'alt', 'placeholder', 'aria-description'];
   for (const el of doc.body.querySelectorAll(attrs.map((a) => `[${a}]`).join(','))) {
@@ -164,10 +193,11 @@ export function foreignTextProblems(site, segments, otherLangName) {
   const problems = [];
   for (const segment of segments) {
     const hit = entries.find((entry) => entry.text.includes(segment));
-    if (hit) {
-      problems.push(`texte ${otherLangName} « ${segment.slice(0, 60)} » visible ` +
-        `(${hit.where} de ${describe(hit.el)})`);
-    }
+    if (hit)
+      problems.push(
+        `texte ${otherLangName} « ${segment.slice(0, 60)} » visible ` +
+          `(${hit.where} de ${describe(hit.el)})`,
+      );
   }
   return capped(problems);
 }
@@ -176,8 +206,7 @@ export function foreignTextProblems(site, segments, otherLangName) {
 export function sectionScopes(site, id, withChrome) {
   const { doc } = site;
   const scopes = [doc.getElementById(id)];
-  if (withChrome) {
+  if (withChrome)
     scopes.push(doc.querySelector('header.bar'), doc.querySelector('nav.tabbar'));
-  }
   return scopes;
 }

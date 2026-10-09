@@ -20,8 +20,13 @@ function readTexts(root) {
   for (const lang of SUPPORTED) {
     const template = root.querySelector(`template[data-lang="${lang}"]`);
     if (!template) throw new Error(`#status : modèle <template data-lang="${lang}"> absent`);
-    texts.set(lang, new Map([...template.content.querySelectorAll('[data-key]')]
-      .map((node) => [node.dataset.key, node.textContent.replace(/\s+/g, ' ').trim()])));
+    texts.set(
+      lang,
+      new Map(
+        [...template.content.querySelectorAll('[data-key]')]
+          .map((node) => [node.dataset.key, node.textContent.replace(/\s+/g, ' ').trim()]),
+      ),
+    );
   }
   return texts;
 }
@@ -48,9 +53,8 @@ export function createStatus({ covered = [], onRetry, onSwitch }) {
 
   const text = (lang, key) => {
     const value = texts.get(lang).get(key);
-    if (value === undefined) {
+    if (value === undefined)
       throw new Error(`#status : texte ${key} absent du modèle ${lang}`);
-    }
     return value;
   };
   const setState = (state, lang) => {
@@ -106,10 +110,13 @@ export function createStatus({ covered = [], onRetry, onSwitch }) {
       failed = lang;
       announce('alert');
       title.textContent = text(lang, 'errors.title');
-      const parts = formatParts(text(lang, `errors.${error.code}`),
-        { status: error.status, path: error.path });
-      message.replaceChildren(...parts.map((part) =>
-        (part.key ? el('code', {}, part.text) : part.text)));
+      const parts = formatParts(
+        text(lang, `errors.${error.code}`),
+        { status: error.status, path: error.path },
+      );
+      message.replaceChildren(
+        ...parts.map((part) => (part.key ? el('code', {}, part.text) : part.text)),
+      );
       retry.textContent = text(lang, 'errors.retry');
       switcher.textContent = text(lang, 'errors.langSwitch');
       setState('error', lang);
@@ -131,10 +138,11 @@ export function createStatus({ covered = [], onRetry, onSwitch }) {
     verify(lang, ui) {
       for (const [key, value] of texts.get(lang)) {
         const expected = key.split('.').reduce((node, part) => node?.[part], ui);
-        if (expected !== value) {
-          console.warn(`index.html : #status, texte ${key} (${lang}) différent de ` +
-            `data/${lang}.json ui.${key}`);
-        }
+        if (expected !== value)
+          console.warn(
+            `index.html : #status, texte ${key} (${lang}) différent de ` +
+              `data/${lang}.json ui.${key}`,
+          );
       }
     },
   };

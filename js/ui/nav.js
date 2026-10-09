@@ -15,6 +15,9 @@ const ICONS = {
   contact: 'M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM3 7l9 6 9-6',
 };
 
+/* Touches qui, au clic sur un lien, demandent son ouverture à part (onglet, fenêtre...). */
+const MODIFIER_KEYS = ['ctrlKey', 'metaKey', 'shiftKey', 'altKey'];
+
 /**
  * @brief Tient --bar-h à la hauteur réelle de la barre (58 à 70 px selon la largeur).
  *
@@ -35,9 +38,18 @@ function trackBarHeight(bar) {
  */
 function icon(id) {
   if (!Object.hasOwn(ICONS, id)) throw new Error(`nav : aucune icône pour la rubrique ${id}`);
-  return svg('svg', { viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor',
-    'stroke-width': '1.8', 'stroke-linejoin': 'round', 'aria-hidden': 'true' },
-  svg('path', { d: ICONS[id] }));
+  return svg(
+    'svg',
+    {
+      viewBox: '0 0 24 24',
+      fill: 'none',
+      stroke: 'currentColor',
+      'stroke-width': '1.8',
+      'stroke-linejoin': 'round',
+      'aria-hidden': 'true',
+    },
+    svg('path', { d: ICONS[id] }),
+  );
 }
 
 /**
@@ -85,8 +97,10 @@ export function createNav({ onLanguage }) {
     if (button) onLanguage(button.dataset.lang);
   });
 
-  const goButtons = () => [...pillNav.querySelectorAll('[data-go]'),
-    ...tabbar.querySelectorAll('[data-go]')];
+  const goButtons = () => [
+    ...pillNav.querySelectorAll('[data-go]'),
+    ...tabbar.querySelectorAll('[data-go]'),
+  ];
 
   const placePill = () => {
     const active = pillNav.querySelector('[aria-current="page"]');
@@ -96,11 +110,20 @@ export function createNav({ onLanguage }) {
   };
 
   const build = (ui) => {
-    pillNav.append(pill, ...ids.map((id) =>
-      el('button', { type: 'button', 'data-go': id }, ui.nav[id])));
-    tabbar.append(...ids.map((id) =>
-      el('button', { type: 'button', 'data-go': id }, icon(id), el('span', {}, ui.nav[id]))));
+    pillNav.append(
+      pill,
+      ...ids.map((id) => el('button', { type: 'button', 'data-go': id }, ui.nav[id])),
+    );
+    tabbar.append(
+      ...ids.map((id) => el(
+        'button',
+        { type: 'button', 'data-go': id },
+        icon(id),
+        el('span', {}, ui.nav[id]),
+      )),
+    );
     new ResizeObserver(placePill).observe(pillNav);
+    document.fonts?.ready.then(placePill); // largeurs des onglets avec les polices chargées
   };
 
   const heading = (scope) => scope.querySelector('h1, h2');
@@ -140,9 +163,8 @@ export function createNav({ onLanguage }) {
      */
     render(ui) {
       if (!pillNav.querySelector('[data-go]')) build(ui);
-      for (const button of goButtons()) {
+      for (const button of goButtons())
         (button.querySelector('span') ?? button).textContent = ui.nav[button.dataset.go];
-      }
       pillNav.setAttribute('aria-label', ui.sections);
       tabbar.setAttribute('aria-label', ui.sections);
       langGroup.setAttribute('aria-label', ui.language);
@@ -155,9 +177,8 @@ export function createNav({ onLanguage }) {
      * @param {string} lang code de langue
      */
     pressLanguage(lang) {
-      for (const button of langGroup.querySelectorAll('button[data-lang]')) {
+      for (const button of langGroup.querySelectorAll('button[data-lang]'))
         button.setAttribute('aria-pressed', String(button.dataset.lang === lang));
-      }
     },
 
     /** @brief Affiche la rubrique du hash courant et suit les clics [data-go] et le hash. */
@@ -165,6 +186,9 @@ export function createNav({ onLanguage }) {
       document.addEventListener('click', (event) => {
         const trigger = event.target.closest?.('[data-go]');
         if (!trigger || !ids.includes(trigger.dataset.go)) return;
+        const modified = MODIFIER_KEYS.some((key) => event[key]);
+        // lien ouvert à part (nouvel onglet, fenêtre...) : comportement natif du navigateur
+        if (trigger.matches('a[href]') && (modified || event.button !== 0)) return;
         event.preventDefault();
         const hash = `#${trigger.dataset.go}`;
         if (location.hash === hash) route();

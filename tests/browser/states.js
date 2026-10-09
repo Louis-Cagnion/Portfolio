@@ -1,7 +1,17 @@
 // États de #status : chargement visible, une erreur par cause, Réessayer qui aboutit.
 import {
-  activeViews, bounded, click, hangingResponse, isVisible, makeFetch, openSite, readJson,
-  response, statusState, waitFor, waitStatus,
+  activeViews,
+  bounded,
+  click,
+  hangingResponse,
+  isVisible,
+  makeFetch,
+  openSite,
+  readJson,
+  response,
+  statusState,
+  waitFor,
+  waitStatus,
 } from './harness.js';
 import { overflowProblems, targetProblems } from './checks.js';
 import { duplicateMessages, normalize } from './text.js';
@@ -10,8 +20,13 @@ import { recordExceptions, skip, test } from './runner.js';
 const FIXTURE = 'tests/fixtures/valid-locale.json';
 const SCHEMA_PATH = 'meta.title'; // champ retiré pour provoquer l'erreur de schéma
 export const CAUSES = ['network', 'timeout', 'http', 'json', 'schema'];
-const CAUSE_NAMES = { network: 'fetch rejeté', timeout: 'délai dépassé (timeoutMs 50)',
-  http: 'HTTP 500', json: 'JSON invalide', schema: `schéma invalide (${SCHEMA_PATH} absent)` };
+const CAUSE_NAMES = {
+  network: 'fetch rejeté',
+  timeout: 'délai dépassé (timeoutMs 50)',
+  http: 'HTTP 500',
+  json: 'JSON invalide',
+  schema: `schéma invalide (${SCHEMA_PATH} absent)`,
+};
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 async function locale(lang, broken) {
@@ -86,8 +101,11 @@ async function pendingLoading(width) {
     site = await openSite({ width, fetch: scriptedFetch(state) });
   } catch (error) {
     release();
-    skip(ctx, ['loading visible tant que fetch ne répond pas', 'loading puis ready'],
-      `ouverture du site impossible (${error.message})`);
+    skip(
+      ctx,
+      ['loading visible tant que fetch ne répond pas', 'loading puis ready'],
+      `ouverture du site impossible (${error.message})`,
+    );
     return;
   }
   try {
@@ -120,11 +138,17 @@ async function errorCause(width, cause, messages) {
   const state = { mode: cause };
   let site;
   try {
-    site = await openSite({ width, fetch: scriptedFetch(state),
-      timeoutMs: cause === 'timeout' ? 50 : undefined });
+    site = await openSite({
+      width,
+      fetch: scriptedFetch(state),
+      timeoutMs: cause === 'timeout' ? 50 : undefined,
+    });
   } catch (error) {
-    skip(ctx, [`${label} : état error et message`, `${label} : Réessayer aboutit à ready`],
-      `ouverture du site impossible (${error.message})`);
+    skip(
+      ctx,
+      [`${label} : état error et message`, `${label} : Réessayer aboutit à ready`],
+      `ouverture du site impossible (${error.message})`,
+    );
     return;
   }
   try {
@@ -135,21 +159,18 @@ async function errorCause(width, cause, messages) {
       const message = statusMessage(site);
       messages[cause] = message;
       if (!message) problems.push('#status : message d\'erreur vide');
-      if (cause === 'http' && !message.includes('500')) {
+      if (cause === 'http' && !message.includes('500'))
         problems.push(`#status : le message « ${message} » ne cite pas le statut 500`);
-      }
-      if (cause === 'schema' && !message.includes(SCHEMA_PATH)) {
+      if (cause === 'schema' && !message.includes(SCHEMA_PATH))
         problems.push(`#status : le message « ${message} » ne cite pas ${SCHEMA_PATH}`);
-      }
       const retry = retryButton(site);
       if (!retry) problems.push('#status button[data-action="retry"] absent');
       else if (!isVisible(retry)) problems.push('bouton Réessayer non visible');
       return [...problems, ...uncaughtProblems(site)];
     });
     await test(ctx, `${label} : Réessayer aboutit à ready`, async () => {
-      if (!shown && site.doc.getElementById('status')?.dataset.state !== 'error') {
+      if (!shown && site.doc.getElementById('status')?.dataset.state !== 'error')
         return ['non joué : l\'état error n\'a pas été atteint'];
-      }
       const retry = retryButton(site);
       if (!retry) return ['#status button[data-action="retry"] absent'];
       state.mode = 'ok';
@@ -172,14 +193,17 @@ async function retryFailsAgain(width) {
       const before = site.fetch.calls.length;
       if (!retryButton(site)) return ['#status button[data-action="retry"] absent'];
       click(site, retryButton(site));
-      await waitFor(() => site.fetch.calls.length > before &&
-        site.doc.getElementById('status')?.dataset.state === 'error', 5000,
-      'nouvel appel au fetch puis état error', () => statusState(site));
+      await waitFor(
+        () => site.fetch.calls.length > before &&
+          site.doc.getElementById('status')?.dataset.state === 'error',
+        5000,
+        'nouvel appel au fetch puis état error',
+        () => statusState(site),
+      );
       state.mode = 'ok';
       const retry = retryButton(site);
-      if (!retry || !isVisible(retry)) {
+      if (!retry || !isVisible(retry))
         return ['bouton Réessayer absent après un second échec'];
-      }
       click(site, retry);
       await waitStatus(site, 'ready', 5000);
       return [...readyProblems(site), ...uncaughtProblems(site)];
@@ -191,8 +215,10 @@ async function retryFailsAgain(width) {
 
 async function errorLayout(width) {
   const ctx = { group: 'États', width, section: 'status' };
-  const names = ['page d\'erreur sans débordement horizontal',
-    'page d\'erreur : zones cliquables d\'au moins 44 px'];
+  const names = [
+    'page d\'erreur sans débordement horizontal',
+    'page d\'erreur : zones cliquables d\'au moins 44 px',
+  ];
   let site;
   try {
     site = await openSite({ width, fetch: scriptedFetch({ mode: 'network' }) });
@@ -222,18 +248,22 @@ export async function runStates(widths, mainWidth) {
   await pendingLoading(mainWidth);
   const messages = {};
   for (const cause of CAUSES) await errorCause(mainWidth, cause, messages);
-  await test({ group: 'États', width: mainWidth, section: 'status' },
-    'messages d\'erreur tous distincts et non vides', () => {
+  await test(
+    { group: 'États', width: mainWidth, section: 'status' },
+    'messages d\'erreur tous distincts et non vides',
+    () => {
       const missing = CAUSES.filter((cause) => !messages[cause]);
-      const problems = missing.map((cause) =>
-        `message absent ou vide : ${CAUSE_NAMES[cause]}`);
+      const problems = missing.map(
+        (cause) => `message absent ou vide : ${CAUSE_NAMES[cause]}`,
+      );
       const filled = Object.fromEntries(Object.entries(messages).filter(([, m]) => m));
-      for (const [a, b] of duplicateMessages(filled)) {
-        problems.push(`même message pour ${CAUSE_NAMES[a]} et ${CAUSE_NAMES[b]} : ` +
-          `« ${messages[a]} »`);
-      }
+      for (const [a, b] of duplicateMessages(filled))
+        problems.push(
+          `même message pour ${CAUSE_NAMES[a]} et ${CAUSE_NAMES[b]} : « ${messages[a]} »`,
+        );
       return problems;
-    });
+    },
+  );
   await retryFailsAgain(mainWidth);
   for (const width of widths) await errorLayout(width);
 }

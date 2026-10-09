@@ -124,7 +124,6 @@ export function setRich(target, html, field) {
   flush();
   open.forEach((node) => report(`<${node.localName}> jamais fermée`));
   target.replaceChildren(fragment);
-  if (problems.length) {
+  if (problems.length)
     console.error(`setRich : HTML hors liste blanche dans ${field} : ${problems.join(' ; ')}`);
-  }
 }

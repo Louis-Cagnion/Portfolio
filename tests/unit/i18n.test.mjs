@@ -23,29 +23,41 @@ describe('SUPPORTED', () => {
 });
 
 describe('initialLang', () => {
-  for (const lang of ['fr', 'en']) {
+  for (const lang of ['fr', 'en'])
     test(`la langue mémorisée supportée "${lang}" est conservée`, async () => {
       const { initialLang } = await load();
       assert.equal(initialLang(lang), lang);
     });
-  }
 
   const fallbacks = [
-    ['null', null], ['undefined', undefined], ['chaîne vide', ''], ['"de"', 'de'],
-    ['"FR " (majuscules et espace)', 'FR '], ['" en"', ' en'], ['"fr-FR"', 'fr-FR'],
-    ['"EN-US"', 'EN-US'], ['"es"', 'es'], ['espaces seuls', '   '],
-    ['un nombre', 42], ['NaN', NaN], ['0', 0], ['false', false], ['true', true],
-    ['un tableau ["en"]', ['en']], ['un objet', { lang: 'en' }],
-    ['"constructor"', 'constructor'], ['"__proto__"', '__proto__'],
-    ['"toString"', 'toString'], ['"0"', '0'],
+    ['null', null],
+    ['undefined', undefined],
+    ['chaîne vide', ''],
+    ['"de"', 'de'],
+    ['"FR " (majuscules et espace)', 'FR '],
+    ['" en"', ' en'],
+    ['"fr-FR"', 'fr-FR'],
+    ['"EN-US"', 'EN-US'],
+    ['"es"', 'es'],
+    ['espaces seuls', '   '],
+    ['un nombre', 42],
+    ['NaN', NaN],
+    ['0', 0],
+    ['false', false],
+    ['true', true],
+    ['un tableau ["en"]', ['en']],
+    ['un objet', { lang: 'en' }],
+    ['"constructor"', 'constructor'],
+    ['"__proto__"', '__proto__'],
+    ['"toString"', 'toString'],
+    ['"0"', '0'],
     ['une chaîne très longue', 'en'.repeat(100000)],
   ];
-  for (const [name, input] of fallbacks) {
+  for (const [name, input] of fallbacks)
     test(`${name} -> "fr"`, async () => {
       const { initialLang } = await load();
       assert.equal(initialLang(input), 'fr', `initialLang(${name}) doit retomber sur fr`);
     });
-  }
 
   test('sans argument -> "fr"', async () => {
     const { initialLang } = await load();
@@ -54,9 +66,8 @@ describe('initialLang', () => {
 
   test('le résultat est toujours dans SUPPORTED', async () => {
     const { initialLang, SUPPORTED } = await load();
-    for (const input of ['fr', 'en', 'de', null, '', undefined, 7, {}]) {
+    for (const input of ['fr', 'en', 'de', null, '', undefined, 7, {}])
       assert.ok(SUPPORTED.includes(initialLang(input)), `hors SUPPORTED pour ${input}`);
-    }
   });
 });
 
@@ -137,12 +148,11 @@ describe('format : valeurs limites', () => {
 
 describe('format : accolades qui ne sont pas {mot}', () => {
   const plain = ['{}', '{ }', '{ n }', '{a b}', '{', '}', '{{', 'a } b { c', '{1 2}', '{-}'];
-  for (const text of plain) {
+  for (const text of plain)
     test(`${JSON.stringify(text)} reste inchangé sans lever`, async () => {
       const { format } = await load();
       assert.equal(format(text, { n: 1, a: 'x' }), text);
     });
-  }
 
   test('accolade ouverte non fermée autour d\'une vraie clé', async () => {
     const { format } = await load();
@@ -154,32 +164,40 @@ describe('format : accolades qui ne sont pas {mot}', () => {
 describe('format : clé absente', () => {
   test('lève une Error dont le message nomme la clé', async () => {
     const { format } = await load();
-    assert.throws(() => format('Bonjour {nom}', {}),
+    assert.throws(
+      () => format('Bonjour {nom}', {}),
       (error) => error instanceof Error && error.message.includes('nom'),
-      'le message doit nommer la clé "nom"');
+      'le message doit nommer la clé "nom"',
+    );
   });
 
   test('nomme la clé manquante parmi plusieurs présentes', async () => {
     const { format } = await load();
-    assert.throws(() => format('{n} sur {total} ({reste})', { n: 1, total: 2 }),
+    assert.throws(
+      () => format('{n} sur {total} ({reste})', { n: 1, total: 2 }),
       (error) => error instanceof Error && error.message.includes('reste') &&
-        !error.message.includes('total'));
+        !error.message.includes('total'),
+    );
   });
 
   test('vars undefined, null ou vide : lève aussi', async () => {
     const { format } = await load();
-    for (const vars of [undefined, null, {}]) {
-      assert.throws(() => format('{x}', vars),
-        (e) => e instanceof Error && e.message.includes('x'), `vars = ${vars}`);
-    }
+    for (const vars of [undefined, null, {}])
+      assert.throws(
+        () => format('{x}', vars),
+        (e) => e instanceof Error && e.message.includes('x'),
+        `vars = ${vars}`,
+      );
   });
 
   test('une clé héritée du prototype compte comme absente', async () => {
     const { format } = await load();
-    for (const key of ['toString', 'constructor', '__proto__', 'hasOwnProperty']) {
-      assert.throws(() => format(`{${key}}`, {}), (e) => e instanceof Error &&
-        e.message.includes(key), `{${key}} doit être refusée`);
-    }
+    for (const key of ['toString', 'constructor', '__proto__', 'hasOwnProperty'])
+      assert.throws(
+        () => format(`{${key}}`, {}),
+        (e) => e instanceof Error && e.message.includes(key),
+        `{${key}} doit être refusée`,
+      );
   });
 
   test('la casse compte : {N} n\'est pas {n}', async () => {
@@ -202,10 +220,13 @@ describe('format : volume', () => {
     assertLinear(assert, 'format', make, (template) => format(template, { k: 'v' }));
   });
 
-  test('temps linéaire sur des accolades ouvertes sans fermeture (regex sûre)',
-    async () => {
-      const { format } = await load();
-      assertLinear(assert, 'format sur "{{{..."', (n) => '{'.repeat(n) + 'a',
-        (template) => format(template, {}));
-    });
+  test('temps linéaire sur des accolades ouvertes sans fermeture (regex sûre)', async () => {
+    const { format } = await load();
+    assertLinear(
+      assert,
+      'format sur "{{{..."',
+      (n) => '{'.repeat(n) + 'a',
+      (template) => format(template, {}),
+    );
+  });
 });

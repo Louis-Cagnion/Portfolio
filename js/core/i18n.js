@@ -47,9 +47,8 @@ export function formatParts(template, vars) {
       if (piece) parts.push({ text: piece });
       return;
     }
-    if (vars == null || !Object.hasOwn(vars, piece)) {
+    if (vars == null || !Object.hasOwn(vars, piece))
       throw new Error(`format : la clé « ${piece} » est absente des valeurs fournies`);
-    }
     parts.push({ text: String(vars[piece]), key: piece });
   });
   return parts;

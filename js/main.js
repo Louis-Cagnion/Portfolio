@@ -33,8 +33,10 @@ function languageMemory(storage) {
     try {
       return action();
     } catch (error) {
-      if (!warned) console.warn(`Choix de langue non mémorisé : stockage indisponible ` +
-        `(${error?.message})`);
+      if (!warned)
+        console.warn(
+          `Choix de langue non mémorisé : stockage indisponible (${error?.message})`,
+        );
       warned = true;
       return fallback;
     }
@@ -73,14 +75,21 @@ function mountHome(root) {
   const mission = el('p', { class: 'mission' });
   const name = el('h1', { tabindex: '-1' });
   const pitch = el('p', { class: 'pitch' });
-  const toProjects = el('button',
-    { type: 'button', class: 'btn primary', 'data-go': 'projects' });
+  const toProjects = el(
+    'button',
+    { type: 'button', class: 'btn primary', 'data-go': 'projects' },
+  );
   const toContact = el('button', { type: 'button', class: 'btn', 'data-go': 'contact' });
   const kicker = el('p', { class: 'kicker' });
   const title = el('h2', { tabindex: '-1' });
   const entries = el('dl', { class: 'hud dossier-body' });
-  root.append(mission, name, pitch, el('div', { class: 'ctas' }, toProjects, toContact),
-    el('section', { class: 'dossier', id: 'dossier' }, kicker, title, entries));
+  root.append(
+    mission,
+    name,
+    pitch,
+    el('div', { class: 'ctas' }, toProjects, toContact),
+    el('section', { class: 'dossier', id: 'dossier' }, kicker, title, entries),
+  );
   return ({ home }) => {
     mission.textContent = home.mission;
     name.textContent = home.name;
@@ -127,9 +136,8 @@ export function boot(env = {}) {
   /** @brief Monte le contenu minimal de chaque rubrique (une fois). */
   const mountSections = () => {
     for (const view of document.querySelectorAll('main > section.view')) {
-      if (!Object.hasOwn(MOUNTS, view.id)) {
+      if (!Object.hasOwn(MOUNTS, view.id))
         throw new Error(`main : rubrique #${view.id} sans contenu prévu dans MOUNTS`);
-      }
       app.updates.push(MOUNTS[view.id](view));
     }
   };
@@ -142,8 +150,9 @@ export function boot(env = {}) {
   const preload = (lang) => {
     loadLocale(lang, { fetch, timeoutMs }).then(
       (content) => status.verify(lang, content.ui),
-      (error) => console.warn(`Langue ${lang} non préchargée (nouvel essai si elle est ` +
-        `choisie) : ${error.message}`),
+      (error) => console.warn(
+        `Langue ${lang} non préchargée (nouvel essai si elle est choisie) : ${error.message}`,
+      ),
     );
   };
 

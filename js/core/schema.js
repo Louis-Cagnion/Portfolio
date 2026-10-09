@@ -108,20 +108,37 @@ const html = text();
 const label = text();
 const id = text();
 const link = record({ intro: label, label, href: text(HREF) });
-const byLevel = record({ advanced: label, intermediate: label, beginner: label,
-  unknown: label });
+const byLevel = record({
+  advanced: label,
+  intermediate: label,
+  beginner: label,
+  unknown: label,
+});
 
 const LOCALE = record({
   meta: record({ lang: id, title: label, description: label }),
   ui: record({
-    nav: record({ home: label, journey: label, skills: label, projects: label,
-      contact: label }),
+    nav: record({
+      home: label,
+      journey: label,
+      skills: label,
+      projects: label,
+      contact: label,
+    }),
     language: label,
     sections: label,
     loading: label,
     close: label,
-    errors: record({ title: label, network: label, timeout: label, http: label,
-      json: label, schema: label, retry: label, langSwitch: label }),
+    errors: record({
+      title: label,
+      network: label,
+      timeout: label,
+      http: label,
+      json: label,
+      schema: label,
+      retry: label,
+      langSwitch: label,
+    }),
   }),
   home: record({
     mission: label,
@@ -145,8 +162,15 @@ const LOCALE = record({
     prev: label,
     next: label,
     stopsLabel: label,
-    stops: list(record({ id, body: id, at: ratio, now: optional(flag), title: label,
-      when: label, paragraphs: list(html) })),
+    stops: list(record({
+      id,
+      body: id,
+      at: ratio,
+      now: optional(flag),
+      title: label,
+      when: label,
+      paragraphs: list(html),
+    })),
   }),
   skills: record({
     title: label,
@@ -166,8 +190,13 @@ const LOCALE = record({
       id,
       title: label,
       short: label,
-      items: list(record({ id, name: label, level,
-        projects: optional(list(id, { empty: true })), description: label })),
+      items: list(record({
+        id,
+        name: label,
+        level,
+        projects: optional(list(id, { empty: true })),
+        description: label,
+      })),
     })),
   }),
   projects: record({

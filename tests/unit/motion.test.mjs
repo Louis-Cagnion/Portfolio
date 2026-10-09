@@ -16,8 +16,10 @@ import { assertLinear, guard, importModule } from '../helpers.mjs';
 
 const load = () => importModule('js/core/motion.js');
 const near = (actual, expected, label) =>
-  assert.ok(Math.abs(actual - expected) < 1e-9,
-    `${label} : obtenu ${actual}, attendu ${expected}`);
+  assert.ok(
+    Math.abs(actual - expected) < 1e-9,
+    `${label} : obtenu ${actual}, attendu ${expected}`,
+  );
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 // Course contre un délai, sans laisser de minuteur en suspens.
 const within = (promise, ms) => new Promise((resolve) => {
@@ -88,9 +90,8 @@ describe('ease', () => {
 
   test('renvoie toujours un nombre fini sur les petites valeurs de t', async () => {
     const { ease } = await load();
-    for (const t of [Number.MIN_VALUE, 1e-12, 0.5, 1 - 1e-12]) {
+    for (const t of [Number.MIN_VALUE, 1e-12, 0.5, 1 - 1e-12])
       assert.ok(Number.isFinite(ease(t)), `ease(${t}) doit être fini`);
-    }
   });
 });
 
@@ -99,9 +100,8 @@ describe('hashId', () => {
 
   test('entier non signé 32 bits pour des identifiants réels', async () => {
     const { hashId } = await load();
-    for (const id of ['c', 'cpp', 'python', 'push_swap', 'js', 'WebSockets']) {
+    for (const id of ['c', 'cpp', 'python', 'push_swap', 'js', 'WebSockets'])
       assert.ok(isUint32(hashId(id)), `hashId(${JSON.stringify(id)}) = ${hashId(id)}`);
-    }
   });
 
   test('stable : mêmes résultats sur des appels répétés', async () => {
@@ -135,9 +135,8 @@ describe('hashId', () => {
 
   test('unicode, espaces, caractère nul : entiers 32 bits valides', async () => {
     const { hashId } = await load();
-    for (const s of ['é', 'Compétences', '🚀', ' ', '\u0000', 'a\u0000b', '日本語']) {
+    for (const s of ['é', 'Compétences', '🚀', ' ', '\u0000', 'a\u0000b', '日本語'])
       assert.ok(isUint32(hashId(s)), `hashId(${JSON.stringify(s)}) = ${hashId(s)}`);
-    }
   });
 
   test('chaîne d\'un million de caractères : toujours dans les bornes', async () => {
@@ -208,8 +207,11 @@ describe('animate', () => {
     const { animate } = await load();
     forbidRaf();
     const frames = [];
-    await guard(animate({ duration: 1e9, onFrame: (t) => frames.push(t), reduced: true }),
-      2000, 'animate (très longue durée)');
+    await guard(
+      animate({ duration: 1e9, onFrame: (t) => frames.push(t), reduced: true }),
+      2000,
+      'animate (très longue durée)',
+    );
     assert.deepEqual(frames, [1]);
     assert.equal(rafCalls, 0);
   });
@@ -218,8 +220,11 @@ describe('animate', () => {
     const { animate } = await load();
     delete globalThis.requestAnimationFrame;
     const frames = [];
-    await guard(animate({ duration: 300, onFrame: (t) => frames.push(t), reduced: true }),
-      2000, 'animate (sans requestAnimationFrame)');
+    await guard(
+      animate({ duration: 300, onFrame: (t) => frames.push(t), reduced: true }),
+      2000,
+      'animate (sans requestAnimationFrame)',
+    );
     assert.deepEqual(frames, [1]);
   });
 

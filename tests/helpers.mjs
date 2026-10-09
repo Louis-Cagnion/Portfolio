@@ -77,6 +77,8 @@ export function assertLinear(assert, label, makeInput, run, options = {}) {
   const first = times[0];
   const last = times[times.length - 1];
   const detail = sizes.map((n, i) => `${n}: ${times[i].toFixed(2)} ms`).join(', ');
-  assert.ok(last <= Math.max(first * maxRatio, floorMs),
-    `${label} n'est pas linéaire (${detail}, rapport ${(last / first).toFixed(1)})`);
+  assert.ok(
+    last <= Math.max(first * maxRatio, floorMs),
+    `${label} n'est pas linéaire (${detail}, rapport ${(last / first).toFixed(1)})`,
+  );
 }

@@ -12,9 +12,8 @@ export function normalize(text) {
 export function stringLeaves(value, out = []) {
   if (typeof value === 'string') out.push(value);
   else if (Array.isArray(value)) value.forEach((item) => stringLeaves(item, out));
-  else if (value && typeof value === 'object') {
+  else if (value && typeof value === 'object')
     Object.values(value).forEach((item) => stringLeaves(item, out));
-  }
   return out;
 }
 
@@ -46,12 +45,11 @@ export function exclusiveSegments(own, other, minLength = 3) {
     .map((str) => normalize(plainText(str)).toLowerCase())
     .join('\u0000');
   const result = new Set();
-  for (const str of stringLeaves(own)) {
+  for (const str of stringLeaves(own))
     for (const segment of textSegments(str, minLength)) {
       const lower = segment.toLowerCase();
       if (!haystack.includes(lower)) result.add(lower);
     }
-  }
   return [...result];
 }
 

@@ -14,8 +14,21 @@
   ou mailto: ; tout le reste en texte, avec console.error qui nomme field.
 Ouvrir : http://127.0.0.1:5501/tests/browser/ (ou port 5500), voir README.md. */
 import {
-  SECTIONS, activeViews, bounded, click, describe, errorText, goTo, isVisible, makeStorage,
-  openSite, readText, settle, shownNavs, waitFor, waitStatus,
+  SECTIONS,
+  activeViews,
+  bounded,
+  click,
+  describe,
+  errorText,
+  goTo,
+  isVisible,
+  makeStorage,
+  openSite,
+  readText,
+  settle,
+  shownNavs,
+  waitFor,
+  waitStatus,
 } from './harness.js';
 import { overflowProblems, sectionScopes, targetProblems } from './checks.js';
 import { createReport } from './report.js';
@@ -56,19 +69,16 @@ async function runContract() {
     if (tags.length !== 1) return [`${tags.length} balise(s) <script> au lieu d'une`];
     const [tag] = tags;
     const problems = [];
-    if (!/\btype\s*=\s*["']module["']/i.test(tag)) {
+    if (!/\btype\s*=\s*["']module["']/i.test(tag))
       problems.push(`${tag} : type="module" absent`);
-    }
-    if (!/\bsrc\s*=\s*["'](\.\/)?js\/main\.js["']/i.test(tag)) {
+    if (!/\bsrc\s*=\s*["'](\.\/)?js\/main\.js["']/i.test(tag))
       problems.push(`${tag} : src="js/main.js" absent`);
-    }
     if (!/\sdefer[\s>=]/i.test(tag)) problems.push(`${tag} : defer absent`);
     const at = html.indexOf(tag);
     const headEnd = html.search(/<\/head>/i);
     const bodyStart = html.search(/<body[\s>]/i);
-    if (headEnd < 0 || bodyStart < 0 || at < headEnd || at > bodyStart) {
+    if (headEnd < 0 || bodyStart < 0 || at < headEnd || at > bodyStart)
       problems.push(`${tag} : pas entre </head> et <body>`);
-    }
     if (/data-noboot/i.test(html)) problems.push('data-noboot présent dans index.html');
     return problems;
   });
@@ -87,24 +97,26 @@ async function runContract() {
       await waitStatus(site, 'ready');
       const { doc } = site;
       const problems = [];
-      for (const [selector, count] of [['header.bar nav.nav [data-go]', 5],
-        ['nav.tabbar [data-go]', 5], ['header.bar .lang button[data-lang]', 2],
-        ['section.view', 5], ['#home #dossier', 1], ['#sheet[role="dialog"]', 1],
-        ['#close', 1]]) {
+      for (const [selector, count] of [
+        ['header.bar nav.nav [data-go]', 5],
+        ['nav.tabbar [data-go]', 5],
+        ['header.bar .lang button[data-lang]', 2],
+        ['section.view', 5],
+        ['#home #dossier', 1],
+        ['#sheet[role="dialog"]', 1],
+        ['#close', 1],
+      ]) {
         const found = doc.querySelectorAll(selector).length;
         if (found !== count) problems.push(`${selector} : ${found} au lieu de ${count}`);
       }
-      for (const id of SECTIONS) {
-        if (!doc.querySelector(`section.view#${id}`)) {
+      for (const id of SECTIONS)
+        if (!doc.querySelector(`section.view#${id}`))
           problems.push(`section.view#${id} absente`);
-        }
-      }
       for (const selector of ['header.bar nav.nav', 'nav.tabbar']) {
         const targets = [...doc.querySelectorAll(`${selector} [data-go]`)]
           .map((b) => b.dataset.go);
-        if (targets.sort().join() !== [...SECTIONS].sort().join()) {
+        if (targets.sort().join() !== [...SECTIONS].sort().join())
           problems.push(`${selector} : [data-go] = [${targets.join(', ')}]`);
-        }
       }
       return [...problems, ...uncaught(site)];
     } finally {
@@ -140,22 +152,25 @@ async function runNavigation(width) {
     await settle(site, 'home');
   } catch (error) {
     site?.close();
-    skip({ ...ctx, section: 'home' }, names,
-      `ouverture du site impossible (${error.message})`);
+    skip(
+      { ...ctx, section: 'home' },
+      names,
+      `ouverture du site impossible (${error.message})`,
+    );
     await runHashOnLoad(width);
     return;
   }
   try {
     const navOk = await test({ ...ctx, section: 'home' }, names[0], () => {
       const shown = shownNavs(site);
-      if (shown.length !== 1) {
+      if (shown.length !== 1)
         return [`${shown.length} barre(s) affichée(s) : [${shown.map((n) => n.selector)}]`];
-      }
       const problems = [];
-      if (shown[0].kind !== kind) {
-        problems.push(`${shown[0].selector} affichée au lieu de la ${kind} attendue sous ` +
-          `${TABBAR_MAX_WIDTH} px`);
-      }
+      if (shown[0].kind !== kind)
+        problems.push(
+          `${shown[0].selector} affichée au lieu de la ${kind} attendue sous ` +
+            `${TABBAR_MAX_WIDTH} px`,
+        );
       const goes = [...shown[0].el.querySelectorAll('[data-go]')];
       const hidden = goes.filter((b) => !isVisible(b)).map(describe);
       if (goes.length !== 5) problems.push(`${shown[0].selector} : ${goes.length} [data-go]`);
@@ -168,12 +183,14 @@ async function runNavigation(width) {
       await goTo(site, id);
       return [];
     };
-    for (const id of ['journey', 'skills', 'projects', 'contact', 'home']) {
+    for (const id of ['journey', 'skills', 'projects', 'contact', 'home'])
       await test({ ...ctx, section: id }, `clic sur ${navName} [data-go="${id}"]`, viaNav(id));
-    }
     const homeGoes = [...site.doc.querySelectorAll('#home [data-go]')].filter(isVisible);
-    await test({ ...ctx, section: 'home' }, 'boutons [data-go] présents dans #home', () =>
-      (homeGoes.length ? [] : ['aucun [data-go] visible dans #home']));
+    await test(
+      { ...ctx, section: 'home' },
+      'boutons [data-go] présents dans #home',
+      () => (homeGoes.length ? [] : ['aucun [data-go] visible dans #home']),
+    );
     const viaHome = (button) => async () => {
       await goTo(site, 'home');
       site.win.scrollTo(0, 0);
@@ -181,52 +198,64 @@ async function runNavigation(width) {
       await settle(site, button.dataset.go);
       return [];
     };
-    for (const button of homeGoes) {
-      await test({ ...ctx, section: button.dataset.go },
-        `bouton de l'accueil ${describe(button)}`, viaHome(button));
-    }
-    await test({ ...ctx, section: 'projects' },
+    for (const button of homeGoes)
+      await test(
+        { ...ctx, section: button.dataset.go },
+        `bouton de l'accueil ${describe(button)}`,
+        viaHome(button),
+      );
+    await test(
+      { ...ctx, section: 'projects' },
       'changement de hash après chargement (#projects)',
       async () => {
         await goTo(site, 'home');
         site.win.location.hash = '#projects';
         await settle(site, 'projects');
         return [];
-      });
-    await test({ ...ctx, section: 'home' },
+      },
+    );
+    await test(
+      { ...ctx, section: 'home' },
       'retour arrière (history.back) : #journey vers #home',
       async () => {
         await goTo(site, 'home');
         await goTo(site, 'journey');
         // history.back() d'une iframe sans entrée propre ramènerait la page de la suite.
         const nav = site.win.navigation; // API désactivée : entries() vide, on joue quand même
-        if (nav && nav.entries().length > 0 && !nav.canGoBack) {
+        if (nav && nav.entries().length > 0 && !nav.canGoBack)
           return ['aucune entrée d\'historique créée par la navigation vers #journey'];
-        }
         site.win.history.back();
         await settle(site, 'home');
         return [];
-      });
+      },
+    );
     const toDossier = (from) => async () => {
       if (from === 'home') {
         site.win.location.hash = '#home';
         await settle(site, 'home');
         site.win.scrollTo(0, 0);
-      } else {
-        await goTo(site, from);
-      }
+      } else await goTo(site, from);
       site.win.location.hash = '#dossier';
       await settle(site, 'home', { checkHash: false });
-      await waitFor(() => dossierOnScreen(site), 4000, '#dossier à l\'écran',
-        () => dossierState(site));
+      await waitFor(
+        () => dossierOnScreen(site),
+        4000,
+        '#dossier à l\'écran',
+        () => dossierState(site),
+      );
       return [];
     };
-    for (const from of ['contact', 'home']) {
-      await test({ ...ctx, section: 'home' },
-        `#dossier depuis #${from} : accueil et dossier à l'écran`, toDossier(from));
-    }
-    await test({ ...ctx, section: null }, 'aucune exception non rattrapée',
-      () => uncaught(site));
+    for (const from of ['contact', 'home'])
+      await test(
+        { ...ctx, section: 'home' },
+        `#dossier depuis #${from} : accueil et dossier à l'écran`,
+        toDossier(from),
+      );
+    await test(
+      { ...ctx, section: null },
+      'aucune exception non rattrapée',
+      () => uncaught(site),
+    );
   } finally {
     site.close();
   }
@@ -246,27 +275,37 @@ async function runHashOnLoad(width) {
     }
   };
   await test({ ...ctx, section: 'skills' }, 'hash direct au chargement (#skills)', direct);
-  await test({ ...ctx, section: null },
+  await test(
+    { ...ctx, section: null },
     'hash inconnu au chargement : une rubrique et son hash',
     async () => {
       const site = await openSite({ width, hash: 'inconnu' });
       try {
         await waitStatus(site, 'ready');
-        await waitFor(() => {
-          const views = activeViews(site);
-          return views.length === 1 && site.win.location.hash === `#${views[0].id}`;
-        }, 6000, 'une seule .view.on et location.hash = #<id>', () =>
-          `vues [${activeViews(site).map((v) => v.id)}], hash "${site.win.location.hash}"`);
+        await waitFor(
+          () => {
+            const views = activeViews(site);
+            return views.length === 1 && site.win.location.hash === `#${views[0].id}`;
+          },
+          6000,
+          'une seule .view.on et location.hash = #<id>',
+          () => `vues [${activeViews(site).map((v) => v.id)}], ` +
+            `hash "${site.win.location.hash}"`,
+        );
         return uncaught(site);
       } finally {
         site.close();
       }
-    });
+    },
+  );
 }
 
 // ---------- Matrice largeur × langue × rubrique ----------
-const MATRIX_CASES = ['aucun débordement horizontal', 'zones cliquables d\'au moins 44 px',
-  'aucun texte de l\'autre langue visible'];
+const MATRIX_CASES = [
+  'aucun débordement horizontal',
+  'zones cliquables d\'au moins 44 px',
+  'aucun texte de l\'autre langue visible',
+];
 
 async function runMatrix(width, lang) {
   const ctx = { group: 'Matrice', width, lang };
@@ -277,15 +316,20 @@ async function runMatrix(width, lang) {
     await settle(site, 'home');
   } catch (error) {
     site?.close();
-    for (const section of SECTIONS) {
-      skip({ ...ctx, section }, MATRIX_CASES,
-        `ouverture du site impossible (${error.message})`);
-    }
+    for (const section of SECTIONS)
+      skip(
+        { ...ctx, section },
+        MATRIX_CASES,
+        `ouverture du site impossible (${error.message})`,
+      );
     return;
   }
   try {
-    await test({ ...ctx, section: 'home' }, `amorçage en ${lang} (lang, titre, description)`,
-      () => langAttrProblems(site, lang));
+    await test(
+      { ...ctx, section: 'home' },
+      `amorçage en ${lang} (lang, titre, description)`,
+      () => langAttrProblems(site, lang),
+    );
     for (const section of SECTIONS) {
       const at = { ...ctx, section };
       let reached = null;
@@ -307,8 +351,11 @@ async function runMatrix(width, lang) {
       });
       await test(at, MATRIX_CASES[2], () => noForeignText(site, lang));
     }
-    await test({ ...ctx, section: null }, 'aucune exception non rattrapée',
-      () => uncaught(site));
+    await test(
+      { ...ctx, section: null },
+      'aucune exception non rattrapée',
+      () => uncaught(site),
+    );
   } finally {
     site.close();
   }
@@ -319,8 +366,11 @@ async function scenario(label, run) {
   try {
     await bounded(run(), SCENARIO_MAX_MS, label);
   } catch (error) {
-    skip({ group: 'Suite', section: null }, [label],
-      `scénario interrompu : ${errorText(error)}`);
+    skip(
+      { group: 'Suite', section: null },
+      [label],
+      `scénario interrompu : ${errorText(error)}`,
+    );
   }
 }
 
@@ -332,25 +382,18 @@ async function main() {
   try {
     if (groups.includes('contrat')) await scenario('contrat', runContract);
     if (groups.includes('setrich')) await scenario('setRich', runRich);
-    if (groups.includes('etats')) {
-      await scenario('états', () => runStates(widths, mainWidth));
-    }
-    if (groups.includes('navigation')) {
-      for (const width of widths) {
+    if (groups.includes('etats')) await scenario('états', () => runStates(widths, mainWidth));
+    if (groups.includes('navigation'))
+      for (const width of widths)
         await scenario(`navigation ${width}`, () => runNavigation(width));
-      }
-    }
     if (groups.includes('langue')) {
       for (const width of widths) await scenario(`langue ${width}`, () => runLanguage(width));
       await scenario('langue (limites)', () => runLanguageEdges(mainWidth));
     }
-    if (groups.includes('matrice')) {
-      for (const width of widths) {
-        for (const lang of ['fr', 'en']) {
+    if (groups.includes('matrice'))
+      for (const width of widths)
+        for (const lang of ['fr', 'en'])
           await scenario(`matrice ${width} ${lang}`, () => runMatrix(width, lang));
-        }
-      }
-    }
   } catch (error) {
     skip({ group: 'Suite', section: null }, ['suite'], `erreur interne : ${errorText(error)}`);
   } finally {

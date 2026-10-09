@@ -36,22 +36,23 @@ export function skip(ctx, names, reason) {
 
 const NOTES = { [INLINE_LINK_LABEL]: 'exempté', [MOCKUP_SIZED_LABEL]: 'validé par Louis' };
 
-/** Range à part, sans échec, les exceptions { label, text } d'une mesure : une ligne par libellé. */
+/**
+ * Range à part, sans échec, les exceptions { label, text } d'une mesure : une ligne par
+ * libellé.
+ */
 export function recordExceptions(ctx, exceptions) {
   const byLabel = new Map();
-  for (const { label, text } of exceptions) {
+  for (const { label, text } of exceptions)
     byLabel.set(label, [...(byLabel.get(label) || []), text]);
-  }
-  for (const [label, texts] of byLabel) {
+  for (const [label, texts] of byLabel)
     report.exception({ ...ctx, name: label, detail: texts.join(' ; '), note: NOTES[label] });
-  }
 }
 
 /** Problème si `actual` diffère de `expected`, nommé par `label`. */
 export function expectEqual(problems, label, actual, expected) {
-  if (actual !== expected) {
-    problems.push(`${label} vaut ${JSON.stringify(actual)} au lieu de ` +
-      `${JSON.stringify(expected)}`);
-  }
+  if (actual !== expected)
+    problems.push(
+      `${label} vaut ${JSON.stringify(actual)} au lieu de ${JSON.stringify(expected)}`,
+    );
   return problems;
 }

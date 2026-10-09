@@ -19,9 +19,8 @@ function leaks(el) {
         /^(https:|mailto:)/.test(attr.value);
       if (!okHref) problems.push(`<${node.localName} ${attr.name}="${attr.value}"> rendu`);
     }
-    if (node.tagName === 'A' && !node.hasAttribute('href')) {
+    if (node.tagName === 'A' && !node.hasAttribute('href'))
       problems.push('<a> sans href rendu');
-    }
   }
   return problems;
 }
@@ -45,14 +44,26 @@ const fieldNamed = (errors, field) =>
   errors.some((args) => args.some((arg) => arg.includes(field)));
 
 const ALLOWED = [
-  ['<strong> et <em>', 'Texte <strong>gras</strong> et <em>italique</em>.',
-    { text: 'Texte gras et italique.', tags: { strong: 'gras', em: 'italique' } }],
-  ['<a href="https:...">', 'Voir <a href="https://example.com/page">le site</a>.',
-    { text: 'Voir le site.', href: 'https://example.com/page' }],
-  ['<a href="mailto:...">', '<a href="mailto:louis@example.com">écrire</a>',
-    { text: 'écrire', href: 'mailto:louis@example.com' }],
-  ['balises imbriquées', '<strong>tout <em>imbriqué</em></strong>',
-    { text: 'tout imbriqué', tags: { strong: 'tout imbriqué', em: 'imbriqué' } }],
+  [
+    '<strong> et <em>',
+    'Texte <strong>gras</strong> et <em>italique</em>.',
+    { text: 'Texte gras et italique.', tags: { strong: 'gras', em: 'italique' } },
+  ],
+  [
+    '<a href="https:...">',
+    'Voir <a href="https://example.com/page">le site</a>.',
+    { text: 'Voir le site.', href: 'https://example.com/page' },
+  ],
+  [
+    '<a href="mailto:...">',
+    '<a href="mailto:louis@example.com">écrire</a>',
+    { text: 'écrire', href: 'mailto:louis@example.com' },
+  ],
+  [
+    'balises imbriquées',
+    '<strong>tout <em>imbriqué</em></strong>',
+    { text: 'tout imbriqué', tags: { strong: 'tout imbriqué', em: 'imbriqué' } },
+  ],
   ['texte sans balise', 'Aucune balise ici', { text: 'Aucune balise ici' }],
 ];
 
@@ -60,14 +71,26 @@ const REJECTED = [
   ['<script>', 'Avant <script>alert(1)</script> après', '<script>'],
   ['<img onerror>', '<img src="x" onerror="alert(1)">', 'onerror'],
   ['<a href="javascript:...">', '<a href="javascript:alert(1)">piège</a>', 'javascript:'],
-  ['<a href="JAVASCRIPT:..."> en majuscules', '<a href="JAVASCRIPT:alert(1)">x</a>',
-    'JAVASCRIPT:'],
-  ['<a href=" javascript:..."> avec espace', '<a href=" javascript:alert(1)">x</a>',
-    'javascript:'],
-  ['<a href="http:...">', '<a href="http://example.com">non chiffré</a>',
-    'http://example.com'],
-  ['<a> avec onclick en plus', '<a href="https://example.com" onclick="alert(1)">x</a>',
-    'onclick'],
+  [
+    '<a href="JAVASCRIPT:..."> en majuscules',
+    '<a href="JAVASCRIPT:alert(1)">x</a>',
+    'JAVASCRIPT:',
+  ],
+  [
+    '<a href=" javascript:..."> avec espace',
+    '<a href=" javascript:alert(1)">x</a>',
+    'javascript:',
+  ],
+  [
+    '<a href="http:...">',
+    '<a href="http://example.com">non chiffré</a>',
+    'http://example.com',
+  ],
+  [
+    '<a> avec onclick en plus',
+    '<a href="https://example.com" onclick="alert(1)">x</a>',
+    'onclick',
+  ],
   ['<a> avec target en plus', '<a href="https://example.com" target="_blank">x</a>', 'target'],
   ['<strong class>', '<strong class="x">gras</strong>', 'class'],
   ['<em style>', '<em style="color:red">rouge</em>', 'style'],
@@ -90,49 +113,42 @@ export async function runRich() {
   }
   const guard = (fn) => () => (loadError ? [loadError] : fn(mod.setRich));
 
-  for (const [name, html, expected] of ALLOWED) {
+  for (const [name, html, expected] of ALLOWED)
     await test(ctx, `autorisé : ${name}`, guard((setRich) => {
       const { el, errors } = render(setRich, html);
       const problems = leaks(el);
-      if (el.textContent !== expected.text) {
+      if (el.textContent !== expected.text)
         problems.push(`texte « ${el.textContent} » au lieu de « ${expected.text} »`);
-      }
       for (const [tag, text] of Object.entries(expected.tags || {})) {
         const node = el.querySelector(tag);
         if (!node) problems.push(`<${tag}> non rendu`);
-        else if (node.textContent !== text) {
+        else if (node.textContent !== text)
           problems.push(`<${tag}> contient « ${node.textContent} »`);
-        }
       }
       if (expected.href) {
         const link = el.querySelector('a');
         if (!link) problems.push('<a> non rendu');
-        else if (link.getAttribute('href') !== expected.href) {
-          problems.push(`href « ${link.getAttribute('href')} » au lieu de ` +
-            `« ${expected.href} »`);
-        }
+        else if (link.getAttribute('href') !== expected.href)
+          problems.push(
+            `href « ${link.getAttribute('href')} » au lieu de « ${expected.href} »`,
+          );
       }
-      if (errors.length) {
+      if (errors.length)
         problems.push(`console.error appelée à tort : ${errors[0].join(' ')}`);
-      }
       return problems;
     }));
-  }
 
-  for (const [name, html, literal] of REJECTED) {
+  for (const [name, html, literal] of REJECTED)
     await test(ctx, `refusé, rendu en texte : ${name}`, guard((setRich) => {
       const { el, errors } = render(setRich, html);
       const problems = leaks(el);
-      if (!el.textContent.includes(literal)) {
+      if (!el.textContent.includes(literal))
         problems.push(`« ${literal} » absent du texte affiché « ${el.textContent} »`);
-      }
       if (!errors.length) problems.push('aucun console.error');
-      else if (!fieldNamed(errors, FIELD)) {
+      else if (!fieldNamed(errors, FIELD))
         problems.push(`console.error ne nomme pas le champ ${FIELD} : ${errors[0].join(' ')}`);
-      }
       return problems;
     }));
-  }
 
   await test(ctx, 'balise non fermée : aucune exception, texte conservé', guard((setRich) => {
     const { el } = render(setRich, 'Début <strong>sans fin');

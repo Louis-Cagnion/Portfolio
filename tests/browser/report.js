@@ -38,13 +38,22 @@ function bindFailureFilter() {
 /** Crée le rapport : `add(résultat)`, `exception(entrée)`, `finish()`. */
 export function createReport(root = document.getElementById('report')) {
   bindFailureFilter();
-  const results = { done: false, passed: 0, failed: 0, failures: [], exceptions: [],
-    startedAt: new Date().toISOString(), durationMs: 0 };
+  const results = {
+    done: false,
+    passed: 0,
+    failed: 0,
+    failures: [],
+    exceptions: [],
+    startedAt: new Date().toISOString(),
+    durationMs: 0,
+  };
   window.__results = results;
   const start = performance.now();
   const summary = document.getElementById('summary');
-  const exceptionsBody = table(document.getElementById('exceptions'),
-    'Exceptions (non bloquantes) : exemptées ou validées par Louis');
+  const exceptionsBody = table(
+    document.getElementById('exceptions'),
+    'Exceptions (non bloquantes) : exemptées ou validées par Louis',
+  );
   const body = table(root, 'Résultats');
 
   const refresh = () => {
@@ -73,8 +82,13 @@ export function createReport(root = document.getElementById('report')) {
     add(entry) {
       const ok = entry.problems.length === 0;
       const detail = entry.problems.join(' ; ');
-      const flat = { group: entry.group, name: entry.name, width: entry.width ?? null,
-        lang: entry.lang ?? null, section: entry.section ?? null };
+      const flat = {
+        group: entry.group,
+        name: entry.name,
+        width: entry.width ?? null,
+        lang: entry.lang ?? null,
+        section: entry.section ?? null,
+      };
       if (ok) results.passed += 1;
       else {
         results.failed += 1;

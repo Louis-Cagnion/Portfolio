@@ -101,8 +101,10 @@ export function makeCamera(svg) {
   camera.ratio = () => svg.clientHeight / svg.clientWidth || DEFAULT_RATIO;
   camera.apply = () => {
     const height = camera.w * camera.ratio();
-    svg.setAttribute('viewBox',
-      `${camera.cx - camera.w / 2} ${camera.cy - height / 2} ${camera.w} ${height}`);
+    svg.setAttribute(
+      'viewBox',
+      `${camera.cx - camera.w / 2} ${camera.cy - height / 2} ${camera.w} ${height}`,
+    );
     svg.style.setProperty('--u', (camera.w / (svg.clientWidth || 1)).toFixed(4));
   };
   camera.set = (target) => {
