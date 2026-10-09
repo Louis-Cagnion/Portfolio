@@ -31,7 +31,7 @@ assets/favicon.svg
 css/                  tokens.css, layout.css, home.css, journey.css, skills.css, projects.css, contact.css
 js/main.js            boot(env) injectable : chargement, rendu, bascule de langue, page d'erreur
 js/core/              data.js (loadLocale, délai 10 s, une erreur par cause, cache), schema.js (validation pure),
-                      i18n.js (langue initiale, format, langchange), dom.js (el, svg, setRich),
+                      i18n.js (langue initiale, format), dom.js (el, svg, setRich),
                       motion.js (reduced, ease, lerp, hashId, animate, makeCamera), router.js (hash, saut hyperespace)
 js/ui/                starfield.js, nav.js, sheet.js, status.js
 js/sections/          home.js, journey.js + journey-art.js, skills.js + skills-layout.js + skills-art.js, projects.js, contact.js
@@ -50,7 +50,8 @@ Identique en FR et en EN. Les champs non textuels (identifiants, ordre, `href`, 
 {
   "meta": { "lang", "title", "description" },
   "ui": { "nav": { "home", "journey", "skills", "projects", "contact" }, "language", "sections",
-          "loading", "close", "errors": { "title", "network", "timeout", "http", "json", "schema", "retry", "langSwitch" } },
+          "loading", "close", "errors": { "title", "network", "timeout", "http", "json", "schema", "unexpected", "retry",
+                                                   "langSwitch" } },
   "home": { "mission", "name", "pitch", "ctas": { "projects", "contact" },
             "telemetry": { "title", "rows": [{ "label", "value", "live" }] },
             "dossier": { "kicker", "title", "entries": [{ "label", "html" }] } },
@@ -78,11 +79,11 @@ Identique en FR et en EN. Les champs non textuels (identifiants, ordre, `href`, 
 
 | Clé | FR (maquette) | EN |
 |---|---|---|
-| `home.mission` | Mission en cours : de la piscine 42 à l'intelligence artificielle | Current mission: from the 42 piscine to artificial intelligence |
+| `home.mission` | Mission : de la piscine 42 à l'intelligence artificielle | Mission: from the 42 piscine to artificial intelligence |
 | `home.pitch` | Développeur au Groupe Tressol-Chabrier, formé à 42 Perpignan. Parti de zéro en 2024, je conçois des applications et des pipelines de données en production. | Developer at Groupe Tressol-Chabrier, trained at 42 Perpignan. Starting from scratch in 2024, I build applications and data pipelines running in production. |
 | `home.ctas` | Voir mes projets / Me contacter | See my projects / Contact me |
 | `telemetry` | Télémétrie ; Décollage : Piscine 42, 2024 ; Tronc commun 42 : Terminé en 18 mois ; Position actuelle : Groupe Tressol-Chabrier, alternance RNCP6 de 2 ans ; Prochaine étape : RNCP7 en IA, alternance 1 an ; Destination : Recherche en IA | Telemetry; Lift-off: 42 piscine, 2024; 42 common core: Completed in 18 months; Current position: Groupe Tressol-Chabrier, 2-year RNCP level 6 work-study; Next stage: RNCP level 7 in AI, 1-year work-study; Destination: AI research |
-| `dossier` | Dossier du pilote ; Je me présente ; Formation / Entraînement en cours / Projets passion | Pilot file; About me; Education / Current training / Passion projects |
+| `dossier` | Dossier du pilote ; Je me présente ; Formation / Entraînement continu / Projets passion | Pilot file; About me; Education / Continuous training / Passion projects |
 | `journey` | Mon parcours ; Choisis une escale pour faire voyager le vaisseau et lire son récit. ; Utilise les flèches pour changer d'escale. ; escale {n} sur {total} ; Étape précédente / suivante ; Étapes du parcours | My journey; Choose a stop to fly the ship there and read its story.; Use the arrows to change stops.; stop {n} of {total}; Previous / Next stop; Journey stops |
 | `stops[].title` | Première piscine, Seconde chance, Tronc commun, Codewars, Tressol-Chabrier, Alternance RNCP6, RNCP7 IA, Recherche en IA | First piscine, Second chance, Common core, Codewars, Tressol-Chabrier, RNCP 6 work-study, RNCP 7 in AI, AI research |
 | `stops[].when` | 2024, 2024, nov. 2024 à 2026, pendant le cursus, depuis juillet 2026, sept. 2026 à 2028, ensuite, horizon | 2024, 2024, Nov. 2024 to 2026, during the curriculum, since July 2026, Sept. 2026 to 2028, next, on the horizon |
@@ -91,7 +92,7 @@ Identique en FR et en EN. Les champs non textuels (identifiants, ordre, `href`, 
 | `projects` | Quatre systèmes stellaires, un par univers : chaque planète en orbite est un projet. Sélectionne un système pour t'en approcher, ou directement une planète pour ouvrir son projet. ; Tous les systèmes ; {n} projets ; Approcher le système {name} ; Système {name} ; Liste des projets ; Projets perso | Four star systems, one per world: each orbiting planet is a project. Select a system to fly closer, or a planet to open its project directly.; All systems; {n} projects; Approach the {name} system; {name} system; Project list; Personal projects |
 | `contact` | Une question, une opportunité, une envie d'échanger ? ; Comme le disque d'or embarqué sur les sondes Voyager, ce message attend que quelqu'un le trouve. Mon adresse email est gravée au centre du disque. Chaque sillon mène aussi à l'un de mes réseaux. | A question, an opportunity, or just want to talk?; Like the golden record carried by the Voyager probes, this message is waiting for someone to find it. My email address is engraved at the centre of the disc. Each groove also leads to one of my networks. |
 | `contact` (disque) | Écrire un e-mail ; COPIER L'EMAIL / EMAIL COPIÉ ; Email copié ; Copie impossible : l'adresse est {mail} ; Sillon {n} : {name} ; Touche-le encore pour l'ouvrir. ; Touche le disque pour choisir un contact ; Revenir au disque entier ; Disque d'or : adresse au centre, un réseau par sillon | Write an email; COPY EMAIL / EMAIL COPIED; Email copied; Copy failed: the address is {mail}; Groove {n}: {name}; Tap it again to open it.; Tap the disc to choose a contact; Back to the whole disc; Golden record: address at the centre, one network per groove |
-| `ui` | Langue ; Sections ; Fermer ; Tentative de connexion avec le pilote… ; erreur : titre, un message par cause (réseau, délai dépassé, HTTP {status}, JSON invalide, champ {path} manquant), Réessayer | Language; Sections; Close; Attempting to connect with the pilot…; same causes; Retry |
+| `ui` | Langue ; Sections ; Fermer ; Tentative de connexion avec le pilote… ; erreur : titre, un message par cause (réseau, délai dépassé, HTTP {status}, JSON invalide, champ {path} manquant, exception inattendue : « L'intrication quantique a tenté de se faire avec les particules d'une autre ligne temporelle. Réessaie. »), Réessayer | Language; Sections; Close; Attempting to connect with the pilot…; same causes (unexpected: "Quantum entanglement tried to form with particles from another timeline. Try again."); Retry |
 
 À traduire en S2 : 36 descriptions de compétences (WebSockets à rédiger), 18 résumés et listes de technologies de projets (12 encore à écrire), 8 titres et noms courts de constellations.
 
