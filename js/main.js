@@ -107,7 +107,8 @@ function mountHome(root) {
 }
 
 /* Contenu minimal de chaque rubrique, par identifiant de section.view, en attendant les
-modules js/sections/ (S5 à S9) : chaque montage rend la mise à jour des textes. */
+modules js/sections/ (S5 à S9) : chaque montage insère sa structure d'un bloc, en dernier
+(rien s'il lève), et rend la mise à jour des textes. */
 const MOUNTS = {
   home: mountHome,
   journey: (root) => mountSimple(root, (c) => [c.journey.title, c.journey.lede.pointer]),
@@ -120,25 +121,35 @@ const MOUNTS = {
  * @brief Amorce le site : langue initiale, chargement, rendu, bascule de langue.
  *
  * Seule la dernière demande de langue s'applique ; une langue déjà chargée s'affiche sans
- * écran de chargement. L'autre langue est préchargée après le premier rendu.
+ * écran de chargement, sauf par Réessayer. L'autre langue est préchargée après le premier
+ * rendu. Toute exception levée après la création du panneau #status aboutit à son écran
+ * d'erreur ; l'échec de cette création part seul en console.error.
  *
  * @param {{ fetch?: Function, storage?: object | null, timeoutMs?: number }} [env] fetch
  *   (celui de la page par défaut), stockage du choix (localStorage par défaut), délai de
  *   chargement en ms (10 000 par défaut)
  *
- * @returns {Promise<void>} résolue quand le premier chargement aboutit ou s'affiche en erreur
+ * @returns {Promise<void>} jamais rejetée ; résolue quand le premier chargement aboutit ou
+ *   s'affiche en erreur
  */
 export function boot(env = {}) {
   const { fetch = (...args) => window.fetch(...args), storage = pageStorage, timeoutMs } = env;
   const memory = languageMemory(storage);
-  const app = { shown: null, wanted: null, ticket: 0, updates: [] };
+  const app = {
+    shown: null,
+    wanted: null,
+    ticket: 0,
+    started: false,
+    updates: new Map(),
+  };
 
-  /** @brief Monte le contenu minimal de chaque rubrique (une fois). */
+  /** @brief Monte le contenu minimal de chaque rubrique pas encore montée. */
   const mountSections = () => {
     for (const view of document.querySelectorAll('main > section.view')) {
+      if (app.updates.has(view)) continue;
       if (!Object.hasOwn(MOUNTS, view.id))
         throw new Error(`main : rubrique #${view.id} sans contenu prévu dans MOUNTS`);
-      app.updates.push(MOUNTS[view.id](view));
+      app.updates.set(view, MOUNTS[view.id](view));
     }
   };
 
@@ -159,13 +170,16 @@ export function boot(env = {}) {
   /**
    * @brief Affiche une langue chargée : textes, attributs de la page, fin du chargement.
    *
+   * Rejouable après une exception : chaque rubrique est montée et la barre démarrée une
+   * seule fois ; app.shown ne nomme que la langue dont tous les textes sont en place.
+   *
    * @param {string} lang code de langue
    * @param {object} content JSON validé de cette langue
    */
   const apply = (lang, content) => {
-    const first = app.shown === null;
-    if (first) mountSections();
+    mountSections();
     if (lang !== app.shown) {
+      app.shown = null;
       app.updates.forEach((update) => update(content));
       nav.render(content.ui);
       status.verify(lang, content.ui);
@@ -178,7 +192,8 @@ export function boot(env = {}) {
     memory.write(lang);
     const hadFocus = status.hasFocus();
     status.ready();
-    if (first) {
+    if (!app.started) {
+      app.started = true;
       nav.start();
       preload(otherLang(lang));
     }
@@ -186,45 +201,74 @@ export function boot(env = {}) {
   };
 
   /**
-   * @brief Demande une langue : affichage immédiat si elle est en cache, sinon chargement.
+   * @brief Affiche l'échec d'une langue sans jamais lever.
+   *
+   * Une exception autre que LocaleError part en console.error (le panneau n'en montre que
+   * errors.unexpected), de même qu'un échec du panneau lui-même.
    *
    * @param {string} lang code de langue
-   *
-   * @returns {Promise<void>} résolue une fois la langue affichée, l'erreur affichée, ou la
-   *   demande dépassée par une plus récente
+   * @param {unknown} error valeur levée au chargement ou à l'affichage
    */
-  const request = async (lang) => {
-    const ticket = ++app.ticket;
-    app.wanted = lang;
-    nav.pressLanguage(lang);
-    const cached = cachedLocale(lang);
-    if (cached) {
-      apply(lang, cached);
-      return;
-    }
-    status.loading(lang);
-    let content;
+  const fail = (lang, error) => {
+    if (!(error instanceof LocaleError))
+      console.error(`main : langue ${lang} non affichée (exception inattendue)`, error);
     try {
-      content = await loadLocale(lang, { fetch, timeoutMs });
-    } catch (error) {
-      if (ticket !== app.ticket) return;
-      if (!(error instanceof LocaleError)) throw error;
       status.error(lang, error);
-      return;
+    } catch (panelError) {
+      console.error('main : écran d\'erreur impossible à afficher', panelError);
     }
-    if (ticket === app.ticket) apply(lang, content);
   };
 
-  const nav = createNav({
-    onLanguage: (lang) => {
-      if (lang !== app.wanted || status.state === 'error') request(lang);
-    },
-  });
-  const status = createStatus({
-    covered: [document.querySelector('main')],
-    onRetry: request,
-    onSwitch: request,
-  });
+  /**
+   * @brief Demande une langue : affichage immédiat si elle est en cache, sinon chargement.
+   *
+   * Crée la barre si elle n'existe pas encore. Toute exception, à cette création, au
+   * chargement ou à l'affichage, aboutit à l'erreur de cette langue.
+   *
+   * @param {string} lang code de langue
+   * @param {{ reload?: boolean }} [options] reload : passe par l'état de chargement même si
+   *   la langue est en cache (Réessayer)
+   *
+   * @returns {Promise<void>} jamais rejetée ; résolue une fois la langue affichée, l'erreur
+   *   affichée, ou la demande dépassée par une plus récente
+   */
+  const request = async (lang, { reload = false } = {}) => {
+    const ticket = ++app.ticket;
+    app.wanted = lang;
+    try {
+      nav ??= createNav({ onLanguage });
+      nav.pressLanguage(lang);
+      const cached = reload ? null : cachedLocale(lang);
+      if (!cached) status.loading(lang);
+      const content = cached ?? (await loadLocale(lang, { fetch, timeoutMs }));
+      if (ticket === app.ticket) apply(lang, content);
+    } catch (error) {
+      if (ticket === app.ticket) fail(lang, error);
+    }
+  };
+
+  /**
+   * @brief Bouton de langue de la barre : demande cette langue si elle ne l'est pas déjà
+   *   ou si l'écran d'erreur est affiché.
+   *
+   * @param {string} lang code de langue
+   */
+  const onLanguage = (lang) => {
+    if (lang !== app.wanted || status.state === 'error') request(lang);
+  };
+
+  let nav = null; // créée par request() ; création rejouée tant qu'elle lève
+  let status;
+  try {
+    status = createStatus({
+      covered: [document.querySelector('main')],
+      onRetry: (lang) => request(lang, { reload: true }),
+      onSwitch: (lang) => request(lang),
+    });
+  } catch (error) {
+    console.error('main : panneau #status impossible à créer, site non affiché', error);
+    return Promise.resolve();
+  }
   return request(initialLang(memory.read()));
 }
 

@@ -90,6 +90,7 @@ export function createNav({ onLanguage }) {
   const ids = views.map((view) => view.id);
   const pill = el('span', { class: 'pill', 'aria-hidden': 'true' });
   let current = null;
+  let built = false;
 
   trackBarHeight(bar);
   langGroup.addEventListener('click', (event) => {
@@ -109,21 +110,26 @@ export function createNav({ onLanguage }) {
     pill.style.width = `${active.offsetWidth}px`;
   };
 
+  /**
+   * @brief Crée les onglets de la pilule et de la barre d'onglets, puis suit leur largeur.
+   *
+   * Rejouable après un échec : chaque conteneur se remplit d'un bloc, une seule fois.
+   *
+   * @param {object} ui textes `ui` d'une langue (nav)
+   */
   const build = (ui) => {
-    pillNav.append(
-      pill,
-      ...ids.map((id) => el('button', { type: 'button', 'data-go': id }, ui.nav[id])),
+    const tab = (id, ...content) => el(
+      'button',
+      { type: 'button', 'data-go': id },
+      ...content,
     );
-    tabbar.append(
-      ...ids.map((id) => el(
-        'button',
-        { type: 'button', 'data-go': id },
-        icon(id),
-        el('span', {}, ui.nav[id]),
-      )),
-    );
+    if (!pillNav.querySelector('[data-go]'))
+      pillNav.append(pill, ...ids.map((id) => tab(id, ui.nav[id])));
+    if (!tabbar.querySelector('[data-go]'))
+      tabbar.append(...ids.map((id) => tab(id, icon(id), el('span', {}, ui.nav[id]))));
     new ResizeObserver(placePill).observe(pillNav);
     document.fonts?.ready.then(placePill); // largeurs des onglets avec les polices chargées
+    built = true;
   };
 
   const heading = (scope) => scope.querySelector('h1, h2');
@@ -162,7 +168,7 @@ export function createNav({ onLanguage }) {
      * @param {object} ui textes `ui` d'une langue (nav, sections, language)
      */
     render(ui) {
-      if (!pillNav.querySelector('[data-go]')) build(ui);
+      if (!built) build(ui);
       for (const button of goButtons())
         (button.querySelector('span') ?? button).textContent = ui.nav[button.dataset.go];
       pillNav.setAttribute('aria-label', ui.sections);

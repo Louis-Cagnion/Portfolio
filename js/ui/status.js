@@ -4,6 +4,7 @@ ready (masqué). Le panneau parle la langue qu'il charge ; ses textes viennent d
 <template data-lang> du panneau, puisque les données de cette langue manquent encore (ou ont
 échoué). Ces modèles recopient ui.loading et ui.errors de data/*.json : verify() le contrôle.
 */
+import { LOCALE_ERROR_CODES, LocaleError } from '../core/data.js';
 import { el } from '../core/dom.js';
 import { formatParts, otherLang, SUPPORTED } from '../core/i18n.js';
 
@@ -103,16 +104,20 @@ export function createStatus({ covered = [], onRetry, onSwitch }) {
     /**
      * @brief État d'erreur : message propre à la cause, boutons, focus sur le titre.
      *
+     * Le texte de l'exception n'est jamais affiché.
+     *
      * @param {string} lang langue en échec (textes du panneau, Réessayer la recharge)
-     * @param {{ code: string, status?: number, path?: string }} error LocaleError
+     * @param {unknown} error LocaleError ({ code, status?, path? }) ou toute autre valeur
+     *   levée (message errors.unexpected)
      */
     error(lang, error) {
       failed = lang;
       announce('alert');
       title.textContent = text(lang, 'errors.title');
+      const known = error instanceof LocaleError && LOCALE_ERROR_CODES.includes(error.code);
       const parts = formatParts(
-        text(lang, `errors.${error.code}`),
-        { status: error.status, path: error.path },
+        text(lang, `errors.${known ? error.code : 'unexpected'}`),
+        { status: error?.status, path: error?.path },
       );
       message.replaceChildren(
         ...parts.map((part) => (part.key ? el('code', {}, part.text) : part.text)),

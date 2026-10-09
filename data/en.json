@@ -23,12 +23,13 @@
       "http": "Our entangled particles got tangled up: the pilot received a cat both dead and alive instead of the site (code {status}).",
       "json": "The content file is invalid (unreadable JSON).",
       "schema": "The content is incomplete: the field {path} is missing or invalid.",
+      "unexpected": "Quantum entanglement tried to form with particles from another timeline. Try again.",
       "retry": "Retry",
       "langSwitch": "View the site in French"
     }
   },
   "home": {
-    "mission": "Current mission: from the 42 piscine to artificial intelligence",
+    "mission": "Mission: from the 42 piscine to artificial intelligence",
     "name": "Louis Cagnion",
     "pitch": "Developer at Groupe Tressol-Chabrier, trained at 42 Perpignan. Starting from scratch in 2024, I build applications and data pipelines running in production.",
     "ctas": { "projects": "See my projects", "contact": "Contact me" },
@@ -55,7 +56,7 @@
           "html": "My name is Louis Cagnion and I am a student at 42 Perpignan. During my common core curriculum, I completed various projects that allowed me to learn C and C++, as well as several practical tools such as MinilibX for graphical rendering, Docker for sharing applications compatible with most environments, and how networks and APIs work. I also learned to manage data on a website visited by users through backend and frontend development."
         },
         {
-          "label": "Current training",
+          "label": "Continuous training",
           "html": "Alongside my job, I practice in areas I have not yet had the chance to explore in depth, such as Python applied to AI, the use of LLMs, and the various tools used in data science, machine learning, and deep learning."
         },
         {

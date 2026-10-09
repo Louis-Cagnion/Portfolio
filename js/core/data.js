@@ -7,6 +7,15 @@ const DEFAULT_TIMEOUT_MS = 10000;
 const loaded = new Map(); // langue -> JSON validé
 const pending = new Map(); // langue -> Promise en cours
 
+// Seules causes de LocaleError, chacune avec son message ui.errors.<code>.
+export const LOCALE_ERROR_CODES = Object.freeze([
+  'network',
+  'timeout',
+  'http',
+  'json',
+  'schema',
+]);
+
 /**
  * @brief Échec de chargement d'une langue, avec sa cause.
  *
@@ -17,12 +26,15 @@ export class LocaleError extends Error {
   /**
    * @brief Crée l'erreur d'une cause.
    *
-   * @param {'network' | 'timeout' | 'http' | 'json' | 'schema'} code cause
+   * @param {string} code cause, élément de LOCALE_ERROR_CODES ; tout autre code lève une
+   *   TypeError qui le nomme
    * @param {string} message phrase qui nomme le fichier et la cause
    * @param {{ status?: number, path?: string, cause?: unknown }} [details] statut HTTP,
    *   chemin fautif, erreur d'origine
    */
   constructor(code, message, { status, path, cause } = {}) {
+    if (!LOCALE_ERROR_CODES.includes(code))
+      throw new TypeError(`LocaleError : code inconnu ${JSON.stringify(code)}`);
     super(message, { cause });
     this.name = 'LocaleError';
     this.code = code;
