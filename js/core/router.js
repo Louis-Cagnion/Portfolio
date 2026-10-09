@@ -50,13 +50,18 @@ export function listViews() {
 /**
  * @brief Carte de déplacement de la courbure en barillet (canaux rouge et vert).
  *
- * @returns {string} image PNG de LENS_SIZE pixels de côté, en URL data:
+ * @returns {string | null} image PNG de LENS_SIZE pixels de côté, en URL data: ; null, avec un
+ *   console.error, si le contexte 2D est indisponible
  */
 function lensMap() {
   const canvas = document.createElement('canvas');
   canvas.width = LENS_SIZE;
   canvas.height = LENS_SIZE;
   const context = canvas.getContext('2d');
+  if (!context) {
+    console.error('router : contexte 2D indisponible pour la carte de courbure #fovMap');
+    return null;
+  }
   const image = context.createImageData(LENS_SIZE, LENS_SIZE);
   const last = LENS_SIZE - 1;
   for (let row = 0; row < LENS_SIZE; row++)
@@ -188,12 +193,13 @@ export function createRouter({ onView, sky = null }) {
   const flash = decor('.flash', 'flash');
   const map = decor('#fovMap', 'courbure');
   const displacement = decor('#fovDisp', 'courbure');
-  const bend = map && displacement; // carte absente : déplacement faussé, courbure laissée à 0
+  const lens = map && lensMap();
+  const bend = lens && displacement; // sans carte : déplacement faussé, courbure laissée à 0
   let current = null;
   let jump = null; // saut en cours : { from, found, timers, frame }
   let waiting = null; // cible dont le titre attend que main ne soit plus inerte
 
-  map?.setAttribute('href', lensMap());
+  if (lens) map.setAttribute('href', lens);
 
   /**
    * @brief Montre une rubrique seule.
