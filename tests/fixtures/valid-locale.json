@@ -12,6 +12,7 @@
     "errors": {
       "title": "Erreur", "network": "Réseau", "timeout": "Délai dépassé",
       "http": "HTTP {status}", "json": "JSON invalide", "schema": "Champ {path} manquant",
+      "unexpected": "Exception inattendue",
       "retry": "Réessayer", "langSwitch": "Changer de langue"
     }
   },

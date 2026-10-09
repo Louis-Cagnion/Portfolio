@@ -177,6 +177,9 @@ const stage = () => document.getElementById('stage') || document.body;
  * Charge le site dans une iframe de `width` × `height` px puis, si `boot` est vrai, importe
  * js/main.js dans l'iframe et appelle boot({ fetch, storage[, timeoutMs] }).
  * `hash` (sans #) est posé avant l'amorçage, sans nouvelle entrée d'historique.
+ * `prepare(site)` modifie le cadre chargé avant l'amorçage (élément retiré, API absente).
+ * Après l'amorçage : `site.booted` vrai si la promesse de boot() est résolue, `bootError`
+ * si elle est rejetée.
  */
 export async function openSite(options) {
   const {
@@ -187,8 +190,16 @@ export async function openSite(options) {
     timeoutMs,
     hash,
     boot = true,
+    prepare,
   } = options;
-  const site = { width, storage, fetch: fakeFetch, uncaught: [], bootError: null };
+  const site = {
+    width,
+    storage,
+    fetch: fakeFetch,
+    uncaught: [],
+    booted: false,
+    bootError: null,
+  };
   fakeFetch.site = site;
   const frame = document.createElement('iframe');
   frame.title = `site à ${width} px`;
@@ -215,6 +226,7 @@ export async function openSite(options) {
     });
     shimHistory(site.win);
     if (hash) site.win.history.replaceState(null, '', `#${hash}`);
+    if (prepare) await prepare(site);
     if (boot) await bootSite(site, { fetch: fakeFetch, storage, timeoutMs });
   } catch (error) {
     frame.remove();
@@ -267,7 +279,14 @@ async function bootSite(site, env) {
     throw new Error(`boot() a levé : ${errorText(error)}`);
   }
   if (result && typeof result.then === 'function')
-    result.then(null, (error) => { site.bootError = error; });
+    result.then(
+      () => {
+        site.booted = true;
+      },
+      (error) => {
+        site.bootError = error;
+      },
+    );
 }
 
 // ---------- Lecture de l'état du site ----------

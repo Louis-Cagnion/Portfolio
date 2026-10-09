@@ -6,6 +6,7 @@ Contrat testé : js/core/schema.js (validation pure du JSON d'une langue).
   - champ manquant, mauvais type, tableau vide là où une liste est attendue,
     chaîne vide : chacun produit son chemin ;
   - ne lève jamais (même pour null, un nombre, un tableau) et ne modifie pas `data`.
+  - ui.errors.unexpected (exception inattendue) est obligatoire comme les autres causes.
 Fixture valide minimale : tests/fixtures/valid-locale.json.
 Lancer : node --test (depuis la racine du dépôt).
 */
@@ -207,6 +208,22 @@ describe('validateLocale : champs fautifs nommés par leur chemin', () => {
     for (const p of expected)
       assert.ok(found.includes(p), `chemin ${p} absent de ${JSON.stringify(found)}`);
     assert.equal(new Set(found).size, found.length, `doublons dans ${JSON.stringify(found)}`);
+  });
+
+  test('ui.errors.unexpected absent : seul ce chemin est nommé', async () => {
+    const validateLocale = await load();
+    assert.deepEqual(
+      validateLocale(mutate(['ui', 'errors', 'unexpected'], DELETE)),
+      ['ui.errors.unexpected'],
+    );
+  });
+
+  test('ui.errors.unexpected vide : seul ce chemin est nommé', async () => {
+    const validateLocale = await load();
+    assert.deepEqual(
+      validateLocale(mutate(['ui', 'errors', 'unexpected'], '')),
+      ['ui.errors.unexpected'],
+    );
   });
 
   test('un seul défaut ne produit pas de faux positifs ailleurs', async () => {

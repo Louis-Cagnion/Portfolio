@@ -1,5 +1,5 @@
 /*
-Tests des données réelles (data/fr.json, data/en.json) et des tirets cadratins.
+Tests des données réelles (data/fr.json, data/en.json).
 Critères : docs/design/plan.md (sections Schéma des données et Tests).
  - conformité à validateLocale (js/core/schema.js : string[] de chemins fautifs)
  - parité FR/EN : mêmes clés et longueurs ; champs non textuels égaux (id, ordre, href,
@@ -7,23 +7,16 @@ Critères : docs/design/plan.md (sections Schéma des données et Tests).
  - une seule escale `now: true` ; références de projets existantes ; identifiants uniques
  - aucune chaîne vide ou d'espaces ; HTML limité à <strong>, <em>, <a href="https:|mailto:">
    et seulement dans html, paragraphs[], blocks[].html, blocks[].items[]
- - un seul canal mailto: dans contact ; aucun tiret cadratin (U+2014) dans data/, js/,
-   css/, index.html, README.md (jamais docs/ ni tests/)
+ - un seul canal mailto: dans contact
+Textes du site (plan, #status, tirets cadratins, temps relatif) : tests/texts.test.mjs.
 Les détecteurs sont eux-mêmes vérifiés (sections « détecteurs ») et testés en volume.
 Lancer : node --test (depuis la racine du dépôt).
 */
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync, readdirSync, statSync } from 'node:fs';
-import { assertLinear, importModule, ROOT, ROOT_URL } from './helpers.mjs';
+import { assertLinear, importModule, readLocale as locale } from './helpers.mjs';
 
 const LANGS = ['fr', 'en'];
-const cache = new Map();
-const locale = (lang) => {
-  if (!cache.has(lang))
-    cache.set(lang, JSON.parse(readFileSync(new URL(`data/${lang}.json`, ROOT_URL), 'utf8')));
-  return cache.get(lang);
-};
 
 // ---------- Parcours de l'arbre ----------
 const join = (parent, key) =>
@@ -64,7 +57,10 @@ function compareLocales(a, b) {
   const nodesB = new Map(walk(b).map((n) => [n.path, n]));
   for (const [path, nodeA] of nodesA) {
     const nodeB = nodesB.get(path);
-    if (!nodeB) { structure.push(`${path} : présent en fr, absent en en`); continue; }
+    if (!nodeB) {
+      structure.push(`${path} : présent en fr, absent en en`);
+      continue;
+    }
     const [typeA, typeB] = [typeOf(nodeA.value), typeOf(nodeB.value)];
     if (typeA !== typeB) {
       structure.push(`${path} : type ${typeA} (fr), ${typeB} (en)`);
@@ -105,7 +101,10 @@ function htmlViolations(text, path) {
   const out = [];
   for (let i = text.indexOf('<'); i !== -1; i = text.indexOf('<', i + 1)) {
     if (!/[A-Za-z/!?]/.test(text[i + 1] ?? '')) continue; // « a < b » n'est pas une balise
-    const allowed = ALLOWED_TAG.some((re) => { re.lastIndex = i; return re.test(text); });
+    const allowed = ALLOWED_TAG.some((re) => {
+      re.lastIndex = i;
+      return re.test(text);
+    });
     if (!allowed) out.push({ path, excerpt: text.slice(i, i + 40) });
   }
   return out;
@@ -120,27 +119,6 @@ function treeHtmlViolations(tree) {
     else if (/<[A-Za-z/!?]/.test(value)) out.push({ path, excerpt: value.slice(0, 40) });
   }
   return out;
-}
-
-// Tiret cadratin brut, échappé (\u2014, \u{2014}) ou en entité (&mdash;, &#8212;, &#x2014;).
-const EM_DASH = /\u2014|\\u0*2014|\\u\{0*2014\}|&mdash;|&#0*8212;|&#x0*2014;/i;
-/** Lignes (1 = première) contenant un tiret cadratin : [{ line, excerpt }]. */
-function emDashLines(text) {
-  const out = [];
-  text.split('\n').forEach((content, index) => {
-    if (!EM_DASH.test(content)) return;
-    out.push({ line: index + 1, excerpt: content.trim().slice(0, 60) });
-  });
-  return out;
-}
-
-const SKIPPED_EXT = /\.(png|jpe?g|gif|webp|avif|ico|woff2?|ttf|otf|pdf|mp4|webm|zip)$/i;
-function filesUnder(relative) {
-  let stat;
-  try { stat = statSync(ROOT + relative); } catch { return []; } // absent : ignoré
-  if (stat.isFile()) return SKIPPED_EXT.test(relative) ? [] : [relative];
-  return readdirSync(ROOT + relative).sort()
-    .flatMap((name) => filesUnder(`${relative}/${name}`));
 }
 
 // ---------- Schéma et parité ----------
@@ -282,17 +260,6 @@ describe('contenu des textes', () => {
   }
 });
 
-describe('aucun tiret cadratin (U+2014)', () => {
-  const targets = ['data', 'js', 'css', 'index.html', 'README.md'];
-  test('data/, js/, css/, index.html et README.md en sont exempts', () => {
-    const found = [];
-    for (const file of targets.flatMap(filesUnder))
-      for (const { line, excerpt } of emDashLines(readFileSync(ROOT + file, 'utf8')))
-        found.push(`${file}:${line}: ${excerpt}`);
-    assert.deepEqual(found, [], `tirets cadratins trouvés :\n${found.join('\n')}`);
-  });
-});
-
 // ---------- Vérification des détecteurs ----------
 describe('détecteurs : html', () => {
   const accepted = [
@@ -372,35 +339,6 @@ describe('détecteurs : html', () => {
   });
 });
 
-describe('détecteurs : tirets cadratins', () => {
-  test('trouve le tiret brut, échappé ou en entité, avec le numéro de ligne', () => {
-    const text = [
-      'propre',
-      'a \u2014 b',
-      'propre',
-      '"\\u2014"',
-      '&mdash;',
-      '&#8212;',
-      '&#x2014;',
-      '\\u{2014}',
-    ].join('\n');
-    assert.deepEqual(emDashLines(text).map((l) => l.line), [2, 4, 5, 6, 7, 8]);
-  });
-
-  test('ignore les autres tirets, et gère CRLF et dernière ligne sans saut', () => {
-    assert.deepEqual(emDashLines('a - b\r\nc \u2013 d\r\n\u2015\r\n'), []);
-    assert.deepEqual(emDashLines('a\r\nb\r\nc\u2014').map((l) => l.line), [3]);
-    assert.deepEqual(emDashLines('\u2014').map((l) => l.line), [1]);
-    assert.deepEqual(emDashLines(''), []);
-  });
-
-  test('fichiers absents ignorés, dossiers parcourus', () => {
-    assert.deepEqual(filesUnder('dossier-inexistant'), []);
-    assert.deepEqual(filesUnder('fichier-inexistant.md'), []);
-    assert.ok(filesUnder('data').every((f) => f.startsWith('data/')));
-  });
-});
-
 describe('détecteurs : parité et chaînes vides', () => {
   const base = () => ({
     meta: { lang: 'fr' },
@@ -469,13 +407,6 @@ describe('détecteurs : volume (10 000 chaînes, temps linéaire)', () => {
       (n) => tree(n, '<em>a</em> <script>'),
       treeHtmlViolations,
     );
-  });
-
-  test('tirets cadratins', () => {
-    const text = (n) => Array.from({ length: n }, (_, i) => (i % 2 ? 'ligne' : 'a \u2014 b'))
-      .join('\n');
-    assert.equal(emDashLines(text(10000)).length, 5000);
-    assertLinear(assert, 'emDashLines', text, emDashLines);
   });
 
   test('parité', () => {

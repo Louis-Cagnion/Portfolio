@@ -24,7 +24,10 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 // Course contre un délai, sans laisser de minuteur en suspens.
 const within = (promise, ms) => new Promise((resolve) => {
   const timer = setTimeout(() => resolve('late'), ms);
-  promise.then(() => { clearTimeout(timer); resolve('done'); });
+  promise.then(() => {
+    clearTimeout(timer);
+    resolve('done');
+  });
 });
 
 describe('lerp', () => {
@@ -161,7 +164,10 @@ describe('animate', () => {
   let rafCalls = 0;
   const forbidRaf = () => {
     rafCalls = 0;
-    globalThis.requestAnimationFrame = () => { rafCalls++; return 0; };
+    globalThis.requestAnimationFrame = () => {
+      rafCalls++;
+      return 0;
+    };
   };
   // Simule requestAnimationFrame (~60 Hz) avec l'horloge réelle.
   const fakeRaf = () => {

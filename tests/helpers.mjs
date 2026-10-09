@@ -5,6 +5,16 @@ import { readFileSync } from 'node:fs';
 export const ROOT_URL = new URL('../', import.meta.url);
 export const ROOT = fileURLToPath(ROOT_URL);
 
+const locales = new Map();
+/** JSON réel d'une langue (data/<lang>.json), lu une fois par processus de test. */
+export function readLocale(lang) {
+  if (!locales.has(lang)) {
+    const url = new URL(`data/${lang}.json`, ROOT_URL);
+    locales.set(lang, JSON.parse(readFileSync(url, 'utf8')));
+  }
+  return locales.get(lang);
+}
+
 /** Lit et analyse un JSON de tests/fixtures. */
 export function readFixture(name) {
   return JSON.parse(readFileSync(new URL(`./fixtures/${name}`, import.meta.url), 'utf8'));
