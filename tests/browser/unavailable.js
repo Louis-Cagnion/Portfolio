@@ -16,8 +16,11 @@ import {
   click,
   goTo,
   isVisible,
+  makeFetch,
   makeStorage,
   openSite,
+  readJson,
+  response,
   settle,
   waitFor,
   waitStatus,
@@ -42,11 +45,22 @@ async function unavailableTexts(lang) {
   return data[lang].ui.unavailable;
 }
 
-/** Ouvre le site (langue `lang`), rend le site posé sur l'accueil. */
-async function open(width, lang = 'fr') {
+/** Faux fetch : les vrais textes, sauf le titre du panneau (ui.unavailable.title) en FR. */
+function longTitleFetch(title) {
+  return makeFetch(async ({ lang, site }) => {
+    if (!lang) return response(site, 'introuvable', 404);
+    const data = await readJson(`data/${lang}.json`);
+    if (lang === 'fr') data.ui.unavailable.title = title;
+    return response(site, JSON.stringify(data));
+  });
+}
+
+/** Ouvre le site (langue `lang`, faux fetch `fake` facultatif), posé sur l'accueil. */
+async function open(width, lang = 'fr', fake) {
   const site = await openSite({
     width,
     storage: makeStorage(lang === 'en' ? { lang } : {}),
+    fetch: fake,
   });
   try {
     await waitStatus(site, 'ready');
@@ -345,7 +359,37 @@ async function runBehaviour(width) {
   }
 }
 
+// ---------- Titre d'un seul mot long : aucun débordement à 320 px ----------
+const LONG_TITLE = 'Informationsunzugänglichkeitsmeldungstitel';
+
+async function runLongTitle() {
+  const ctx = { group: GROUP, width: 320, lang: 'fr', section: 'journey' };
+  let site;
+  try {
+    site = await open(320, 'fr', longTitleFetch(LONG_TITLE));
+  } catch (error) {
+    skip(ctx, ['titre d\'un mot long'], `ouverture impossible (${error.message})`);
+    return;
+  }
+  try {
+    await test(
+      ctx,
+      'titre d\'un mot long sans espace : ni panneau ni page ne débordent',
+      async () => {
+        await goTo(site, 'journey');
+        const { panel, problems } = onePanel(site, 'journey');
+        if (!panel) return problems;
+        expectEqual(problems, 'titre du panneau', textOf(parts(panel).heading), LONG_TITLE);
+        return [...problems, ...widthProblems(site, 'journey')];
+      },
+    );
+  } finally {
+    site.close();
+  }
+}
+
 export async function runUnavailable(widths, mainWidth) {
   for (const width of widths) await runWidth(width);
   await runBehaviour(mainWidth);
+  await runLongTitle();
 }

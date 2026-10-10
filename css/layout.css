@@ -48,6 +48,7 @@ h2 {
   font-weight: 400;
   font-size: clamp(1.3rem, 3vw, 1.9rem);
   margin: 56px 0 8px;
+  overflow-wrap: break-word;
 }
 
 /* ───── Barre du haut ───── */
@@ -266,6 +267,7 @@ elle reste la même au repos et pendant le saut (rubrique en position: absolute)
   background: none;
   cursor: pointer;
   transition: border-color var(--dur-fast), transform var(--dur-fast);
+  overflow-wrap: break-word;
 }
 
 .btn.primary {
@@ -320,6 +322,7 @@ body:has(> .status-screen:not([data-state="ready"])) :is(.nav, .tabbar) {
 .status :is(h2, h3) {
   font: 400 1.15rem var(--display);
   margin: 0 0 10px;
+  overflow-wrap: break-word;
 }
 
 .status p {
