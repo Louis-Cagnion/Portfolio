@@ -4,7 +4,6 @@
 
 - Suivre `docs/design/plan.md` (validé le 08/10/2026), étapes 4 à 8, sur la branche `redesign/space`.
 - S5b « Contenu indisponible » (plan validé, `docs/design/plan.md`, ligne S5b et Décisions de Louis) : étape 8, correctifs des écarts du crash-test (rapport et scripts dans le scratchpad de session `s5b-crash/`, à reproduire si perdus) :
-  - `overflow-wrap` des titres `h2`, `.status :is(h2, h3)` et de `.btn` (`css/layout.css:46`, `:261`, `:320`) : correctif en cours.
   - Saut (S4) : `finishJump()` (`js/core/router.js:266-274`) rend le focus au titre même si l'utilisateur l'a déplacé pendant le saut (bouton EN cliqué entre 100 et 900 ms) ; ne focaliser le titre que si le focus n'a pas bougé depuis le départ.
   - Module JS qui ne charge pas (`js/main.js` en 404, une dépendance en échec) : la page reste sur « Tentative de connexion avec le pilote… » sans erreur ni « Réessayer » ; afficher le texte validé (`docs/design/plan.md`, Décisions de Louis, « Module JS qui ne charge pas »).
   - Sous 260 px, `.tabbar` (`css/layout.css:403`) et `.lang` (`:138`) sortent de l'écran, `.lang` aussi à 300 % de police sur 320 à 390 px : choix de rendu à proposer en maquettes dans Chrome.
