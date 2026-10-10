@@ -317,7 +317,7 @@ body:has(> .status-screen:not([data-state="ready"])) :is(.nav, .tabbar) {
   padding: 28px;
 }
 
-.status h2 {
+.status :is(h2, h3) {
   font: 400 1.15rem var(--display);
   margin: 0 0 10px;
 }
@@ -381,6 +381,24 @@ body:has(> .status-screen:not([data-state="ready"])) :is(.nav, .tabbar) {
   min-height: 44px;
   padding-top: 11px;
   padding-bottom: 11px;
+}
+
+/* Panneau « contenu indisponible » d'une rubrique : à 32 px du chapeau (sa marge haute
+l'emporte sur celle du chapeau) et jamais plus large que la colonne. Les coins du HUD
+restent dans le cadre (0 au lieu de -2px) : ils n'élargissent pas la zone défilable. */
+.view .status {
+  width: min(34rem, 100%);
+  margin: 32px 0 0;
+}
+
+.view .status::before {
+  top: 0;
+  left: 0;
+}
+
+.view .status::after {
+  bottom: 0;
+  right: 0;
 }
 
 /* Sans JavaScript : seul le message du <noscript> reste ; la bascule, inerte, disparaît. */

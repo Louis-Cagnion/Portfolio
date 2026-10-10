@@ -140,6 +140,7 @@ const LOCALE = record({
       retry: label,
       langSwitch: label,
     }),
+    unavailable: record({ title: label, message: label, home: label }),
   }),
   home: record({
     mission: label,

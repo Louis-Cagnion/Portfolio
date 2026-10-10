@@ -51,7 +51,8 @@ function languageMemory(storage) {
 }
 
 /**
- * @brief Monte le contenu minimal d'une rubrique : titre h2 et chapeau.
+ * @brief Monte le contenu minimal d'une rubrique : titre h2, chapeau et panneau
+ *   « contenu indisponible » (retiré par le module qui remplace cette rubrique).
  *
  * @param {HTMLElement} root section.view de la rubrique
  * @param {(content: object) => string[]} pick [titre, chapeau] tirés des données d'une langue
@@ -61,9 +62,24 @@ function languageMemory(storage) {
 function mountSimple(root, pick) {
   const title = el('h2', { tabindex: '-1' });
   const lede = el('p', { class: 'lede' });
-  root.append(title, lede);
+  const heading = el('h3');
+  const message = el('p');
+  const home = el('button', { type: 'button', class: 'btn primary', 'data-go': 'home' });
+  const panel = el(
+    'div',
+    { class: 'status hud', 'data-state': 'error' },
+    heading,
+    message,
+    el('div', { class: 'status-bar' }, el('i')),
+    el('div', { class: 'status-actions' }, home),
+  );
+  root.append(title, lede, panel);
   return (content) => {
     [title.textContent, lede.textContent] = pick(content);
+    const { unavailable } = content.ui;
+    heading.textContent = unavailable.title;
+    message.textContent = unavailable.message;
+    home.textContent = unavailable.home;
   };
 }
 
@@ -83,7 +99,8 @@ function startSky() {
 
 /* Contenu minimal de chaque rubrique, par identifiant de section.view, en attendant les
 modules js/sections/ (S5 à S9) : chaque montage insère sa structure d'un bloc, en dernier
-(rien s'il lève), et rend la mise à jour des textes. */
+(rien s'il lève), et rend la mise à jour des textes. Le panneau « indisponible » de
+mountSimple disparaît avec la rubrique simple, quand son module la remplace. */
 const MOUNTS = {
   home: mountHome,
   journey: (root) => mountSimple(root, (c) => [c.journey.title, c.journey.lede.pointer]),

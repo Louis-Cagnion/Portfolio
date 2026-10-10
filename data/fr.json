@@ -26,6 +26,11 @@
       "unexpected": "L'intrication quantique a tenté de se faire avec les particules d'une autre ligne temporelle. Réessaie.",
       "retry": "Réessayer",
       "langSwitch": "Voir le site en anglais"
+    },
+    "unavailable": {
+      "title": "Contenu indisponible",
+      "message": "Ce secteur n'est pas encore cartographié, le pilote n'a pas encore trouvé le mode hyperespace. Reviens plus tard.",
+      "home": "Retour à l'accueil"
     }
   },
   "home": {

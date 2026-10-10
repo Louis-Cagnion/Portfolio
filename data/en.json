@@ -26,6 +26,11 @@
       "unexpected": "Quantum entanglement tried to form with particles from another timeline. Try again.",
       "retry": "Retry",
       "langSwitch": "View the site in French"
+    },
+    "unavailable": {
+      "title": "Content unavailable",
+      "message": "This sector hasn't been charted yet, the pilot hasn't found hyperspace mode yet. Come back later.",
+      "home": "Back to home"
     }
   },
   "home": {
