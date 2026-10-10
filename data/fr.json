@@ -24,6 +24,7 @@
       "json": "Le fichier de contenu est invalide (JSON illisible).",
       "schema": "Le contenu est incomplet : le champ {path} est manquant ou invalide.",
       "unexpected": "L'intrication quantique a tenté de se faire avec les particules d'une autre ligne temporelle. Réessaie.",
+      "boot": "L'intrication quantique s'est rompue.",
       "retry": "Réessayer",
       "langSwitch": "Voir le site en anglais"
     },

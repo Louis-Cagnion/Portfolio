@@ -24,6 +24,8 @@ import {
   makeStorage,
   openSite,
   readJson,
+  readText,
+  ROOT,
   response,
   statusState,
   waitFor,
@@ -540,6 +542,117 @@ async function errorLayout(width, cause, lang) {
   }
 }
 
+/**
+ * Ouvre le vrai index.html sans `data-noboot`. Avec `breakMain`, son texte (avec <base> vers
+ * la racine) est injecté en srcdoc, js/main.js remplacé par un chemin inexistant. Sinon la
+ * page est chargée par son URL : sous <base>, le pushState de l'iframe srcdoc lèverait.
+ * Le stockage est celui du banc (même origine que l'iframe) : l'appelant le restaure.
+ */
+async function openRealPage(width, breakMain) {
+  const frame = document.createElement('iframe');
+  frame.title = `site réel à ${width} px`;
+  frame.style.cssText = `width:${width}px;height:800px;border:1px solid #567;`;
+  if (breakMain)
+    frame.srcdoc = (await readText('index.html'))
+      .replace(/<head(\s[^>]*)?>/i, (tag) => `${tag}<base href="${ROOT}">`)
+      .replace('src="js/main.js"', 'src="js/introuvable-main.js"');
+  else frame.src = new URL('index.html', ROOT).href;
+  (document.getElementById('stage') || document.body).append(frame);
+  const page = { frame, close: () => frame.remove() };
+  try {
+    await waitFor(
+      () => frame.contentDocument?.readyState === 'complete' &&
+        frame.contentWindow.location.href !== 'about:blank',
+      15000,
+      'chargement du vrai index.html',
+      () => frame.contentDocument?.readyState,
+    );
+  } catch (error) {
+    page.close();
+    throw error;
+  }
+  page.doc = frame.contentDocument;
+  return page;
+}
+
+/** Ouvre le vrai index.html avec `lang` stocké, joue `run(page)` puis restaure le stockage. */
+async function withRealPage(width, { breakMain, lang }, run) {
+  const saved = localStorage.getItem('lang');
+  if (lang) localStorage.setItem('lang', lang);
+  else localStorage.removeItem('lang');
+  let page;
+  try {
+    page = await openRealPage(width, breakMain);
+    return await run(page);
+  } finally {
+    page?.close();
+    if (saved === null) localStorage.removeItem('lang');
+    else localStorage.setItem('lang', saved);
+  }
+}
+
+/** Problèmes du panneau d'erreur de démarrage de `page`, dans la langue `lang`. */
+async function bootErrorProblems(page, lang) {
+  const { data } = await languageTexts();
+  const errors = data[lang]?.ui?.errors;
+  const doc = page.doc;
+  const statusText = () => doc.getElementById('status')?.dataset.state;
+  await waitFor(
+    () => statusText() === 'error',
+    5000,
+    '#status[data-state="error"] sans js/main.js',
+    () => `data-state="${statusText()}"`,
+  );
+  const status = doc.getElementById('status');
+  const problems = [];
+  const expect = (label, actual, expected) => {
+    if (actual !== expected)
+      problems.push(`${label} : « ${actual} » au lieu de « ${expected} »`);
+  };
+  expect('titre', normalize(doc.getElementById('status-title').textContent), errors?.title);
+  expect('message', normalize(doc.getElementById('status-message').textContent), errors?.boot);
+  expect('rôle', status.getAttribute('role'), 'alert');
+  const retry = status.querySelector('button[data-action="retry"]');
+  if (!isVisible(retry)) problems.push('Réessayer n\'est pas visible');
+  else expect('texte de Réessayer', normalize(retry.textContent), errors?.retry);
+  const switcher = status.querySelector('button[data-action="switch-lang"]');
+  if (isVisible(switcher)) problems.push('switch-lang est visible');
+  return problems;
+}
+
+/** Module JS introuvable : le garde-fou affiche l'erreur de démarrage ; sinon il se tait. */
+async function bootGuard(width) {
+  const ctx = { group: 'États', width, section: 'status' };
+  for (const lang of LANGS) {
+    const name = lang === 'fr' ? 'français' : 'anglais';
+    await test(
+      { ...ctx, lang },
+      `js/main.js introuvable : erreur de démarrage en ${name}`,
+      () => withRealPage(
+        width,
+        { breakMain: true, lang },
+        (page) => bootErrorProblems(page, lang),
+      ),
+    );
+  }
+  await test(
+    { ...ctx, lang: 'fr' },
+    'js/main.js présent : le garde-fou reste muet et le site atteint ready',
+    () => withRealPage(width, { lang: 'fr' }, async (page) => {
+      const status = () => page.doc.getElementById('status')?.dataset.state;
+      await waitFor(
+        () => status() === 'ready',
+        10000,
+        '#status[data-state="ready"] avec le vrai js/main.js',
+        () => `data-state="${status()}"`,
+      );
+      if (!page.doc.documentElement.hasAttribute('data-booted'))
+        return ['<html> sans data-booted malgré le site prêt'];
+      return [];
+    }),
+  );
+}
+
 /** Groupe « États » : `widths` pour la mise en page, `mainWidth` pour les causes. */
 export async function runStates(widths, mainWidth) {
   for (const width of widths) await staticLoading(width);
@@ -566,6 +679,7 @@ export async function runStates(widths, mainWidth) {
     },
   );
   await retryFailsAgain(mainWidth);
+  await bootGuard(mainWidth);
   for (const width of widths)
     for (const [cause, lang] of LAYOUT_CASES) await errorLayout(width, cause, lang);
 }

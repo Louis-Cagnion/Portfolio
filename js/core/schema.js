@@ -137,6 +137,7 @@ const LOCALE = record({
       json: label,
       schema: label,
       unexpected: label,
+      boot: label,
       retry: label,
       langSwitch: label,
     }),

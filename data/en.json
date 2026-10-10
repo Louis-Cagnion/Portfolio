@@ -24,6 +24,7 @@
       "json": "The content file is invalid (unreadable JSON).",
       "schema": "The content is incomplete: the field {path} is missing or invalid.",
       "unexpected": "Quantum entanglement tried to form with particles from another timeline. Try again.",
+      "boot": "Quantum entanglement has been broken.",
       "retry": "Retry",
       "langSwitch": "View the site in French"
     },

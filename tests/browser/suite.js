@@ -1,6 +1,7 @@
 /* Contrat DOM et d'amorçage (fixé par le moniteur) :
-- index.html : un seul script d'entrée <script type="module" src="js/main.js" defer> entre
-  </head> et <body>. js/main.js exporte boot(env) (env optionnel { fetch, storage, timeoutMs },
+- index.html : deux scripts entre </head> et <body>, dans cet ordre : le garde-fou classique
+  <script src="js/boot-guard.js" defer>, puis l'entrée <script type="module" src="js/main.js"
+  defer>. js/main.js exporte boot(env) (env optionnel { fetch, storage, timeoutMs },
   défauts window.fetch, localStorage, 10000) et s'amorce seul, sauf si <html data-noboot>.
 - #status statique : data-state="loading" et texte visible avant tout JS ; puis "ready"
   (masqué) ou "error" (message propre à la cause, button[data-action="retry"] qui relance).
@@ -84,22 +85,27 @@ async function runContract() {
   const ctx = { group: 'Contrat', section: null };
   const html = await readText('index.html').catch((error) => error);
   const failed = html instanceof Error;
-  await test(ctx, 'index.html : un seul script d\'entrée, module, js/main.js, defer', () => {
+  await test(ctx, 'index.html : garde-fou classique puis script d\'entrée module', () => {
     if (failed) return [errorText(html)];
     const tags = html.match(/<script\b[^>]*>/gi) || [];
-    if (tags.length !== 1) return [`${tags.length} balise(s) <script> au lieu d'une`];
-    const [tag] = tags;
+    if (tags.length !== 2) return [`${tags.length} balise(s) <script> au lieu de deux`];
+    const [guard, tag] = tags;
     const problems = [];
+    if (!/\bsrc\s*=\s*["'](\.\/)?js\/boot-guard\.js["']/i.test(guard))
+      problems.push(`${guard} : src="js/boot-guard.js" absent`);
+    if (/\btype\s*=\s*["']module["']/i.test(guard))
+      problems.push(`${guard} : doit être un script classique`);
+    if (!/\sdefer[\s>=]/i.test(guard)) problems.push(`${guard} : defer absent`);
     if (!/\btype\s*=\s*["']module["']/i.test(tag))
       problems.push(`${tag} : type="module" absent`);
     if (!/\bsrc\s*=\s*["'](\.\/)?js\/main\.js["']/i.test(tag))
       problems.push(`${tag} : src="js/main.js" absent`);
     if (!/\sdefer[\s>=]/i.test(tag)) problems.push(`${tag} : defer absent`);
-    const at = html.indexOf(tag);
+    const at = html.indexOf(guard);
     const headEnd = html.search(/<\/head>/i);
     const bodyStart = html.search(/<body[\s>]/i);
-    if (headEnd < 0 || bodyStart < 0 || at < headEnd || at > bodyStart)
-      problems.push(`${tag} : pas entre </head> et <body>`);
+    if (headEnd < 0 || bodyStart < 0 || at < headEnd || html.indexOf(tag) > bodyStart)
+      problems.push('scripts pas entre </head> et <body>');
     if (/data-noboot/i.test(html)) problems.push('data-noboot présent dans index.html');
     return problems;
   });
