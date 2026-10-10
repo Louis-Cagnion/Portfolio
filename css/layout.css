@@ -454,6 +454,11 @@ l'emporte sur celle du chapeau) et jamais plus large que la colonne. */
     color: var(--accent);
     background: var(--accent-soft);
   }
+
+  /* Anneau à l'intérieur : les libellés touchent le bord de leur case jusqu'à 430 px. */
+  .tabbar button:focus-visible {
+    outline-offset: -3px;
+  }
 }
 
 @media (max-width: 55em) and (hover: hover) {
