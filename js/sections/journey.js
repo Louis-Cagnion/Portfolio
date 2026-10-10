@@ -82,7 +82,7 @@ function buildStop(stop, index, now, last) {
   const when = svg('text', { class: 'y' });
   const g = svg(
     'g',
-    { class: classes.filter(Boolean).join(' '), tabindex: 0, role: 'button' },
+    { class: classes.filter(Boolean).join(' '), tabindex: -1, role: 'button' },
     hit,
     pulse,
     art,
@@ -271,6 +271,17 @@ export function mount(root) {
     lede.textContent = state.vertical ? texts.arrows : texts.pointer;
   };
 
+  /**
+   * Ordre de tabulation des escales : sur le parcours vertical seule l'escale choisie y
+   * reste (les flèches changent d'escale), au bureau toutes. Le focus n'est jamais retiré.
+   */
+  const setTabStops = () => {
+    state.stops.forEach((item, index) => {
+      const reachable = !state.vertical || index === state.cur;
+      item.g.setAttribute('tabindex', reachable ? '0' : '-1');
+    });
+  };
+
   /** Textes du titre de scène, de la fiche et état des flèches pour l'escale choisie. */
   const fill = (fade) => {
     const { journey, cur } = state;
@@ -289,6 +300,7 @@ export function mount(root) {
     prev.disabled = up.disabled = cur === 0;
     next.disabled = down.disabled = cur === last();
     state.stops.forEach((item, index) => item.g.classList.toggle('sel', index === cur));
+    setTabStops();
   };
 
   /** Place tracé, escales et textes du dessin selon l'orientation, puis le vaisseau. */
@@ -320,6 +332,7 @@ export function mount(root) {
     state.shipPos = dock(state.cur);
     arrive();
     showLede();
+    setTabStops();
     recentre();
   };
 
