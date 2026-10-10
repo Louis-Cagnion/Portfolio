@@ -8,6 +8,8 @@ Suite sans dépendance qui charge le site dans des iframes de 320, 390, 430, 768
 2. Ouvrir `http://127.0.0.1:5501/tests/browser/` dans Chrome (ou le port 5500), onglet au premier plan jusqu'à la fin (plusieurs minutes une fois le site en place).
 3. Relance ciblée, paramètres facultatifs : `?widths=320,1280` et `?groups=contrat,setrich,etats,navigation,saut,langue,matrice,accueil,indisponible,contact,parcours`.
 
+Sans fenêtre : `node tools/run-browser-suite.mjs http://127.0.0.1:5501/tests/browser/ resultat.json 1300` joue la suite dans un Chrome headless et écrit le bilan en JSON (code 1 si un cas échoue). Un serveur par Chrome : deux Chrome sur un même `http.server` laissent un module en suspens.
+
 ## Lire
 
 - En haut, le bilan : vert si tout passe, rouge sinon. La case « Afficher seulement les échecs » masque les cas réussis.
