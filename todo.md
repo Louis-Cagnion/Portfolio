@@ -4,7 +4,6 @@
 
 - Suivre `docs/design/plan.md` (validé le 08/10/2026), étapes 4 à 8, sur la branche `redesign/space`.
 - S5b « Contenu indisponible » (plan validé, `docs/design/plan.md`, ligne S5b et Décisions de Louis) : étape 8, correctifs des écarts du crash-test (rapport et scripts dans le scratchpad de session `s5b-crash/`, à reproduire si perdus) :
-  - Saut (S4) : `finishJump()` (`js/core/router.js:266-274`) rend le focus au titre même si l'utilisateur l'a déplacé pendant le saut (bouton EN cliqué entre 100 et 900 ms) ; ne focaliser le titre que si le focus n'a pas bougé depuis le départ.
   - Module JS qui ne charge pas (`js/main.js` en 404, une dépendance en échec) : la page reste sur « Tentative de connexion avec le pilote… » sans erreur ni « Réessayer » ; afficher le texte validé (`docs/design/plan.md`, Décisions de Louis, « Module JS qui ne charge pas »).
   - Sous 260 px, `.tabbar` (`css/layout.css:403`) et `.lang` (`:138`) sortent de l'écran, `.lang` aussi à 300 % de police sur 320 à 390 px : choix de rendu à proposer en maquettes dans Chrome.
 - S7 « Parcours » : étapes 5 à 8 (tests rouges : groupe navigateur `parcours`, `tests/browser/journey*.js`). À trancher au brief de l'étape 5 : garder `id="jDetail"` sur la fiche ou transposer en classe les règles `#jDetail` de la maquette ; cadrage « centré » testé à 36 % ± 5 % de la scène ; `p.lede` = `lede.arrows` à 700 px et moins, `lede.pointer` au-dessus.
