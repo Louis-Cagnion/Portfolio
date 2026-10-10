@@ -39,7 +39,7 @@ tests/                data.test.mjs, unit/*.test.mjs (node --test), browser/inde
 ```
 
 - Supprimés car remplacés : `js/script.js`, `js/fetch.js`, `js/projects.js`, `js/tag.js`, `styles.css`.
-- Chaque rubrique expose `mount(root, content, ui)` (structure construite une fois) et `update(content, ui)` (textes seuls). L'état (escale, constellation et étoile, système zoomé, fiche, disque) est gardé par identifiant lors d'un changement de langue.
+- Chaque rubrique exporte `mount(root)`, qui construit sa structure une fois et rend `update(content)` (textes seuls), la forme qu'attend `MOUNTS` dans `js/main.js`. L'état (escale, constellation et étoile, système zoomé, fiche, disque) est gardé par identifiant lors d'un changement de langue.
 - Le placement organique des constellations est calculé à partir de `id`, jamais du nom traduit. L'autre langue est préchargée après le premier rendu.
 
 ## Schéma des données
@@ -118,7 +118,7 @@ Ordre imposé par les dépendances : socle avant rubriques, fiche projet avant c
 | S2 | Migration des données et traductions | `data/fr.json`, `data/en.json` | Tests de données au vert, tirets cadratins retirés |
 | S3 | Socle : chargement, erreurs, langue | `index.html`, `css/tokens.css`, `css/layout.css`, `js/main.js`, `js/core/*`, `js/ui/status.js`, `js/ui/nav.js`, `assets/favicon.svg` | Chargement visible avant le JS, page d'erreur stylée par cause avec Réessayer, bascule FR/EN qui met à jour `lang`, `<title>` et la description, anciens fichiers supprimés |
 | S4 | Navigation, transition, ciel | `js/core/router.js`, `js/ui/starfield.js` | Hash et retour arrière, saut en deux temps avant et arrière, courbure FOV, aucune transition si mouvement réduit |
-| S5 | Accueil et dossier du pilote | `js/sections/home.js`, `css/home.css`, `index.html` (lien de `css/home.css`) | Conforme à la maquette, repère qui s'efface, aucun débordement à 320 px |
+| S5 | Accueil et dossier du pilote | `js/sections/home.js`, `css/home.css`, `index.html` (lien de `css/home.css`), `js/main.js` (`mountHome` remplacé par l'import du module) | Conforme à la maquette, repère qui s'efface, aucun débordement à 320 px |
 | S6 | Projets et fiche | `projects.js`, `ui/sheet.js`, `css/projects.css` | Zoom, systèmes masqués, noms cliquables, liste, fiche accessible au clavier, intro de système placée selon la maquette validée, système de la Piscine (une vingtaine de planètes) lisible dès 320 px selon la maquette validée |
 | S7 | Parcours | `journey.js`, `journey-art.js`, `css/journey.css` | Ouverture sur la position actuelle, flèches seules sur téléphone, toucher de l'escale actuelle qui descend à sa fiche |
 | S8 | Compétences | `skills*.js`, `css/skills.css` | Déploiement, plongée, retour sans à-coup, projets liés qui ouvrent la fiche, lien Devpedia placé selon la maquette validée |
@@ -145,4 +145,5 @@ Le modèle et l'effort de chaque agent se choisissent au moment de le lancer, d'
 - Le lien Devpedia des compétences et les introductions des catégories de projets sont conservés : leur emplacement se propose en maquettes rendues dans Chrome pendant S6 et S8.
 - Les contenus de `content-suggestions.md` (textes proposés le 08/10/2026 d'après ses dépôts, dates, ouverture de « Je me présente », photo) sont reportés par S2 une fois validés par Louis, au plus tard avant S10.
 - `css/home.css` se charge par un `<link>` dans `index.html`, après `css/layout.css`, et non par une injection depuis `home.js` (10/10/2026).
+- Les modules de rubrique suivent la forme de `MOUNTS` (`mount(root)` qui rend `update(content)`), et chacun remplace dans `js/main.js` le montage minimal de sa rubrique (10/10/2026).
 - La Piscine devient un quatrième système à côté de Tressol-Chabrier, personnel et 42, avec une planète par module (Shell00 et Shell01, C00 à C13, les trois rushs, BSQ) ; sa présentation se propose en maquettes rendues dans Chrome pendant S6.
