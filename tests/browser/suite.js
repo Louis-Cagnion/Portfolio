@@ -42,7 +42,7 @@ import { runWithout2d } from './no2d.js';
 import { runReducedMotion, runWarp } from './warp.js';
 
 const WIDTHS = [320, 390, 430, 768, 1280];
-// Maquette : @media (max-width: 880px) masque la pilule et affiche les onglets.
+// Maquette : max-width 55em (880px, taille par défaut) masque la pilule, montre les onglets.
 const TABBAR_MAX_WIDTH = 880;
 const MAIN_WIDTH = 390; // largeur des cas qui ne dépendent pas de la mise en page
 const SCENARIO_MAX_MS = 300000; // garde-fou d'un scénario entier

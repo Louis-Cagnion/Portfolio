@@ -397,7 +397,7 @@ body:has(> .status-screen:not([data-state="ready"])) :is(.nav, .tabbar) {
   display: none;
 }
 
-@media (max-width: 880px) {
+@media (max-width: 55em) {
   .nav {
     display: none;
   }
@@ -443,7 +443,7 @@ body:has(> .status-screen:not([data-state="ready"])) :is(.nav, .tabbar) {
   }
 }
 
-@media (max-width: 880px) and (hover: hover) {
+@media (max-width: 55em) and (hover: hover) {
   .tabbar button:not([aria-current="page"]):hover {
     color: var(--text);
   }

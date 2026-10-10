@@ -281,9 +281,11 @@ Points de rupture de la maquette (mêmes valeurs en CSS et en JS, définies une 
 
 | Largeur | Source | Ce qui change |
 |---|---|---|
-| 880 px et moins | `@media (max-width: 880px)` et `narrow` (`matchMedia`) | la pilule disparaît, la barre d'onglets du bas apparaît ; accueil sur une colonne (`gap: 32px`, hauteur automatique) ; fiche d'escale en 22px 18px ; Compétences : constellations sur 2 colonnes (170 × 200), plan de zoom ratio `1 / 1.15`, panneau de détail placé sous le plan collant avec `margin-top: -34vw` ; Projets : quatre systèmes empilés (plan ; la maquette en a trois) (360 × 810, inclinaison 0,9 au zoom), `.sys-head` dans le flux ; fiche projet en feuille du bas (88vh) ; poussière d'étoiles supprimée (`W <= 880`) |
-| 820 px et moins | `@media (max-width: 820px)` et `phoneDisc` | Contact sur une colonne (message, disque, aide), disque de 320px au plus, disque verrouillé puis moitié haute, bouton `.rec-hint` |
-| 700 px et moins | `@media (max-width: 700px)` et `mobile` | dossier du pilote sur une colonne (intitulé au-dessus du texte) ; parcours en courbe verticale (scène collante de 58svh, titre et flèches sur la scène, fiche translucide floutée remontée de 20svh, flèches de la fiche masquées) |
+| 880 px et moins (55em) | `@media (max-width: 55em)` et `narrow` (`matchMedia`) | la pilule disparaît, la barre d'onglets du bas apparaît ; accueil sur une colonne (`gap: 32px`, hauteur automatique) ; fiche d'escale en 22px 18px ; Compétences : constellations sur 2 colonnes (170 × 200), plan de zoom ratio `1 / 1.15`, panneau de détail placé sous le plan collant avec `margin-top: -34vw` ; Projets : quatre systèmes empilés (plan ; la maquette en a trois) (360 × 810, inclinaison 0,9 au zoom), `.sys-head` dans le flux ; fiche projet en feuille du bas (88vh) ; poussière d'étoiles supprimée (`W <= 880`) |
+| 820 px et moins (51,25em) | `@media (max-width: 51.25em)` et `phoneDisc` | Contact sur une colonne (message, disque, aide), disque de 320px au plus, disque verrouillé puis moitié haute, bouton `.rec-hint` |
+| 700 px et moins (43,75em) | `@media (max-width: 43.75em)` et `mobile` | dossier du pilote sur une colonne (intitulé au-dessus du texte) ; parcours en courbe verticale (scène collante de 58svh, titre et flèches sur la scène, fiche translucide floutée remontée de 20svh, flèches de la fiche masquées) |
+
+Les ruptures sont en em pour suivre la taille de police du navigateur : la barre d'onglets prend le relais quand le texte agrandi ne tient plus dans la barre du haut.
 
 - [ ] Aucun point de rupture n'est ajouté sans mise à jour de ce tableau.
 - [ ] La plage 701 à 880 px (dont 768 px) combine la barre d'onglets et le parcours horizontal : vérifier les deux ensemble.

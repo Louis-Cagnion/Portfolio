@@ -19,6 +19,19 @@ const WARP_VARS = ['left', 'width', 'top', 'cx', 'cy']; // propriétés --warp-*
 const MODIFIER_KEYS = ['ctrlKey', 'metaKey', 'shiftKey', 'altKey'];
 
 /**
+ * @brief Dit si un clic doit ouvrir son lien à part (nouvel onglet, fenêtre...), auquel cas le
+ *   navigateur le traite seul.
+ *
+ * @param {MouseEvent} event clic à examiner
+ *
+ * @returns {boolean} true si une touche de MODIFIER_KEYS est enfoncée ou si le bouton n'est
+ *   pas le principal
+ */
+export function opensElsewhere(event) {
+  return MODIFIER_KEYS.some((key) => event[key]) || event.button !== 0;
+}
+
+/**
  * @brief Sens du saut d'une rubrique à une autre, selon leur ordre.
  *
  * jumpDirection('home', 'contact', ['home', 'journey', 'contact']) -> 'forward'
@@ -347,9 +360,8 @@ export function createRouter({ onView, sky = null }) {
   const onClick = (event) => {
     const trigger = event.target.closest?.('[data-go]');
     if (!trigger || !ids.includes(trigger.dataset.go)) return;
-    const modified = MODIFIER_KEYS.some((key) => event[key]);
     // lien ouvert à part (nouvel onglet, fenêtre...) : comportement natif du navigateur
-    if (trigger.matches('a[href]') && (modified || event.button !== 0)) return;
+    if (trigger.matches('a[href]') && opensElsewhere(event)) return;
     event.preventDefault();
     const hash = `#${trigger.dataset.go}`;
     if (location.hash === hash) route();

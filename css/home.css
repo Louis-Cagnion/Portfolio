@@ -14,7 +14,7 @@ Les titres, .btn et .hud viennent de css/layout.css. Chargée après lui par ind
   padding-top: 32px;
 }
 
-@media (max-width: 880px) {
+@media (max-width: 55em) {
   .hero {
     grid-template-columns: minmax(0, 1fr);
     min-height: auto;
@@ -56,6 +56,7 @@ Les titres, .btn et .hud viennent de css/layout.css. Chargée après lui par ind
   font: 500 0.95rem var(--sans);
   color: var(--dim);
   margin: 0 0 12px;
+  overflow-wrap: anywhere;
 }
 
 .rows {
@@ -76,6 +77,8 @@ Les titres, .btn et .hud viennent de css/layout.css. Chargée après lui par ind
 
 .rows dt {
   color: var(--dim);
+  max-width: 50%;
+  overflow-wrap: break-word;
 }
 
 .rows dd {
@@ -99,6 +102,8 @@ Les titres, .btn et .hud viennent de css/layout.css. Chargée après lui par ind
   width: max-content;
   max-width: 100%;
   margin: 4px auto 0;
+  text-align: center;
+  overflow-wrap: anywhere;
   color: var(--faint);
   font: 400 0.8rem var(--mono);
   text-decoration: none;
@@ -136,10 +141,12 @@ Les titres, .btn et .hud viennent de css/layout.css. Chargée après lui par ind
   font: 400 0.85rem var(--mono);
   color: var(--accent);
   margin: 80px 0 0;
+  overflow-wrap: anywhere;
 }
 
 .dossier h2 {
   margin: 6px 0 22px;
+  overflow-wrap: anywhere;
 }
 
 .dossier-body {
@@ -176,7 +183,7 @@ Les titres, .btn et .hud viennent de css/layout.css. Chargée après lui par ind
   margin: 0;
 }
 
-@media (max-width: 700px) {
+@media (max-width: 43.75em) {
   .dossier-body {
     padding: 4px 18px;
   }

@@ -2,12 +2,13 @@
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
 
-/* Points de rupture de docs/design-checklist.md (section 5) ; les @media de css/ reprennent
-ces largeurs, qu'un fichier CSS ne peut pas lire ici. */
+/* Points de rupture de docs/design-checklist.md (section 5), en em pour suivre la taille de
+police du navigateur ; les @media de css/ reprennent ces largeurs, qu'un fichier CSS ne peut
+pas lire ici. */
 export const BREAKPOINTS = Object.freeze({
-  narrow: '(max-width: 880px)',
-  phoneDisc: '(max-width: 820px)',
-  mobile: '(max-width: 700px)',
+  narrow: '(max-width: 55em)',
+  phoneDisc: '(max-width: 51.25em)',
+  mobile: '(max-width: 43.75em)',
 });
 
 /* Balises admises par setRich, à la position courante (drapeau y) : ouvrantes <strong>, <em>,

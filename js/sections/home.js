@@ -5,6 +5,7 @@ qui s'efface à l'arrivée du dossier, puis dossier du pilote. Structure de la m
 */
 import { el, setRich } from '../core/dom.js';
 import { reduced } from '../core/motion.js';
+import { opensElsewhere } from '../core/router.js';
 
 const CUE_ZONE = '0px 0px -15% 0px'; // le repère s'efface quand le dossier passe ce seuil
 const ARROW = '↓';
@@ -38,13 +39,17 @@ function dossierRow(entry, index) {
  * @brief Fait défiler la page jusqu'au dossier, en douceur sauf sous mouvement réduit.
  *
  * Le repère s'efface à l'arrivée du dossier : le focus passe au titre du dossier, sans
- * défilement, pour que l'utilisateur au clavier garde sa place.
+ * défilement, pour que l'utilisateur au clavier garde sa place. Un clic qui ouvre le lien à
+ * part (touche de modification, bouton autre que le principal), ou pendant un saut, est
+ * laissé au navigateur : le routeur termine le saut puis amène l'ancre.
  *
  * @param {HTMLElement} dossier section du dossier du pilote
  * @param {HTMLElement} title titre h2 du dossier (tabindex="-1"), reçoit le focus
- * @param {Event} event activation du repère (le lien natif est remplacé, sans changer le hash)
+ * @param {MouseEvent} event activation du repère (le lien natif est remplacé, sans changer le
+ *   hash, sauf si opensElsewhere ou un saut en cours le réserve au navigateur)
  */
 function scrollToDossier(dossier, title, event) {
+  if (opensElsewhere(event) || document.documentElement.hasAttribute('data-warp')) return;
   event.preventDefault();
   dossier.scrollIntoView({ behavior: reduced() ? 'auto' : 'smooth' });
   title.focus({ preventScroll: true });
