@@ -5,7 +5,7 @@ de 700 px, courbe horizontale fixe (viewBox 0 0 1100 300) ; à 700 px et moins, 
 verticale suivie par une caméra, flèches ↑ ↓ sur la scène, et le toucher de l'escale où se
 trouve déjà le vaisseau descend à sa fiche. Structure et mouvements de la maquette
 (docs/design/prototype/prototype.html:370-387 et 584-731) ; dessins dans journey-art.js,
-mise en page dans css/journey.css.
+vaisseau et traînée dans journey-ship.js, mise en page dans css/journey.css.
 */
 import { BREAKPOINTS, el, setRich, svg } from '../core/dom.js';
 import { format } from '../core/i18n.js';
@@ -19,6 +19,7 @@ import {
   stopArt,
   stopRadius,
 } from './journey-art.js';
+import { makeShip } from './journey-ship.js';
 
 const WIDE_VIEW = '0 0 1100 300';
 const WIDE_TRACK = 'M40 250 C 340 250, 640 220, 990 120';
@@ -34,10 +35,6 @@ const LABEL = { gap: 16, maxRadius: 34, line: 17, shift: 12, below: 22, above: 2
 const LABEL_LINES = { title: 1, when: 19 }; // lignes sous le centre de l'astre, vertical
 const TRIP_MS = 600; // durée de base d'un trajet, plus une part de la distance
 const TRIP_MS_PER_UNIT = { vertical: 1.4, horizontal: 1.2 };
-const SHIP_SCALE = 1.3;
-const SHIP_NOSE = 13; // distance du centre du vaisseau à sa tuyère, pour la traînée
-const HEADING_SPAN = 1.5; // demi-longueur du segment qui donne le cap du vaisseau
-const TRAIL = { max: 40, fade: 0.035, jitter: 2, r: 2.2, minR: 0.6, growR: 1.8, alpha: 0.8 };
 const FADE = [{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }];
 const FADE_MS = 450;
 const ARROWS = { prev: '←', next: '→', up: '↑', down: '↓' };
@@ -96,26 +93,89 @@ function buildStop(stop, index, now, last) {
   return { g, hit, pulse, art, title, when, body: stop.body };
 }
 
+/** Pose plusieurs attributs d'un coup sur un élément. */
+function setAttributes(element, attributes) {
+  Object.entries(attributes).forEach(([name, value]) => element.setAttribute(name, value));
+}
+
 /**
- * @brief Monte le parcours : structure construite une fois, insérée d'un bloc.
+ * @brief Pose une escale en un point : zone cliquable, pulsation, astre et textes.
  *
- * L'escale choisie est gardée par identifiant à la bascule de langue ; la première mise à
- * jour ouvre sur l'escale `now`. Le passage de 700 px reconstruit la géométrie sans
- * recréer d'élément.
- *
- * @param {HTMLElement} root section.view#journey
- *
- * @returns {(content: object) => void} update(content) : textes d'une langue
+ * @param {object} item éléments de l'escale (buildStop)
+ * @param {{ point: {x: number, y: number}, radius: number, vertical: boolean, end: boolean,
+ *   odd: boolean }} place point du tracé, rayon de l'astre, orientation, vrai pour la
+ *   destination (sauf si elle est seule) et pour un rang impair
  */
-export function mount(root) {
-  const mobile = matchMedia(BREAKPOINTS.mobile);
+function placeStopAt(item, { point: p, radius, vertical, end, odd }) {
+  const center = { cx: p.x, cy: p.y };
+  const minimum = vertical ? HIT.vertical : HIT.horizontal;
+  setAttributes(item.hit, { ...center, r: Math.max(minimum, radius + HIT_MARGIN) });
+  if (item.pulse) setAttributes(item.pulse, { ...center, r: radius + PULSE_MARGIN });
+  const scale = isGalaxy(item.body) ? ` scale(${galaxyScale(vertical)})` : '';
+  item.art.setAttribute('transform', `translate(${p.x} ${p.y})${scale}`);
+  let x = p.x - LABEL.shift;
+  let y = 0;
+  let anchor = 'start';
+  if (vertical) x = p.x + Math.min(radius, LABEL.maxRadius) + LABEL.gap;
+  else if (end) {
+    x = p.x;
+    y = p.y - radius - LABEL.top;
+    anchor = 'middle';
+  } else y = odd ? p.y - radius - LABEL.above : p.y + radius + LABEL.below;
+  const lines = vertical
+    ? [p.y + LABEL_LINES.title, p.y + LABEL_LINES.when]
+    : [y, y + LABEL.line];
+  [item.title, item.when].forEach((text, at) => {
+    text.setAttribute('x', x);
+    text.setAttribute('y', lines[at]);
+    text.setAttribute('text-anchor', anchor);
+  });
+}
+
+/**
+ * @brief Repère l'escale actuelle des données et signale en console ce qui est incohérent.
+ *
+ * Sans `now` on ouvre sur la première escale ; un `now` en trop ou un `body` sans dessin
+ * est signalé, sans rien changer d'autre.
+ *
+ * @param {object[]} stops escales des données
+ *
+ * @returns {number} rang de l'escale `now` (0 si aucune)
+ */
+function auditStops(stops) {
+  let now = stops.findIndex((stop) => stop.now);
+  if (now < 0) {
+    console.error('parcours : aucune escale journey.stops[].now, ouverture sur la première');
+    now = 0;
+  }
+  const extra = stops.flatMap((stop, at) => (stop.now && at > now ? [at] : []));
+  if (extra.length) {
+    const fields = extra.map((index) => `journey.stops[${index}].now`).join(', ');
+    console.error(`parcours : ${fields} en plus de journey.stops[${now}].now, ignoré`);
+  }
+  stops.forEach(({ body }, index) => {
+    if (hasArt(body)) return;
+    const message = `parcours : journey.stops[${index}].body « ${body} » sans dessin`;
+    console.error(`${message}, galaxie à la place`);
+  });
+  return now;
+}
+
+/**
+ * @brief Construit les éléments de la section (titre, scène, flèches, fiche), sans insérer.
+ *
+ * @returns {object} références : heading, lede, track, done, stopsLayer, trail, shipNode,
+ *   traj, sceneName, sceneWhen, sceneTitle, up, down, stage, title, when, count, prev, next,
+ *   body, detail
+ */
+function buildScene() {
   const heading = el('h2', { tabindex: '-1' });
   const lede = el('p', { class: 'lede' });
   const track = svg('path', { class: 'track' });
   const done = svg('path', { class: 'done' });
   const stopsLayer = svg('g');
   const trail = svg('g', { class: 'trail' });
-  const ship = shipArt();
+  const shipNode = shipArt();
   const traj = svg(
     'svg',
     { class: 'traj', role: 'group' },
@@ -124,7 +184,7 @@ export function mount(root) {
     done,
     stopsLayer,
     trail,
-    ship,
+    shipNode,
   );
   const sceneName = el('b');
   const sceneWhen = el('span');
@@ -155,6 +215,67 @@ export function mount(root) {
     ),
     body,
   );
+  return {
+    heading,
+    lede,
+    track,
+    done,
+    stopsLayer,
+    trail,
+    shipNode,
+    traj,
+    sceneName,
+    sceneWhen,
+    sceneTitle,
+    up,
+    down,
+    stage,
+    title,
+    when,
+    count,
+    prev,
+    next,
+    body,
+    detail,
+  };
+}
+
+/**
+ * @brief Monte le parcours : structure construite une fois, insérée d'un bloc.
+ *
+ * L'escale choisie est gardée par identifiant à la bascule de langue ; la première mise à
+ * jour ouvre sur l'escale `now`. Le passage de 700 px reconstruit la géométrie sans
+ * recréer d'élément.
+ *
+ * @param {HTMLElement} root section.view#journey
+ *
+ * @returns {(content: object) => void} update(content) : textes d'une langue
+ */
+export function mount(root) {
+  const mobile = matchMedia(BREAKPOINTS.mobile);
+  const {
+    heading,
+    lede,
+    track,
+    done,
+    stopsLayer,
+    trail,
+    shipNode,
+    traj,
+    sceneName,
+    sceneWhen,
+    sceneTitle,
+    up,
+    down,
+    stage,
+    title,
+    when,
+    count,
+    prev,
+    next,
+    body,
+    detail,
+  } = buildScene();
   const camera = makeCamera(traj);
   const state = {
     journey: null,
@@ -171,8 +292,6 @@ export function mount(root) {
     moving: false,
     trip: 0, // numéro du trajet en cours : un trajet dépassé n'écrit plus rien
     shipFrame: 0,
-    particles: [],
-    trailFrame: 0,
   };
   const last = () => state.stops.length - 1;
   const pointAt = (d) => {
@@ -221,46 +340,10 @@ export function mount(root) {
       camera.set(viewFor(state.lens[state.cur]));
   };
 
-  /** Particules de la traînée : elles pâlissent et rétrécissent, puis disparaissent. */
-  const fadeTrail = () => {
-    state.particles = state.particles.filter((particle) => {
-      particle.life -= TRAIL.fade;
-      if (particle.life <= 0) {
-        particle.node.remove();
-        return false;
-      }
-      particle.node.setAttribute('r', (TRAIL.minR + TRAIL.growR * particle.life).toFixed(2));
-      particle.node.setAttribute('opacity', (particle.life * TRAIL.alpha).toFixed(2));
-      return true;
-    });
-    state.trailFrame = state.particles.length ? requestAnimationFrame(fadeTrail) : 0;
-  };
-
-  const emitTrail = (x, y) => {
-    if (state.particles.length > TRAIL.max) state.particles.shift().node.remove();
-    const jitter = () => (Math.random() - 0.5) * TRAIL.jitter;
-    const node = svg('circle', { cx: x + jitter(), cy: y + jitter(), r: TRAIL.r });
-    trail.append(node);
-    state.particles.push({ node, life: 1 });
-    if (!state.trailFrame) state.trailFrame = requestAnimationFrame(fadeTrail);
-  };
+  const ship = makeShip(shipNode, trail, pointAt);
 
   /** Pose le vaisseau à l'abscisse courante, tourné selon le tracé et le sens du trajet. */
-  const placeShip = (moving) => {
-    const d = state.shipPos;
-    const a = pointAt(d - HEADING_SPAN);
-    const b = pointAt(d + HEADING_SPAN);
-    const p = pointAt(d);
-    const angle = Math.atan2(b.y - a.y, b.x - a.x) + (state.shipDir < 0 ? Math.PI : 0);
-    ship.setAttribute(
-      'transform',
-      `translate(${p.x.toFixed(2)} ${p.y.toFixed(2)}) ` +
-        `rotate(${((angle * 180) / Math.PI).toFixed(2)}) scale(${SHIP_SCALE})`,
-    );
-    ship.classList.toggle('thrust', moving);
-    if (moving && !reduced())
-      emitTrail(p.x - Math.cos(angle) * SHIP_NOSE, p.y - Math.sin(angle) * SHIP_NOSE);
-  };
+  const placeShip = (moving) => ship.place(state.shipPos, state.shipDir, moving);
 
   /** Fin d'un trajet : vaisseau au repos, cap remis vers l'avant, titre de scène affiché. */
   const arrive = () => {
@@ -345,40 +428,14 @@ export function mount(root) {
     recentre();
   };
 
-  /** Pose plusieurs attributs d'un coup sur un élément. */
-  const setAttributes = (element, attributes) => {
-    Object.entries(attributes).forEach(([name, value]) => element.setAttribute(name, value));
-  };
-
   /** Pose une escale au point du tracé qui lui revient, avec ses deux lignes de texte. */
-  const placeStop = (item, index) => {
-    const { vertical } = state;
-    const p = pointAt(state.lens[index]);
-    const radius = radiusOf(index);
-    const center = { cx: p.x, cy: p.y };
-    const minimum = vertical ? HIT.vertical : HIT.horizontal;
-    setAttributes(item.hit, { ...center, r: Math.max(minimum, radius + HIT_MARGIN) });
-    if (item.pulse) setAttributes(item.pulse, { ...center, r: radius + PULSE_MARGIN });
-    const scale = isGalaxy(item.body) ? ` scale(${galaxyScale(vertical)})` : '';
-    item.art.setAttribute('transform', `translate(${p.x} ${p.y})${scale}`);
-    let x = p.x - LABEL.shift;
-    let y = 0;
-    let anchor = 'start';
-    if (vertical) x = p.x + Math.min(radius, LABEL.maxRadius) + LABEL.gap;
-    else if (index === last() && index > 0) {
-      x = p.x;
-      y = p.y - radius - LABEL.top;
-      anchor = 'middle';
-    } else y = index % 2 === 0 ? p.y + radius + LABEL.below : p.y - radius - LABEL.above;
-    const lines = vertical
-      ? [p.y + LABEL_LINES.title, p.y + LABEL_LINES.when]
-      : [y, y + LABEL.line];
-    [item.title, item.when].forEach((text, at) => {
-      text.setAttribute('x', x);
-      text.setAttribute('y', lines[at]);
-      text.setAttribute('text-anchor', anchor);
-    });
-  };
+  const placeStop = (item, index) => placeStopAt(item, {
+    point: pointAt(state.lens[index]),
+    radius: radiusOf(index),
+    vertical: state.vertical,
+    end: index === last() && index > 0,
+    odd: index % 2 !== 0,
+  });
 
   /**
    * @brief Choisit une escale et y fait voyager le vaisseau (caméra sur téléphone).
@@ -464,21 +521,7 @@ export function mount(root) {
     const kept = state.ids[state.cur];
     halt();
     state.ids = ids;
-    state.now = stops.findIndex((stop) => stop.now);
-    if (state.now < 0) {
-      console.error('parcours : aucune escale journey.stops[].now, ouverture sur la première');
-      state.now = 0;
-    }
-    const extra = stops.flatMap((stop, at) => (stop.now && at > state.now ? [at] : []));
-    if (extra.length) {
-      const fields = extra.map((index) => `journey.stops[${index}].now`).join(', ');
-      console.error(`parcours : ${fields} en plus de journey.stops[${state.now}].now, ignoré`);
-    }
-    stops.forEach(({ body }, index) => {
-      if (hasArt(body)) return;
-      const message = `parcours : journey.stops[${index}].body « ${body} » sans dessin`;
-      console.error(`${message}, galaxie à la place`);
-    });
+    state.now = auditStops(stops);
     const lastIndex = stops.length - 1;
     state.stops = stops.map((stop, index) => buildStop(stop, index, state.now, lastIndex));
     state.stops.forEach((item, index) => {
