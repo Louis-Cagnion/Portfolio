@@ -76,9 +76,11 @@ h2 {
   color: var(--text);
   text-decoration: none;
   letter-spacing: 0.03em;
+  min-width: 0; /* le nom se coupe sur deux lignes quand la place manque */
 }
 
 .brand i {
+  flex-shrink: 0; /* le point reste rond */
   width: 8px;
   height: 8px;
   border-radius: 50%;
@@ -138,6 +140,7 @@ h2 {
 
 .lang {
   display: flex;
+  flex-shrink: 0;
   border: 1px solid var(--line);
   border-radius: var(--radius-pill);
   overflow: hidden;
@@ -456,6 +459,79 @@ l'emporte sur celle du chapeau) et jamais plus large que la colonne. */
 @media (max-width: 55em) and (hover: hover) {
   .tabbar button:not([aria-current="page"]):hover {
     color: var(--text);
+  }
+}
+
+/* Sous 16.25em (260 px, 780 px à 300 %) : FR/EN en colonne, onglets en icônes seules, un seul
+mis en avant (focalisé, sinon courant ; survolé si l'appareil survole), à la largeur --lead-w
+et à la police --label-size de js/ui/nav.js ; les autres cases se partagent le reste. */
+@media (max-width: 16.25em) {
+  .lang {
+    flex-direction: column;
+    border-radius: var(--radius-lang);
+  }
+
+  .lang button {
+    padding: 5px 10px;
+  }
+
+  .tabbar {
+    display: flex;
+  }
+
+  .tabbar button {
+    flex: 1 1 0px;
+    grid-template-columns: minmax(0, 1fr);
+    align-content: center;
+    min-width: 0;
+    min-height: 50px;
+    overflow: hidden;
+    container-type: inline-size;
+    transition: flex var(--dur) var(--ease-out), color var(--dur), background var(--dur);
+  }
+
+  .tabbar svg {
+    width: min(1.25rem, 100cqi - 4px);
+    height: auto;
+    aspect-ratio: 1;
+  }
+
+  .tabbar span {
+    max-width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    font-size: var(--label-size, 1em);
+    opacity: 0;
+    transition: opacity var(--dur);
+  }
+
+  .tabbar button:focus-visible,
+  .tabbar:not(:has(button:focus-visible)) button[aria-current="page"] {
+    flex: 0 0 var(--lead-w, auto);
+  }
+
+  .tabbar button:focus-visible span,
+  .tabbar:not(:has(button:focus-visible)) button[aria-current="page"] span {
+    opacity: 1;
+  }
+}
+
+/* Appareil qui survole : l'onglet survolé prend la mise en avant, les autres la perdent. */
+@media (max-width: 16.25em) and (hover: hover) {
+  .tabbar:has(button:hover) button:not(:hover) {
+    flex: 1 1 0px;
+  }
+
+  .tabbar:has(button:hover) button:not(:hover) span {
+    opacity: 0;
+  }
+
+  .tabbar button:hover {
+    flex: 0 0 var(--lead-w, auto);
+  }
+
+  .tabbar button:hover span {
+    opacity: 1;
   }
 }
 

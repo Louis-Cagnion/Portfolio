@@ -42,6 +42,7 @@ import { runHome } from './home.js';
 import { runUnavailable } from './unavailable.js';
 import { runContact } from './contact.js';
 import { runJourney } from './journey.js';
+import { runNarrow } from './narrow.js';
 import { runWithout2d } from './no2d.js';
 import { runReducedMotion, runWarp } from './warp.js';
 
@@ -62,6 +63,7 @@ const GROUPS = [
   'indisponible',
   'contact',
   'parcours',
+  'etroit',
 ];
 const PILL_WIDTH = 1280; // saut rejoué aussi par la pilule
 
@@ -437,6 +439,7 @@ async function main() {
       await scenario('contact', () => runContact(widths, mainWidth));
     if (groups.includes('parcours'))
       await scenario('parcours', () => runJourney(widths, mainWidth));
+    if (groups.includes('etroit')) await scenario('barres étroites', runNarrow);
   } catch (error) {
     skip({ group: 'Suite', section: null }, ['suite'], `erreur interne : ${errorText(error)}`);
   } finally {

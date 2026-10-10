@@ -47,6 +47,7 @@ courbes et durées des feuilles de style. Valeurs relevées dans la maquette val
   --radius-pill: 999px;
   --radius-tabbar: 22px;
   --radius-tab: 16px;
+  --radius-lang: 10px;
   --radius-label: 4px;
 
   /* ───── Empilement (--z-status : écran de chargement, entre le contenu et le saut) ───── */

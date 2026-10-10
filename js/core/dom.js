@@ -9,6 +9,7 @@ export const BREAKPOINTS = Object.freeze({
   narrow: '(max-width: 55em)',
   phoneDisc: '(max-width: 51.25em)',
   mobile: '(max-width: 43.75em)',
+  narrowest: '(max-width: 16.25em)',
 });
 
 /* Balises admises par setRich, à la position courante (drapeau y) : ouvrantes <strong>, <em>,

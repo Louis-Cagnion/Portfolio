@@ -1,9 +1,10 @@
 /*
-Barre du site : pilule des rubriques (bureau), barre d'onglets (880 px et moins), bascule de
-langue et hauteur mesurée (--bar-h). Les changements de rubrique relèvent du routeur
-(js/core/router.js), qui signale la rubrique affichée par markCurrent.
+Barre du site : pilule des rubriques (bureau), barre d'onglets (880 px et moins, en icônes
+seules sous 260 px), bascule de langue et hauteur mesurée (--bar-h). Les changements de
+rubrique relèvent du routeur (js/core/router.js), qui signale la rubrique affichée par
+markCurrent.
 */
-import { el, svg } from '../core/dom.js';
+import { BREAKPOINTS, el, svg } from '../core/dom.js';
 import { listViews } from '../core/router.js';
 
 /* Icônes de la barre d'onglets (tracés 24 × 24 de la maquette), par rubrique. */
@@ -15,6 +16,9 @@ const ICONS = {
   contact: 'M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM3 7l9 6 9-6',
 };
 
+const MIN_CELL = 24; // px : case d'un onglet non mis en avant (icône de 20 px, 2 px de marge)
+const LABEL_PAD = 20; // px : 10 px de chaque côté du libellé de l'onglet mis en avant
+
 /**
  * @brief Tient --bar-h à la hauteur réelle de la barre (58 à 70 px selon la largeur).
  *
@@ -24,6 +28,44 @@ function trackBarHeight(bar) {
   new ResizeObserver(() => {
     document.documentElement.style.setProperty('--bar-h', `${bar.offsetHeight}px`);
   }).observe(bar);
+}
+
+/**
+ * @brief Mesure, pour la barre d'onglets en icônes seules (sous 260 px), la case de l'onglet
+ * mis en avant.
+ *
+ * Chaque bouton reçoit --lead-w : la largeur de son libellé plus 20 px, plafonnée pour que les
+ * autres cases gardent 24 px au moins, et jamais sous un cinquième de la barre : une case mise
+ * en avant plus étroite que les autres glisserait sous le curseur et le ferait osciller entre
+ * deux onglets. Un libellé trop long pour ce plafond reçoit en plus --label-size, sa police
+ * réduite d'autant. Les deux variables sont retirées dès que la barre
+ * n'est plus en icônes seules ou qu'elle est masquée (au-dessus de 880 px) : pas de mesure.
+ *
+ * @param {HTMLElement} tabbar élément nav.tabbar
+ */
+function measureTabs(tabbar) {
+  const buttons = [...tabbar.querySelectorAll('button')];
+  for (const button of buttons) {
+    button.style.removeProperty('--lead-w');
+    button.style.removeProperty('--label-size');
+  }
+  if (!matchMedia(BREAKPOINTS.narrowest).matches || !tabbar.getClientRects().length) return;
+  const style = getComputedStyle(tabbar);
+  const padding = parseFloat(style.paddingLeft) + parseFloat(style.paddingRight);
+  const inner = tabbar.clientWidth - padding;
+  const room = Math.max(MIN_CELL, inner - (buttons.length - 1) * MIN_CELL);
+  const share = Math.ceil(inner / buttons.length) + 1;
+  const labels = buttons.map((button) => {
+    const span = button.querySelector('span');
+    return { width: span.scrollWidth, size: parseFloat(getComputedStyle(span).fontSize) };
+  });
+  buttons.forEach((button, index) => {
+    const { width, size } = labels[index];
+    const scale = Math.max(0, Math.min(1, (room - LABEL_PAD) / width));
+    if (scale < 1) button.style.setProperty('--label-size', `${size * scale}px`);
+    const lead = Math.min(room, Math.max(width * scale + LABEL_PAD, share));
+    button.style.setProperty('--lead-w', `${Math.floor(lead)}px`);
+  });
 }
 
 /**
@@ -85,8 +127,16 @@ export function createNav({ onLanguage }) {
     pill.style.width = `${active.offsetWidth}px`;
   };
 
+  const layout = () => {
+    placePill();
+    measureTabs(tabbar);
+  };
+
   /**
    * @brief Crée les onglets de la pilule et de la barre d'onglets, puis suit leur largeur.
+   *
+   * La pastille et les cases de la barre d'onglets se remesurent quand l'une des deux barres
+   * change de taille, que les polices sont chargées ou que la barre passe en icônes seules.
    *
    * Rejouable après un échec : chaque conteneur se remplit d'un bloc, une seule fois.
    *
@@ -102,14 +152,17 @@ export function createNav({ onLanguage }) {
       pillNav.append(pill, ...ids.map((id) => tab(id, ui.nav[id])));
     if (!tabbar.querySelector('[data-go]'))
       tabbar.append(...ids.map((id) => tab(id, icon(id), el('span', {}, ui.nav[id]))));
-    new ResizeObserver(placePill).observe(pillNav);
-    document.fonts?.ready.then(placePill); // largeurs des onglets avec les polices chargées
+    const observer = new ResizeObserver(layout);
+    observer.observe(pillNav);
+    observer.observe(tabbar);
+    matchMedia(BREAKPOINTS.narrowest).addEventListener('change', layout);
+    document.fonts?.ready.then(layout); // largeurs des onglets avec les polices chargées
     built = true;
   };
 
   return {
     /**
-     * @brief Crée les onglets au premier appel, puis met à jour leurs libellés.
+     * @brief Crée les onglets au premier appel, puis met à jour leurs libellés et les mesures.
      *
      * @param {object} ui textes `ui` d'une langue (nav, sections, language)
      */
@@ -120,7 +173,7 @@ export function createNav({ onLanguage }) {
       pillNav.setAttribute('aria-label', ui.sections);
       tabbar.setAttribute('aria-label', ui.sections);
       langGroup.setAttribute('aria-label', ui.language);
-      placePill();
+      layout();
     },
 
     /**
