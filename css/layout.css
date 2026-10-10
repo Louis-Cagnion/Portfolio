@@ -384,21 +384,10 @@ body:has(> .status-screen:not([data-state="ready"])) :is(.nav, .tabbar) {
 }
 
 /* Panneau « contenu indisponible » d'une rubrique : à 32 px du chapeau (sa marge haute
-l'emporte sur celle du chapeau) et jamais plus large que la colonne. Les coins du HUD
-restent dans le cadre (0 au lieu de -2px) : ils n'élargissent pas la zone défilable. */
+l'emporte sur celle du chapeau) et jamais plus large que la colonne. */
 .view .status {
   width: min(34rem, 100%);
   margin: 32px 0 0;
-}
-
-.view .status::before {
-  top: 0;
-  left: 0;
-}
-
-.view .status::after {
-  bottom: 0;
-  right: 0;
 }
 
 /* Sans JavaScript : seul le message du <noscript> reste ; la bascule, inerte, disparaît. */

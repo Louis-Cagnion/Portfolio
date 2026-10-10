@@ -157,10 +157,14 @@ function widthProblems(site, id) {
   const root = site.doc.documentElement;
   if (root.scrollWidth > root.clientWidth)
     problems.push(`html : scrollWidth ${root.scrollWidth} > clientWidth ${root.clientWidth}`);
-  if (panel.scrollWidth > panel.clientWidth)
-    problems.push(`panneau : scrollWidth ${panel.scrollWidth} > ` +
-      `clientWidth ${panel.clientWidth}`);
   const rect = panel.getBoundingClientRect();
+  for (const el of panel.querySelectorAll('*')) {
+    const box = el.getBoundingClientRect();
+    if (box.left < rect.left - 0.5 || box.right > rect.right + 0.5)
+      problems.push(`${el.localName}${el.className ? `.${el.classList[0]}` : ''} ` +
+        `hors du panneau : ${box.left.toFixed(1)} à ${box.right.toFixed(1)} ` +
+        `contre ${rect.left.toFixed(1)} à ${rect.right.toFixed(1)}`);
+  }
   if (rect.left < -0.5 || rect.right > site.win.innerWidth + 0.5)
     problems.push(`panneau hors de la fenêtre : ${rect.left.toFixed(1)} ` +
       `à ${rect.right.toFixed(1)}`);
