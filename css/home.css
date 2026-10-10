@@ -1,0 +1,188 @@
+/*
+Accueil : mission, nom, accroche, appels, télémétrie, repère du dossier et dossier du pilote.
+Valeurs : maquette validée (docs/design/prototype/prototype.template.html:63-95 et 300-302).
+Les titres, .btn et .hud viennent de css/layout.css. Chargée après lui par index.html.
+*/
+
+/* ───── Accueil : deux colonnes, une seule à 880 px et moins ───── */
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: 48px;
+  align-items: center;
+  min-height: calc(100vh - 180px);
+  padding-top: 32px;
+}
+
+@media (max-width: 880px) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: auto;
+    gap: 32px;
+  }
+}
+
+.mission {
+  color: var(--accent);
+  font-weight: 500;
+  margin: 0 0 22px;
+  overflow-wrap: anywhere;
+}
+
+.hero h1 {
+  overflow-wrap: anywhere;
+}
+
+.pitch {
+  max-width: 33em;
+  color: var(--dim);
+  font-size: 1.12rem;
+  margin: 0 0 32px;
+  overflow-wrap: anywhere;
+}
+
+.ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* ───── Télémétrie ───── */
+.telemetry {
+  padding: 22px;
+}
+
+.telemetry h3 {
+  font: 500 0.95rem var(--sans);
+  color: var(--dim);
+  margin: 0 0 12px;
+}
+
+.rows {
+  margin: 0;
+}
+
+.rows div {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 11px 0;
+  border-bottom: 1px dashed var(--line);
+}
+
+.rows div:last-child {
+  border-bottom: 0;
+}
+
+.rows dt {
+  color: var(--dim);
+}
+
+.rows dd {
+  min-width: 0;
+  margin: 0;
+  font-family: var(--mono);
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.rows dd.live {
+  color: var(--live);
+}
+
+/* ───── Repère : invite à défiler, s'efface quand le dossier est à l'écran ───── */
+.cue {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  width: max-content;
+  max-width: 100%;
+  margin: 4px auto 0;
+  color: var(--faint);
+  font: 400 0.8rem var(--mono);
+  text-decoration: none;
+  transition: color var(--dur-fast), opacity 0.4s, visibility 0s;
+}
+
+.cue.gone {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s, visibility 0s 0.4s;
+}
+
+.cue span {
+  animation: cue 2s ease-in-out infinite;
+}
+
+@keyframes cue {
+  50% {
+    transform: translateY(4px);
+  }
+}
+
+@media (hover: hover) {
+  .cue:hover {
+    color: var(--accent);
+  }
+}
+
+.cue:focus-visible {
+  color: var(--accent);
+}
+
+/* ───── Dossier du pilote : intitulé à gauche, texte à droite (une colonne à 700 px) ───── */
+.kicker {
+  font: 400 0.85rem var(--mono);
+  color: var(--accent);
+  margin: 80px 0 0;
+}
+
+.dossier h2 {
+  margin: 6px 0 22px;
+}
+
+.dossier-body {
+  margin: 0;
+  padding: 6px 28px;
+}
+
+.dossier-body div {
+  display: grid;
+  grid-template-columns: 200px minmax(0, 1fr);
+  gap: 24px;
+  padding: 18px 0;
+  border-bottom: 1px dashed var(--line);
+}
+
+.dossier-body div:last-child {
+  border-bottom: 0;
+}
+
+.dossier-body dt {
+  font: 500 0.85rem var(--mono);
+  color: var(--accent);
+  padding-top: 4px;
+  overflow-wrap: anywhere;
+}
+
+.dossier-body dd {
+  margin: 0;
+  color: var(--dim);
+  max-width: 68ch;
+}
+
+.dossier-body .body {
+  margin: 0;
+}
+
+@media (max-width: 700px) {
+  .dossier-body {
+    padding: 4px 18px;
+  }
+
+  .dossier-body div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4px;
+  }
+}

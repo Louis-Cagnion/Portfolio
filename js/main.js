@@ -4,9 +4,10 @@ navigation, gère la bascule FR/EN et l'écran #status. boot(env) est injectable
 (tests/browser/README.md) ; le module s'amorce seul, sauf sur <html data-noboot>.
 */
 import { cachedLocale, loadLocale, LocaleError } from './core/data.js';
-import { el, setRich } from './core/dom.js';
+import { el } from './core/dom.js';
 import { initialLang, otherLang } from './core/i18n.js';
 import { createRouter, listViews } from './core/router.js';
+import { mount as mountHome } from './sections/home.js';
 import { createNav } from './ui/nav.js';
 import { createSky } from './ui/starfield.js';
 import { createStatus } from './ui/status.js';
@@ -63,48 +64,6 @@ function mountSimple(root, pick) {
   root.append(title, lede);
   return (content) => {
     [title.textContent, lede.textContent] = pick(content);
-  };
-}
-
-/**
- * @brief Monte l'accueil minimal : mission, nom, accroche, appels et dossier du pilote.
- *
- * @param {HTMLElement} root section.view#home
- *
- * @returns {(content: object) => void} mise à jour des textes pour une langue
- */
-function mountHome(root) {
-  const mission = el('p', { class: 'mission' });
-  const name = el('h1', { tabindex: '-1' });
-  const pitch = el('p', { class: 'pitch' });
-  const toProjects = el(
-    'button',
-    { type: 'button', class: 'btn primary', 'data-go': 'projects' },
-  );
-  const toContact = el('button', { type: 'button', class: 'btn', 'data-go': 'contact' });
-  const kicker = el('p', { class: 'kicker' });
-  const title = el('h2', { tabindex: '-1' });
-  const entries = el('dl', { class: 'hud dossier-body' });
-  root.append(
-    mission,
-    name,
-    pitch,
-    el('div', { class: 'ctas' }, toProjects, toContact),
-    el('section', { class: 'dossier', id: 'dossier' }, kicker, title, entries),
-  );
-  return ({ home }) => {
-    mission.textContent = home.mission;
-    name.textContent = home.name;
-    pitch.textContent = home.pitch;
-    toProjects.textContent = home.ctas.projects;
-    toContact.textContent = home.ctas.contact;
-    kicker.textContent = home.dossier.kicker;
-    title.textContent = home.dossier.title;
-    entries.replaceChildren(...home.dossier.entries.map((entry, index) => {
-      const body = el('p', { class: 'body' });
-      setRich(body, entry.html, `home.dossier.entries[${index}].html`);
-      return el('div', {}, el('dt', {}, entry.label), el('dd', {}, body));
-    }));
   };
 }
 
