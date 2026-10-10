@@ -39,6 +39,8 @@ import { runRich } from './rich.js';
 import { runCue } from './cue.js';
 import { runHome } from './home.js';
 import { runUnavailable } from './unavailable.js';
+import { runContact } from './contact.js';
+import { runJourney } from './journey.js';
 import { runWithout2d } from './no2d.js';
 import { runReducedMotion, runWarp } from './warp.js';
 
@@ -57,6 +59,8 @@ const GROUPS = [
   'matrice',
   'accueil',
   'indisponible',
+  'contact',
+  'parcours',
 ];
 const PILL_WIDTH = 1280; // saut rejoué aussi par la pilule
 
@@ -423,6 +427,10 @@ async function main() {
     }
     if (groups.includes('indisponible'))
       await scenario('indisponible', () => runUnavailable(widths, mainWidth));
+    if (groups.includes('contact'))
+      await scenario('contact', () => runContact(widths, mainWidth));
+    if (groups.includes('parcours'))
+      await scenario('parcours', () => runJourney(widths, mainWidth));
   } catch (error) {
     skip({ group: 'Suite', section: null }, ['suite'], `erreur interne : ${errorText(error)}`);
   } finally {
