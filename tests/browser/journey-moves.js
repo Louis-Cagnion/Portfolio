@@ -23,6 +23,7 @@ import {
   scrollMax,
   selected,
   sleep,
+  tabindexProblems,
   textProblems,
   uncaught,
   view,
@@ -138,6 +139,29 @@ export async function runKeyboard(width) {
       return [`escale choisie passée de ${index + 1} à ${selected(site) + 1}`];
     });
   });
+}
+
+/** Téléphone : la flèche ↓ de la scène déplace le `tabindex="0"` sur l'escale suivante. */
+export async function runPhoneTabindex(width) {
+  const ctx = context(width);
+  const name = 'téléphone : flèche ↓ de la scène = tabindex 0 sur l\'escale suivante, ' +
+    '-1 sur l\'ancienne';
+  await withJourney(ctx, [name], {}, (site) => test(ctx, name, async () => {
+    const before = selected(site);
+    const stage = arrowPairs(site).stagePair;
+    if (stage.length !== 2) return ['flèches de la scène absentes'];
+    const problems = tabindexProblems(site, width);
+    click(site, stage[1]);
+    const found = await eventually(() => [
+      ...(selected(site) === before + 1 ? [] : ['l\'escale suivante n\'est pas choisie']),
+      ...tabindexProblems(site, width),
+    ]);
+    const old = wps(site)[before]?.getAttribute('tabindex');
+    const next = wps(site)[before + 1]?.getAttribute('tabindex');
+    if (old !== '-1' || next !== '0')
+      found.push(`ancienne escale à ${old} et suivante à ${next} au lieu de -1 et 0`);
+    return [...problems, ...found];
+  }));
 }
 
 /** Fiche amenée sous la barre (à 8 px près), ou page au bout de sa course. */
@@ -298,6 +322,22 @@ export async function runRapid(width) {
 }
 
 const RESIZE_WIDTHS = [881, 880, 768, 701, 700, 430, 320, 701, 1280, 700, 1280];
+
+/** Franchir 700 px : toutes les escales à 0 au bureau, une seule sur téléphone. */
+export async function runResizeTabindex() {
+  const ctx = context(1280);
+  const name = 'redimensionnement à travers 700 px : tabindex de toutes les escales au ' +
+    'bureau, d\'une seule sur téléphone';
+  await withJourney(ctx, [name], {}, (site) => test(ctx, name, async () => {
+    const problems = [];
+    for (const width of [1280, 700, 701, 430, 1280]) {
+      await resize(site, width);
+      const found = await eventually(() => tabindexProblems(site, width));
+      problems.push(...found.map((p) => `à ${width} px : ${p}`));
+    }
+    return [...problems, ...uncaught(site)];
+  }));
+}
 
 /** Redimensionnement de 1280 px à travers 880 et 700 px : escale gardée, sans doublon. */
 export async function runResize() {

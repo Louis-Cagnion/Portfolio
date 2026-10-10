@@ -46,9 +46,11 @@ import {
   runDesktopTouch,
   runKeyboard,
   runLanguageMidway,
+  runPhoneTabindex,
   runPhoneTouch,
   runRapid,
   runResize,
+  runResizeTabindex,
   walkProblems,
 } from './journey-moves.js';
 
@@ -115,7 +117,10 @@ async function runStructure(width) {
     'css/journey.css chargé',
   ];
   await withJourney(ctx, names, {}, async (site) => {
-    await test(ctx, names[0], async () => structureProblems(site, await journeyData('fr')));
+    await test(ctx, names[0], async () => {
+      const fr = await journeyData('fr');
+      return structureProblems(site, fr, width);
+    });
     await test(ctx, names[1], () => stylesheetProblems(site));
   });
 }
@@ -220,7 +225,10 @@ export async function runJourney(widths, mainWidth) {
   for (const width of EDGE_WIDTHS) await runEdge(width);
   const phones = widths.filter(phone);
   const desktops = widths.filter((width) => !phone(width));
-  for (const width of phones) await runPhoneTouch(width);
+  for (const width of phones) {
+    await runPhoneTouch(width);
+    await runPhoneTabindex(width);
+  }
   for (const width of desktops) await runDesktopTouch(width);
   for (const width of new Set([mainWidth, ...desktops.slice(-1)])) {
     await runKeyboard(width);
@@ -230,4 +238,5 @@ export async function runJourney(widths, mainWidth) {
   }
   await runLongWord();
   await runResize();
+  await runResizeTabindex();
 }

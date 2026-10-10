@@ -318,8 +318,26 @@ export function positionProblems(site, journey, index, width) {
 
 export const nowIndex = (journey) => journey.stops.findIndex((s) => s.now);
 
+/**
+ * Ordre de tabulation des escales (plan.md:156) : sur téléphone, seule l'escale choisie
+ * est à `tabindex="0"`, les autres à `-1` ; au bureau, toutes sont à `0`.
+ */
+export function tabindexProblems(site, width) {
+  const list = wps(site);
+  if (!list.length) return ['aucune escale rendue'];
+  const chosen = selected(site);
+  const problems = [];
+  list.forEach((g, at) => {
+    const wanted = !phone(width) || at === chosen ? '0' : '-1';
+    const found = g.getAttribute('tabindex');
+    if (found !== wanted)
+      problems.push(`escale ${at + 1} : tabindex ${found} au lieu de ${wanted}`);
+  });
+  return problems;
+}
+
 /** Structure DOM de la maquette (370-387, 653-666), sans les textes. */
-export function structureProblems(site, journey) {
+export function structureProblems(site, journey, width) {
   const root = view(site);
   if (!root) return ['section.view#journey absente'];
   const problems = [];
@@ -348,7 +366,12 @@ export function structureProblems(site, journey) {
     '.traj .ship-g',
   ].forEach((selector) => need(selector));
   need('.traj .wp', n);
-  need('.traj .wp[tabindex="0"][role="button"]', n);
+  if (phone(width)) {
+    need('.traj .wp[role="button"]', n);
+    need('.traj .wp.sel[tabindex="0"]', 1);
+    need('.traj .wp:not(.sel)[tabindex="-1"]', n - 1);
+    need('.traj .wp[tabindex="0"]', 1);
+  } else need('.traj .wp[tabindex="0"][role="button"]', n);
   need('.traj .wp > circle.hit', n);
   need('.traj .wp > g.stop', n);
   need('.traj .wp > text:not(.y)', n);

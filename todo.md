@@ -1,9 +1,15 @@
-> Prochaine tâche : S7 « Parcours », étape 5/8 : briefer un builder sur les tests rouges du groupe navigateur `parcours` (`tests/browser/journey*.js`, 110 rouges), en tranchant au brief les trois points de la ligne S7 ci-dessous. Ensuite S9 « Contact », étape 5/8. Contexte des agents : `~/.claude/references/projects/portfolio/contexte.md`. Session Linux : Node 22, ports 5510 à 5519 pour les agents, 5520 et plus pour le moniteur.
+> Prochaine tâche : S7 « Parcours », étape 7/8 : finir les correctifs listés ci-dessous, un fixer à la fois, puis l'étape 8/8. Ensuite S9 « Contact », étape 5/8. Contexte des agents : `~/.claude/references/projects/portfolio/contexte.md`. Session Linux : Node 22, ports 5510 à 5519 pour les agents, 5520 et plus pour le moniteur.
 
 ## Refonte spatiale
 
 - Suivre `docs/design/plan.md` (validé le 08/10/2026), étapes 4 à 8, sur la branche `redesign/space`.
-- S7 « Parcours » : étapes 5 à 8 (tests rouges : groupe navigateur `parcours`, `tests/browser/journey*.js`). À trancher au brief de l'étape 5 : garder `id="jDetail"` sur la fiche ou transposer en classe les règles `#jDetail` de la maquette ; cadrage « centré » testé à 36 % ± 5 % de la scène ; `p.lede` = `lede.arrows` à 700 px et moins, `lede.pointer` au-dessus.
+- S7 « Parcours », étape 7/8, correctifs restants de la revue, un fixer à la fois :
+  - Tab des escales sur téléphone (`docs/design/plan.md:156`, variante C) : test rouge en cours, puis code ;
+  - robustesse de `js/sections/journey.js` : `viewFor` sur scène masquée (`clientWidth` nul), `setRich` rejoué à chaque sélection (un paragraphe mal formé signalé plusieurs fois), vaisseau garé sur l'astre avec une seule escale en vertical, deux `now` et `body` avec espace non signalés ; au bureau, clic sur l'escale actuelle qui rejoue flamme, traînée et fondu comme la maquette (`pickStop` → `select`) ;
+  - règles de fiche partagées (`.detail`, `.when`, `.count`, `.arrows`, boutons de flèche, `.b-spin`, `.b-drift` et leurs `@keyframes`) déplacées de `css/journey.css` vers `css/layout.css` pour S8 ;
+  - `mount` (environ 390 lignes) scindé : construction du DOM et fabrique du vaisseau et de sa traînée hors de `mount`.
+- S7 étape 8/8 : suite complète, vérification en vrai Chrome (trajet animé, focus clavier, mouvement réduit), chasse aux cas limites.
+- Étape 5 de S6, S8 et S9 : retirer la rubrique du module de `MOUNTED` dans `tests/browser/unavailable.js` (le panneau « indisponible » ne vaut que pour les rubriques encore montées par `mountSimple`, `docs/design/plan.md:122`).
 - S9 « Contact » : étapes 5 à 8 (tests rouges : groupe navigateur `contact`, `tests/unit/contact.test.mjs`). Trois textes du cœur à ajouter dans `data/*.json` (validés, `docs/design/plan.md`, dernière décision de Louis).
 - Brief S6 : `#sheet` est un `<aside role="dialog">` repris de la maquette (rôle non admis sur `aside`), à passer en `<div>` ou `<section>` ; le voile `.sheet-bg` transitionne en 0,35 s sans jeton correspondant.
 - S10 : `README.md` : le garder en anglais (choix de Louis du 08/10/2026), ajouter la section usage de l'IA et la liste des contributeurs (en dernier), décrire la nouvelle version.
