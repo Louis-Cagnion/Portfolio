@@ -1,6 +1,6 @@
 /* Contenu indisponible des rubriques à venir (S5b). Contrat
 (docs/design/plan.md:122 et :151) : sous le titre (h2) et le chapeau (p.lede) de chaque
-rubrique encore montée par mountSimple (journey, skills, projects, contact), un panneau
+rubrique encore montée par mountSimple (skills, projects, contact), un panneau
 `.status.hud[data-state="error"]` :
 - titre, message (ui.unavailable.title, message), barre en pointillés (élément dont la
   classe contient « bar », fond repeating-linear-gradient ou bordure dashed), bouton
@@ -31,7 +31,7 @@ import { expectEqual, skip, test } from './runner.js';
 import { normalize } from './text.js';
 
 export const GROUP = 'Indisponible';
-export const MOUNTED = ['journey', 'skills', 'projects', 'contact'];
+export const MOUNTED = ['skills', 'projects', 'contact'];
 const PANEL = '.status.hud[data-state="error"]';
 const GAP = 32; // px, bas du chapeau à haut du panneau
 const TOLERANCE = 1; // px : arrondis de sous-pixel
@@ -363,7 +363,7 @@ async function runBehaviour(width) {
 const LONG_TITLE = 'Informationsunzugänglichkeitsmeldungstitel';
 
 async function runLongTitle() {
-  const ctx = { group: GROUP, width: 320, lang: 'fr', section: 'journey' };
+  const ctx = { group: GROUP, width: 320, lang: 'fr', section: 'skills' };
   let site;
   try {
     site = await open(320, 'fr', longTitleFetch(LONG_TITLE));
@@ -376,11 +376,11 @@ async function runLongTitle() {
       ctx,
       'titre d\'un mot long sans espace : ni panneau ni page ne débordent',
       async () => {
-        await goTo(site, 'journey');
-        const { panel, problems } = onePanel(site, 'journey');
+        await goTo(site, 'skills');
+        const { panel, problems } = onePanel(site, 'skills');
         if (!panel) return problems;
         expectEqual(problems, 'titre du panneau', textOf(parts(panel).heading), LONG_TITLE);
-        return [...problems, ...widthProblems(site, 'journey')];
+        return [...problems, ...widthProblems(site, 'skills')];
       },
     );
   } finally {

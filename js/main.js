@@ -9,6 +9,7 @@ import { el } from './core/dom.js';
 import { initialLang, otherLang } from './core/i18n.js';
 import { createRouter, listViews } from './core/router.js';
 import { mount as mountHome } from './sections/home.js';
+import { mount as mountJourney } from './sections/journey.js';
 import { createNav } from './ui/nav.js';
 import { createSky } from './ui/starfield.js';
 import { createStatus } from './ui/status.js';
@@ -104,7 +105,7 @@ modules js/sections/ (S5 à S9) : chaque montage insère sa structure d'un bloc,
 mountSimple disparaît avec la rubrique simple, quand son module la remplace. */
 const MOUNTS = {
   home: mountHome,
-  journey: (root) => mountSimple(root, (c) => [c.journey.title, c.journey.lede.pointer]),
+  journey: mountJourney,
   skills: (root) => mountSimple(root, (c) => [c.skills.title, c.skills.lede]),
   projects: (root) => mountSimple(root, (c) => [c.projects.title, c.projects.lede]),
   contact: (root) => mountSimple(root, (c) => [c.contact.title, c.contact.question]),
