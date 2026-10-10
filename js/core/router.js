@@ -190,7 +190,8 @@ function focusTitle(found) {
  * Une seconde demande pendant un saut termine le premier puis part de son arrivée ; le
  * mouvement réduit, relu à chaque demande, donne un changement immédiat, de même que main
  * inerte (chargement, écran d'erreur). À l'arrivée, le focus va au titre de la rubrique ou
- * de l'ancre (sauf au premier affichage), dès que main est utilisable.
+ * de l'ancre (sauf au premier affichage), dès que main est utilisable ; il n'est pas repris
+ * si l'utilisateur l'a déplacé pendant le saut.
  *
  * @param {{ onView: (id: string) => void, sky?: { warp: Function, calm: Function } | null }}
  *   options rappel de la rubrique affichée (barre), ciel accéléré pendant le saut
@@ -209,7 +210,7 @@ export function createRouter({ onView, sky = null }) {
   const lens = map && lensMap();
   const bend = lens && displacement; // sans carte : déplacement faussé, courbure laissée à 0
   let current = null;
-  let jump = null; // saut en cours : { from, found, timers, frame }
+  let jump = null; // saut en cours : { from, found, timers, frame, focus }
   let waiting = null; // cible dont le titre attend que main ne soit plus inerte
 
   if (lens) map.setAttribute('href', lens);
@@ -271,7 +272,9 @@ export function createRouter({ onView, sky = null }) {
     cancelAnimationFrame(done.frame);
     unwarp(done.from);
     show(done.found.view);
-    land(done.found, true);
+    const active = document.activeElement;
+    const moved = active && active !== document.body && active !== done.focus;
+    land(done.found, !moved);
   };
 
   /**
@@ -285,7 +288,7 @@ export function createRouter({ onView, sky = null }) {
    */
   const startJump = (found, direction) => {
     const from = current;
-    const state = { from, found, timers: [], frame: 0 };
+    const state = { from, found, timers: [], frame: 0, focus: document.activeElement };
     jump = state;
     select(found.view);
     const box = from.getBoundingClientRect();

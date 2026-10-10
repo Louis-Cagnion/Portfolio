@@ -466,6 +466,7 @@ const WARP_CASES = {
   again: 'même rubrique redemandée pendant son saut : arrivée propre',
   loops: 'accueil immobile : une seule boucle requestAnimationFrame (le ciel)',
   toggle: 'mouvement réduit activé en cours de session, puis désactivé',
+  kept: 'focus déplacé pendant le saut (bouton EN) : conservé à l\'arrivée',
   exceptions: 'aucune exception non rattrapée',
 };
 
@@ -540,6 +541,7 @@ export async function runWarp(width) {
     again,
     loops,
     toggle,
+    kept,
     exceptions,
   } = WARP_CASES;
   try {
@@ -611,6 +613,19 @@ export async function runWarp(width) {
         await reach(run, from);
         return departureProblems(run, to);
       });
+    await test(at('journey'), kept, async () => {
+      await reach(run, 'home');
+      const button = site.doc.querySelector('header.bar .lang button[data-lang="en"]');
+      if (!button) return ['header.bar .lang button[data-lang="en"] absent'];
+      clickGo(site, 'journey');
+      await sleep(run.warp.bend * MID_SHARE);
+      button.focus();
+      await arrival(site, 'journey');
+      await settle(site, 'journey');
+      return site.doc.activeElement === button
+        ? []
+        : [`focus sur ${describe(site.doc.activeElement)} au lieu du bouton EN`];
+    });
     await test(ctx, exceptions, () => uncaught(site));
   } finally {
     run.motion.reduce = false;
