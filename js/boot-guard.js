@@ -28,12 +28,20 @@ tests), le panneau #status passe en erreur avec les textes de ses modèles <temp
    * @param {string} lang code de langue
    * @param {string} key clé du texte (`errors.boot`...)
    *
-   * @returns {string} texte aux espaces normalisés ; vide si le modèle ou la clé manque
+   * @returns {string} texte aux espaces normalisés ; vide si le modèle ou la clé manque, avec
+   *                   un console.error qui le nomme
    */
   function templateText(root, lang, key) {
     const template = root.querySelector(`template[data-lang="${lang}"]`);
     const node = template?.content.querySelector(`[data-key="${key}"]`);
-    return node ? node.textContent.replace(/\s+/g, ' ').trim() : '';
+    if (!node) {
+      const cause = template
+        ? `clé ${key} absente du modèle ${lang}`
+        : `modèle ${lang} absent (clé ${key})`;
+      console.error(`Garde-fou de démarrage : ${cause}, texte vide.`);
+      return '';
+    }
+    return node.textContent.replace(/\s+/g, ' ').trim();
   }
 
   /** @brief Passe #status en erreur de démarrage si les modules ne se sont pas lancés. */
@@ -41,11 +49,24 @@ tests), le panneau #status passe en erreur avec les textes de ses modèles <temp
     const html = document.documentElement;
     if (html.hasAttribute('data-noboot') || html.hasAttribute('data-booted')) return;
     const root = document.getElementById('status');
-    const title = root?.querySelector('#status-title');
-    const message = root?.querySelector('#status-message');
-    const retry = root?.querySelector('button[data-action="retry"]');
-    const switcher = root?.querySelector('button[data-action="switch-lang"]');
-    if (!title || !message || !retry || !switcher) return;
+    if (!root) {
+      console.error('Garde-fou de démarrage : #status absent, panneau non mis à jour.');
+      return;
+    }
+    const title = root.querySelector('#status-title');
+    const message = root.querySelector('#status-message');
+    const retry = root.querySelector('button[data-action="retry"]');
+    const switcher = root.querySelector('button[data-action="switch-lang"]');
+    const elements = [
+      ['#status-title', title],
+      ['#status-message', message],
+      ['button[data-action="retry"]', retry],
+      ['button[data-action="switch-lang"]', switcher],
+    ];
+    const missing = elements.filter(([, element]) => !element);
+    for (const [selector] of missing)
+      console.error(`Garde-fou de démarrage : ${selector} absent, panneau non mis à jour.`);
+    if (missing.length) return;
     const lang = storedLang();
     title.textContent = templateText(root, lang, 'errors.title');
     message.textContent = templateText(root, lang, 'errors.boot');

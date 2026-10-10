@@ -542,20 +542,46 @@ async function errorLayout(width, cause, lang) {
   }
 }
 
+// Espion de console.error posé en tête de l'iframe srcdoc, avant le garde-fou de démarrage.
+const CONSOLE_SPY = `<script>
+window.__errors = [];
+const logError = console.error;
+console.error = (...args) => {
+  window.__errors.push(args.map((arg) => String(arg?.message ?? arg)).join(' '));
+  logError.apply(console, args);
+};
+</script>`;
+
 /**
- * Ouvre le vrai index.html sans `data-noboot`. Avec `breakMain`, son texte (avec <base> vers
- * la racine) est injecté en srcdoc, js/main.js remplacé par un chemin inexistant. Sinon la
- * page est chargée par son URL : sous <base>, le pushState de l'iframe srcdoc lèverait.
- * Le stockage est celui du banc (même origine que l'iframe) : l'appelant le restaure.
+ * Source srcdoc du vrai index.html : <base> vers la racine et l'espion de console.error. Avec
+ * `breakMain`, js/main.js pointe vers un chemin inexistant ; avec `dropFrBoot`, la clé
+ * errors.boot sort du modèle fr.
  */
-async function openRealPage(width, breakMain) {
+async function realSource({ breakMain, dropFrBoot }) {
+  let html = (await readText('index.html')).replace(
+    /<head(\s[^>]*)?>/i,
+    (tag) => `${tag}<base href="${ROOT}">${CONSOLE_SPY}`,
+  );
+  if (breakMain) html = html.replace('src="js/main.js"', 'src="js/introuvable-main.js"');
+  if (dropFrBoot)
+    html = html.replace(
+      /<template data-lang="fr">[\s\S]*?<\/template>/,
+      (template) => template.replace(/\s*<p data-key="errors\.boot">[\s\S]*?<\/p>/, ''),
+    );
+  return html;
+}
+
+/**
+ * Ouvre le vrai index.html sans `data-noboot`. Avec `breakMain` ou `dropFrBoot`, la source de
+ * realSource() est injectée en srcdoc. Sinon la page est chargée par son URL : sous <base>,
+ * le pushState de l'iframe srcdoc lèverait. Le stockage est celui du banc (même origine que
+ * l'iframe) : l'appelant le restaure.
+ */
+async function openRealPage(width, { breakMain = false, dropFrBoot = false }) {
   const frame = document.createElement('iframe');
   frame.title = `site réel à ${width} px`;
   frame.style.cssText = `width:${width}px;height:800px;border:1px solid #567;`;
-  if (breakMain)
-    frame.srcdoc = (await readText('index.html'))
-      .replace(/<head(\s[^>]*)?>/i, (tag) => `${tag}<base href="${ROOT}">`)
-      .replace('src="js/main.js"', 'src="js/introuvable-main.js"');
+  if (breakMain || dropFrBoot) frame.srcdoc = await realSource({ breakMain, dropFrBoot });
   else frame.src = new URL('index.html', ROOT).href;
   (document.getElementById('stage') || document.body).append(frame);
   const page = { frame, close: () => frame.remove() };
@@ -576,13 +602,13 @@ async function openRealPage(width, breakMain) {
 }
 
 /** Ouvre le vrai index.html avec `lang` stocké, joue `run(page)` puis restaure le stockage. */
-async function withRealPage(width, { breakMain, lang }, run) {
+async function withRealPage(width, { breakMain, dropFrBoot, lang }, run) {
   const saved = localStorage.getItem('lang');
   if (lang) localStorage.setItem('lang', lang);
   else localStorage.removeItem('lang');
   let page;
   try {
-    page = await openRealPage(width, breakMain);
+    page = await openRealPage(width, { breakMain, dropFrBoot });
     return await run(page);
   } finally {
     page?.close();
@@ -620,6 +646,26 @@ async function bootErrorProblems(page, lang) {
   return problems;
 }
 
+/** Problèmes d'un garde-fou sans errors.boot dans le modèle fr : console.error le nomme. */
+async function bootLogProblems(page) {
+  const doc = page.doc;
+  const state = () => doc.getElementById('status')?.dataset.state;
+  await waitFor(
+    () => state() === 'error',
+    5000,
+    '#status[data-state="error"] sans js/main.js ni errors.boot',
+    () => `data-state="${state()}"`,
+  );
+  const model = doc.querySelector('template[data-lang="fr"]').content;
+  const problems = [];
+  if (model.querySelector('[data-key="errors.boot"]'))
+    problems.push('errors.boot encore présent dans le modèle fr (cas mal monté)');
+  const logged = page.frame.contentWindow.__errors ?? [];
+  if (!logged.some((text) => text.includes('errors.boot')))
+    problems.push(`aucun console.error ne nomme errors.boot : [${logged.join(' | ')}]`);
+  return problems;
+}
+
 /** Module JS introuvable : le garde-fou affiche l'erreur de démarrage ; sinon il se tait. */
 async function bootGuard(width) {
   const ctx = { group: 'États', width, section: 'status' };
@@ -635,6 +681,15 @@ async function bootGuard(width) {
       ),
     );
   }
+  await test(
+    { ...ctx, lang: 'fr' },
+    'js/main.js introuvable et errors.boot absent du modèle fr : console.error le nomme',
+    () => withRealPage(
+      width,
+      { breakMain: true, dropFrBoot: true, lang: 'fr' },
+      bootLogProblems,
+    ),
+  );
   await test(
     { ...ctx, lang: 'fr' },
     'js/main.js présent : le garde-fou reste muet et le site atteint ready',
