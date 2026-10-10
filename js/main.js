@@ -70,7 +70,7 @@ function mountSimple(root, pick) {
     { class: 'status hud', 'data-state': 'error' },
     heading,
     message,
-    el('div', { class: 'status-bar' }, el('i')),
+    el('div', { class: 'status-bar', 'aria-hidden': 'true' }, el('i')),
     el('div', { class: 'status-actions' }, home),
   );
   root.append(title, lede, panel);
