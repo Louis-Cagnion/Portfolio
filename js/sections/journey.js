@@ -77,7 +77,11 @@ function buildStop(stop, index, now, last) {
   const classes = ['wp', index > now ? 'future' : '', index === last ? 'dest' : ''];
   const hit = svg('circle', { class: 'hit' });
   const pulse = index === now ? svg('circle', { class: 'pulse' }) : null;
-  const art = svg('g', { class: `stop ${stop.body}` }, ...stopArt(stop.body));
+  const art = svg(
+    'g',
+    { class: hasArt(stop.body) ? `stop ${stop.body}` : 'stop' },
+    ...stopArt(stop.body),
+  );
   const title = svg('text');
   const when = svg('text', { class: 'y' });
   const g = svg(
@@ -155,6 +159,7 @@ export function mount(root) {
   const state = {
     journey: null,
     ids: [], // identifiants des escales construites
+    paragraphs: [], // <p> de la fiche de chaque escale, refaits à chaque mise à jour
     stops: [], // éléments de chaque escale (buildStop)
     now: 0,
     cur: 0,
@@ -170,7 +175,11 @@ export function mount(root) {
     trailFrame: 0,
   };
   const last = () => state.stops.length - 1;
-  const pointAt = (d) => track.getPointAtLength(Math.min(Math.max(d, 0), state.len));
+  const pointAt = (d) => {
+    const p = track.getPointAtLength(Math.min(Math.max(d, 0), state.len));
+    // Tracé de longueur nulle (une seule escale) : on le prolonge vers le bas.
+    return state.len ? p : { x: p.x, y: p.y + d };
+  };
   const radiusOf = (index) => stopRadius(state.stops[index].body, state.vertical);
 
   /** Où se gare le vaisseau : juste avant l'astre, ou juste après la Terre au départ. */
@@ -190,8 +199,12 @@ export function mount(root) {
     return (low + high) / 2;
   };
 
-  /** Vue de la caméra qui place l'abscisse `d` à FOCUS_Y de la scène, bord gauche fixe. */
+  /**
+   * Vue de la caméra qui place l'abscisse `d` à FOCUS_Y de la scène, bord gauche fixe ; scène
+   * masquée (sans largeur), la vue ne bouge pas et le ResizeObserver recadre au retour.
+   */
   const viewFor = (d) => {
+    if (!stage.clientWidth) return { cx: camera.cx, cy: camera.cy, w: camera.w };
     const w = stage.clientWidth / ZOOM;
     const h = w * camera.ratio();
     return { cx: VIEW_LEFT + w / 2, cy: pointAt(d).y + (0.5 - FOCUS_Y) * h, w };
@@ -291,11 +304,7 @@ export function mount(root) {
     title.textContent = stop.title;
     when.textContent = stop.when;
     count.textContent = format(journey.counter, { n: cur + 1, total: journey.stops.length });
-    body.replaceChildren(...stop.paragraphs.map((html, at) => {
-      const paragraph = el('p');
-      setRich(paragraph, html, `journey.stops[${cur}].paragraphs[${at}]`);
-      return paragraph;
-    }));
+    body.replaceChildren(...state.paragraphs[cur]);
     if (fade && !reduced()) body.animate(FADE, { duration: FADE_MS, easing: 'ease' });
     prev.disabled = up.disabled = cur === 0;
     next.disabled = down.disabled = cur === last();
@@ -420,11 +429,10 @@ export function mount(root) {
 
   /** Escale touchée : voyage, ou descente à la fiche si le vaisseau y est déjà (vertical). */
   const pick = (index) => {
-    if (index !== state.cur) {
+    if (!state.vertical || index !== state.cur || state.moving) {
       select(index);
       return;
     }
-    if (!state.vertical || state.moving) return;
     detail.scrollIntoView({ block: 'start', behavior: scrollBehavior() });
   };
 
@@ -461,6 +469,11 @@ export function mount(root) {
       console.error('parcours : aucune escale journey.stops[].now, ouverture sur la première');
       state.now = 0;
     }
+    const extra = stops.flatMap((stop, at) => (stop.now && at > state.now ? [at] : []));
+    if (extra.length) {
+      const fields = extra.map((index) => `journey.stops[${index}].now`).join(', ');
+      console.error(`parcours : ${fields} en plus de journey.stops[${state.now}].now, ignoré`);
+    }
     stops.forEach(({ body }, index) => {
       if (hasArt(body)) return;
       const message = `parcours : journey.stops[${index}].body « ${body} » sans dessin`;
@@ -492,6 +505,11 @@ export function mount(root) {
     traj.setAttribute('aria-label', journey.stopsLabel);
     [prev, up].forEach((button) => button.setAttribute('aria-label', journey.prev));
     [next, down].forEach((button) => button.setAttribute('aria-label', journey.next));
+    state.paragraphs = journey.stops.map((stop, index) => stop.paragraphs.map((html, at) => {
+      const paragraph = el('p');
+      setRich(paragraph, html, `journey.stops[${index}].paragraphs[${at}]`);
+      return paragraph;
+    }));
     const rebuilt = buildStops(journey.stops);
     journey.stops.forEach((stop, index) => {
       const item = state.stops[index];

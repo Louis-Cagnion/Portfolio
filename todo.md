@@ -4,7 +4,6 @@
 
 - Suivre `docs/design/plan.md` (validé le 08/10/2026), étapes 4 à 8, sur la branche `redesign/space`.
 - S7 « Parcours », étape 7/8, correctifs restants de la revue, un fixer à la fois :
-  - Tab des escales sur téléphone (`docs/design/plan.md:156`, variante C) : test rouge en cours, puis code ;
   - robustesse de `js/sections/journey.js` : `viewFor` sur scène masquée (`clientWidth` nul), `setRich` rejoué à chaque sélection (un paragraphe mal formé signalé plusieurs fois), vaisseau garé sur l'astre avec une seule escale en vertical, deux `now` et `body` avec espace non signalés ; au bureau, clic sur l'escale actuelle qui rejoue flamme, traînée et fondu comme la maquette (`pickStop` → `select`) ;
   - règles de fiche partagées (`.detail`, `.when`, `.count`, `.arrows`, boutons de flèche, `.b-spin`, `.b-drift` et leurs `@keyframes`) déplacées de `css/journey.css` vers `css/layout.css` pour S8 ;
   - `mount` (environ 390 lignes) scindé : construction du DOM et fabrique du vaisseau et de sa traînée hors de `mount`.
