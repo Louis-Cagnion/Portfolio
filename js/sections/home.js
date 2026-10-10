@@ -4,7 +4,7 @@ qui s'efface à l'arrivée du dossier, puis dossier du pilote. Structure de la m
 (docs/design/prototype/prototype.template.html:344-368) ; mise en page dans css/home.css.
 */
 import { el, setRich } from '../core/dom.js';
-import { reduced } from '../core/motion.js';
+import { scrollBehavior } from '../core/motion.js';
 import { opensElsewhere } from '../core/router.js';
 
 const CUE_ZONE = '0px 0px -15% 0px'; // le repère s'efface quand le dossier passe ce seuil
@@ -51,7 +51,7 @@ function dossierRow(entry, index) {
 function scrollToDossier(dossier, title, event) {
   if (opensElsewhere(event) || document.documentElement.hasAttribute('data-warp')) return;
   event.preventDefault();
-  dossier.scrollIntoView({ behavior: reduced() ? 'auto' : 'smooth' });
+  dossier.scrollIntoView({ behavior: scrollBehavior() });
   title.focus({ preventScroll: true });
 }
 

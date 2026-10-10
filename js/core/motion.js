@@ -13,6 +13,15 @@ export function reduced() {
 }
 
 /**
+ * @brief Comportement de défilement à demander au navigateur selon la préférence de mouvement.
+ *
+ * @returns {'auto' | 'smooth'} 'auto' (saut) sous mouvement réduit, sinon 'smooth'
+ */
+export function scrollBehavior() {
+  return reduced() ? 'auto' : 'smooth';
+}
+
+/**
  * @brief Suit la préférence « mouvement réduit » quand elle change en cours de session.
  *
  * @param {(still: boolean) => void} listener rappel de chaque changement, nouvelle valeur

@@ -125,6 +125,7 @@ function earth() {
   ];
 }
 
+/** Lune : disque gris et deux cratères. */
 function moon() {
   return [
     svg('circle', { r: RADIUS.moon, fill: 'url(#jMoon)' }),
@@ -133,6 +134,7 @@ function moon() {
   ];
 }
 
+/** Mars : disque rouille et trois sillons sombres. */
 function mars() {
   return [
     svg('circle', { r: RADIUS.mars, fill: 'url(#jMars)' }),
@@ -145,6 +147,7 @@ function mars() {
   ];
 }
 
+/** Astéroïdes : cinq blocs de roche anguleux, deux plus clairs, un plus sombre. */
 function asteroids() {
   const light = '#a39a8c';
   return [svg(
@@ -191,6 +194,7 @@ function saturn() {
   )];
 }
 
+/** Nébuleuse : trois nappes colorées à la dérive et trois étoiles. */
 function nebula() {
   return [
     svg(
@@ -232,6 +236,7 @@ function galaxyArms() {
   return stars;
 }
 
+/** Galaxie : halo, cœur lumineux et bras spiraux en rotation, vus de biais. */
 function galaxy() {
   return [
     svg('circle', { r: 44, fill: 'url(#jHalo)' }),

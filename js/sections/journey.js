@@ -9,7 +9,7 @@ mise en page dans css/journey.css.
 */
 import { BREAKPOINTS, el, setRich, svg } from '../core/dom.js';
 import { format } from '../core/i18n.js';
-import { ease, lerp, makeCamera, reduced } from '../core/motion.js';
+import { ease, lerp, makeCamera, reduced, scrollBehavior } from '../core/motion.js';
 import {
   artDefs,
   galaxyScale,
@@ -38,7 +38,6 @@ const SHIP_SCALE = 1.3;
 const SHIP_NOSE = 13; // distance du centre du vaisseau à sa tuyère, pour la traînée
 const HEADING_SPAN = 1.5; // demi-longueur du segment qui donne le cap du vaisseau
 const TRAIL = { max: 40, fade: 0.035, jitter: 2, r: 2.2, minR: 0.6, growR: 1.8, alpha: 0.8 };
-const BAR_GAP = 8; // la fiche descend à 8 px sous la barre du haut
 const FADE = [{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }];
 const FADE_MS = 450;
 const ARROWS = { prev: '←', next: '→', up: '↑', down: '↓' };
@@ -155,7 +154,7 @@ export function mount(root) {
   const camera = makeCamera(traj);
   const state = {
     journey: null,
-    ids: '', // identifiants des escales construites, séparés par des sauts de ligne
+    ids: [], // identifiants des escales construites
     stops: [], // éléments de chaque escale (buildStop)
     now: 0,
     cur: 0,
@@ -324,6 +323,11 @@ export function mount(root) {
     recentre();
   };
 
+  /** Pose plusieurs attributs d'un coup sur un élément. */
+  const setAttributes = (element, attributes) => {
+    Object.entries(attributes).forEach(([name, value]) => element.setAttribute(name, value));
+  };
+
   /** Pose une escale au point du tracé qui lui revient, avec ses deux lignes de texte. */
   const placeStop = (item, index) => {
     const { vertical } = state;
@@ -331,11 +335,8 @@ export function mount(root) {
     const radius = radiusOf(index);
     const center = { cx: p.x, cy: p.y };
     const minimum = vertical ? HIT.vertical : HIT.horizontal;
-    Object.entries({ ...center, r: Math.max(minimum, radius + HIT_MARGIN) })
-      .forEach(([name, value]) => item.hit.setAttribute(name, value));
-    if (item.pulse)
-      Object.entries({ ...center, r: radius + PULSE_MARGIN })
-        .forEach(([name, value]) => item.pulse.setAttribute(name, value));
+    setAttributes(item.hit, { ...center, r: Math.max(minimum, radius + HIT_MARGIN) });
+    if (item.pulse) setAttributes(item.pulse, { ...center, r: radius + PULSE_MARGIN });
     const scale = isGalaxy(item.body) ? ` scale(${galaxyScale(vertical)})` : '';
     item.art.setAttribute('transform', `translate(${p.x} ${p.y})${scale}`);
     let x = p.x - LABEL.shift;
@@ -382,7 +383,7 @@ export function mount(root) {
     state.moving = true;
     if (state.vertical) {
       const top = root.getBoundingClientRect().top + scrollY;
-      if (scrollY > top) scrollTo({ top, behavior: reduced() ? 'auto' : 'smooth' });
+      if (scrollY > top) scrollTo({ top, behavior: scrollBehavior() });
       sceneTitle.classList.add('out');
       camera.tween(() => viewFor(state.lens[target]), duration, travel).then(() => {
         if (trip === state.trip) arrive();
@@ -411,10 +412,7 @@ export function mount(root) {
       return;
     }
     if (!state.vertical || state.moving) return;
-    const bar = document.querySelector('.bar');
-    const top = detail.getBoundingClientRect().top + scrollY -
-      (bar ? bar.offsetHeight : 0) - BAR_GAP;
-    scrollTo({ top, behavior: reduced() ? 'auto' : 'smooth' });
+    detail.scrollIntoView({ block: 'start', behavior: scrollBehavior() });
   };
 
   /** Flèche : pas d'une escale ; à la borne, le focus passe à l'autre flèche de la paire. */
@@ -438,9 +436,11 @@ export function mount(root) {
    * @returns {boolean} vrai si les escales ont été reconstruites
    */
   const buildStops = (stops) => {
-    const ids = stops.map((stop) => stop.id).join('\n');
-    if (state.stops.length && ids === state.ids) return false;
-    const kept = state.ids.split('\n')[state.cur];
+    const ids = stops.map((stop) => stop.id);
+    const same = ids.length === state.ids.length &&
+      ids.every((id, index) => id === state.ids[index]);
+    if (state.stops.length && same) return false;
+    const kept = state.ids[state.cur];
     halt();
     state.ids = ids;
     state.now = stops.findIndex((stop) => stop.now);
@@ -449,10 +449,9 @@ export function mount(root) {
       state.now = 0;
     }
     stops.forEach(({ body }, index) => {
-      if (!hasArt(body))
-        console.error(
-          `parcours : journey.stops[${index}].body « ${body} » sans dessin, galaxie à la place`,
-        );
+      if (hasArt(body)) return;
+      const message = `parcours : journey.stops[${index}].body « ${body} » sans dessin`;
+      console.error(`${message}, galaxie à la place`);
     });
     const lastIndex = stops.length - 1;
     state.stops = stops.map((stop, index) => buildStop(stop, index, state.now, lastIndex));
@@ -472,7 +471,6 @@ export function mount(root) {
 
   mobile.addEventListener('change', recentre);
   new ResizeObserver(recentre).observe(stage);
-  document.fonts?.ready.then(recentre);
   root.append(heading, lede, stage, detail);
 
   return ({ journey }) => {
