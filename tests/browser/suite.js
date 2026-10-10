@@ -38,6 +38,7 @@ import { langAttrProblems, noForeignText, runLanguage, runLanguageEdges } from '
 import { runRich } from './rich.js';
 import { runCue } from './cue.js';
 import { runHome } from './home.js';
+import { runUnavailable } from './unavailable.js';
 import { runWithout2d } from './no2d.js';
 import { runReducedMotion, runWarp } from './warp.js';
 
@@ -55,6 +56,7 @@ const GROUPS = [
   'langue',
   'matrice',
   'accueil',
+  'indisponible',
 ];
 const PILL_WIDTH = 1280; // saut rejoué aussi par la pilule
 
@@ -419,6 +421,8 @@ async function main() {
       await scenario('repère', () => runCue(mainWidth, false));
       await scenario('repère (mouvement réduit)', () => runCue(mainWidth, true));
     }
+    if (groups.includes('indisponible'))
+      await scenario('indisponible', () => runUnavailable(widths, mainWidth));
   } catch (error) {
     skip({ group: 'Suite', section: null }, ['suite'], `erreur interne : ${errorText(error)}`);
   } finally {

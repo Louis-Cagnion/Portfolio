@@ -14,6 +14,9 @@
       "http": "HTTP {status}", "json": "JSON invalide", "schema": "Champ {path} manquant",
       "unexpected": "Exception inattendue",
       "retry": "Réessayer", "langSwitch": "Changer de langue"
+    },
+    "unavailable": {
+      "title": "Indisponible", "message": "Pas encore de contenu", "home": "Accueil"
     }
   },
   "home": {
