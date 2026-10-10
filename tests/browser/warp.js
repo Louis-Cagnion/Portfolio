@@ -20,12 +20,10 @@ import {
   openSite,
   settle,
   shownNavs,
-  statusState,
   waitFor,
   waitStatus,
 } from './harness.js';
 import { expectEqual, skip, test } from './runner.js';
-import { captureConsoleErrors } from './states.js';
 
 const BEND_MS = 1000; // courbure, --dur-warp-out + --dur-warp-in (checklist, section 1)
 const LAST_FRAME_MS = 20; // saut complet en 1020 ms (checklist, section 1)
@@ -42,13 +40,12 @@ const SAMPLE_GAP_MS = 100;
 const RESIZE_FRAMES_MAX = 2; // une image redessinée, un événement resize double toléré
 const SHIFT_MAX_PX = 1; // écart toléré entre la position au repos et celle au départ du saut
 const IDENTITY = new Set(['none', 'matrix(1, 0, 0, 1, 0, 0)']);
-const LOAD_MS = 10000; // fin du chargement : #status quitte data-state="loading"
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const root = (site) => site.doc.documentElement;
 const fovDisp = (site) => site.doc.getElementById('fovDisp');
 const currentId = (site) => activeViews(site)[0]?.id ?? null;
-const uncaught = (site) => site.uncaught.map((e) => `exception non rattrapée : ${e}`);
+export const uncaught = (site) => site.uncaught.map((e) => `exception non rattrapée : ${e}`);
 const direction = (order, from, to) => (
   order.indexOf(to) > order.indexOf(from) ? 'forward' : 'backward'
 );
@@ -285,7 +282,7 @@ function goBack(site) {
 }
 
 /** Attend l'arrivée sur `id` en `ms` au plus : saut fini, une seule .view.on, hash. */
-function arrival(site, id, ms = ARRIVAL_MS) {
+export function arrival(site, id, ms = ARRIVAL_MS) {
   return waitFor(
     () => !root(site).hasAttribute('data-warp') &&
       currentId(site) === id &&
@@ -698,86 +695,6 @@ export async function runReducedMotion(width) {
       return problems;
     });
     await test(ctx, exceptions, () => uncaught(site));
-  } finally {
-    site.close();
-  }
-}
-
-// ---------- Contexte 2D indisponible ----------
-/* Contrat : getContext('2d') rend null dans le cadre dès avant l'amorçage ; le site s'affiche
-et suit le hash, seul le décor est perdu, la courbure signalée par un seul console.error. */
-
-const NO_2D_CASES = [
-  'contexte 2D indisponible : site affiché (pas d\'écran d\'erreur, une .view.on)',
-  'contexte 2D indisponible : navigation par hash (#skills)',
-  'contexte 2D indisponible : un seul console.error nomme la courbure et le 2D',
-];
-const CURVE_CAUSE = [/#fovMap|courbure/i, /2D/i]; // texte exact libre, ces deux mentions
-
-/** Refuse le contexte 2D à tout canvas du cadre : getContext('2d') rend null. */
-function refuse2d(site) {
-  const proto = site.win.HTMLCanvasElement.prototype;
-  const original = proto.getContext;
-  proto.getContext = function getContext(type, ...rest) {
-    if (String(type).toLowerCase() === '2d') return null;
-    return original.call(this, type, ...rest);
-  };
-}
-
-/** Texte d'un appel à console.error : chaînes et messages des erreurs passées. */
-const consoleText = (args) => args.map((arg) => String(arg?.message ?? arg)).join(' ');
-
-/** Groupe « Saut », contexte 2D refusé avant l'amorçage, à la largeur `width`. */
-export async function runWithout2d(width) {
-  const ctx = { group: 'Saut', width, lang: 'fr', section: null };
-  const [shown, hashNav, logged] = NO_2D_CASES;
-  let site;
-  try {
-    site = await openSite({
-      width,
-      prepare: (frame) => {
-        captureConsoleErrors(frame);
-        refuse2d(frame);
-      },
-    });
-  } catch (error) {
-    skip(ctx, NO_2D_CASES, `ouverture du site impossible (${error.message})`);
-    return;
-  }
-  const errors = () => site.consoleErrors.map(consoleText);
-  try {
-    await test({ ...ctx, section: 'home' }, shown, async () => {
-      await waitFor(
-        () => site.doc.getElementById('status')?.dataset.state !== 'loading',
-        LOAD_MS,
-        'fin du chargement',
-        () => statusState(site),
-      );
-      const problems = [];
-      const state = site.doc.getElementById('status')?.dataset.state;
-      if (state !== 'ready')
-        problems.push(
-          `#status[data-state="${state}"] au lieu de "ready" ; ` +
-            `console.error : [${errors().join(' | ')}]`,
-        );
-      const views = activeViews(site).map((view) => `#${view.id}`);
-      if (views.length !== 1) problems.push(`.view.on : [${views}] au lieu d'une rubrique`);
-      return [...problems, ...uncaught(site)];
-    });
-    await test({ ...ctx, section: 'skills' }, hashNav, async () => {
-      site.win.location.hash = '#skills';
-      await arrival(site, 'skills');
-      await settle(site, 'skills');
-      return uncaught(site);
-    });
-    await test(ctx, logged, () => {
-      const named = errors().filter((text) => CURVE_CAUSE.every((cause) => cause.test(text)));
-      if (named.length === 1) return [];
-      return [
-        `${named.length} console.error nomment la courbure et le 2D au lieu d'un : ` +
-          `[${errors().join(' | ')}]`,
-      ];
-    });
   } finally {
     site.close();
   }

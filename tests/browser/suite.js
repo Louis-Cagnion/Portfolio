@@ -38,7 +38,8 @@ import { langAttrProblems, noForeignText, runLanguage, runLanguageEdges } from '
 import { runRich } from './rich.js';
 import { runCue } from './cue.js';
 import { runHome } from './home.js';
-import { runReducedMotion, runWarp, runWithout2d } from './warp.js';
+import { runWithout2d } from './no2d.js';
+import { runReducedMotion, runWarp } from './warp.js';
 
 const WIDTHS = [320, 390, 430, 768, 1280];
 // Maquette : @media (max-width: 880px) masque la pilule et affiche les onglets.

@@ -8,21 +8,10 @@
 - textes (data/fr.json:31-62, data/en.json) : home.mission, name, pitch, ctas, telemetry.title,
   telemetry.rows[] ({label, value, live}), dossier.kicker, title, entries[] ({label, html}) ;
   une seule dd.live, celle de la ligne live: true ; le repère affiche home.dossier.kicker
-  (aucune clé propre, maquette:359 lui donne le texte du kicker, maquette:361) ;
-- mise en page : deux colonnes 1.1fr 0.9fr, écart 48px, hauteur mini 100vh - 180px au-dessus
-  de 880 px (maquette:64) ; une colonne, écart 32px, jusqu'à 880 px (maquette:300-302,
-  checklist:284) ; dossier en 200px + 1fr, écart 24px, sur une colonne, écart 4px, jusqu'à
-  700 px (maquette:91 et 95, checklist:286) ;
-- repère (maquette:1208-1212) : le clic amène #dossier à l'écran (défilement fluide, immédiat
-  sous mouvement réduit), sans saut en hyperespace ; .gone (opacity 0, visibility hidden,
-  maquette:84) posée quand #dossier entre dans la zone limitée par rootMargin
-  '0px 0px -15% 0px', retirée en remontant ; la flèche tourne en boucle (animation cue 2s
-  infinite, maquette:85) sauf sous mouvement réduit (animation: none, checklist:298) ;
-- aucun débordement horizontal à 320, 390, 430, 768 et 1280 px, en français et en anglais
-  (checklist:272-276), mot long du dossier compris (overflow-wrap, checklist:107).
-Limites du banc : Entrée est jouée par un keydown synthétique, puis par le clic que le
-navigateur déclenche sur un lien natif si keydown n'est pas annulé ; mouvement réduit : le
-bouchon matchMedia n'atteint pas le CSS, la règle est lue dans le CSSOM. */
+  (aucune clé propre, maquette:359 lui donne le texte du kicker, maquette:361).
+Limites du banc : le repère et Entrée se jugent dans cue.js ; mise en page : constantes
+WIDE_MIN à ARROW ; mouvement réduit : le bouchon matchMedia n'atteint pas le CSS, la règle
+est lue dans le CSSOM. */
 import {
   describe,
   makeFetch,
@@ -508,7 +497,11 @@ async function runEdited() {
 
 // ---------- Lancement ----------
 
-/** Groupe « Accueil » : contenu, mise en page par largeur, ruptures, cas limites. */
+/**
+ * Groupe « Accueil » : contenu, mise en page par largeur, ruptures, cas limites. Aucun
+ * débordement horizontal à 320, 390, 430, 768 et 1280 px, en français et en anglais
+ * (checklist:272-276), mot long du dossier compris (overflow-wrap, checklist:107).
+ */
 export async function runHome(widths, mainWidth) {
   await runContent(mainWidth);
   for (const width of widths) await runWidth(width);
