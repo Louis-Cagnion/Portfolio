@@ -36,3 +36,12 @@ S5b « Contenu indisponible » est close. S7 « Parcours » est réalisée et co
 - Objectif : une V1 qu'un recruteur consulte sur ordinateur ou téléphone en vue normale, puis pré-mortem. Ordre : S6, S8, S9, S10.
 - Contenus de Louis reportés : dates des deux piscines et du tronc commun, message « Ce secteur n'a pas encore été cartographié », accroche réécrite ; la version anglaise de l'accroche est à valider.
 - Historique des 5 commits français réécrit en anglais, poussé avec `--force-with-lease`.
+
+## Nuit (21h à 22h) : S6 « Projets et fiche » commencée
+
+- Arbre de S6 écrit et validé (`arbre-s6.md`, 16 feuilles, feuilles validées 4/16) ; moniteur sonnet/high confirmé par Louis.
+- S6.A1 : maquettes de l'introduction des systèmes et de la Piscine (`docs/design/s6/`), parcourues dans Chrome sans erreur de console.
+- Choix de Louis (`docs/design/plan.md`, dernière décision) : introduction sous le plan sur toute la largeur et liste masquée pendant un zoom ; bureau deux par deux au repos ; teinte azur ; planètes de la Piscine de mêmes tailles ; téléphone avec toutes les étiquettes.
+- « Planètes du diamètre moyen d'un pouce » : Louis a choisi R1 (zone de toucher de 44 px, planètes de taille normale) ; S6.A1b vérifie la faisabilité sur téléphone (plan plus haut).
+- S6.B1 : groupe de tests navigateur `fiche` (98 cas rouges, commité) ; contrat de `js/ui/sheet.js` et hypothèses du tester dans `arbre-s6.md`, « Faits pour la suite ».
+
