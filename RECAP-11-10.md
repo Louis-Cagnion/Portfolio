@@ -28,3 +28,11 @@ S5b « Contenu indisponible » est close. S7 « Parcours » est réalisée et co
 - Plafonnement général des textes : un builder (Opus, effort high) a repris le travail dans un worktree ; arrêté par Louis avant son rapport, son état est sauvegardé en WIP sur `agent/fit-words` (`266d7fd`), rien n'est vérifié.
 - Le total des points de S7 était de 4 et non de 2 : plafonnement, graphèmes, cas jamais vérifiés du crash-test, contrôles dans Chrome (`todo.md`). Compteur à nommer par ce qu'il compte (« points clos 1/4 »).
 - Règles ajoutées à /best-practice : points ouverts d'une sous-tâche S à enchaîner sans demander, commande en arrière-plan qui ne retarde pas un agent, sens du compteur, moniteur de niveau inférieur à ses agents avec un analyste de niveau supérieur pour le risqué.
+
+## Soirée (19h à 20h40) : clôture de S7
+
+- Plafonnement général des textes : revue À CORRIGER, corrigé par un fixer (retours à une mise en page déjà vue, tests asynchrones, plafonnement à l'arrivée d'une rubrique), fusionné en un commit ; suite complète 1283 réussis, 66 rouges du seul groupe `Contact`, Node 295/319.
+- Décisions de Louis montrées dans Chrome : écriture verticale du titre de scène (D1) et flèches de scène (E3) reportées au pré-mortem, bascule FR/EN inchangée ; cas niche (200 à 240 px, police à 300 %) réservés au pré-mortem.
+- Objectif : une V1 qu'un recruteur consulte sur ordinateur ou téléphone en vue normale, puis pré-mortem. Ordre : S6, S8, S9, S10.
+- Contenus de Louis reportés : dates des deux piscines et du tronc commun, message « Ce secteur n'a pas encore été cartographié », accroche réécrite ; la version anglaise de l'accroche est à valider.
+- Historique des 5 commits français réécrit en anglais, poussé avec `--force-with-lease`.
