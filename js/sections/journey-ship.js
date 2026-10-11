@@ -9,13 +9,17 @@ import { reduced } from '../core/motion.js';
 const SHIP_SCALE = 1.3;
 const SHIP_NOSE = 13; // distance du centre du vaisseau à sa tuyère, pour la traînée
 const HEADING_SPAN = 1.5; // demi-longueur du segment qui donne le cap du vaisseau
+const FRAME_MS = 1000 / 60; // image de la maquette : émission et effacement sont réglés dessus
+const STEP_MAX_MS = 50; // plafond du pas de temps (onglet masqué, image très tardive)
+// fade : vie retirée par image à 60 Hz
 const TRAIL = { max: 40, fade: 0.035, jitter: 2, r: 2.2, minR: 0.6, growR: 1.8, alpha: 0.8 };
 
 /**
  * @brief Fabrique le vaisseau : le pose sur le tracé et entretient sa traînée.
  *
  * Les particules vivent dans la fabrique ; elles survivent à une nouvelle pose et s'éteignent
- * d'elles-mêmes.
+ * d'elles-mêmes. Émission et effacement suivent le temps écoulé (une particule par image à
+ * 60 Hz, quelle que soit la cadence réelle).
  *
  * @param {SVGElement} art dessin du vaisseau (shipArt)
  * @param {SVGElement} trail groupe qui reçoit les particules de la traînée
@@ -28,11 +32,19 @@ const TRAIL = { max: 40, fade: 0.035, jitter: 2, r: 2.2, minR: 0.6, growR: 1.8, 
 export function makeShip(art, trail, pointAt) {
   let particles = [];
   let frame = 0;
+  let fadedAt = null; // horodatage de la dernière image d'effacement
+  let emittedAt = null; // date de la dernière pose en voyage ; null au repos
+  let owed = 0; // temps de voyage pas encore payé en particules
 
-  /** Particules de la traînée : elles pâlissent et rétrécissent, puis disparaissent. */
-  const fadeTrail = () => {
+  /**
+   * Particules de la traînée : elles pâlissent et rétrécissent, puis disparaissent.
+   * @param {number} now horodatage de requestAnimationFrame
+   */
+  const fadeTrail = (now) => {
+    const dt = fadedAt === null ? FRAME_MS : Math.min(now - fadedAt, STEP_MAX_MS);
+    fadedAt = now;
     particles = particles.filter((particle) => {
-      particle.life -= TRAIL.fade;
+      particle.life -= (TRAIL.fade * dt) / FRAME_MS;
       if (particle.life <= 0) {
         particle.node.remove();
         return false;
@@ -42,6 +54,7 @@ export function makeShip(art, trail, pointAt) {
       return true;
     });
     frame = particles.length ? requestAnimationFrame(fadeTrail) : 0;
+    if (!frame) fadedAt = null;
   };
 
   const emitTrail = (x, y) => {
@@ -51,6 +64,16 @@ export function makeShip(art, trail, pointAt) {
     trail.append(node);
     particles.push({ node, life: 1 });
     if (!frame) frame = requestAnimationFrame(fadeTrail);
+  };
+
+  /** Nombre de particules dues depuis la dernière pose en voyage (une dès la première). */
+  const dueParticles = () => {
+    const now = performance.now();
+    owed += emittedAt === null ? FRAME_MS : Math.min(now - emittedAt, STEP_MAX_MS);
+    emittedAt = now;
+    const count = Math.floor(owed / FRAME_MS);
+    owed -= count * FRAME_MS;
+    return count;
   };
 
   const place = (d, dir, moving) => {
@@ -64,8 +87,14 @@ export function makeShip(art, trail, pointAt) {
         `rotate(${((angle * 180) / Math.PI).toFixed(2)}) scale(${SHIP_SCALE})`,
     );
     art.classList.toggle('thrust', moving);
-    if (moving && !reduced())
-      emitTrail(p.x - Math.cos(angle) * SHIP_NOSE, p.y - Math.sin(angle) * SHIP_NOSE);
+    if (!moving || reduced()) {
+      emittedAt = null;
+      owed = 0;
+      return;
+    }
+    const x = p.x - Math.cos(angle) * SHIP_NOSE;
+    const y = p.y - Math.sin(angle) * SHIP_NOSE;
+    for (let n = dueParticles(); n > 0; n -= 1) emitTrail(x, y);
   };
 
   return { place };
