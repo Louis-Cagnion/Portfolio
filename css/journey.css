@@ -300,20 +300,24 @@ compétences (S8) les reprendra. Chargée après css/layout.css par index.html.
     opacity: 0;
   }
 
+  /* Centré à 36 % de la scène, sans passer au-dessus de son bord haut (-0.36 * 58svh) :
+  un titre long déborde alors vers le bas. */
   .jtitle {
+    --lift: max(-50%, calc(-0.36 * 58svh));
     display: block;
     position: absolute;
     left: 112px;
     right: 62px;
     top: 36%;
-    transform: translateY(-50%);
+    transform: translateY(var(--lift));
     pointer-events: none;
+    overflow-wrap: anywhere;
     transition: opacity var(--dur), transform var(--dur);
   }
 
   .jtitle.out {
     opacity: 0;
-    transform: translateY(calc(-50% + 12px));
+    transform: translateY(calc(var(--lift) + 12px));
   }
 
   .jtitle b {

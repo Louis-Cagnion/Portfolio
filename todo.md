@@ -1,10 +1,10 @@
-> Prochaine tâche : S7 « Parcours », étape 8/8 : corriger les 4 écarts mineurs du crash-test listés ci-dessous, un fixer à la fois (les visibles comme `.jtitle` se comparent à la maquette, qui fait foi), puis suite complète et clôture de S7. Ensuite S9 « Contact », étape 5/8. Contexte des agents : `~/.claude/references/projects/portfolio/contexte.md`. Session Linux : Node 22, ports 5510 à 5519 pour les agents, 5520 et plus pour le moniteur.
+> Prochaine tâche : S7 « Parcours », étape 8/8 : corriger les 2 écarts mineurs du crash-test listés ci-dessous, un fixer à la fois (les visibles comme `.jtitle` se comparent à la maquette, qui fait foi), puis suite complète et clôture de S7. Ensuite S9 « Contact », étape 5/8. Contexte des agents : `~/.claude/references/projects/portfolio/contexte.md`. Session Linux : Node 22, ports 5510 à 5519 pour les agents, 5520 et plus pour le moniteur.
 
 ## Refonte spatiale
 
 - Suivre `docs/design/plan.md` (validé le 08/10/2026), étapes 4 à 8, sur la branche `redesign/space`.
-- S7 « Parcours », étape 8/8 : corriger les 4 écarts mineurs du crash-test, un fixer à la fois, puis suite complète (scripts et captures du crash-test : scratchpad de la session du 10/10, perdus au redémarrage ; les scénarios ci-dessous suffisent) :
-  - `.jtitle` du téléphone en colonne fixe `left: 112px; right: 62px` (`css/journey.css:292-314`) : titre rogné et passé sous les flèches à 200 et 300 % de police, et dès 320 px en police normale pour « Alternance RNCP6 » ; à exprimer en unités qui suivent la police ;
+- S7 « Parcours », étape 8/8 : corriger les 2 écarts mineurs du crash-test, un fixer à la fois, puis suite complète (scripts et captures du crash-test : scratchpad de la session du 10/10, perdus au redémarrage ; les scénarios ci-dessous suffisent) :
+  - décision de Louis : titre de scène du téléphone (`.jtitle`) à 200 % de police et plus sur 240 à 390 px, et à 200 px quelle que soit la police : il sort de la scène par le bas (colonne `left: 112px; right: 62px`, hauteur `58svh`, `css/journey.css`) ; seule piste : changer la mise en page (titre sous le tracé), ce qui modifie le rendu validé ; cas exclus listés dans `tests/browser/journey-title-fit.js` ;
   - libellés SVG sans troncature : débordement de page avec des titres de 70 caractères ;
   - un layout par image au repos à cause des animations SVG infinies (`css/journey.css:162-204`, 233-241) : batterie sur téléphone, à mesurer et réduire si possible sans changer le rendu ;
   - en anglais, le vaisseau à quai traverse « during the curriculum » (libellé de Codewars) de 701 à 1400 px ;
