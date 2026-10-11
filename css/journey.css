@@ -204,6 +204,12 @@ compétences (S8) les reprendra. Chargée après css/layout.css par index.html.
 }
 
 /* ───── Vaisseau et traînée ───── */
+/* Le vaisseau à quai ne doit pas capter les clics de l'escale actuelle. */
+.ship-g,
+.trail {
+  pointer-events: none;
+}
+
 .trail circle {
   fill: var(--trail);
 }

@@ -203,6 +203,27 @@ async function tapNowProblems(site, fr, width, selector, smooth) {
   return problems;
 }
 
+/** Le vaisseau et la traînée ne captent pas les clics : l'escale actuelle les reçoit. */
+function shipPassThroughProblems(site, fr) {
+  const problems = [];
+  for (const selector of ['.ship-g', '.trail']) {
+    const element = one(site, selector);
+    if (!element) problems.push(`${selector} absent`);
+    else {
+      const value = site.win.getComputedStyle(element).pointerEvents;
+      expectEqual(problems, `pointer-events de ${selector}`, value, 'none');
+    }
+  }
+  const hit = wps(site)[nowIndex(fr)]?.querySelector('.hit');
+  if (!hit) return [...problems, 'zone .hit de l\'escale actuelle absente'];
+  hit.scrollIntoView({ block: 'center' });
+  const { x, y } = center(hit.getBoundingClientRect());
+  const found = site.doc.elementFromPoint(x, y);
+  if (!found?.closest('.wp'))
+    problems.push(`élément au centre de .hit : ${describe(found)} au lieu de l'escale`);
+  return problems;
+}
+
 /** Toucher d'une autre escale, puis flèche depuis le bas de la page (téléphone). */
 async function otherStopProblems(site, fr, width) {
   const now = nowIndex(fr);
@@ -244,6 +265,7 @@ export async function runPhoneTouch(width) {
     'téléphone : toucher d\'une autre escale = voyage vers elle, sans descendre',
     'téléphone : flèche depuis le bas de la page = retour en haut de la rubrique, ' +
       'escale suivante',
+    'téléphone : vaisseau et traînée sans pointer-events, clic reçu par l\'escale actuelle',
   ];
   const fr = await journeyData('fr');
   const cases = [
@@ -252,6 +274,7 @@ export async function runPhoneTouch(width) {
     [names[2], false, (site) => tapNowProblems(site, fr, width, '.hit', true)],
     [names[3], true, (site) => otherStopProblems(site, fr, width)],
     [names[4], true, (site) => arrowFromBottomProblems(site, fr, width)],
+    [names[5], true, (site) => shipPassThroughProblems(site, fr)],
   ];
   for (const [name, reduce, probe] of cases)
     await withJourney(ctx, [name], { reduce }, (site) => test(ctx, name, () => probe(site)));
@@ -263,6 +286,7 @@ export async function runDesktopTouch(width) {
   const names = [
     'bureau : clic sur l\'escale actuelle = aucune descente',
     'bureau : clic sur une autre escale = voyage vers elle',
+    'bureau : vaisseau et traînée sans pointer-events, clic reçu par l\'escale actuelle',
   ];
   await withJourney(ctx, names, {}, async (site) => {
     const fr = await journeyData('fr');
@@ -283,6 +307,7 @@ export async function runDesktopTouch(width) {
       click(site, g.querySelector('.hit'));
       return eventually(() => positionProblems(site, fr, now + 1, width));
     });
+    await test(ctx, names[2], () => shipPassThroughProblems(site, fr));
   });
 }
 
