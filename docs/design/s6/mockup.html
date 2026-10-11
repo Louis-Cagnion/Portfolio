@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maquette S6, projets</title>
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Michroma&display=swap">
+<link rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="mockup.css">
+</head>
+<body>
+<main>
+    <h2 id="pTitle"></h2>
+    <p class="lede" id="pLede"></p>
+    <div class="sys-layout" id="sysLayout">
+        <div class="sys-plan">
+            <div class="sys-head" id="sysHead">
+                <button class="back" id="sysBack" type="button"></button>
+                <p class="ctitle" id="sysHeadTitle"></p>
+                <span class="count" id="sysHeadCount"></span>
+            </div>
+            <svg class="systems" id="systems" role="group"></svg>
+        </div>
+    </div>
+    <div class="plist" id="plist"></div>
+</main>
+<div class="sheet-bg" id="sheetBg"></div>
+<aside class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sTitle">
+    <button class="close" id="close" type="button" aria-label="Fermer">&#215;</button>
+    <span class="cat" id="sCat"></span>
+    <h3 id="sTitle"></h3>
+    <ul class="tags" id="sTags"></ul>
+    <div class="body" id="sBody"></div>
+</aside>
+<script src="mockup.js"></script>
+</body>
+</html>

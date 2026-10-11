@@ -1,0 +1,38 @@
+/* Page de comparaison des maquettes S6 */
+:root { --s: 0.5; }
+* { box-sizing: border-box; }
+body { margin: 0; background: #1b1d22; color: #ddd; font: 15px/1.5 system-ui, sans-serif; }
+a { color: #9cf; }
+code { background: #000; padding: 1px 5px; border-radius: 3px; }
+.top { padding: 20px 28px 8px; max-width: 1200px; }
+.top h1 { margin: 0 0 8px; font-size: 24px; }
+.top p { margin: 0 0 12px; max-width: 80ch; }
+.scale { display: inline-block; margin-right: 24px; }
+.top nav { display: inline-block; }
+.top nav a { margin-right: 16px; }
+main { padding: 0 28px 80px; }
+section { margin-top: 36px; }
+section > h2 {
+    margin: 0;
+    font-size: 22px;
+    border-bottom: 1px solid #444;
+    padding-bottom: 6px;
+}
+section > p { max-width: 90ch; }
+h3 { margin: 28px 0 4px; font-size: 18px; }
+.note { margin: 0 0 12px; color: #aab; max-width: 90ch; }
+.cards { display: flex; flex-wrap: wrap; gap: 28px 36px; align-items: flex-start; }
+.card { margin: 0; }
+.card > h4 { margin: 0 0 8px; font-size: 15px; max-width: 46ch; }
+.frames { display: flex; gap: 20px; align-items: flex-start; }
+.desk { border: 1px solid #555; overflow: hidden; background: #000; }
+.desk iframe {
+    display: block;
+    border: 0;
+    width: 1280px;
+    transform: scale(var(--s));
+    transform-origin: 0 0;
+}
+.phone { margin: 0; text-align: center; }
+.phone iframe { border: 10px solid #000; border-radius: 36px; background: #000; }
+.phone figcaption { margin-top: 6px; font-size: 13px; }

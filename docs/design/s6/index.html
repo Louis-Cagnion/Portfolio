@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maquettes S6, projets et fiche</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="index.css">
+</head>
+<body>
+<header class="top">
+    <h1>S6, projets et fiche : deux choix à trancher</h1>
+    <p>
+        Chaque option est la même page (<code>mockup.html</code>) avec un paramètre d'URL.
+        Bureau : fenêtre de 1280 px réduite à l'échelle choisie. Téléphone : cadres de 320, 390
+        et 430 px de contenu. Les planètes tournent comme dans la maquette.
+    </p>
+    <label class="scale">
+        Échelle des vues bureau
+        <select id="scale">
+            <option value="0.4">40 %</option>
+            <option value="0.5" selected>50 %</option>
+            <option value="0.65">65 %</option>
+            <option value="1">100 %</option>
+        </select>
+    </label>
+    <nav>
+        <a href="#intro">Introduction</a>
+        <a href="#piscine">Piscine</a>
+    </nav>
+</header>
+<main id="main"></main>
+<script src="index.js"></script>
+</body>
+</html>
