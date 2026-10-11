@@ -35,6 +35,7 @@ compétences (S8) les reprendra. Chargée après css/layout.css par index.html.
   font-family: var(--mono);
   color: var(--accent);
   font-size: 0.9rem;
+  overflow-wrap: break-word;
 }
 
 #journey .count {

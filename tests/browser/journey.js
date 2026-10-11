@@ -55,6 +55,7 @@ import {
   walkProblems,
 } from './journey-moves.js';
 import { runArrowRepeat } from './journey-repeat.js';
+import { runWhenWrap } from './journey-when-wrap.js';
 
 const WIDTH_CASES = {
   open: 'ouverture centrée sur l\'escale actuelle (fiche, vaisseau, cadrage, flèches)',
@@ -241,6 +242,7 @@ export async function runJourney(widths, mainWidth) {
     await runEdited(width);
   }
   await runLongWord();
+  for (const width of widths) await runWhenWrap(width);
   await runResize();
   await runResizeTabindex();
 }
