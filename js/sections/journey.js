@@ -5,7 +5,8 @@ de 700 px, courbe horizontale fixe (viewBox 0 0 1100 300) ; à 700 px et moins, 
 verticale suivie par une caméra, flèches ↑ ↓ sur la scène, et le toucher de l'escale où se
 trouve déjà le vaisseau descend à sa fiche. Structure et mouvements de la maquette
 (docs/design/prototype/prototype.html:370-387 et 584-731) ; dessins dans journey-art.js,
-vaisseau et traînée dans journey-ship.js, mise en page dans css/journey.css.
+vaisseau et traînée dans journey-ship.js, troncature des libellés dans journey-labels.js,
+mise en page dans css/journey.css.
 */
 import { BREAKPOINTS, el, setRich, svg } from '../core/dom.js';
 import { format } from '../core/i18n.js';
@@ -19,9 +20,11 @@ import {
   stopArt,
   stopRadius,
 } from './journey-art.js';
+import { fitLabels } from './journey-labels.js';
 import { makeShip } from './journey-ship.js';
 
 const WIDE_VIEW = '0 0 1100 300';
+const WIDE_RIGHT = 1100; // bord droit de la scène horizontale, en unités du dessin
 const WIDE_TRACK = 'M40 250 C 340 250, 640 220, 990 120';
 const ZOOM = 1.3; // pixels affichés par unité du dessin, parcours vertical
 const FOCUS_Y = 0.36; // hauteur de la scène où se cadre l'escale choisie
@@ -33,6 +36,7 @@ const HIT_MARGIN = 6;
 const PULSE_MARGIN = 3;
 const LABEL = { gap: 16, maxRadius: 34, line: 17, shift: 12, below: 22, above: 26, top: 34 };
 const LABEL_LINES = { title: 1, when: 19 }; // lignes sous le centre de l'astre, vertical
+const LABEL_PAD = 4; // marge laissée entre un libellé tronqué et le bord de la scène
 const TRIP_MS = 600; // durée de base d'un trajet, plus une part de la distance
 const TRIP_MS_PER_UNIT = { vertical: 1.4, horizontal: 1.2 };
 const FADE = [{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }];
@@ -337,14 +341,31 @@ export function mount(root) {
   };
 
   /**
+   * Tronque les libellés qui sortent de la scène : bord droit du dessin au bureau, bord droit
+   * de la scène sinon (repère de la caméra : bord gauche VIEW_LEFT, ZOOM pixels par unité).
+   * Scène masquée (sans largeur) : rien à mesurer, le recadrage s'en charge au retour.
+   */
+  const fitStops = () => {
+    if (!state.journey || !state.stops.length) return;
+    let right = WIDE_RIGHT;
+    if (state.vertical) {
+      if (!stage.clientWidth) return;
+      right = VIEW_LEFT + stage.clientWidth / ZOOM;
+    }
+    fitLabels(state.stops, state.journey.stops, { left: 0, right: right - LABEL_PAD });
+  };
+
+  /**
    * @brief Suit la largeur : géométrie refaite au passage de 700 px, sinon caméra recadrée
    *   sur l'escale choisie (jamais pendant un trajet ni scène masquée).
    */
   const recentre = () => {
     if (!state.stops.length) return;
     if (mobile.matches !== state.vertical) layout();
-    else if (state.vertical && !camera.raf && stage.clientWidth)
+    else if (state.vertical && !camera.raf && stage.clientWidth) {
       camera.set(viewFor(state.lens[state.cur]));
+      fitStops();
+    }
   };
 
   const ship = makeShip(shipNode, trail, pointAt);
@@ -445,6 +466,7 @@ export function mount(root) {
     showLede();
     setTabStops();
     recentre();
+    fitStops();
   };
 
   /** Pose une escale au point du tracé qui lui revient, avec ses deux lignes de texte. */
@@ -599,6 +621,9 @@ export function mount(root) {
   mobile.addEventListener('change', recentre);
   mobile.addEventListener('change', followFocus);
   new ResizeObserver(recentre).observe(stage);
+  // Largeur des libellés mesurée avec la police réelle : remesurée à son arrivée.
+  document.fonts?.ready.then(fitStops);
+  document.fonts?.addEventListener('loadingdone', fitStops);
   root.append(heading, lede, stage, detail);
 
   return ({ journey }) => {
@@ -620,7 +645,10 @@ export function mount(root) {
       item.when.textContent = stop.when;
     });
     if (rebuilt) layout();
-    else showLede();
+    else {
+      showLede();
+      fitStops(); // la langue change les textes, pas la géométrie
+    }
     fill(false);
   };
 }

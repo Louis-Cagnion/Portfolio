@@ -60,6 +60,7 @@ import { runBreakpointFocus } from './journey-focus.js';
 import { runCountGap } from './journey-count.js';
 import { runWhenWrap } from './journey-when-wrap.js';
 import { runLiveFill } from './journey-livefill.js';
+import { runLabelFit } from './journey-labels.js';
 import { runTrailRate } from './journey-trail.js';
 import { runFrameLoops } from './journey-raf.js';
 import { runTitleFit } from './journey-title-fit.js';
@@ -253,6 +254,7 @@ export async function runJourney(widths, mainWidth) {
   await runLongWord();
   for (const width of widths) await runWhenWrap(width);
   for (const width of widths) await runCountGap(width);
+  for (const width of widths) await runLabelFit(width);
   for (const width of desktops) await runLiveFill(width);
   await runTrailRate();
   for (const width of widths) await runFrameLoops(width);
