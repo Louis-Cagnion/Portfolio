@@ -6,7 +6,7 @@ Suite sans dépendance qui charge le site dans des iframes de 320, 390, 430, 768
 
 1. Servir la racine du dépôt : Live Server (port 5500) ou `python -m http.server 5501`.
 2. Ouvrir `http://127.0.0.1:5501/tests/browser/` dans Chrome (ou le port 5500), onglet au premier plan jusqu'à la fin (plusieurs minutes une fois le site en place).
-3. Relance ciblée, paramètres facultatifs : `?widths=320,1280` et `?groups=contrat,setrich,etats,navigation,saut,langue,matrice,accueil,indisponible,contact,parcours,etroit,plafonnement`.
+3. Relance ciblée, paramètres facultatifs : `?widths=320,1280` et `?groups=contrat,setrich,etats,navigation,saut,langue,matrice,accueil,indisponible,contact,fiche,parcours,etroit,plafonnement`.
 
 Sans fenêtre : `node tools/run-browser-suite.mjs http://127.0.0.1:5501/tests/browser/ resultat.json 1300` joue la suite dans un Chrome headless et écrit le bilan en JSON (code 1 si un cas échoue). Un serveur par Chrome : deux Chrome sur un même `http.server` laissent un module en suspens.
 
@@ -22,6 +22,8 @@ Sans fenêtre : `node tools/run-browser-suite.mjs http://127.0.0.1:5501/tests/br
 Le banc lit `/index.html`, ajoute `data-noboot` sur `<html>` et un `<base>` vers la racine, l'injecte en `srcdoc`, importe `js/main.js` dans l'iframe puis appelle `boot({ fetch, storage })` avec un faux `fetch` (vrais `data/*.json`, ou fixture `tests/fixtures/valid-locale.json` pour les états de chargement et d'erreur) et un faux stockage. Toute attente a un délai maximal et un échec nommé. Le crochet `prepare(site)` d'`openSite` modifie le cadre avant l'amorçage : `states.js` y retire `AbortController` ou `meta[name="description"]` pour provoquer une exception inattendue.
 
 Jusqu'à 1024 px, la barre de défilement de l'iframe est flottante, comme sur téléphone et tablette. Le `<base>` du banc ne doit pas fausser la navigation : un lien `href="#..."` cliqué par la suite et laissé au navigateur par le site est rejoué en navigation par fragment, et une URL relative passée à `history.pushState` ou `replaceState` est résolue contre le document (seul son fragment compte), comme sur le vrai site sans `<base>`. Une affectation `location.href = '#...'` reste en revanche détournée par le `<base>` : l'échec le signale (« l'iframe a quitté le site testé »), préférer `location.hash`.
+
+Le groupe `fiche` (`sheet.js`) joue le module `js/ui/sheet.js` (fiche projet) : `initSheet(doc)` idempotent, état fermé, contenu rendu, focus, piège de Tab, reste de la page `inert`, fermeture par le bouton, le voile et Échap, focus rendu à l'origine ou à la planète puis au titre de Projets, `update(view)` en changeant de langue, géométrie (feuille du bas jusqu'à 880 px, panneau à droite au-delà), débordement à 320 px, cibles de 44 px, mouvement réduit et ouvertures répétées. Il pose dans `#projects` des fixtures (bouton d'origine, planètes `.planet[aria-label]`) et rejoue la fiche du projet au plus long contenu de chaque langue.
 
 Le groupe `etroit` (`narrow.js`) joue des largeurs fixes de 200, 240 et 390 px, hors du filtre `widths`. Le lanceur headless ouvre une page sans focus (ni `:focus`, ni événement de focus) : le cas du focus clavier y rejoue alors les règles de la barre avec une classe à la place de `:focus-visible`. La police du navigateur ne se règle pas dans une iframe : le cas « 300 % » se vérifie hors banc.
 

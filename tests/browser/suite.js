@@ -41,6 +41,7 @@ import { runCue } from './cue.js';
 import { runHome } from './home.js';
 import { runUnavailable } from './unavailable.js';
 import { runContact } from './contact.js';
+import { runSheet } from './sheet.js';
 import { runJourney } from './journey.js';
 import { runFitWords } from './fit-words.js';
 import { runNarrow } from './narrow.js';
@@ -63,6 +64,7 @@ const GROUPS = [
   'accueil',
   'indisponible',
   'contact',
+  'fiche',
   'parcours',
   'etroit',
   'plafonnement',
@@ -439,6 +441,8 @@ async function main() {
       await scenario('indisponible', () => runUnavailable(widths, mainWidth));
     if (groups.includes('contact'))
       await scenario('contact', () => runContact(widths, mainWidth));
+    if (groups.includes('fiche'))
+      await scenario('fiche', () => runSheet(widths, mainWidth));
     if (groups.includes('parcours'))
       await scenario('parcours', () => runJourney(widths, mainWidth));
     if (groups.includes('etroit')) await scenario('barres étroites', runNarrow);
