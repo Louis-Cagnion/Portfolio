@@ -1,11 +1,12 @@
 /*
-Point d'entrée : charge la langue, rend la barre et les rubriques, démarre le ciel et la
-navigation, gère la bascule FR/EN et l'écran #status. boot(env) est injectable
-(tests/browser/README.md) ; le module s'amorce seul, sauf sur <html data-noboot> ;
-il pose alors <html data-booted>, que js/boot-guard.js attend.
+Point d'entrée : charge la langue, rend la barre et les rubriques, démarre le ciel, le
+plafonnement des textes et la navigation, gère la bascule FR/EN et l'écran #status.
+boot(env) est injectable (tests/browser/README.md) ; le module s'amorce seul, sauf sur
+<html data-noboot> ; il pose alors <html data-booted>, que js/boot-guard.js attend.
 */
 import { cachedLocale, loadLocale, LocaleError } from './core/data.js';
 import { el } from './core/dom.js';
+import { startFitWords } from './core/fit-words.js';
 import { initialLang, otherLang } from './core/i18n.js';
 import { createRouter, listViews } from './core/router.js';
 import { mount as mountHome } from './sections/home.js';
@@ -267,6 +268,7 @@ export function boot(env = {}) {
     return Promise.resolve();
   }
   const sky = startSky();
+  startFitWords();
   return request(initialLang(memory.read()));
 }
 

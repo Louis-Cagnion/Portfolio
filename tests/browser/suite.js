@@ -42,6 +42,7 @@ import { runHome } from './home.js';
 import { runUnavailable } from './unavailable.js';
 import { runContact } from './contact.js';
 import { runJourney } from './journey.js';
+import { runFitWords } from './fit-words.js';
 import { runNarrow } from './narrow.js';
 import { runWithout2d } from './no2d.js';
 import { runReducedMotion, runWarp } from './warp.js';
@@ -64,6 +65,7 @@ const GROUPS = [
   'contact',
   'parcours',
   'etroit',
+  'plafonnement',
 ];
 const PILL_WIDTH = 1280; // saut rejoué aussi par la pilule
 
@@ -440,6 +442,8 @@ async function main() {
     if (groups.includes('parcours'))
       await scenario('parcours', () => runJourney(widths, mainWidth));
     if (groups.includes('etroit')) await scenario('barres étroites', runNarrow);
+    if (groups.includes('plafonnement'))
+      await scenario('plafonnement', () => runFitWords(widths));
   } catch (error) {
     skip({ group: 'Suite', section: null }, ['suite'], `erreur interne : ${errorText(error)}`);
   } finally {

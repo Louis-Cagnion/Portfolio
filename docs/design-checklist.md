@@ -105,6 +105,7 @@ Couleurs de décor (CSS de la maquette, valeurs relevées telles quelles) :
 
 - [ ] Aucun texte justifié ni alinéa ; texte aligné à gauche, lignes de 80 caractères au plus (`max-width` en `ch` : 60ch chapeau, 68ch corps et dossier).
 - [ ] Les textes rédigés (`.body`, `.lede`, dossier) portent `overflow-wrap: anywhere` pour qu'une adresse ou un mot long ne crée jamais de débordement.
+- [ ] Plafonnement général des textes (décision de Louis du 11/10/2026) : un texte de `FIT_TARGETS` (`js/core/fit-words.js`) dont le plus long mot ne tiendrait pas sur une ligne dans sa largeur reçoit un `font-size` en ligne réduit juste assez, sans plancher : jamais un mot coupé ni un débordement. Un texte dont les mots tiennent ne reçoit aucun style. Remesure aux changements de texte, de largeur, de police du navigateur et au chargement des polices (groupe `plafonnement` de la suite navigateur).
 
 ### Espacements, rayons, hauteur de barre
 
