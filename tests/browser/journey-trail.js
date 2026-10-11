@@ -101,6 +101,38 @@ function capProblems(runs) {
       `affichées (plafond ${MAX_CHILDREN})`);
 }
 
+/**
+ * Horodatage de la boucle propre antérieur à celui d'un fade() précédent : la vie des
+ * particules ne doit jamais augmenter (opacité relevée avant et après).
+ */
+function backwardsProblems() {
+  const realFrame = window.requestAnimationFrame;
+  const host = document.createElementNS(SVG_NS, 'svg');
+  const trail = document.createElementNS(SVG_NS, 'g');
+  const art = document.createElementNS(SVG_NS, 'g');
+  host.append(trail, art);
+  document.body.append(host);
+  const queue = [];
+  window.requestAnimationFrame = (callback) => queue.push(callback);
+  try {
+    const ship = makeShip(art, trail, (d) => ({ x: d, y: 0 }));
+    ship.place(0, 1, true);
+    ship.fade(START_MS + 40);
+    ship.fade(START_MS + 60);
+    const opacities = () => [...trail.children].map((node) => +node.getAttribute('opacity'));
+    const before = opacities();
+    queue.forEach((callback) => callback(START_MS + 50)); // plus tôt que le fade précédent
+    const after = opacities();
+    const raised = after.filter((value, at) => value > before[at]);
+    return before.length && raised.length
+      ? [`${raised.length} particule(s) ont regagné de la vie avec un horodatage antérieur`]
+      : [];
+  } finally {
+    window.requestAnimationFrame = realFrame;
+    host.remove();
+  }
+}
+
 /** @brief Traînée du vaisseau : même densité et même durée de vie à 31, 60 et 390 images/s. */
 export async function runTrailRate() {
   const ctx = context(null);
@@ -108,10 +140,12 @@ export async function runTrailRate() {
     'traînée : particules émises sur 500 ms identiques à 31, 60 et 390 images/s (2 près)',
     'traînée : vie d\'une particule de 476 ms (20 % près) à 31, 60 et 390 images/s',
     'traînée : jamais plus de 41 particules affichées à 31, 60 et 390 images/s',
+    'traînée : un horodatage antérieur au précédent ne rend aucune vie aux particules',
   ];
   const runs = {};
   for (const fps of RATES) runs[fps] = simulate(fps);
   await test(ctx, names[0], () => countProblems(runs));
   await test(ctx, names[1], () => lifeProblems(runs));
   await test(ctx, names[2], () => capProblems(runs));
+  await test(ctx, names[3], () => backwardsProblems());
 }

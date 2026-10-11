@@ -475,10 +475,12 @@ export function mount(root) {
     const speed = state.vertical ? TRIP_MS_PER_UNIT.vertical : TRIP_MS_PER_UNIT.horizontal;
     const duration = TRIP_MS + Math.abs(to - from) * speed;
     const travel = (k) => {
+      ship.fade();
       state.shipPos = lerp(from, to, k);
       placeShip(k < 1);
     };
     state.moving = true;
+    ship.fade(); // le trajet prend l'effacement de la traînée
     if (state.vertical) {
       const top = root.getBoundingClientRect().top + scrollY;
       if (scrollY > top) scrollTo({ top, behavior: scrollBehavior() });

@@ -19,15 +19,19 @@ const TRAIL = { max: 40, fade: 0.035, jitter: 2, r: 2.2, minR: 0.6, growR: 1.8, 
  *
  * Les particules vivent dans la fabrique ; elles survivent à une nouvelle pose et s'éteignent
  * d'elles-mêmes. Émission et effacement suivent le temps écoulé (une particule par image à
- * 60 Hz, quelle que soit la cadence réelle).
+ * 60 Hz, quelle que soit la cadence réelle). En voyage, l'appelant fait avancer l'effacement
+ * à chaque image par fade() : la traînée n'a de boucle propre qu'au repos.
  *
  * @param {SVGElement} art dessin du vaisseau (shipArt)
  * @param {SVGElement} trail groupe qui reçoit les particules de la traînée
  * @param {(d: number) => {x: number, y: number}} pointAt point du tracé à l'abscisse d
  *
- * @returns {{ place: (d: number, dir: number, moving: boolean) => void }} place(d, dir,
- *   moving) : pose le vaisseau à l'abscisse d, cap vers l'avant (dir > 0) ou l'arrière,
- *   poussée allumée si moving
+ * @returns {{
+ *   place: (d: number, dir: number, moving: boolean) => void,
+ *   fade: (now?: number) => void
+ * }} place(d, dir, moving) : pose le vaisseau à l'abscisse d, cap vers l'avant (dir > 0) ou
+ *   l'arrière, poussée allumée si moving ; fade(now) : un pas d'effacement de la traînée à
+ *   l'horodatage now (l'instant présent par défaut)
  */
 export function makeShip(art, trail, pointAt) {
   let particles = [];
@@ -35,13 +39,15 @@ export function makeShip(art, trail, pointAt) {
   let fadedAt = null; // horodatage de la dernière image d'effacement
   let emittedAt = null; // date de la dernière pose en voyage ; null au repos
   let owed = 0; // temps de voyage pas encore payé en particules
+  let driven = false; // l'appelant anime l'effacement (voyage en cours) : pas de boucle propre
 
   /**
    * Particules de la traînée : elles pâlissent et rétrécissent, puis disparaissent.
    * @param {number} now horodatage de requestAnimationFrame
    */
-  const fadeTrail = (now) => {
-    const dt = fadedAt === null ? FRAME_MS : Math.min(now - fadedAt, STEP_MAX_MS);
+  const fadeTrail = (now = performance.now()) => {
+    frame = 0;
+    const dt = fadedAt === null ? FRAME_MS : Math.max(0, Math.min(now - fadedAt, STEP_MAX_MS));
     fadedAt = now;
     particles = particles.filter((particle) => {
       particle.life -= (TRAIL.fade * dt) / FRAME_MS;
@@ -53,8 +59,15 @@ export function makeShip(art, trail, pointAt) {
       particle.node.setAttribute('opacity', (particle.life * TRAIL.alpha).toFixed(2));
       return true;
     });
-    frame = particles.length ? requestAnimationFrame(fadeTrail) : 0;
-    if (!frame) fadedAt = null;
+    if (particles.length && !driven) frame = requestAnimationFrame(fadeTrail);
+    else if (!particles.length) fadedAt = null;
+  };
+
+  /** Fait avancer l'effacement depuis la boucle du trajet ; la boucle propre est annulée. */
+  const fade = (now) => {
+    driven = true;
+    cancelAnimationFrame(frame);
+    fadeTrail(now);
   };
 
   const emitTrail = (x, y) => {
@@ -63,7 +76,7 @@ export function makeShip(art, trail, pointAt) {
     const node = svg('circle', { cx: x + jitter(), cy: y + jitter(), r: TRAIL.r });
     trail.append(node);
     particles.push({ node, life: 1 });
-    if (!frame) frame = requestAnimationFrame(fadeTrail);
+    if (!frame && !driven) frame = requestAnimationFrame(fadeTrail);
   };
 
   /** Nombre de particules dues depuis la dernière pose en voyage (une dès la première). */
@@ -88,8 +101,10 @@ export function makeShip(art, trail, pointAt) {
     );
     art.classList.toggle('thrust', moving);
     if (!moving || reduced()) {
+      driven = false;
       emittedAt = null;
       owed = 0;
+      if (particles.length && !frame) frame = requestAnimationFrame(fadeTrail);
       return;
     }
     const x = p.x - Math.cos(angle) * SHIP_NOSE;
@@ -97,5 +112,5 @@ export function makeShip(art, trail, pointAt) {
     for (let n = dueParticles(); n > 0; n -= 1) emitTrail(x, y);
   };
 
-  return { place };
+  return { place, fade };
 }
