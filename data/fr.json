@@ -30,14 +30,14 @@
     },
     "unavailable": {
       "title": "Contenu indisponible",
-      "message": "Ce secteur n'est pas encore cartographié, le pilote n'a pas encore trouvé le mode hyperespace. Reviens plus tard.",
+      "message": "Ce secteur n'a pas encore été cartographié, le pilote n'a pas encore trouvé le mode hyperespace. Reviens plus tard.",
       "home": "Retour à l'accueil"
     }
   },
   "home": {
     "mission": "Mission : de la piscine 42 à l'intelligence artificielle",
     "name": "Louis Cagnion",
-    "pitch": "Développeur au Groupe Tressol-Chabrier, formé à 42 Perpignan. Parti de zéro en 2024, je conçois des applications et des pipelines de données en production.",
+    "pitch": "Alternant Ingénieur Tech & Data au sein du Groupe Tressol-Chabrier, formé à 42 Perpignan. Parti de zéro en 2024, je développe des applications, des tableaux de bord et des pipelines de données, de la conception à la mise en production.",
     "ctas": { "projects": "Voir mes projets", "contact": "Me contacter" },
     "telemetry": {
       "title": "Télémétrie",
@@ -89,7 +89,7 @@
         "at": 0,
         "now": false,
         "title": "Première piscine",
-        "when": "2024",
+        "when": "juillet-août 2024",
         "paragraphs": [
           "J'ai humblement commencé dans le code durant ma première piscine à 42. Oui, oui, je ne connaissais absolument rien à ce milieu avant de commencer la sélection de l'école. Je ne savais même pas ce qu'était un terminal ou un IDE.",
           "On m'a parlé de l'école, de leur façon d'apprendre la programmation, des débouchés possibles après le tronc commun, et je me suis dit que cela avait l'air intéressant. J'ai donc tenté la piscine de 42 pour voir de quoi j'étais capable dans ce nouveau milieu.",
@@ -105,7 +105,7 @@
         "at": 0.12,
         "now": false,
         "title": "Seconde chance",
-        "when": "2024",
+        "when": "sept.-oct. 2024",
         "paragraphs": [
           "J'étais donc prêt à me préparer de mon côté pour réussir la sélection la fois suivante, mais le destin en a décidé autrement. Quelques jours après les résultats, j'ai reçu un message du directeur de l'école me proposant de participer à la piscine suivante, qui arrivait seulement trois semaines plus tard, alors qu'en temps normal il faut attendre un an avant de pouvoir retenter.",
           "Évidemment, je n'ai pas hésité une seconde. Je me suis empressé d'accepter et j'étais extrêmement heureux de pouvoir revenir aussi vite sur le champ de bataille.",
@@ -119,7 +119,7 @@
         "at": 0.25,
         "now": false,
         "title": "Tronc commun",
-        "when": "nov. 2024 à 2026",
+        "when": "nov. 2024-janv. 2026",
         "paragraphs": [
           "Nous avions désormais, en théorie, trois ans devant nous pour terminer le tronc commun. De mon côté, je voulais me donner à fond dans mon apprentissage du code. J'ai donc choisi de me challenger en réalisant tous les bonus possibles sur les projets que je sélectionnais.",
           "Je voulais également avancer rapidement tout en gardant un travail de qualité, car aller vite sans rien apprendre n'aurait eu aucun intérêt. C'est ce que j'ai essayé de faire pendant tout mon cursus.",

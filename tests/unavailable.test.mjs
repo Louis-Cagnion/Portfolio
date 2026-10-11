@@ -16,7 +16,7 @@ const KEYS = ['title', 'message', 'home'];
 const EXPECTED = {
   fr: {
     title: 'Contenu indisponible',
-    message: 'Ce secteur n\'est pas encore cartographié, le pilote n\'a pas encore trouvé ' +
+    message: 'Ce secteur n\'a pas encore été cartographié, le pilote n\'a pas encore trouvé ' +
       'le mode hyperespace. Reviens plus tard.',
     home: 'Retour à l\'accueil',
   },

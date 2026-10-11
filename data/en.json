@@ -37,7 +37,7 @@
   "home": {
     "mission": "Mission: from the 42 piscine to artificial intelligence",
     "name": "Louis Cagnion",
-    "pitch": "Developer at Groupe Tressol-Chabrier, trained at 42 Perpignan. Starting from scratch in 2024, I build applications and data pipelines running in production.",
+    "pitch": "Tech & Data Engineering Apprentice at Groupe Tressol-Chabrier, trained at 42 Perpignan. Starting from scratch in 2024, I develop applications, dashboards and data pipelines, from design to production.",
     "ctas": { "projects": "See my projects", "contact": "Contact me" },
     "telemetry": {
       "title": "Telemetry",
@@ -89,7 +89,7 @@
         "at": 0,
         "now": false,
         "title": "First piscine",
-        "when": "2024",
+        "when": "July-August 2024",
         "paragraphs": [
           "I humbly started coding during my first piscine at 42. Yes, I knew absolutely nothing about this world before starting the school's selection process. I did not even know what a terminal or an IDE was.",
           "Someone told me about the school, their approach to learning programming, and the possible career paths after the core curriculum: it sounded interesting. So I tried the 42 piscine to see what I was capable of in this new environment.",
@@ -105,7 +105,7 @@
         "at": 0.12,
         "now": false,
         "title": "Second chance",
-        "when": "2024",
+        "when": "Sept.-Oct. 2024",
         "paragraphs": [
           "I was ready to prepare on my own for the next attempt, but fate had other plans. A few days after the results, I received a message from the school's director inviting me to join the next piscine, which was only three weeks away, whereas normally you have to wait a full year before retrying.",
           "Obviously, I did not hesitate for a second. I eagerly accepted and was extremely happy to be back on the battlefield so quickly.",
@@ -119,7 +119,7 @@
         "at": 0.25,
         "now": false,
         "title": "Common core",
-        "when": "Nov. 2024 to 2026",
+        "when": "Nov. 2024 to Jan. 2026",
         "paragraphs": [
           "We theoretically had three years ahead of us to complete the core curriculum. For my part, I wanted to throw myself fully into learning to code. I chose to challenge myself by completing every possible bonus on the projects I picked.",
           "I also wanted to move quickly while maintaining quality work, because going fast without actually learning anything would have been pointless. That is what I tried to do throughout my studies.",
