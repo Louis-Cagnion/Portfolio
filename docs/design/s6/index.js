@@ -4,87 +4,49 @@ const DESK_W = 1280;
 const PHONE_FRAMES = { 320: 'Petit téléphone, 320 px', 390: 'Téléphone courant, 390 px',
     430: 'Grand téléphone, 430 px' };
 
-/* Introduction : quatre emplacements, deux systèmes (le texte le plus long, puis un court) */
-const INTRO_OPTIONS = [
-    ['a', 'A : sous le titre et le compte de la tête du système'],
-    ['b', 'B : panneau à côté du plan (bureau), sous le plan (téléphone)'],
-    ['c', 'C : sous le plan, avant la liste des projets'],
-    ['none', 'Sans introduction (référence)'],
-];
-const introCards = system => INTRO_OPTIONS.map(([key, label]) => ({
+/* Cartes : un cadre bureau (1280 px) et, au besoin, des cadres téléphone */
+const deskCard = (label, query, height) => ({
     label,
-    desk: { query: `layout=rows&intro=${key}&zoom=${system}`, height: 820 },
-    phones: [{ width: 390, query: `intro=${key}&zoom=${system}`, height: 900 }],
-}));
-
-/* Piscine : trois dispositions bureau, puis le téléphone */
-const LAYOUTS = [
-    ['row', 'A : quatre systèmes en une ligne, rayons d\'orbite réduits', 560],
-    ['rows', 'B : trois en une ligne, la Piscine seule en pleine largeur dessous', 780],
-    ['grid', 'C : deux par deux', 780],
-];
-const layoutCards = zoom => LAYOUTS.map(([key, label, height]) => ({
-    label,
-    desk: {
-        query: `layout=${key}${zoom ? '&zoom=piscine' : ''}`,
-        height: zoom ? 820 : height,
-    },
+    desk: { query, height },
     phones: [],
-}));
-const phoneCards = (label, extra, widths, zoom) => [{
+});
+const phoneCard = (label, query, widths, height = 600) => ({
     label,
     desk: null,
-    phones: widths.map(width => ({
-        width,
-        query: `${zoom ? 'zoom=piscine' : 'scrollto=piscine'}${extra}`,
-        height: 600,
-    })),
-}];
-
-const FOCUS_PEEK = 'zoom=piscine&zoomstyle=focus&peek=c05';
+    phones: widths.map(width => ({ width, query, height })),
+});
+const PHONES = [320, 390, 430];
 
 const SECTIONS = [
     {
-        id: 'intro',
-        title: 'Introduction de chaque système',
-        lead: 'Où placer le texte de présentation d\'un système ? Il n\'apparaît que lorsque '
-            + 'le système est zoomé ; au repos, rien. Cliquer le soleil d\'un système pour '
-            + 'retrouver l\'état, Échap ou « Tous les systèmes » pour en sortir.',
+        id: 'decided',
+        title: 'Décidé (11/10/2026)',
+        lead: 'Introduction sous le plan sur toute la largeur de la page, visible seulement '
+            + 'système zoomé (la liste des projets est alors masquée) ; bureau : quatre '
+            + 'systèmes deux par deux au repos, Piscine zoomée ; téléphone : Piscine zoomée '
+            + 'avec toutes les étiquettes et des zones de toucher de 44 px.',
         groups: [
-            { title: 'Système Tressol-Chabrier zoomé (texte le plus long)',
-                cards: introCards('pro') },
-            { title: 'Projets perso zoomé (texte court)', cards: introCards('perso') },
-        ],
-    },
-    {
-        id: 'piscine',
-        title: 'La Piscine, quatrième système',
-        lead: 'Vingt planètes sur cinq orbites, teinte azur. Dispositions bureau, puis '
-            + 'téléphone (les quatre systèmes s\'empilent sous 880 px).',
-        groups: [
-            { title: 'Bureau, au repos', cards: layoutCards(false) },
-            { title: 'Bureau, la Piscine zoomée', cards: layoutCards(true) },
-            { title: 'Téléphone, au repos (défilé jusqu\'à la Piscine)',
-                note: 'Les étiquettes n\'apparaissent qu\'au survol ou au focus.',
-                cards: phoneCards('Piscine au repos', '', [320, 390, 430], false) },
-            { title: 'Téléphone, zoom avec toutes les étiquettes (zoomstyle=labels)',
-                note: 'Comme la maquette : chaque planète porte son nom.',
-                cards: phoneCards('Toutes les étiquettes', '&zoomstyle=labels',
-                    [320, 390, 430], true) },
-            { title: 'Téléphone, zoom avec étiquette de la planète touchée (zoomstyle=focus)',
-                note: 'Seule la planète touchée ou survolée porte son nom (ici C05 est '
-                    + 'montrée comme touchée sur les deux premiers cadres) ; son clic ouvre '
-                    + 'la fiche comme dans la maquette.',
-                cards: [{
-                    label: 'Étiquette de la planète touchée',
-                    desk: null,
-                    phones: [
-                        { width: 320, query: FOCUS_PEEK, height: 600 },
-                        { width: 390, query: FOCUS_PEEK, height: 600 },
-                        { width: 390, query: 'zoom=piscine&zoomstyle=focus', height: 600,
-                            caption: 'Aucune planète touchée, 390 px' },
-                    ],
-                }] },
+            { title: 'Introduction sous le plan, bureau et téléphone',
+                note: 'Tressol-Chabrier (texte long) puis Projets perso (texte court).',
+                cards: [
+                    deskCard('Tressol-Chabrier zoomé, bureau', 'zoom=pro', 900),
+                    phoneCard('Tressol-Chabrier zoomé, 390 px', 'zoom=pro', [390], 900),
+                    deskCard('Projets perso zoomé, bureau', 'zoom=perso', 900),
+                    phoneCard('Projets perso zoomé, 390 px', 'zoom=perso', [390], 900),
+                ] },
+            { title: 'Bureau : deux par deux au repos, puis la Piscine zoomée',
+                cards: [
+                    deskCard('Au repos', '', 780),
+                    deskCard('Piscine zoomée', 'zoom=piscine', 900),
+                ] },
+            { title: 'Téléphone : Piscine zoomée, zones de toucher de 44 px visibles',
+                note: 'Cercles de 44 px de diamètre (paramètre hit=show) : le toucher choisit '
+                    + 'la planète au centre le plus proche du point touché.',
+                cards: [phoneCard('Avec zones visibles', 'zoom=piscine&hit=show', PHONES)] },
+            { title: 'Téléphone : Piscine zoomée, rendu réel',
+                cards: [phoneCard('Sans zones visibles', 'zoom=piscine', PHONES)] },
+            { title: 'Téléphone : Piscine au repos (défilé jusqu\'à la Piscine)',
+                cards: [phoneCard('Piscine au repos', 'scrollto=piscine', PHONES)] },
         ],
     },
 ];

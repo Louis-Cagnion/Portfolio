@@ -173,6 +173,7 @@ h2 {
 .systems { transition: height 0.7s cubic-bezier(.65, 0, .35, 1); }
 .systems.zoomed { overflow: hidden; }
 .sys { transition: opacity 0.6s; }
+.systems.bleed { width: calc(100% + 24px); margin: 0 -12px; }
 .sys.dim { opacity: 0; pointer-events: none; }
 .sys-hit { fill: transparent; cursor: zoom-in; }
 .sys.on .sys-hit, .sys.on .sun-btn { cursor: default; }
@@ -207,60 +208,29 @@ h2 {
 .sys-head .ctitle { margin: 0; }
 .sys-head .count { margin: 0; }
 
-/* introduction d'un système : visible seulement quand un système est zoomé */
+/* introduction d'un système : sous le plan, pleine largeur, seulement système zoomé */
 .sys-intro {
     margin: 0;
     color: var(--dim);
     font-size: 0.95rem;
     line-height: 1.55;
-    max-width: 62ch;
-}
-.sys-head .sys-intro { flex-basis: 100%; font-size: 0.9rem; line-height: 1.5; }
-[data-intro="a"] .sys-head {
-    width: min(26rem, 100%);
-    padding: 12px 14px;
-    background: color-mix(in srgb, var(--void) 94%, transparent);
-    border: 1px solid var(--line);
-}
-.intro-b {
-    min-width: 0;
-    overflow: hidden;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.4s, visibility 0s 0.4s;
-}
-.intro-b .sys-intro { padding: 20px 22px; }
-.zfocus .intro-b {
-    overflow: visible;
-    opacity: 1;
-    visibility: visible;
-    transition: opacity 0.4s 0.5s, visibility 0s;
-}
-[data-intro="b"] .sys-layout {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 0;
-    align-items: start;
-    transition: grid-template-columns 0.7s cubic-bezier(.65, 0, .35, 1), column-gap 0.7s;
-}
-[data-intro="b"] .sys-layout.zfocus {
-    grid-template-columns: minmax(0, 1fr) 20rem;
-    column-gap: 24px;
 }
 .intro-c { margin-top: 18px; display: none; }
 .zfocus + .intro-c { display: block; }
-.intro-c .sys-intro { max-width: 72ch; }
+.plist[hidden] { display: none; }
 
-/* Piscine sur téléphone, variante « focus » : seule la planète touchée porte son nom */
-[data-zoomstyle="focus"] .sys.on
-    .planet:not(:hover):not(:active):not(:focus-visible):not(.peek) .pl-label {
-    opacity: 0;
-    pointer-events: none;
+/* Piscine sur téléphone : zone de toucher de 44 px, choisie au centre le plus proche */
+.planet.nearest .pl-hit { fill: transparent; stroke: none; }
+.sys.on .planet.nearest, .sys.on .planet.nearest .pl-label { pointer-events: none; }
+[data-hit="show"] .sys.on .planet.nearest .pl-hit {
+    fill: rgba(143, 227, 191, 0.06);
+    stroke: rgba(143, 227, 191, 0.35);
+    stroke-width: 1px;
 }
 
 @media (max-width: 880px) {
     .sys-layout:not(.zfocus) .sys-head { display: none; }
     .sys-head { position: relative; margin-bottom: 8px; }
-    [data-intro="a"] .sys-head { width: auto; padding: 0; background: none; border: 0; }
     .sheet {
         top: auto;
         height: 88vh;
@@ -269,10 +239,7 @@ h2 {
         border-top: 1px solid var(--line);
         transform: translateY(100%);
     }
-    [data-intro="b"] .sys-layout,
-    [data-intro="b"] .sys-layout.zfocus { display: block; }
-    .intro-b { display: none; margin-top: 18px; }
-    .zfocus .intro-b { display: block; }
+}
 }
 
 /* ?zoom ou ?still : sans animation, l'état zoomé apparaît d'emblée */

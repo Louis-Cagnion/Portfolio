@@ -36,3 +36,5 @@ h3 { margin: 28px 0 4px; font-size: 18px; }
 .phone { margin: 0; text-align: center; }
 .phone iframe { border: 10px solid #000; border-radius: 36px; background: #000; }
 .phone figcaption { margin-top: 6px; font-size: 13px; }
+.card, .cards { max-width: 100%; }
+.frames { max-width: 100%; overflow-x: auto; }
