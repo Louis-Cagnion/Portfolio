@@ -54,6 +54,7 @@ import {
   runResizeTabindex,
   walkProblems,
 } from './journey-moves.js';
+import { runArrowRepeat } from './journey-repeat.js';
 
 const WIDTH_CASES = {
   open: 'ouverture centrée sur l\'escale actuelle (fiche, vaisseau, cadrage, flèches)',
@@ -224,6 +225,7 @@ export async function runJourney(widths, mainWidth) {
   await runStructure(mainWidth);
   for (const width of widths) await runWidth(width);
   for (const width of widths) await runTitleAria(width);
+  for (const width of widths) await runArrowRepeat(width);
   for (const width of EDGE_WIDTHS) await runEdge(width);
   const phones = widths.filter(phone);
   const desktops = widths.filter((width) => !phone(width));

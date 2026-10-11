@@ -507,6 +507,12 @@ export function mount(root) {
         select(state.cur + dir);
         if (focused && button.disabled) other.focus({ preventScroll: true });
       });
+      // Touche maintenue : chaque répétition d'Entrée ou d'Espace produit un `click`. À la
+      // borne, le focus passe à l'autre flèche, qui recevrait alors la suite et repartirait.
+      button.addEventListener('keydown', (event) => {
+        const choosing = event.key === 'Enter' || event.key === ' ';
+        if (event.repeat && choosing) event.preventDefault();
+      });
     });
   };
   bindArrows(prev, next);
