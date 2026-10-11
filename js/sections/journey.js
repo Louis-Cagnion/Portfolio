@@ -35,6 +35,9 @@ const HIT = { vertical: 30, horizontal: 22 }; // rayon minimal de la zone cliqua
 const HIT_MARGIN = 6;
 const PULSE_MARGIN = 3;
 const LABEL = { gap: 16, maxRadius: 34, line: 17, shift: 12, below: 22, above: 26, top: 34 };
+// Montée du tracé jusqu'au quai suivant au-delà de laquelle le libellé du dessus passe à
+// gauche de l'astre : le vaisseau qui s'y gare n'atteint plus le texte (en unités du dessin)
+const LABEL_CLIMB = 6;
 const LABEL_LINES = { title: 1, when: 19 }; // lignes sous le centre de l'astre, vertical
 const LABEL_PAD = 4; // marge laissée entre un libellé tronqué et le bord de la scène
 const TRIP_MS = 600; // durée de base d'un trajet, plus une part de la distance
@@ -107,10 +110,11 @@ function setAttributes(element, attributes) {
  *
  * @param {object} item éléments de l'escale (buildStop)
  * @param {{ point: {x: number, y: number}, radius: number, vertical: boolean, end: boolean,
- *   odd: boolean }} place point du tracé, rayon de l'astre, orientation, vrai pour la
- *   destination (sauf si elle est seule) et pour un rang impair
+ *   odd: boolean, climb: number }} place point du tracé, rayon de l'astre, orientation, vrai
+ *   pour la destination (sauf si elle est seule) et pour un rang impair, montée du tracé
+ *   (vers le haut du dessin) jusqu'au quai de l'escale suivante, 0 sans escale suivante
  */
-function placeStopAt(item, { point: p, radius, vertical, end, odd }) {
+function placeStopAt(item, { point: p, radius, vertical, end, odd, climb }) {
   const center = { cx: p.x, cy: p.y };
   const minimum = vertical ? HIT.vertical : HIT.horizontal;
   setAttributes(item.hit, { ...center, r: Math.max(minimum, radius + HIT_MARGIN) });
@@ -125,7 +129,13 @@ function placeStopAt(item, { point: p, radius, vertical, end, odd }) {
     x = p.x;
     y = p.y - radius - LABEL.top;
     anchor = 'middle';
-  } else y = odd ? p.y - radius - LABEL.above : p.y + radius + LABEL.below;
+  } else if (odd) {
+    y = p.y - radius - LABEL.above;
+    if (climb > LABEL_CLIMB) {
+      x = p.x + LABEL.shift;
+      anchor = 'end';
+    }
+  } else y = p.y + radius + LABEL.below;
   const lines = vertical
     ? [p.y + LABEL_LINES.title, p.y + LABEL_LINES.when]
     : [y, y + LABEL.line];
@@ -470,13 +480,18 @@ export function mount(root) {
   };
 
   /** Pose une escale au point du tracé qui lui revient, avec ses deux lignes de texte. */
-  const placeStop = (item, index) => placeStopAt(item, {
-    point: pointAt(state.lens[index]),
-    radius: radiusOf(index),
-    vertical: state.vertical,
-    end: index === last() && index > 0,
-    odd: index % 2 !== 0,
-  });
+  const placeStop = (item, index) => {
+    const point = pointAt(state.lens[index]);
+    const next = index < last() ? pointAt(dock(index + 1)) : point;
+    placeStopAt(item, {
+      point,
+      radius: radiusOf(index),
+      vertical: state.vertical,
+      end: index === last() && index > 0,
+      odd: index % 2 !== 0,
+      climb: point.y - next.y,
+    });
+  };
 
   /**
    * @brief Choisit une escale et y fait voyager le vaisseau (caméra sur téléphone).
