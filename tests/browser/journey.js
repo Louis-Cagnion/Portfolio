@@ -43,6 +43,7 @@ import {
   wps,
 } from './journey-probe.js';
 import { runTitleAria } from './journey-a11y-title.js';
+import { runCurrentAria } from './journey-a11y-current.js';
 import {
   runDesktopTouch,
   runKeyboard,
@@ -236,6 +237,7 @@ export async function runJourney(widths, mainWidth) {
   }
   for (const width of desktops) await runDesktopTouch(width);
   for (const width of new Set([mainWidth, ...desktops.slice(-1)])) {
+    await runCurrentAria(width);
     await runKeyboard(width);
     await runRapid(width);
     await runLanguageMidway(width);

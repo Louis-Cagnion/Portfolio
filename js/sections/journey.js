@@ -397,7 +397,12 @@ export function mount(root) {
     if (fade && !reduced()) body.animate(FADE, { duration: FADE_MS, easing: 'ease' });
     prev.disabled = up.disabled = cur === 0;
     next.disabled = down.disabled = cur === last();
-    state.stops.forEach((item, index) => item.g.classList.toggle('sel', index === cur));
+    state.stops.forEach((item, index) => {
+      item.g.classList.toggle('sel', index === cur);
+      // L'escale choisie est annoncée comme étape courante ; l'attribut est retiré des autres.
+      if (index === cur) item.g.setAttribute('aria-current', 'step');
+      else item.g.removeAttribute('aria-current');
+    });
     setTabStops();
   };
 
