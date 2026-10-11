@@ -27,6 +27,8 @@ const LONG_TITLE = 'a'.repeat(70); // 70 caractères sans espace
 const SPACED_TITLE = 'mot assez long '.repeat(5).slice(0, 70); // 70 caractères avec espaces
 const LONG_WHEN = '0123456789'.repeat(4); // 40 caractères
 const END_STOPS = [3, 5]; // rangs 4 et 6 : ancrés en `end` au bureau (journey.js)
+const EMOJI_STOP = 7; // escale dont la date est faite d'émojis à modificateur de teint
+const THUMB = '👍🏽'; // un graphème de deux points de code, soit quatre unités UTF-16
 const TRUNCATED_STOP = 3; // rang 4 : son titre dépasse sa place (le rang 6 la tient)
 
 /**
@@ -59,6 +61,16 @@ function truncationProblems(label, shown, full) {
   if (!head || !full.startsWith(head))
     return [`${label} : « ${shown} » n'est pas un début de « ${full} »`];
   return [];
+}
+
+/**
+ * Date d'émojis tronquée : « … » seul, ou une suite de `THUMB` entiers (jamais une moitié de
+ * paire de substitution, jamais le modificateur séparé de son émoji) suivie de « … ».
+ */
+function emojiProblems(shown) {
+  const whole = new RegExp(`^(?:${THUMB})*${ELLIPSIS}$`, 'u');
+  if (shown === THUMB.repeat(30)) return [`date d'émojis non tronquée : ${shown}`];
+  return whole.test(shown) ? [] : [`date d'émojis coupée dans un graphème : « ${shown} »`];
 }
 
 /** Libellé `text` d'une escale : texte attendu, rectangle dans la scène. */
@@ -204,6 +216,18 @@ export async function runLabelFit(width) {
     const run = (site) => test(ctx, endName, () => eventually(() => endProblems(site)));
     await withJourney(ctx, [endName], { fetch: endFetch }, run);
   }
+  const emojiName = `libellé d'émojis à ${width} px : tronqué sur un graphème entier`;
+  const emojiFetch = editedFetch((data) => {
+    data.stops[EMOJI_STOP].when = THUMB.repeat(30);
+  });
+  await withJourney(ctx, [emojiName], { fetch: emojiFetch }, (site) => test(
+    ctx,
+    emojiName,
+    () => eventually(() => {
+      const text = wps(site)[EMOJI_STOP]?.querySelector('text.y');
+      return text ? emojiProblems(text.textContent) : ['escale absente'];
+    }),
+  ));
   await withJourney(ctx, [names.real], {}, (site) => test(ctx, names.real, async () => {
     const none = { edited: new Set(), must: new Set() };
     const problems = [];

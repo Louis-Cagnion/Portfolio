@@ -8,6 +8,7 @@ const ELLIPSIS = '…';
 const FIELDS = ['title', 'when']; // les deux <text> d'une escale (buildStop)
 
 let sizer = null;
+const graphemes = new Intl.Segmenter(undefined, { granularity: 'grapheme' });
 
 /**
  * @brief Largeur d'un texte SVG, dans l'unité du dessin, par mesure sur canvas.
@@ -30,6 +31,9 @@ function widthOf(text, content) {
 /**
  * @brief Plus long début de `full` qui, suivi de « … », tient dans `room`.
  *
+ * La coupe tombe entre deux graphèmes : un émoji (modificateur de teint, paire de
+ * substitution) n'est jamais séparé en deux.
+ *
  * @param {SVGTextElement} text libellé mesuré
  * @param {string} full texte complet
  * @param {number} room largeur disponible
@@ -37,9 +41,10 @@ function widthOf(text, content) {
  * @returns {string} le début gardé, espaces de fin retirés, puis « … » (« … » seul au pire)
  */
 function truncated(text, full, room) {
-  const cut = (count) => full.slice(0, count).trimEnd() + ELLIPSIS;
-  let low = 0; // longueur qui tient toujours (« … » seul)
-  let high = full.length; // longueur qui ne tient pas : le texte complet
+  const parts = Array.from(graphemes.segment(full), ({ segment }) => segment);
+  const cut = (count) => parts.slice(0, count).join('').trimEnd() + ELLIPSIS;
+  let low = 0; // nombre de graphèmes qui tient toujours (« … » seul)
+  let high = parts.length; // nombre qui ne tient pas : le texte complet
   while (high - low > 1) {
     const mid = (low + high) >> 1;
     if (widthOf(text, cut(mid)) <= room) low = mid;
