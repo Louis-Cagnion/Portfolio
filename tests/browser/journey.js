@@ -56,6 +56,7 @@ import {
   walkProblems,
 } from './journey-moves.js';
 import { runArrowRepeat } from './journey-repeat.js';
+import { runBreakpointFocus } from './journey-focus.js';
 import { runCountGap } from './journey-count.js';
 import { runWhenWrap } from './journey-when-wrap.js';
 import { runLiveFill } from './journey-livefill.js';
@@ -255,4 +256,5 @@ export async function runJourney(widths, mainWidth) {
   for (const width of widths) await runFrameLoops(width);
   await runResize();
   await runResizeTabindex();
+  await runBreakpointFocus();
 }

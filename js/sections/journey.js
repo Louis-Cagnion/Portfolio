@@ -565,7 +565,39 @@ export function mount(root) {
     return true;
   };
 
+  /**
+   * @brief Au passage de 700 px, la flèche qui avait le focus le passe à son équivalente de la
+   *   paire devenue visible (← ↔ ↑, → ↔ ↓), ou à l'autre flèche de cette paire si elle est
+   *   désactivée. La flèche masquée perd le focus (`focusout` sans cible suivante) avant
+   *   l'évènement `change`, où `activeElement` est déjà `body` : elle est retenue de
+   *   `focusin` jusqu'à un `focusout` qui la laisse affichée (focus réellement quitté).
+   */
+  const pairs = [[prev, next], [up, down]];
+  let held = null;
+  pairs.flat().forEach((button) => {
+    button.addEventListener('focusin', () => {
+      held = button;
+    });
+    button.addEventListener('focusout', () => {
+      if (held === button && button.offsetParent !== null) held = null;
+    });
+  });
+  const followFocus = () => {
+    const from = pairs.findIndex((pair) => pair.includes(held));
+    const lost = [held, document.body].includes(document.activeElement);
+    const at = from < 0 ? -1 : pairs[from].indexOf(held);
+    const targets = from < 0 || !lost ? [] : [pairs[1 - from][at], pairs[1 - from][1 - at]];
+    held = null;
+    // Lire `offsetParent` force le recalcul du style : la paire à montrer est peut-être cachée
+    targets.some((button) => {
+      if (button.offsetParent === null || button.disabled) return false;
+      button.focus({ preventScroll: true });
+      return document.activeElement === button;
+    });
+  };
+
   mobile.addEventListener('change', recentre);
+  mobile.addEventListener('change', followFocus);
   new ResizeObserver(recentre).observe(stage);
   root.append(heading, lede, stage, detail);
 
