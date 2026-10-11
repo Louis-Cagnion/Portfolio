@@ -58,6 +58,7 @@ import {
 import { runArrowRepeat } from './journey-repeat.js';
 import { runCountGap } from './journey-count.js';
 import { runWhenWrap } from './journey-when-wrap.js';
+import { runLiveFill } from './journey-livefill.js';
 
 const WIDTH_CASES = {
   open: 'ouverture centrée sur l\'escale actuelle (fiche, vaisseau, cadrage, flèches)',
@@ -247,6 +248,7 @@ export async function runJourney(widths, mainWidth) {
   await runLongWord();
   for (const width of widths) await runWhenWrap(width);
   for (const width of widths) await runCountGap(width);
+  for (const width of desktops) await runLiveFill(width);
   await runResize();
   await runResizeTabindex();
 }

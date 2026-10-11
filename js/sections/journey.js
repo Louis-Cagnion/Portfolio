@@ -287,6 +287,7 @@ export function mount(root) {
     journey: null,
     ids: [], // identifiants des escales construites
     paragraphs: [], // <p> de la fiche de chaque escale, refaits à chaque mise à jour
+    shown: null, // paragraphes actuellement montés dans la fiche (écrits une seule fois)
     stops: [], // éléments de chaque escale (buildStop)
     now: 0,
     cur: 0,
@@ -390,11 +391,18 @@ export function mount(root) {
     const stop = journey.stops[cur];
     sceneName.textContent = stop.title;
     sceneWhen.textContent = stop.when;
-    title.textContent = stop.title;
-    when.textContent = stop.when;
-    count.textContent = format(journey.counter, { n: cur + 1, total: journey.stops.length });
-    body.replaceChildren(...state.paragraphs[cur]);
-    if (fade && !reduced()) body.animate(FADE, { duration: FADE_MS, easing: 'ease' });
+    const written = (el, text) => {
+      if (el.textContent !== text) el.textContent = text;
+    };
+    // Fiche en lecture vocale (aria-live) : seul ce qui change y est écrit.
+    written(title, stop.title);
+    written(when, stop.when);
+    written(count, format(journey.counter, { n: cur + 1, total: journey.stops.length }));
+    if (state.shown !== state.paragraphs[cur]) {
+      state.shown = state.paragraphs[cur];
+      body.replaceChildren(...state.shown);
+      if (fade && !reduced()) body.animate(FADE, { duration: FADE_MS, easing: 'ease' });
+    }
     prev.disabled = up.disabled = cur === 0;
     next.disabled = down.disabled = cur === last();
     state.stops.forEach((item, index) => {
