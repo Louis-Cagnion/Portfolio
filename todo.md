@@ -1,4 +1,4 @@
-> Prochaine tâche : S6 « Projets et fiche », relire le rapport de la feuille S6.A1b de `arbre-s6.md` (maquettes R1 : géométrie de la Piscine sur téléphone), puis les tests S6.B2 (Node) et S6.B3 (navigateur), puis S6.C1 à C5, puis S8, S9 et S10 jusqu'à une V1 présentable sur ordinateur et mobile, puis le pré-mortem. Contexte des agents : `~/.claude/references/projects/portfolio/contexte.md`. Session Linux : Node 22, ports 5510 à 5519 pour les agents, 5520 et plus pour le moniteur.
+> Prochaine tâche : S6 « Projets et fiche », feuille S6.B2 de `arbre-s6.md` (tests Node `tests/unit/projects-layout.test.mjs`, tous les choix de design sont pris), puis S6.B3 (tests navigateur), S6.C1 à C5, puis S8, S9 et S10 jusqu'à une V1 présentable sur ordinateur et mobile, puis le pré-mortem. Contexte des agents : `~/.claude/references/projects/portfolio/contexte.md`. Session Linux : Node 22, ports 5510 à 5519 pour les agents, 5520 et plus pour le moniteur.
 
 ## Refonte spatiale
 

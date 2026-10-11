@@ -39,9 +39,9 @@ S5b « Contenu indisponible » est close. S7 « Parcours » est réalisée et co
 
 ## Nuit (21h à 22h) : S6 « Projets et fiche » commencée
 
-- Arbre de S6 écrit et validé (`arbre-s6.md`, 16 feuilles, feuilles validées 4/16) ; moniteur sonnet/high confirmé par Louis.
+- Arbre de S6 écrit et validé (`arbre-s6.md`, 16 feuilles, feuilles validées 6/16) ; moniteur sonnet/high confirmé par Louis.
 - S6.A1 : maquettes de l'introduction des systèmes et de la Piscine (`docs/design/s6/`), parcourues dans Chrome sans erreur de console.
 - Choix de Louis (`docs/design/plan.md`, dernière décision) : introduction sous le plan sur toute la largeur et liste masquée pendant un zoom ; bureau deux par deux au repos ; teinte azur ; planètes de la Piscine de mêmes tailles ; téléphone avec toutes les étiquettes.
-- « Planètes du diamètre moyen d'un pouce » : Louis a choisi R1 (zone de toucher de 44 px, planètes de taille normale) ; S6.A1b vérifie la faisabilité sur téléphone (plan plus haut).
+- « Planètes du diamètre moyen d'un pouce » : Louis a choisi R1 (zone de toucher de 44 px, planètes de taille normale) ; S6.A1b l'a maquetté : Piscine zoomée sur téléphone, plan de 320 px de haut, 20 étiquettes sans chevauchement, aucune zone de 44 px qui se touche ; règle du centre le plus proche prévue pour les cas où elles se toucheraient.
 - S6.B1 : groupe de tests navigateur `fiche` (98 cas rouges, commité) ; contrat de `js/ui/sheet.js` et hypothèses du tester dans `arbre-s6.md`, « Faits pour la suite ».
 
