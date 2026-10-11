@@ -6,6 +6,7 @@ import { overflowProblems } from './checks.js';
 import { switchTo } from './language.js';
 import { test } from './runner.js';
 import {
+  LONG_WORD,
   TOL,
   all,
   context,
@@ -25,6 +26,8 @@ const ELLIPSIS = '…';
 const LONG_TITLE = 'a'.repeat(70); // 70 caractères sans espace
 const SPACED_TITLE = 'mot assez long '.repeat(5).slice(0, 70); // 70 caractères avec espaces
 const LONG_WHEN = '0123456789'.repeat(4); // 40 caractères
+const END_STOPS = [3, 5]; // rangs 4 et 6 : ancrés en `end` au bureau (journey.js)
+const TRUNCATED_STOP = 3; // rang 4 : son titre dépasse sa place (le rang 6 la tient)
 
 /**
  * Edite les données : titres de 70 caractères sur deux escales (sans espace, puis avec
@@ -117,6 +120,41 @@ function labelProblems(site, journey, width, edits) {
 }
 
 /**
+ * Escales ancrées en `end` (END_STOPS) : titre de 70 caractères sans espace, tronqué par
+ * « … » au rang 4 (TRUNCATED_STOP) et entier au rang 6, qui le tient ; date de 40 caractères,
+ * entière (elle tient à ces rangs). Tout reste dans la scène et l'aria-label garde le titre
+ * complet.
+ *
+ * @param {object} site site ouvert sur la rubrique
+ * @returns {string[]} problèmes trouvés
+ */
+function endProblems(site) {
+  const list = wps(site);
+  const box = one(site, '.jstage')?.getBoundingClientRect();
+  if (!box || list.length <= Math.max(...END_STOPS)) return ['scène ou escales absentes'];
+  return END_STOPS.flatMap((at) => {
+    const aria = list[at].getAttribute('aria-label');
+    const problems = aria.includes(LONG_WORD)
+      ? []
+      : [`escale ${at + 1} : aria-label « ${aria} » sans le titre complet`];
+    ['title', 'when'].forEach((field) => {
+      const text = list[at].querySelector(field === 'title' ? 'text:not(.y)' : 'text.y');
+      const anchor = text.getAttribute('text-anchor');
+      if (anchor !== 'end') problems.push(`escale ${at + 1} (${field}) : ancrage ${anchor}`);
+      const full = field === 'title' ? LONG_WORD : LONG_WHEN;
+      const cut = field === 'title' && at === TRUNCATED_STOP ? true : null;
+      problems.push(...textProblems(
+        `escale ${at + 1} (${field})`,
+        text,
+        full,
+        { box, arrows: [], cut },
+      ));
+    });
+    return problems;
+  });
+}
+
+/**
  * @brief Libellés trop longs puis libellés réels, à `width` px, en français et en anglais.
  *
  * Données éditées : titres de 70 caractères (sans espace, avec espaces) et dates de 40
@@ -135,9 +173,17 @@ export async function runLabelFit(width) {
     english: `libellés trop longs à ${width} px : idem après bascule en anglais`,
     real: `libellés des données réelles à ${width} px : inchangés, aucun tronqué (fr, en)`,
   };
+  const endName = `libellés d'escales ancrées en fin à ${width} px : tronqués, ` +
+    'dans la scène, texte complet gardé';
   const edited = {};
   const fetch = editedFetch((data, lang) => {
     edited[lang] = { journey: data, ...lengthen(data) };
+  });
+  const endFetch = editedFetch((data) => {
+    END_STOPS.forEach((at) => {
+      data.stops[at].title = LONG_WORD;
+      data.stops[at].when = LONG_WHEN;
+    });
   });
   await withJourney(ctx, Object.values(names), { fetch }, async (site) => {
     const fit = (lang) => eventually(() => [
@@ -154,6 +200,10 @@ export async function runLabelFit(width) {
       return [...await fit('en'), ...overflowProblems(site)];
     });
   });
+  if (!phone(width)) {
+    const run = (site) => test(ctx, endName, () => eventually(() => endProblems(site)));
+    await withJourney(ctx, [endName], { fetch: endFetch }, run);
+  }
   await withJourney(ctx, [names.real], {}, (site) => test(ctx, names.real, async () => {
     const none = { edited: new Set(), must: new Set() };
     const problems = [];

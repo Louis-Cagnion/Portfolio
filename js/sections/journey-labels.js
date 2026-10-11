@@ -54,13 +54,14 @@ function truncated(text, full, room) {
  * @param {SVGTextElement} text libellé déjà posé (attributs x et text-anchor)
  * @param {{ left: number, right: number }} bounds bords de la scène, en unités du dessin
  *
- * @returns {number} largeur disponible (centrée sur x si le libellé est centré)
+ * @returns {number} largeur disponible : centrée sur x si le libellé est centré (`middle`),
+ *   vers la gauche de x s'il est ancré en fin (`end`), vers la droite sinon (`start`)
  */
 function roomFor(text, { left, right }) {
   const x = Number(text.getAttribute('x'));
-  return text.getAttribute('text-anchor') === 'middle'
-    ? 2 * Math.min(x - left, right - x)
-    : right - x;
+  const anchor = text.getAttribute('text-anchor');
+  if (anchor === 'middle') return 2 * Math.min(x - left, right - x);
+  return anchor === 'end' ? x - left : right - x;
 }
 
 /**
