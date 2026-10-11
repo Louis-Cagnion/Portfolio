@@ -56,6 +56,7 @@ import {
   walkProblems,
 } from './journey-moves.js';
 import { runArrowRepeat } from './journey-repeat.js';
+import { runCountGap } from './journey-count.js';
 import { runWhenWrap } from './journey-when-wrap.js';
 
 const WIDTH_CASES = {
@@ -245,6 +246,7 @@ export async function runJourney(widths, mainWidth) {
   }
   await runLongWord();
   for (const width of widths) await runWhenWrap(width);
+  for (const width of widths) await runCountGap(width);
   await runResize();
   await runResizeTabindex();
 }

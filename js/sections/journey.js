@@ -216,7 +216,7 @@ function buildScene() {
     el(
       'header',
       {},
-      el('div', {}, title, when, count),
+      el('div', {}, title, when, document.createTextNode(' '), count),
       el('div', { class: 'arrows' }, prev, next),
     ),
     body,

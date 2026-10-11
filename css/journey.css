@@ -42,7 +42,9 @@ compétences (S8) les reprendra. Chargée après css/layout.css par index.html.
   font-family: var(--mono);
   color: var(--faint);
   font-size: 0.8rem;
-  margin-left: 10px;
+  /* L'espace du DOM, mesurée à 4,02 px dans la police du corps, complète l'écart de 10 px
+  de la maquette. */
+  margin-left: 6px;
 }
 
 #journey .detail .body {
