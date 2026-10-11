@@ -42,6 +42,7 @@ import {
   withJourney,
   wps,
 } from './journey-probe.js';
+import { runTitleAria } from './journey-a11y-title.js';
 import {
   runDesktopTouch,
   runKeyboard,
@@ -222,6 +223,7 @@ async function runEdge(width) {
 export async function runJourney(widths, mainWidth) {
   await runStructure(mainWidth);
   for (const width of widths) await runWidth(width);
+  for (const width of widths) await runTitleAria(width);
   for (const width of EDGE_WIDTHS) await runEdge(width);
   const phones = widths.filter(phone);
   const desktops = widths.filter((width) => !phone(width));

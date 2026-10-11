@@ -188,7 +188,13 @@ function buildScene() {
   );
   const sceneName = el('b');
   const sceneWhen = el('span');
-  const sceneTitle = el('div', { class: 'jtitle' }, sceneName, sceneWhen);
+  // Titre répété par la fiche : masqué aux lecteurs d'écran pour ne pas être lu deux fois.
+  const sceneTitle = el(
+    'div',
+    { class: 'jtitle', 'aria-hidden': 'true' },
+    sceneName,
+    sceneWhen,
+  );
   const up = el('button', { type: 'button' }, ARROWS.up);
   const down = el('button', { type: 'button' }, ARROWS.down);
   const stage = el(
