@@ -1,5 +1,6 @@
 /* Parcours (S7) : ouverture du site et mesures du DOM (positions, textes, flèches). */
 import {
+  click,
   describe,
   goTo,
   isVisible,
@@ -154,6 +155,15 @@ export function arrowPairs(site) {
     detailPair,
     visible: shown(stagePair) ? stagePair : shown(detailPair) ? detailPair : null,
   };
+}
+
+export const NO_PAIR = 'aucune paire de flèches affichée';
+
+/** Clique sur la flèche précédente (`dir` < 0) ou suivante de la paire affichée. */
+export function pressArrow(site, dir) {
+  const pair = arrowPairs(site).visible;
+  if (pair) click(site, pair[dir > 0 ? 1 : 0]);
+  return Boolean(pair);
 }
 
 /** Distance de `a` à `b` (centres). */

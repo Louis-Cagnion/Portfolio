@@ -5,6 +5,7 @@ import { noForeignText, switchTo } from './language.js';
 import { expectEqual, test } from './runner.js';
 import {
   BAR_GAP,
+  NO_PAIR,
   TOL,
   all,
   arrowPairs,
@@ -19,6 +20,7 @@ import {
   one,
   openJourney,
   positionProblems,
+  pressArrow,
   resize,
   scrollMax,
   selected,
@@ -30,15 +32,6 @@ import {
   withJourney,
   wps,
 } from './journey-probe.js';
-
-const NO_PAIR = 'aucune paire de flèches affichée';
-
-/** Clique sur la flèche précédente (`dir` < 0) ou suivante de la paire affichée. */
-function pressArrow(site, dir) {
-  const pair = arrowPairs(site).visible;
-  if (pair) click(site, pair[dir > 0 ? 1 : 0]);
-  return Boolean(pair);
-}
 
 /** Marche aller et retour par les flèches affichées, avec contrôle de chaque pas. */
 export async function walkProblems(site, journey, width) {

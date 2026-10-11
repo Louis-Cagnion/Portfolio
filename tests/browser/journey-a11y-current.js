@@ -2,24 +2,16 @@
 import { click } from './harness.js';
 import { expectEqual, test } from './runner.js';
 import {
-  arrowPairs,
+  NO_PAIR,
   context,
   eventually,
   journeyData,
   nowIndex,
   positionProblems,
+  pressArrow,
   withJourney,
   wps,
 } from './journey-probe.js';
-
-const NO_PAIR = 'aucune paire de flèches affichée';
-
-/** Clique sur la flèche précédente (`dir` < 0) ou suivante de la paire affichée. */
-function pressArrow(site, dir) {
-  const pair = arrowPairs(site).visible;
-  if (pair) click(site, pair[dir > 0 ? 1 : 0]);
-  return Boolean(pair);
-}
 
 /**
  * Une seule escale porte aria-current : celle de `index`, avec la valeur « step ».

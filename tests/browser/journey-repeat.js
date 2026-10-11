@@ -1,9 +1,7 @@
 /* Parcours (S7) : touche maintenue sur une flèche (répétitions de keydown). */
 import { describe } from './harness.js';
 import { test } from './runner.js';
-import { arrowPairs, context, withJourney } from './journey-probe.js';
-
-const NO_PAIR = 'aucune paire de flèches affichée';
+import { NO_PAIR, arrowPairs, context, withJourney } from './journey-probe.js';
 
 /** Envoie un `keydown` annulable sur `el`, répété ou non, et rend l'évènement. */
 function repeatEvent(site, el, key, repeat) {
