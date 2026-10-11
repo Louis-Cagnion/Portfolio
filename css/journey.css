@@ -148,6 +148,8 @@ compétences (S8) les reprendra. Chargée après css/layout.css par index.html.
   fill: var(--dim);
   font: 500 14px var(--sans);
   transition: opacity var(--dur);
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .traj .wp text.y {

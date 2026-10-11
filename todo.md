@@ -1,9 +1,9 @@
-> Prochaine tâche : S7 « Parcours », étape 8/8 : corriger les 14 écarts mineurs du crash-test listés ci-dessous, un fixer à la fois (les visibles comme `.jtitle` se comparent à la maquette, qui fait foi), puis suite complète et clôture de S7. Ensuite S9 « Contact », étape 5/8. Contexte des agents : `~/.claude/references/projects/portfolio/contexte.md`. Session Linux : Node 22, ports 5510 à 5519 pour les agents, 5520 et plus pour le moniteur.
+> Prochaine tâche : S7 « Parcours », étape 8/8 : corriger les 12 écarts mineurs du crash-test listés ci-dessous, un fixer à la fois (les visibles comme `.jtitle` se comparent à la maquette, qui fait foi), puis suite complète et clôture de S7. Ensuite S9 « Contact », étape 5/8. Contexte des agents : `~/.claude/references/projects/portfolio/contexte.md`. Session Linux : Node 22, ports 5510 à 5519 pour les agents, 5520 et plus pour le moniteur.
 
 ## Refonte spatiale
 
 - Suivre `docs/design/plan.md` (validé le 08/10/2026), étapes 4 à 8, sur la branche `redesign/space`.
-- S7 « Parcours », étape 8/8 : corriger les 14 écarts mineurs du crash-test, un fixer à la fois, puis suite complète (scripts et captures du crash-test : scratchpad de la session du 10/10, perdus au redémarrage ; les scénarios ci-dessous suffisent) :
+- S7 « Parcours », étape 8/8 : corriger les 12 écarts mineurs du crash-test, un fixer à la fois, puis suite complète (scripts et captures du crash-test : scratchpad de la session du 10/10, perdus au redémarrage ; les scénarios ci-dessous suffisent) :
   - focus qui tombe sur `body` quand la largeur franchit 700 px avec une flèche focalisée (la paire masquée passe en `display: none`) : le passer à la flèche équivalente de la paire visible (`docs/design-checklist.md:315`, 319) ;
   - Entrée maintenue sur une flèche : le focus qui passe à l'autre flèche à la borne fait repartir le vaisseau en sens inverse sans fin ; ignorer l'autorépétition (`event.repeat`) ;
   - réactiver l'escale déjà choisie réécrit toute la fiche `aria-live` et relance le fondu (texte invisible tant qu'Entrée est maintenue) : n'écrire que ce qui change (`docs/design-checklist.md:322`) ;
@@ -15,8 +15,6 @@
   - sur téléphone, titre et date de la scène (`.jtitle`) lus en double par les lecteurs d'écran (`aria-hidden` à ajouter) ; escale choisie sans `aria-current` ;
   - un layout par image au repos à cause des animations SVG infinies (`css/journey.css:162-204`, 233-241) : batterie sur téléphone, à mesurer et réduire si possible sans changer le rendu ;
   - en anglais, le vaisseau à quai traverse « during the curriculum » (libellé de Codewars) de 701 à 1400 px ;
-  - libellés SVG sélectionnables au double-clic (`user-select: none` sur `.traj .wp text`) ;
-  - `.ship-g` et `.trail` sans `pointer-events: none` : 1 à 2 % de la zone cliquable de l'escale actuelle couverte par le vaisseau.
 - S8 « Compétences » : les règles de fiche (`.detail`, `.when`, `.count`, `.arrows`, boutons de flèche, `.b-spin`, `.b-drift` et leurs `@keyframes`) ne sont écrites que sous `#journey` dans `css/journey.css` ; les partager avec la fiche des compétences (maquette:400), dans une feuille dédiée plutôt que `css/layout.css` (655 lignes, environ 745 avec elles).
 - Étape 5 de S6, S8 et S9 : retirer la rubrique du module de `MOUNTED` dans `tests/browser/unavailable.js` (le panneau « indisponible » ne vaut que pour les rubriques encore montées par `mountSimple`, `docs/design/plan.md:122`).
 - S9 « Contact » : étapes 5 à 8 (tests rouges : groupe navigateur `contact`, `tests/unit/contact.test.mjs`). Trois textes du cœur à ajouter dans `data/*.json` (validés, `docs/design/plan.md`, dernière décision de Louis).

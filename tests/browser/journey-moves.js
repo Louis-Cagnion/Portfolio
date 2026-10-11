@@ -224,6 +224,17 @@ function shipPassThroughProblems(site, fr) {
   return problems;
 }
 
+/** Les libellés et dates des escales ne se surlignent pas au double-clic. */
+function stopTextSelectionProblems(site) {
+  const texts = wps(site).flatMap((g) => [...g.querySelectorAll('text')]);
+  if (!texts.length) return ['libellés des escales absents'];
+  const selectable = texts.filter(
+    (text) => site.win.getComputedStyle(text).userSelect !== 'none',
+  );
+  if (!selectable.length) return [];
+  return [`${selectable.length} libellé(s) d'escale sélectionnable(s) sur ${texts.length}`];
+}
+
 /** Toucher d'une autre escale, puis flèche depuis le bas de la page (téléphone). */
 async function otherStopProblems(site, fr, width) {
   const now = nowIndex(fr);
@@ -266,6 +277,7 @@ export async function runPhoneTouch(width) {
     'téléphone : flèche depuis le bas de la page = retour en haut de la rubrique, ' +
       'escale suivante',
     'téléphone : vaisseau et traînée sans pointer-events, clic reçu par l\'escale actuelle',
+    'téléphone : libellés et dates des escales non sélectionnables au double-clic',
   ];
   const fr = await journeyData('fr');
   const cases = [
@@ -275,6 +287,7 @@ export async function runPhoneTouch(width) {
     [names[3], true, (site) => otherStopProblems(site, fr, width)],
     [names[4], true, (site) => arrowFromBottomProblems(site, fr, width)],
     [names[5], true, (site) => shipPassThroughProblems(site, fr)],
+    [names[6], true, (site) => stopTextSelectionProblems(site)],
   ];
   for (const [name, reduce, probe] of cases)
     await withJourney(ctx, [name], { reduce }, (site) => test(ctx, name, () => probe(site)));
@@ -287,6 +300,7 @@ export async function runDesktopTouch(width) {
     'bureau : clic sur l\'escale actuelle = aucune descente',
     'bureau : clic sur une autre escale = voyage vers elle',
     'bureau : vaisseau et traînée sans pointer-events, clic reçu par l\'escale actuelle',
+    'bureau : libellés et dates des escales non sélectionnables au double-clic',
   ];
   await withJourney(ctx, names, {}, async (site) => {
     const fr = await journeyData('fr');
@@ -308,6 +322,7 @@ export async function runDesktopTouch(width) {
       return eventually(() => positionProblems(site, fr, now + 1, width));
     });
     await test(ctx, names[2], () => shipPassThroughProblems(site, fr));
+    await test(ctx, names[3], () => stopTextSelectionProblems(site));
   });
 }
 
