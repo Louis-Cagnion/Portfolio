@@ -1,10 +1,10 @@
-> Prochaine tâche : S7 « Parcours », étape 8/8 : prochaine feuille prête de `arbre-s7.md`. Ensuite le pré-mortem de la V1, puis S9 « Contact », étape 5/8. Contexte des agents : `~/.claude/references/projects/portfolio/contexte.md`. Session Linux : Node 22, ports 5510 à 5519 pour les agents, 5520 et plus pour le moniteur.
+> Prochaine tâche : S7 « Parcours », étape 8/8 : prochaine feuille prête de `arbre-s7.md`. Ensuite la maquette dans l'ordre du plan (S6 « Projets et fiche », S8, S9, S10) jusqu'à une V1 présentable sur ordinateur et mobile, puis le pré-mortem. Contexte des agents : `~/.claude/references/projects/portfolio/contexte.md`. Session Linux : Node 22, ports 5510 à 5519 pour les agents, 5520 et plus pour le moniteur.
 
 ## Refonte spatiale
 
 - Suivre `docs/design/plan.md` (validé le 08/10/2026), étapes 4 à 8, sur la branche `redesign/space`.
 - S7 « Parcours », étape 8/8 : dérouler `arbre-s7.md` (arbre de feuilles, statuts et faits pour la suite), puis clôturer S7.
-- Pré-mortem de la V1, après la clôture de S7 et avant S9 (décision de Louis du 11/10/2026) : une feuille en lecture seule par axe (`~/.claude/references/best-practice/arborescence-taches.md`, « Phases d'un projet »), constats triés au backlog, puis arbre de correction ; il peut réorienter S8 à S10.
+- Pré-mortem de la V1, une fois la V1 présentable sur ordinateur et mobile (S10 close ; décision de Louis du 11/10/2026 au soir, qui remplace « avant S9 ») : une feuille en lecture seule par axe (`~/.claude/references/best-practice/arborescence-taches.md`, « Phases d'un projet »), constats triés au backlog, puis arbre de correction.
 - S8 « Compétences » : les règles de fiche (`.detail`, `.when`, `.count`, `.arrows`, boutons de flèche, `.b-spin`, `.b-drift` et leurs `@keyframes`) ne sont écrites que sous `#journey` dans `css/journey.css` ; les partager avec la fiche des compétences (maquette:400), dans une feuille dédiée plutôt que `css/layout.css` (655 lignes, environ 745 avec elles).
 - Étape 5 de S6, S8 et S9 : retirer la rubrique du module de `MOUNTED` dans `tests/browser/unavailable.js` (le panneau « indisponible » ne vaut que pour les rubriques encore montées par `mountSimple`, `docs/design/plan.md:122`).
 - S9 « Contact » : étapes 5 à 8 (tests rouges : groupe navigateur `contact`, `tests/unit/contact.test.mjs`). Trois textes du cœur à ajouter dans `data/*.json` (validés, `docs/design/plan.md`, dernière décision de Louis).
