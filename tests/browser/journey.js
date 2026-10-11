@@ -63,6 +63,7 @@ import { runLiveFill } from './journey-livefill.js';
 import { runTrailRate } from './journey-trail.js';
 import { runFrameLoops } from './journey-raf.js';
 import { runTitleFit } from './journey-title-fit.js';
+import { runIdleLayout } from './journey-idle.js';
 
 const WIDTH_CASES = {
   open: 'ouverture centrée sur l\'escale actuelle (fiche, vaisseau, cadrage, flèches)',
@@ -256,6 +257,7 @@ export async function runJourney(widths, mainWidth) {
   await runTrailRate();
   for (const width of widths) await runFrameLoops(width);
   await runTitleFit();
+  for (const width of widths) await runIdleLayout(width);
   await runResize();
   await runResizeTabindex();
   await runBreakpointFocus();
