@@ -389,6 +389,47 @@ describe('détecteurs : parité et chaînes vides', () => {
   });
 });
 
+// ---------- Format de la légende des compétences (S8.B2, ajouté par S8.C0) ----------
+/* arbre-s8.md:22 : clé `skills.legendItem`, « {body} : {level} » en français et
+« {body}: {level} » en anglais (maquette, prototype.template.html:932) ; le niveau est mis en
+minuscules par le code, jamais par la donnée. */
+describe('légende des compétences : skills.legendItem', () => {
+  const EXPECTED = { fr: '{body} : {level}', en: '{body}: {level}' };
+  for (const lang of LANGS) {
+    const read = () => {
+      const value = get(locale(lang), 'skills.legendItem');
+      assert.equal(
+        typeof value,
+        'string',
+        `data/${lang}.json : skills.legendItem absent (format de la légende, feuille C0)`,
+      );
+      return value;
+    };
+
+    test(`${lang} : skills.legendItem contient exactement {body} et {level}`, () => {
+      const markers = read().match(/\{[^{}]*\}/g) ?? [];
+      assert.deepEqual([...markers].sort(), ['{body}', '{level}']);
+      assert.equal(read().includes('{body}'), true);
+      assert.equal(read().indexOf('{level}') > read().indexOf('{body}'), true);
+    });
+
+    test(`${lang} : skills.legendItem vaut « ${EXPECTED[lang]} »`, () => {
+      assert.equal(read(), EXPECTED[lang]);
+    });
+  }
+
+  test('le niveau et l\'astre ne sont pas déjà dans le format', () => {
+    for (const lang of LANGS) {
+      const text = locale(lang).skills;
+      const names = [...Object.values(text.levels), ...Object.values(text.bodies)];
+      assert.equal(typeof text.legendItem, 'string', `${lang} : skills.legendItem absent`);
+      const fixed = text.legendItem.replace(/\{[^{}]*\}/g, '');
+      for (const name of names)
+        assert.equal(fixed.includes(name), false, `${lang} : « ${name} » écrit en dur`);
+    }
+  });
+});
+
 describe('détecteurs : volume (10 000 chaînes, temps linéaire)', () => {
   const tree = (n, text) =>
     ({ journey: { stops: [{ paragraphs: Array.from({ length: n }, () => text) }] } });

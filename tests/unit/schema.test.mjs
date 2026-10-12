@@ -235,6 +235,41 @@ describe('validateLocale : champs fautifs nommés par leur chemin', () => {
   });
 });
 
+describe('validateLocale : format de la légende des compétences (skills.legendItem)', () => {
+  /* arbre-s8.md:22 : clé requise, ajoutée aux données par la feuille C0. La fixture de
+  tests/fixtures n'est pas modifiée ici : les cas partent d'une copie qui porte la clé. */
+  const KEY = ['skills', 'legendItem'];
+  const withKey = (value) => {
+    const copy = clone(valid);
+    copy.skills.legendItem = value;
+    return copy;
+  };
+
+  test('clé présente et conforme : aucun chemin fautif', async () => {
+    const validateLocale = await load();
+    assert.deepEqual(validateLocale(withKey('{body} : {level}')), []);
+    assert.deepEqual(validateLocale(withKey('{body}: {level}')), []);
+  });
+
+  test('clé absente : skills.legendItem est nommé', async () => {
+    const validateLocale = await load();
+    const copy = clone(valid);
+    delete copy.skills.legendItem;
+    assert.deepEqual(validateLocale(copy), ['skills.legendItem']);
+  });
+
+  test('chaîne vide : skills.legendItem est nommé', async () => {
+    const validateLocale = await load();
+    assert.deepEqual(validateLocale(withKey('')), ['skills.legendItem']);
+  });
+
+  for (const [name, bad] of [['nombre', 42], ['null', null], ['objet', {}], ['liste', ['x']]])
+    test(`${name} à la place du format : skills.legendItem est nommé`, async () => {
+      const validateLocale = await load();
+      assert.deepEqual(validateLocale(withKey(bad)), [toPath(KEY)]);
+    });
+});
+
 describe('validateLocale : entrées limites', () => {
   for (const [name, input] of [
     ['null', null],

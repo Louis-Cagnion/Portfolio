@@ -44,6 +44,7 @@ import { runContact } from './contact.js';
 import { runSheet } from './sheet.js';
 import { runSheetFocus } from './sheet-focus.js';
 import { runProjects } from './projects.js';
+import { runSkills } from './skills.js';
 import { runJourney } from './journey.js';
 import { runFitWords } from './fit-words.js';
 import { runNarrow } from './narrow.js';
@@ -68,6 +69,7 @@ const GROUPS = [
   'contact',
   'fiche',
   'projets',
+  'competences',
   'parcours',
   'etroit',
   'plafonnement',
@@ -451,6 +453,9 @@ async function main() {
     if (groups.includes('projets'))
       for (const width of widths)
         await scenario(`projets ${width}`, () => runProjects([width], mainWidth));
+    if (groups.includes('competences'))
+      for (const width of widths)
+        await scenario(`competences ${width}`, () => runSkills([width], mainWidth));
     if (groups.includes('parcours'))
       await scenario('parcours', () => runJourney(widths, mainWidth));
     if (groups.includes('etroit')) await scenario('barres étroites', runNarrow);
