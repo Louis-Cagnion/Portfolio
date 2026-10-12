@@ -1,0 +1,114 @@
+/*
+Projets : fiche d'un projet (voile et panneau). Valeurs : maquette validée
+(docs/design/prototype/prototype.template.html:228-235 et 312). Le CSS des systèmes
+viendra avec leurs feuilles. Chargée après css/journey.css par index.html.
+*/
+
+/* ───── Voile ───── */
+.sheet-bg {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-scrim);
+  background: var(--scrim);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-scrim);
+}
+
+.sheet-bg.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ───── Fiche : panneau à droite, feuille du bas à 880 px et moins ───── */
+.sheet {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: var(--z-sheet);
+  width: min(620px, 100%);
+  overflow-y: auto;
+  padding: 32px;
+  background: var(--panel);
+  border-left: 1px solid var(--line);
+  overflow-wrap: anywhere;
+  visibility: hidden;
+  transform: translateX(100%);
+  transition:
+    transform var(--dur-sheet) var(--ease-out),
+    visibility 0s linear var(--dur-sheet);
+}
+
+.sheet.open {
+  visibility: visible;
+  transform: none;
+  transition-delay: 0s;
+}
+
+@media (max-width: 55em) {
+  .sheet {
+    top: auto;
+    height: 88vh;
+    width: 100%;
+    border-left: 0;
+    border-top: 1px solid var(--line);
+    transform: translateY(100%);
+  }
+}
+
+/* Mouvement réduit, lu en JS (data-still) et en CSS : ouverture et fermeture directes. */
+.sheet[data-still],
+.sheet-bg[data-still] {
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sheet,
+  .sheet-bg {
+    transition: none;
+  }
+}
+
+.sheet .cat {
+  font: 400 0.85rem var(--mono);
+  color: var(--accent);
+}
+
+.sheet h3 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 1.25rem;
+  margin: 10px 0 16px;
+  line-height: 1.35;
+}
+
+.sheet .tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 18px;
+}
+
+.sheet .tags li {
+  font: 400 0.8rem var(--mono);
+  padding: 3px 8px;
+  border: 1px solid var(--line);
+}
+
+.sheet .body {
+  color: var(--dim);
+}
+
+.close {
+  float: right;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line);
+  background: none;
+  color: var(--text);
+  font-size: 1.2rem;
+  cursor: pointer;
+}

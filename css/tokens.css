@@ -81,6 +81,7 @@ courbes et durées des feuilles de style. Valeurs relevées dans la maquette val
   --dur-slow: 0.5s;
   --dur-link: 0.25s;
   --dur-sheet: 0.45s;
+  --dur-scrim: 0.35s;
   --dur-height: 0.7s;
   --dur-warp-in: 0.55s;
   --dur-warp-out: 0.45s;
