@@ -2,7 +2,10 @@
 Focus rendu à l'origine ; origine détachée ou masquée : la planète du même projet
 (`.planet[aria-label]` égal au titre, dans #projects) ; sans planète : le h2 de #projects
 (tabindex="-1"). La vraie rubrique Projets est montée : ses planètes de même titre passeraient
-avant la planète fixture, donc chaque cas neutralise leur `aria-label` le temps du cas. */
+avant la planète fixture, donc chaque cas neutralise leur `aria-label` le temps du cas.
+Planète du même titre INERTE (`tabindex="-1"`, `aria-hidden="true"`, règle de S6.F2a) : jamais
+une cible, le focus ne reste pas sur un élément masqué (design-checklist.md:320) ; repli sur
+le h2 de #projects. Planète ACTIVE (`tabindex="0"`) : cible, comme avant. */
 import { isVisible } from './harness.js';
 import {
   GROUP,
@@ -58,6 +61,36 @@ async function fallbackTests(ctx, site, view) {
       });
 }
 
+const TWINS = [
+  ['planète du même titre inerte', true, 'le h2 (jamais la planète inerte)'],
+  ['planète du même titre active', false, 'la planète'],
+];
+
+/** Origine détruite, planète du même titre inerte ou active : cible du focus rendu. */
+async function inertTests(ctx, site, view) {
+  for (const [name, inert, target] of TWINS)
+    await check(ctx, `origine détruite, ${name} : focus sur ${target}`, site, async (ctl) => {
+      const unmute = muteRealPlanets(site, view.title);
+      try {
+        const fx = addFixtures(site, view);
+        if (inert) {
+          fx.planet.setAttribute('tabindex', '-1');
+          fx.planet.setAttribute('aria-hidden', 'true');
+        }
+        ctl.open(view, fx.origin);
+        await rest(site);
+        fx.origin.remove();
+        await closeBy(site, 'bouton');
+        const wanted = inert ? site.doc.querySelector('#projects h2') : fx.planet;
+        const active = site.doc.activeElement;
+        if (!wanted) return ['cible de repli introuvable (h2 de #projects)'];
+        return active === wanted ? [] : [`focus sur ${focusText(site)}`];
+      } finally {
+        unmute();
+      }
+    });
+}
+
 /** Groupe « Fiche », replis du focus, à chaque largeur. */
 export async function runSheetFocus(widths) {
   const views = await sheetViews();
@@ -66,6 +99,7 @@ export async function runSheetFocus(widths) {
     try {
       const ctx = { group: GROUP, section: 'projects', width, lang: 'fr' };
       await fallbackTests(ctx, site, views.fr);
+      await inertTests(ctx, site, views.fr);
     } finally {
       site.close();
     }

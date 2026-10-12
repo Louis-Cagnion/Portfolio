@@ -4,8 +4,9 @@
 - #sysLayout (classe zfocus pendant un zoom) contient .sys-head (.back, .ctitle, .count) et
   svg#systems ; .intro-c (frère suivant de #sysLayout) porte l'intro du système zoomé ;
 - soleils : .sun-btn[role=button][tabindex=0][aria-label=projects.approach], un par système ;
-- planètes : .planet[role=button][tabindex=0][aria-label=titre brut du projet], dans
-  svg#systems ;
+- planètes : .planet[role=button][aria-label=titre brut du projet], dans svg#systems ;
+  inertes au repos (tabindex -1, aria-hidden), actives dans le système zoomé seulement
+  (projects-inert.js) ;
 - liste : élément [aria-label=projects.listLabel] (classe plist) de boutons natifs, un par
   projet, nommés par le titre ; visible au repos, masquée pendant un zoom ;
 - zoom : clic, Entrée ou Espace sur un soleil ; les autres systèmes (soleil et planètes) ne
@@ -47,6 +48,7 @@ import {
   visibleText,
   zoomIn,
 } from './projects-probe.js';
+import { runInert } from './projects-inert.js';
 import { runLoops, runReducedMotion } from './projects-motion.js';
 import { runPhonePiscine } from './projects-phone.js';
 import { runSwitch } from './projects-lang.js';
@@ -133,14 +135,15 @@ async function restTests(site, ctx, text, systems) {
       ...focusProblems(site, found),
     ];
   });
-  await test(ctx, `planètes : une par projet (${counts}), focalisables, nommées par le titre`,
+  await test(ctx, `planètes : une par projet (${counts}), nommées par le titre`,
     () => {
       const missing = gate(site);
       if (missing.length) return missing;
       const found = planetEls(site);
       return [
         ...namesProblems('planète', found.map(labelOf), names),
-        ...focusProblems(site, found),
+        ...found.filter((el) => el.getAttribute('role') !== 'button')
+          .map((el) => `${describe(el)} : role≠button`),
       ];
     });
   const listName = `liste : une entrée cliquable par projet (${names.length}), nommée`;
@@ -449,6 +452,7 @@ async function runSite(width, lang, datas, mainWidth) {
     await listTests(site, ctx, text, systems);
     await triggerTests(site, ctx, text, systems);
     await backFocusTests(site, ctx, text, systems);
+    await runInert(site, ctx, text, systems);
     await raiseTests(site, ctx, text, systems);
     for (let index = 0; index < systems.length; index++)
       await systemFlow(site, ctx, text, systems, index);
