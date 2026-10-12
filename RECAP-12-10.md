@@ -10,6 +10,9 @@ S6 « Projets et fiche » avance : feuilles validées 11/16. Prochaine étape en
 - S6.C2 : `js/sections/projects-layout.js` (pur) ; 50 tests unitaires réussis, Node 345 réussis et 24 rouges (S8 et S9).
 - S6.C3 (reprise le 12/10 sur Windows) : `js/sections/projects-art.js` et règles CSS des soleils et planètes dans `css/projects.css`, rendu identique à la maquette (comparaison chiffrée à 1280 et 390 px, Piscine à 320, 390 et 430 px sans chevauchement d'étiquettes).
 
+- S6.C4 (Windows, 12/10) : `js/sections/projects.js` et `projects-loop.js` (rubrique au repos : plan des quatre systèmes, liste, fiche, boucle unique, bascule de langue), `css/projects.css` complété ; groupe `projets` à 118 réussis (les rouges tiennent au zoom, C5), `fiche` 98 après réécriture de 3 cas dans `tests/browser/sheet-focus.js`. Feuilles validées 12/16.
+- Demande de Louis (pré-mortem, `todo.md`) : projets triés par catégorie avec outil de filtre.
+
 ## À savoir pour la reprise
 
 - Hypothèses que le code de C4 et C5 doit satisfaire : `arbre-s6.md`, « Faits pour la suite » (DOM, boucle `requestAnimationFrame` repérée par sa pile d'appels, mouvement réduit, débordement des étiquettes invisibles au repos).
