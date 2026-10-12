@@ -1,6 +1,6 @@
 # Récapitulatif du 12/10/2026 (session moniteur, Linux)
 
-S6 « Projets et fiche » avance : feuilles validées 10/16. Prochaine étape en tête de `todo.md`, détail dans `arbre-s6.md`.
+S6 « Projets et fiche » avance : feuilles validées 11/16. Prochaine étape en tête de `todo.md`, détail dans `arbre-s6.md`.
 
 ## Faits depuis le 11/10
 
@@ -8,7 +8,7 @@ S6 « Projets et fiche » avance : feuilles validées 10/16. Prochaine étape en
 - S6.B3 : groupe navigateur `projets` (5 fichiers `tests/browser/projects*.js`, 481 cas sur cinq largeurs, un scénario par largeur). Rouge sur le site actuel (4 réussis, 103 échecs à 390 px), vert sur un module de référence du tester, 10 mutations détectées.
 - S6.C1 : `js/ui/sheet.js` et `css/projects.css` (fiche) ; groupe `fiche` à 98 réussis.
 - S6.C2 : `js/sections/projects-layout.js` (pur) ; 50 tests unitaires réussis, Node 345 réussis et 24 rouges (S8 et S9).
-- S6.C3 interrompue à 8h15 à la demande de Louis (arrêt à 8h25) : brouillon de `js/sections/projects-art.js` sur la branche `wip/s6-c3`, JavaScript seulement, non rendu, non relu.
+- S6.C3 (reprise le 12/10 sur Windows) : `js/sections/projects-art.js` et règles CSS des soleils et planètes dans `css/projects.css`, rendu identique à la maquette (comparaison chiffrée à 1280 et 390 px, Piscine à 320, 390 et 430 px sans chevauchement d'étiquettes).
 
 ## À savoir pour la reprise
 

@@ -112,3 +112,115 @@ viendra avec leurs feuilles. Chargée après css/journey.css par index.html.
   font-size: 1.2rem;
   cursor: pointer;
 }
+
+/* ───── Systèmes : orbites, soleils, planètes (docs/design/s6/mockup.css:82-189) ───── */
+.sys-hit {
+  fill: transparent;
+  cursor: zoom-in;
+}
+
+.orbit {
+  fill: none;
+  stroke: var(--orbit);
+  stroke-dasharray: 3 6;
+}
+
+.sun-btn {
+  cursor: zoom-in;
+}
+
+.sun-btn:focus {
+  outline: none;
+}
+
+.sun-label {
+  fill: var(--text);
+  font: 400 15px var(--display);
+  text-anchor: middle;
+  transition: opacity 0.4s; /* 0,4 s : valeur de la maquette, sans jeton */
+}
+
+.sun-sub {
+  fill: var(--faint);
+  font: 400 12px var(--mono);
+  text-anchor: middle;
+  transition: opacity 0.4s;
+}
+
+.sun-glow {
+  transition: filter var(--dur);
+}
+
+.sys:not(.on) .sun-btn:hover .sun-glow,
+.sun-btn:focus-visible .sun-glow {
+  filter: brightness(1.25) drop-shadow(var(--glow-sun));
+}
+
+.sun-btn:focus-visible .sun-label {
+  text-decoration: underline;
+}
+
+.sys.on .sys-hit,
+.sys.on .sun-btn {
+  cursor: default;
+}
+
+.sys.on .sun-label,
+.sys.on .sun-sub {
+  opacity: 0;
+}
+
+.planet {
+  cursor: pointer;
+}
+
+.planet:focus {
+  outline: none;
+}
+
+.pl-hit {
+  fill: transparent;
+}
+
+.pl-label {
+  opacity: 0;
+  transition: opacity var(--dur-link);
+  pointer-events: none;
+}
+
+.pl-bg {
+  fill: var(--label-bg);
+  stroke: var(--accent-edge);
+}
+
+.pl-name {
+  fill: var(--text);
+  font: 500 12.5px var(--sans);
+}
+
+.planet:hover .pl-label,
+.planet:focus-visible .pl-label {
+  opacity: 1;
+}
+
+.planet:hover .pl-body,
+.planet:focus-visible .pl-body {
+  filter: brightness(1.35) drop-shadow(var(--glow-planet));
+}
+
+.sys.on .pl-label {
+  opacity: 1;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+/* Piscine sur téléphone : zone de toucher de 44 px, choisie au centre le plus proche */
+.planet.nearest .pl-hit {
+  fill: transparent;
+  stroke: none;
+}
+
+.sys.on .planet.nearest,
+.sys.on .planet.nearest .pl-label {
+  pointer-events: none;
+}
