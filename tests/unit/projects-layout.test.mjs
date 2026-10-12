@@ -14,11 +14,17 @@ Module pur, sans accès au DOM. Source : docs/design/s6/mockup.js (maquette vali
       5.18, 0.71], cases triées par angle de base, le module j prend la case j ;
     - Piscine téléphone : 3, 6 et 11 planètes, couples [ring, angle] figés (PHONE_SLOTS) ;
     - Piscine hors de 20 projets : lève, ou renvoie un élément fini par projet ;
+    - taille : hors Piscine, planetSize du projet ; Piscine, bureau et téléphone :
+      8.4 + (13 - 8.4) x rang / (n - 1), n = 20, rang (0 à n - 1) du projet classé par
+      longueur croissante (somme de block.html, ou de items.join('') en liste), à égalité
+      le premier de system.projects d'abord ;
   splitTitle(title) -> [title] sans espace, sinon coupe à l'espace le plus proche du
     milieu (à égalité le premier), l'espace supprimé ;
   nearestPlanet(point, planets, hitRadius = 22) -> la planète au centre le plus proche,
     à une distance STRICTEMENT inférieure à hitRadius (égalité : la première), sinon null.
-Le placement ne dépend que de `id` et du nombre de blocs, jamais des textes ni de la langue.
+Position, anneau, rayon et angle ne dépendent que de `id` et de l'ordre des projets, jamais
+des textes ni de la langue ; seule la taille de la Piscine dépend des longueurs de ses textes.
+Taille de la Piscine (par rang de longueur) : projects-layout-sizes.test.mjs.
 Lancer : node --test (depuis la racine du dépôt).
 */
 import { test, describe } from 'node:test';
@@ -75,6 +81,12 @@ const PHONE_RINGS = [43, 83, 123];
 const DESK_COUNTS = [2, 4, 4, 5, 5];
 const DESK_OFFSETS = [1.1, 3.59, 4.46, 5.18, 0.71];
 const DESK_RATIOS = [0.28, 0.46, 0.64, 0.82, 1];
+
+// Sorties sans la taille de la Piscine, seule taille qui dépend de la langue.
+const sansTaillePiscine = (slots, system) => {
+  if (system.id !== 'piscine') return slots;
+  return slots.map(({ size, ...reste }) => reste);
+};
 
 // Cases de la Piscine bureau, recalculées depuis le contrat : [ring, angle de base] triés.
 function deskSlots() {
@@ -414,19 +426,22 @@ describe('planetSlots, données réelles', () => {
 });
 
 describe('planetSlots, indépendance de la langue', () => {
-  test('fr et en donnent les mêmes sorties', async () => {
+  test('fr et en donnent les mêmes sorties, hors taille de la Piscine', async () => {
     const { planetSlots } = await load();
     const fr = readLocale('fr').projects.systems;
     const en = readLocale('en').projects.systems;
     fr.forEach((system, systemIndex) => {
       for (const phone of [false, true]) {
         const options = { phone, systemIndex, maxRadius: MAX_RADIUS };
-        assert.deepEqual(planetSlots(system, options), planetSlots(en[systemIndex], options));
+        assert.deepEqual(
+          sansTaillePiscine(planetSlots(system, options), system),
+          sansTaillePiscine(planetSlots(en[systemIndex], options), en[systemIndex]),
+        );
       }
     });
   });
 
-  test('textes réécrits (titre, résumé, tags, blocs) : sorties inchangées', async () => {
+  test('textes réécrits : sorties inchangées, hors taille de la Piscine', async () => {
     const { planetSlots } = await load();
     const systems = readLocale('fr').projects.systems;
     systems.forEach((system, systemIndex) => {
@@ -444,7 +459,10 @@ describe('planetSlots, indépendance de la langue', () => {
       }
       for (const phone of [false, true]) {
         const options = { phone, systemIndex, maxRadius: MAX_RADIUS };
-        assert.deepEqual(planetSlots(changed, options), planetSlots(system, options));
+        assert.deepEqual(
+          sansTaillePiscine(planetSlots(changed, options), changed),
+          sansTaillePiscine(planetSlots(system, options), system),
+        );
       }
     });
   });
