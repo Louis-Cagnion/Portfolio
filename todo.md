@@ -1,4 +1,4 @@
-> Prochaine tâche : S6.F3 de `arbre-s6.md` (checker : suites après les décisions de S6.F, en cours) (planètes inertes au repos, système entier sélectionnable), F2b, F3, puis S6.E3 (Louis dans Chrome), clôture de S6, S8, S9 et S10 jusqu'à une V1 présentable sur ordinateur et mobile, puis le pré-mortem. Contexte des agents : `~/.claude/references/projects/portfolio/contexte.md`. Session Linux : Node 22, ports 5510 à 5519 pour les agents, 5520 et plus pour le moniteur.
+> Prochaine tâche : S8 « Compétences » (cadrage par un analyst, puis `arbre-s8.md`), sans attendre S6.E3 (Louis regarde Projets dans Chrome après un rechargement forcé, puis clôture de S6 par le moniteur), puis S9 et S10 jusqu'à une V1 présentable sur ordinateur et mobile, puis le pré-mortem. Contexte des agents : `~/.claude/references/projects/portfolio/contexte.md`. Session Linux : Node 22, ports 5510 à 5519 pour les agents, 5520 et plus pour le moniteur.
 
 ## Refonte spatiale
 
