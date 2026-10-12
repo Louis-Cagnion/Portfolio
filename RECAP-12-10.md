@@ -1,6 +1,6 @@
 # Récapitulatif du 12/10/2026 (session moniteur, Linux)
 
-S6 « Projets et fiche » avance : feuilles validées 11/16. Prochaine étape en tête de `todo.md`, détail dans `arbre-s6.md`.
+S6 « Projets et fiche » avance : feuilles validées 12/16 (C5 livrée, non validée). Prochaine étape en tête de `todo.md`, détail dans `arbre-s6.md`.
 
 ## Faits depuis le 11/10
 
@@ -18,3 +18,5 @@ S6 « Projets et fiche » avance : feuilles validées 11/16. Prochaine étape en
 - Hypothèses que le code de C4 et C5 doit satisfaire : `arbre-s6.md`, « Faits pour la suite » (DOM, boucle `requestAnimationFrame` repérée par sa pile d'appels, mouvement réduit, débordement des étiquettes invisibles au repos).
 - Moniteur sonnet/high, à réévaluer avant C4 (code d'animation dense) ; C5 relu par un `analyst` opus/high avant le commit si le diff est trop long.
 - Un agent peut laisser une boucle de lancements du banc sur un serveur expiré : vérifier les processus à chaque rapport.
+
+- S6.C5 (Windows, 16h14-16h45) : `projects-zoom.js` livré par un builder sonnet/high ; le banc navigateur du moniteur n'a rien rendu en 240 à 300 s (serveur `http.server` seul, aucun processus parasite trouvé), cause non élucidée ; l'agent l'avait joué sans incident. Détail dans `arbre-s6.md`.
