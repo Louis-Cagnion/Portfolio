@@ -1,8 +1,8 @@
 /*
 Projets : quatre systèmes stellaires (une planète par projet), liste des projets et fiche.
 Dessin dans projects-art.js, placement dans projects-layout.js, boucle d'animation dans
-projects-loop.js, fiche dans ui/sheet.js, styles dans css/projects.css. Le zoom sur un
-système (S6.C5) se branche dans `createZoom` ; au repos, un clic sur un soleil n'en fait rien.
+projects-loop.js, zoom sur un système dans projects-zoom.js, fiche dans ui/sheet.js, styles
+dans css/projects.css.
 Structure et mécanique de la maquette : docs/design/s6/mockup.js.
 */
 import { BREAKPOINTS, el, setRich, svg } from '../core/dom.js';
@@ -18,6 +18,7 @@ import {
 } from './projects-art.js';
 import { nearestPlanet } from './projects-layout.js';
 import { createLoop } from './projects-loop.js';
+import { createZoom } from './projects-zoom.js';
 
 const ARROW = '←';
 const HELD = ':hover, :focus-visible'; // une planète survolée ou focalisée cesse de tourner
@@ -239,19 +240,6 @@ function planetUnder(point, planets) {
 }
 
 /**
- * @brief Couture du zoom (S6.C5) : ce stub ne fait rien, projects-zoom.js le remplace.
- *
- * `enter(index)` est appelée à chaque clic ou touche sur un soleil, même zoomé : l'ignorer si
- * un zoom est déjà posé. `exit()` suit le bouton retour ; `step(dt)` avance les planètes du
- * système zoomé (`view.zoomedIndex`) avant leur rendu, dans la boucle unique de la rubrique.
- *
- * @returns {{ enter: Function, exit: Function, step: Function }} commandes du zoom
- */
-function createZoom() {
-  return { enter() {}, exit() {}, step() {} };
-}
-
-/**
  * @brief Monte la rubrique Projets : structure construite une fois, systèmes au premier
  *   `update`.
  *
@@ -317,7 +305,7 @@ export function mount(root) {
     setRich(parts.intro, system.intro, `projects.systems[${index}].intro`);
   };
 
-  const zoom = createZoom();
+  const zoom = createZoom({ parts, state, renderAll, showSystem });
 
   /** Branche les soleils (zoom), les planètes (fiche, remontée au survol) d'un dessin neuf. */
   const wire = ({ systems, planets }) => {

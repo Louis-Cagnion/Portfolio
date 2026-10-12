@@ -248,13 +248,24 @@ docs/design/s6/mockup.css). Chargée après css/journey.css par index.html.
   margin: 0 -12px;
 }
 
+/* Zoom : le plan zoomé rogne ce que la caméra ne montre pas (svg : overflow hidden). */
+.systems.zoomed {
+  overflow: hidden;
+}
+
 .sys {
   transition: opacity 0.6s; /* 0,6 s : valeur de la maquette, sans jeton */
 }
 
+/* Système masqué : invisible, hors de l'ordre de Tab et de l'arbre d'accessibilité une fois
+   le fondu fini (visibility), sans prise au pointeur ; il réapparaît dès la sortie. */
 .sys.dim {
   opacity: 0;
+  visibility: hidden;
   pointer-events: none;
+  transition:
+    opacity 0.6s,
+    visibility 0s 0.6s;
 }
 
 /* ───── En-tête du système zoomé : retour, nom et compte ───── */
