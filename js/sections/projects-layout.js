@@ -1,7 +1,8 @@
 /*
 Placement des planètes de la section Projets : module pur, sans accès au DOM.
 Source des valeurs : docs/design/s6/mockup.js (maquette validée).
-Le placement ne dépend que de l'identifiant du système et du nombre de blocs.
+Le placement ne dépend que de l'identifiant du système. La taille dépend du nombre de blocs,
+sauf à la Piscine, où elle dépend de la longueur du texte (décision du 12/10/2026).
 */
 
 const TAU = 2 * Math.PI;
@@ -10,6 +11,9 @@ const PISCINE_SIZE = 20;
 const SIZE_BASE = 7;
 const SIZE_PER_BLOCK = 1.4;
 const SIZE_BONUS_MAX = 6;
+// Piscine : du projet le plus court (taille d'un bloc) au plus long (taille maximale).
+const PISCINE_SIZE_MIN = SIZE_BASE + SIZE_PER_BLOCK;
+const PISCINE_SIZE_MAX = SIZE_BASE + SIZE_BONUS_MAX;
 const DEFAULT_HIT_RADIUS = 22;
 const DEFAULT_RADII = [72, 120, 168];
 const RING_COUNT_OTHER = DEFAULT_RADII.length;
@@ -41,6 +45,45 @@ export function planetSize(project) {
     throw new TypeError(`planetSize : blocks doit être un tableau, reçu ${String(blocks)}`);
   }
   return SIZE_BASE + Math.min(SIZE_BONUS_MAX, SIZE_PER_BLOCK * blocks.length);
+}
+
+/**
+ * Longueur du texte d'un projet, pour classer les planètes de la Piscine.
+ *
+ * @example textLength({ blocks: [{ type: 'list', items: ['ab', 'c'] }] }) -> 3
+ *
+ * @param {{ blocks: Array }} project Projet : blocs `text` (`html`) ou `list` (`items`).
+ *
+ * @returns {number} Nombre de caractères, sans séparateur entre les items.
+ */
+function textLength(project) {
+  return project.blocks
+    .map(block => (block.type === 'list' ? block.items.join('') : block.html).length)
+    .reduce((total, length) => total + length, 0);
+}
+
+/**
+ * Tailles des planètes de la Piscine, selon le rang de longueur du texte.
+ *
+ * @example piscineSizes([{ blocks: [] }, { blocks: [{ html: 'ab' }] }]) -> [8.4, 13]
+ *
+ * @param {{ blocks: Array }[]} projects Projets de la Piscine.
+ *
+ * @returns {number[]} Une taille par projet, dans l'ordre des projets, de 8,4 à 13.
+ */
+function piscineSizes(projects) {
+  const count = projects.length;
+  const range = PISCINE_SIZE_MAX - PISCINE_SIZE_MIN;
+  const ranked = projects
+    .map((project, index) => ({ index, length: textLength(project) }))
+    .sort((a, b) => a.length - b.length || a.index - b.index);
+  const sizes = [];
+  ranked.forEach(({ index }, rank) => {
+    sizes[index] = count > 1
+      ? PISCINE_SIZE_MIN + (range * rank) / (count - 1)
+      : PISCINE_SIZE_MIN;
+  });
+  return sizes;
 }
 
 /**
@@ -119,6 +162,7 @@ function baseSlots(system, phone, maxRadius) {
 
 /**
  * Emplacement de chaque planète d'un système, dans l'ordre des projets.
+ * Taille : `planetSize`, sauf à la Piscine (rang de longueur du texte).
  *
  * @example planetSlots(system, { phone: false })[0] -> { id, ring: 0, radius: 72, ... }
  *
@@ -132,12 +176,13 @@ function baseSlots(system, phone, maxRadius) {
  */
 export function planetSlots(system, { phone, systemIndex = 0, maxRadius } = {}) {
   const slots = baseSlots(system, phone, maxRadius);
+  const piscine = system.id === PISCINE_ID ? piscineSizes(system.projects) : null;
   return system.projects.map((project, j) => ({
     id: project.id,
     ring: slots[j].ring,
     radius: slots[j].radius,
     angle: slots[j].angle + systemIndex,
-    size: planetSize(project),
+    size: piscine ? piscine[j] : planetSize(project),
   }));
 }
 
