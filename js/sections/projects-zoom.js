@@ -293,7 +293,7 @@ export function createZoom({ parts, state, renderAll, showSystem }) {
   };
 
   document.addEventListener('keydown', (event) => {
-    if (event.key !== 'Escape' || state.view.zoomedIndex < 0) return;
+    if (event.defaultPrevented || event.key !== 'Escape' || state.view.zoomedIndex < 0) return;
     if (!layout.parentElement?.classList.contains('on')) return;
     if (!initSheet(document).isOpen()) exit();
   });
