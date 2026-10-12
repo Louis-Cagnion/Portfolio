@@ -1,4 +1,4 @@
-> Prochaine tâche : S6.E3 de `arbre-s6.md` (Louis regarde Projets dans Chrome), puis clôture de S6 par le moniteur, puis S8, S9 et S10 jusqu'à une V1 présentable sur ordinateur et mobile, puis le pré-mortem. Contexte des agents : `~/.claude/references/projects/portfolio/contexte.md`. Session Linux : Node 22, ports 5510 à 5519 pour les agents, 5520 et plus pour le moniteur.
+> Prochaine tâche : S6.F1a de `arbre-s6.md` (tester : tailles de la Piscine par rang de texte), puis F1b, F2a (planètes inertes au repos, système entier sélectionnable), F2b, F3, puis S6.E3 (Louis dans Chrome), clôture de S6, S8, S9 et S10 jusqu'à une V1 présentable sur ordinateur et mobile, puis le pré-mortem. Contexte des agents : `~/.claude/references/projects/portfolio/contexte.md`. Session Linux : Node 22, ports 5510 à 5519 pour les agents, 5520 et plus pour le moniteur.
 
 ## Refonte spatiale
 
