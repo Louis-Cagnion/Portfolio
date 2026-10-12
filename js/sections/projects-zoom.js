@@ -120,7 +120,7 @@ function columnWidth(plan) {
  *   commandes du zoom
  */
 export function createZoom({ parts, state, renderAll, showSystem }) {
-  const { plan, layout } = parts;
+  const { plan, layout, head } = parts;
   const camera = makeCamera(plan);
   let run = null; // animation en cours : { kind, built, system, planets, shift, ... }
   let hovered = false;
@@ -265,6 +265,7 @@ export function createZoom({ parts, state, renderAll, showSystem }) {
     if (view.zoomedIndex < 0 || run) return;
     const system = built.systems[view.zoomedIndex];
     layout.classList.remove('zfocus');
+    if (head.contains(document.activeElement)) system.sun.focus({ preventScroll: true });
     for (const each of built.systems) each.g.classList.remove('on', 'dim');
     setHeight(plan, (columnWidth(plan) * built.height) / built.width);
     start('out', system, planetsOf(system.index));

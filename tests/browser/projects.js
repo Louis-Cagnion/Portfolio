@@ -37,9 +37,11 @@ import {
   planetEls,
   planetOf,
   plain,
+  press,
   pressEscape,
   projectsData,
   rest,
+  sleep,
   suns,
   sunOf,
   visibleText,
@@ -55,6 +57,7 @@ const PHONE_MAX = 430;
 const TOLERANCE = 2;
 const GRID_TOLERANCE = 8; // px d'écart admis entre soleils alignés
 const LANGS = ['fr', 'en'];
+const BACK_CHECK_MS = 100; // relevé du focus, bien avant la fin de la sortie (900 ms)
 
 const uncaught = (site) => site.uncaught.map((e) => `exception non rattrapée : ${e}`);
 const rect = (el) => el.getBoundingClientRect();
@@ -344,6 +347,25 @@ async function systemFlow(site, ctx, text, systems, index) {
   });
 }
 
+/** Bouton retour (clic ou Entrée) : le focus passe au soleil dès le retrait de l'en-tête. */
+async function backFocusTests(site, ctx, text, systems) {
+  for (const how of ['clic', 'Entrée'])
+    await test(ctx, `retour (${how}) : focus au soleil avant la fin de sortie`, async () => {
+      const sun = sunOf(site, text, systems[0]);
+      if (!sun) return ['soleil introuvable'];
+      await zoomIn(site, sun, 'clic');
+      const { back } = parts(site);
+      back.focus();
+      if (how === 'Entrée') press(site, back, 'Enter');
+      back.click();
+      await sleep(BACK_CHECK_MS);
+      const active = site.doc.activeElement;
+      const problems = active === sun ? [] : [`focus sur ${describe(active)} après le retour`];
+      await rest(site);
+      return problems;
+    });
+}
+
 /** Entrée, Espace et clic zooment ; une autre touche ne zoome pas. */
 async function triggerTests(site, ctx, text, systems) {
   const system = systems[0];
@@ -384,6 +406,7 @@ async function runSite(width, lang, datas, mainWidth) {
     await layoutTests(site, ctx, 'repos');
     await listTests(site, ctx, text, systems);
     await triggerTests(site, ctx, text, systems);
+    await backFocusTests(site, ctx, text, systems);
     for (let index = 0; index < systems.length; index++)
       await systemFlow(site, ctx, text, systems, index);
     await runSwitch(site, ctx, lang, datas);

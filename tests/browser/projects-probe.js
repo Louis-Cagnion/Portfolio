@@ -175,7 +175,7 @@ export function visibleText(site, root) {
 // ---------- Gestes et attentes ----------
 
 /** Frappe `name` (keydown) sur `el`, comme le ferait le clavier. */
-function press(site, el, name) {
+export function press(site, el, name) {
   const code = name === ' ' ? 'Space' : name;
   const event = new site.win.KeyboardEvent('keydown', {
     key: name,
