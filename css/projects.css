@@ -297,29 +297,6 @@ docs/design/s6/mockup.css). Chargée après css/journey.css par index.html.
     visibility 0s;
 }
 
-.sys-head .back {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  border: 1px solid var(--line);
-  background: none;
-  color: var(--text);
-  font: 500 0.9rem var(--sans);
-  padding: 8px 14px;
-  cursor: pointer;
-}
-
-.sys-head .back:hover,
-.sys-head .back:focus-visible {
-  border-color: var(--accent);
-}
-
-.sys-head .ctitle {
-  font-family: var(--display);
-  font-size: 1.05rem;
-  margin: 0;
-}
-
 .sys-head .count {
   font-family: var(--mono);
   color: var(--faint);

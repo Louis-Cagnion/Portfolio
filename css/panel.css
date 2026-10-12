@@ -1,0 +1,71 @@
+/*
+Règles de panneau partagées : flèches (fiche et scène du Parcours, fiche des compétences),
+bouton retour et titre d'en-tête (Projets, Compétences), rotations des corps célestes.
+Chargée après css/layout.css et avant les feuilles de rubrique, qui gardent la priorité.
+*/
+
+/* ───── Flèches ───── */
+.arrows {
+  display: flex;
+  gap: 8px;
+  flex: none;
+}
+
+:is(.arrows, .stage-arrows) button {
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--void) 60%, transparent);
+  color: var(--text);
+  font-size: 1.05rem;
+  cursor: pointer;
+}
+
+@media (hover: hover) {
+  :is(.arrows, .stage-arrows) button:hover:not(:disabled) {
+    border-color: var(--accent);
+  }
+}
+
+:is(.arrows, .stage-arrows) button:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+/* ───── Bouton retour et titre ───── */
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--line);
+  background: none;
+  color: var(--text);
+  font: 500 0.9rem var(--sans);
+  padding: 8px 14px;
+  cursor: pointer;
+}
+
+.back:hover,
+.back:focus-visible {
+  border-color: var(--accent);
+}
+
+.ctitle {
+  font-family: var(--display);
+  font-size: 1.05rem;
+  margin: 0;
+}
+
+/* ───── Corps célestes ───── */
+@keyframes body-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes body-drift {
+  50% {
+    transform: rotate(8deg) scale(1.06);
+    opacity: 0.85;
+  }
+}

@@ -1,8 +1,8 @@
 /*
 Parcours : scène du trajet (tracé, escales, vaisseau), fiche de l'escale et flèches.
 Valeurs : maquette validée (docs/design/prototype/prototype.html:98-141 et 303-331). Les
-règles de fiche (.detail, .when, .count, .arrows) sont limitées à #journey : la fiche des
-compétences (S8) les reprendra. Chargée après css/layout.css par index.html.
+règles de fiche (.detail, .when, .count) sont limitées à #journey ; flèches et rotations des
+corps sont dans css/panel.css. Chargée après css/layout.css par index.html.
 */
 
 /* ───── Fiche de l'escale ───── */
@@ -49,34 +49,6 @@ compétences (S8) les reprendra. Chargée après css/layout.css par index.html.
 
 #journey .detail .body {
   color: var(--dim);
-}
-
-/* ───── Flèches de la fiche (bureau) et de la scène (téléphone) ───── */
-#journey .arrows {
-  display: flex;
-  gap: 8px;
-  flex: none;
-}
-
-#journey :is(.arrows, .stage-arrows) button {
-  width: 44px;
-  height: 44px;
-  border: 1px solid var(--line);
-  background: color-mix(in srgb, var(--void) 60%, transparent);
-  color: var(--text);
-  font-size: 1.05rem;
-  cursor: pointer;
-}
-
-@media (hover: hover) {
-  #journey :is(.arrows, .stage-arrows) button:hover:not(:disabled) {
-    border-color: var(--accent);
-  }
-}
-
-#journey :is(.arrows, .stage-arrows) button:disabled {
-  opacity: 0.3;
-  cursor: default;
 }
 
 /* ───── Scène : tracé pointillé, part parcourue en or ───── */
@@ -193,19 +165,6 @@ compétences (S8) les reprendra. Chargée après css/layout.css par index.html.
   transform-box: fill-box;
   transform-origin: center;
   animation: body-drift 9s ease-in-out infinite;
-}
-
-@keyframes body-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes body-drift {
-  50% {
-    transform: rotate(8deg) scale(1.06);
-    opacity: 0.85;
-  }
 }
 
 /* ───── Vaisseau et traînée ───── */
