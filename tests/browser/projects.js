@@ -366,6 +366,48 @@ async function backFocusTests(site, ctx, text, systems) {
     });
 }
 
+/** Planètes du groupe de `planet`, dans l'ordre du DOM. */
+const siblingsOf = (planet) => [...planet.parentNode.children];
+
+/** `mouseenter` : remonte une planète non focalisée, laisse en place la planète focalisée. */
+async function raiseTests(site, ctx, text, systems) {
+  const first = () => planetOf(site, systems[0].projects[0]);
+  const enter = (planet) => planet.dispatchEvent(new site.win.MouseEvent('mouseenter'));
+  const zoom = async () => {
+    const sun = sunOf(site, text, systems[0]);
+    if (!sun || !first()) return false;
+    await zoomIn(site, sun, 'clic');
+    return true;
+  };
+  await test(ctx, 'mouseenter sur la planète focalisée : focus et ordre gardés', async () => {
+    if (!await zoom()) return ['soleil ou planète introuvable'];
+    const planet = first();
+    planet.focus();
+    const before = siblingsOf(planet).indexOf(planet);
+    enter(planet);
+    const problems = [];
+    if (site.doc.activeElement !== planet)
+      problems.push(`focus sur ${describe(site.doc.activeElement)} après mouseenter`);
+    if (siblingsOf(planet).indexOf(planet) !== before)
+      problems.push('planète focalisée déplacée dans son groupe par mouseenter');
+    return problems;
+  });
+  const raised = 'mouseenter sur une planète non focalisée : remontée en dernier';
+  await test(ctx, raised, async () => {
+    const planet = first();
+    if (!planet) return ['planète introuvable'];
+    site.doc.activeElement?.blur();
+    enter(planet);
+    const problems = [];
+    if (siblingsOf(planet).length > 1 && planet.parentNode.lastElementChild !== planet)
+      problems.push('planète non remontée en dernier par mouseenter');
+    planet.dispatchEvent(new site.win.MouseEvent('mouseleave'));
+    pressEscape(site);
+    await rest(site);
+    return [...problems, ...isZoomed(site) ? ['zoom gardé après Échap'] : []];
+  });
+}
+
 /** Entrée, Espace et clic zooment ; une autre touche ne zoome pas. */
 async function triggerTests(site, ctx, text, systems) {
   const system = systems[0];
@@ -407,6 +449,7 @@ async function runSite(width, lang, datas, mainWidth) {
     await listTests(site, ctx, text, systems);
     await triggerTests(site, ctx, text, systems);
     await backFocusTests(site, ctx, text, systems);
+    await raiseTests(site, ctx, text, systems);
     for (let index = 0; index < systems.length; index++)
       await systemFlow(site, ctx, text, systems, index);
     await runSwitch(site, ctx, lang, datas);

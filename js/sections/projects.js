@@ -200,6 +200,7 @@ function retext(built, fresh) {
  */
 function bindRaise(node, next) {
   node.addEventListener('mouseenter', () => {
+    if (document.activeElement === node) return;
     if (node.parentNode.lastElementChild !== node) node.parentNode.append(node);
   });
   node.addEventListener('mouseleave', () => {
