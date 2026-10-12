@@ -1,6 +1,6 @@
 # Récapitulatif du 12/10/2026 (session moniteur, Linux)
 
-S6 « Projets et fiche » avance : feuilles validées 12/16 (C5 livrée, non validée). Prochaine étape en tête de `todo.md`, détail dans `arbre-s6.md`.
+S6 « Projets et fiche » avance : feuilles validées 13/16 (C5 validée). Prochaine étape en tête de `todo.md`, détail dans `arbre-s6.md`.
 
 ## Faits depuis le 11/10
 
@@ -19,4 +19,4 @@ S6 « Projets et fiche » avance : feuilles validées 12/16 (C5 livrée, non val
 - Moniteur sonnet/high, à réévaluer avant C4 (code d'animation dense) ; C5 relu par un `analyst` opus/high avant le commit si le diff est trop long.
 - Un agent peut laisser une boucle de lancements du banc sur un serveur expiré : vérifier les processus à chaque rapport.
 
-- S6.C5 (Windows, 16h14-16h45) : `projects-zoom.js` livré par un builder sonnet/high ; le banc navigateur du moniteur n'a rien rendu en 240 à 300 s (serveur `http.server` seul, aucun processus parasite trouvé), cause non élucidée ; l'agent l'avait joué sans incident. Détail dans `arbre-s6.md`.
+- S6.C5 : `projects-zoom.js` livré par un builder sonnet/high (Windows), validé le 12/10 sur Linux : `rest()` du banc corrigé par un tester haiku/medium, groupe `projets` vert aux cinq largeurs, zoom essayé dans Chrome. Le blocage du banc sur Windows (aucun rendu en 240 à 300 s) ne s'est pas reproduit sur Linux. Détail dans `arbre-s6.md`.
