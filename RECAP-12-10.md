@@ -1,22 +1,16 @@
 # Récapitulatif du 12/10/2026 (session moniteur, Linux)
 
-S6 « Projets et fiche » avance : feuilles validées 22/23 (toutes sauf E3 de Louis ; crash-test E2 reporté au pré-mortem). Prochaine étape en tête de `todo.md`, détail dans `arbre-s6.md`.
+S6 « Projets et fiche » est livrée, il ne reste que le regard de Louis (S6.E3). S8 « Compétences » est lancée : arbre de 17 feuilles dans `arbre-s8.md`, 6 validées. Prochaine étape en tête de `todo.md`.
 
-## Faits depuis le 11/10
+## Faits de la journée
 
-- S7 « Parcours » close et S5b « Contenu indisponible » close (décisions de Louis dans `docs/design/plan.md`). Objectif : une V1 présentable sur ordinateur et téléphone (S6, S8, S9, S10), puis le pré-mortem.
-- S6.B3 : groupe navigateur `projets` (5 fichiers `tests/browser/projects*.js`, 481 cas sur cinq largeurs, un scénario par largeur). Rouge sur le site actuel (4 réussis, 103 échecs à 390 px), vert sur un module de référence du tester, 10 mutations détectées.
-- S6.C1 : `js/ui/sheet.js` et `css/projects.css` (fiche) ; groupe `fiche` à 98 réussis.
-- S6.C2 : `js/sections/projects-layout.js` (pur) ; 50 tests unitaires réussis, Node 345 réussis et 24 rouges (S8 et S9).
-- S6.C3 (reprise le 12/10 sur Windows) : `js/sections/projects-art.js` et règles CSS des soleils et planètes dans `css/projects.css`, rendu identique à la maquette (comparaison chiffrée à 1280 et 390 px, Piscine à 320, 390 et 430 px sans chevauchement d'étiquettes).
-
-- S6.C4 (Windows, 12/10) : `js/sections/projects.js` et `projects-loop.js` (rubrique au repos : plan des quatre systèmes, liste, fiche, boucle unique, bascule de langue), `css/projects.css` complété ; groupe `projets` à 118 réussis (les rouges tiennent au zoom, C5), `fiche` 98 après réécriture de 3 cas dans `tests/browser/sheet-focus.js`. Feuilles validées 12/16.
-- Demande de Louis (pré-mortem, `todo.md`) : projets triés par catégorie avec outil de filtre.
+- S6 : zoom (C5), revue indépendante (D1) puis trois correctifs de focus et d'Échap (D2 à D4), point de contrôle (E1), puis les trois décisions de Louis (tailles de la Piscine par rang de longueur de texte, système entier sélectionnable, planètes inertes au repos) livrées en F1 à F3. Suites après S6 : Node 359 réussis, navigateur complet 1979 réussis et 66 rouges du seul groupe `Contact` (S9). Le crash-test E2 est reporté au pré-mortem.
+- Règle ajoutée aux commandes : toute feuille ou tout constat qui n'est pas pour la V1 va au pré-mortem, jamais dans l'arbre de la V1.
+- S8 : cadrage par un analyste, maquettes de choix (A1, 56 vues dans `docs/design/s8/`), tests des fonctions pures (B1) et du groupe navigateur au repos (B2), module `skills-layout.js` (C1), clé `skills.legendItem` (C0), CSS partagé `css/panel.css` (C2). Node : 410 tests, 407 réussis, 3 rouges (`contact`, S9).
 
 ## À savoir pour la reprise
 
-- Hypothèses que le code de C4 et C5 doit satisfaire : `arbre-s6.md`, « Faits pour la suite » (DOM, boucle `requestAnimationFrame` repérée par sa pile d'appels, mouvement réduit, débordement des étiquettes invisibles au repos).
-- Moniteur sonnet/high, à réévaluer avant C4 (code d'animation dense) ; C5 relu par un `analyst` opus/high avant le commit si le diff est trop long.
-- Un agent peut laisser une boucle de lancements du banc sur un serveur expiré : vérifier les processus à chaque rapport.
-
-- S6.C5 : `projects-zoom.js` livré par un builder sonnet/high (Windows), validé le 12/10 sur Linux : `rest()` du banc corrigé par un tester haiku/medium, groupe `projets` vert aux cinq largeurs, zoom essayé dans Chrome. Le blocage du banc sur Windows (aucun rendu en 240 à 300 s) ne s'est pas reproduit sur Linux. Détail dans `arbre-s6.md`.
+- Louis voit les maquettes et Projets le 13/10 : S6.E3 (Projets dans Chrome, rechargement forcé car le cache du navigateur garde d'anciens modules) et S8.A2 (choix sur `docs/design/s8/index.html`, à servir depuis la racine du dépôt, jamais en `file://`).
+- S8.C3 (dessin des astres) est à lancer : un premier lancement a été arrêté à 22 h, rien n'est resté dans le dépôt. Son brief doit citer les bonnes lignes de la maquette : `GALAXY_ARMS` `prototype.template.html:778-788`, `DEFS` `:768`, `bodyMarkup` `:789-794`, `bodyIcon` `:795`.
+- Un lancement du banc à une seule largeur (`?widths=<w>`) rejoue les cas de la largeur principale : ne jamais additionner de tels lancements pour prévoir le total d'un lancement complet.
+- Un agent qui s'arrête peut laisser un serveur ou un Chrome : vérifier les processus à chaque rapport (arrêt par PID exact).
