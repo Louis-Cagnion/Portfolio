@@ -1,6 +1,6 @@
 # Récapitulatif du 12/10/2026 (session moniteur, Linux)
 
-S6 « Projets et fiche » avance : feuilles validées 13/16 (C5 validée). Prochaine étape en tête de `todo.md`, détail dans `arbre-s6.md`.
+S6 « Projets et fiche » avance : feuilles validées 17/18 (C5, D1 à D4 et E1 validées ; E3 de Louis restante, crash-test E2 reporté au pré-mortem). Prochaine étape en tête de `todo.md`, détail dans `arbre-s6.md`.
 
 ## Faits depuis le 11/10
 
