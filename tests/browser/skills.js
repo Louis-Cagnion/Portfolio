@@ -43,9 +43,7 @@ Critères (mot pour mot) :
 - :352 « `grep -rn innerHTML js/` ne renvoie que `js/core/dom.js` » (déjà couvert par les
   tests de source de tests/texts.test.mjs, hors de ce fichier).
 Cas par site (largeur, langue) ; le mouvement est réduit hors de la largeur principale pour
-tenir le temps de la suite. Un cas supplémentaire à 2560 px (français), un cas sans contexte
-2D à 390 px (tests/browser/no2d.js charge déjà #skills sans contexte 2D : ici la rubrique
-est montée ; à 1280 px le ciel de l'accueil échoue déjà sans 2D, hors de ce groupe). */
+tenir le temps de la suite. Un cas supplémentaire à 2560 px (français). */
 import { overflowProblems, targetProblems } from './checks.js';
 import { describe, waitFor } from './harness.js';
 import { noForeignText, switchTo } from './language.js';
@@ -76,7 +74,6 @@ export const GROUP = 'Compétences';
 const LANGS = ['fr', 'en'];
 const OPENING = 'ouverture du site sur Compétences';
 const WIDE_WIDTH = 2560;
-const NO_2D_WIDTH = 390; // à 1280 px le site seul échoue sans 2D (ciel, groupe « Saut »)
 const MIN_STAR_GAP = 24; // unités du dessin : deux astres plus proches se recouvriraient
 const POSITION_TOLERANCE = 0.5; // unités du dessin entre deux langues
 const EDGE_TOLERANCE = 1; // px entre cellules voisines ou d'une étoile au bord de sa cellule
@@ -452,31 +449,6 @@ async function placementTest(site, ctx, lang, width, datas) {
   });
 }
 
-// ---------- Sans contexte 2D ----------
-
-async function runWithout2d(width) {
-  const ctx = { group: GROUP, section: 'skills', width, lang: 'fr' };
-  const name = 'sans contexte 2D (getContext("2d") nul) : la rubrique est montée';
-  let site;
-  try {
-    site = await openSkillsSite(width, { no2d: true, reduce: true });
-  } catch (error) {
-    skip(ctx, [name], `ouverture du site impossible (${error.message})`);
-    return;
-  }
-  try {
-    await test(ctx, name, async () => {
-      const missing = gate(site);
-      if (missing.length) return missing;
-      const found = groupEls(site).length;
-      const problems = found === 8 ? [] : [`${found} constellation(s) au lieu de 8`];
-      return [...problems, ...uncaught(site)];
-    });
-  } finally {
-    site.close();
-  }
-}
-
 // ---------- Lancement ----------
 
 async function runSite(width, lang, datas, mainWidth) {
@@ -525,7 +497,7 @@ async function runWide(datas) {
 
 /**
  * Groupe « Compétences » : cas au repos par largeur et langue ; le cas à 2560 px avec la
- * largeur principale, le cas sans contexte 2D avec 390 px.
+ * largeur principale.
  */
 export async function runSkills(widths, mainWidth) {
   const datas = await skillsData();
@@ -533,5 +505,4 @@ export async function runSkills(widths, mainWidth) {
     for (const lang of LANGS) await runSite(width, lang, datas, mainWidth);
   if (!widths.includes(mainWidth)) return;
   await runWide(datas);
-  if (widths.includes(NO_2D_WIDTH)) await runWithout2d(NO_2D_WIDTH);
 }

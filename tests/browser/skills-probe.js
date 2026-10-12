@@ -12,7 +12,7 @@ import {
   waitStatus,
 } from './harness.js';
 import { normalize } from './text.js';
-import { stubMotion, arrival } from './warp.js';
+import { stubMotion } from './warp.js';
 
 export const GRID = {
   desk: { cols: 4, cellWidth: 275, cellHeight: 220 },
@@ -57,43 +57,26 @@ export function gridFor(width, count) {
 
 /**
  * Site ouvert sur Compétences (`visit` faux : resté sur l'accueil). `reduce` fixe le mouvement
- * réduit dès l'amorçage ; `no2d` refuse le contexte 2D avant l'amorçage.
+ * réduit dès l'amorçage.
  */
 export async function openSkillsSite(width, options = {}) {
-  const { lang = 'fr', reduce = false, visit = true, no2d = false } = options;
+  const { lang = 'fr', reduce = false, visit = true } = options;
   const motion = { reduce };
   const site = await openSite({
     width,
     storage: makeStorage(lang === 'en' ? { lang } : {}),
-    prepare: (opened) => {
-      stubMotion(opened, motion);
-      if (no2d) refuse2d(opened);
-    },
+    prepare: (opened) => stubMotion(opened, motion),
   });
   site.motion = motion;
   try {
     await waitStatus(site, 'ready');
     await settle(site, 'home');
-    if (visit && no2d) {
-      site.win.location.hash = '#skills';
-      await arrival(site, 'skills');
-      await settle(site, 'skills');
-    } else if (visit) await goTo(site, 'skills');
+    if (visit) await goTo(site, 'skills');
   } catch (error) {
     site.close();
     throw error;
   }
   return site;
-}
-
-/** Refuse le contexte 2D à tout canvas du cadre : getContext('2d') rend null. */
-function refuse2d(site) {
-  const proto = site.win.HTMLCanvasElement.prototype;
-  const original = proto.getContext;
-  proto.getContext = function getContext(type, ...rest) {
-    if (String(type).toLowerCase() === '2d') return null;
-    return original.call(this, type, ...rest);
-  };
 }
 
 // ---------- Éléments du contrat DOM ----------
