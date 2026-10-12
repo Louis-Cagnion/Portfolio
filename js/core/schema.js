@@ -188,6 +188,7 @@ const LOCALE = record({
     legend: label,
     levels: byLevel,
     bodies: byLevel,
+    legendItem: label,
     link,
     groups: list(record({
       id,

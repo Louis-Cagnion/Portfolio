@@ -80,6 +80,7 @@
       "advanced": "Galaxie", "intermediate": "Nébuleuse",
       "beginner": "Géante jaune", "unknown": "Étoile en fusion"
     },
+    "legendItem": "{body} : {level}",
     "link": { "intro": "Mes notes :", "label": "Devpedia", "href": "https://example.com/dev" },
     "groups": [
       {

@@ -211,6 +211,7 @@
       "beginner": "Géante jaune",
       "unknown": "Étoile en fusion"
     },
+    "legendItem": "{body} : {level}",
     "link": {
       "intro": "Pour une vue plus complète et détaillée de mes connaissances en développement, vous pouvez consulter",
       "label": "Devpedia",

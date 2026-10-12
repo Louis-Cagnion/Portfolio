@@ -211,6 +211,7 @@
       "beginner": "Yellow giant",
       "unknown": "Molten star"
     },
+    "legendItem": "{body}: {level}",
     "link": {
       "intro": "For a more complete and detailed view of my development knowledge, you can check out",
       "label": "Devpedia",
