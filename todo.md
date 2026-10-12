@@ -1,4 +1,4 @@
-> Prochaine tâche : S8.A1 de `arbre-s8.md` (builder : maquettes pour le choix de Louis), puis B1, C1, B2, C0, C2 à C6 sans attendre S6.E3 (Louis regarde Projets dans Chrome après un rechargement forcé, puis clôture de S6 par le moniteur), puis S9 et S10 jusqu'à une V1 présentable sur ordinateur et mobile, puis le pré-mortem. Contexte des agents : `~/.claude/references/projects/portfolio/contexte.md`. Session Linux : Node 22, ports 5510 à 5519 pour les agents, 5520 et plus pour le moniteur.
+> Prochaine tâche : S8.B1 de `arbre-s8.md` (tester : fonctions pures de `skills-layout.js`), puis C1, B2, C0, C2 à C6 sans attendre S6.E3 (Louis regarde Projets dans Chrome après un rechargement forcé, puis clôture de S6 par le moniteur), puis S9 et S10 jusqu'à une V1 présentable sur ordinateur et mobile, puis le pré-mortem. Contexte des agents : `~/.claude/references/projects/portfolio/contexte.md`. Session Linux : Node 22, ports 5510 à 5519 pour les agents, 5520 et plus pour le moniteur.
 
 ## Refonte spatiale
 

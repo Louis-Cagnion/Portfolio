@@ -1,0 +1,284 @@
+/* Maquette S8 : valeurs reprises telles quelles de docs/design/prototype */
+:root {
+    --void: #070d1f;
+    --panel: #0f1a38;
+    --line: rgba(220, 230, 255, 0.13);
+    --text: #e6ecff;
+    --dim: #9aa7cc;
+    --faint: #66739c;
+    --accent: #e8b45a;
+    --accent-ink: #070d1f;
+    --accent-soft: rgba(232, 180, 90, 0.15);
+    --live: #8fe3bf;
+    --display: "Michroma", system-ui, sans-serif;
+    --sans: "IBM Plex Sans", system-ui, sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, monospace;
+    --bar-h: 61px;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+html { scrollbar-gutter: stable; }
+body {
+    background: var(--void);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    overflow-x: clip;
+}
+:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+}
+.bar {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    height: var(--bar-h);
+    padding: 12px clamp(16px, 4vw, 48px);
+    background: color-mix(in srgb, var(--void) 82%, transparent);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+}
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--display);
+    font-size: 0.82rem;
+    letter-spacing: 0.03em;
+}
+.brand i {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--live);
+    box-shadow: 0 0 10px var(--live);
+}
+.nav {
+    display: flex;
+    gap: 4px;
+    padding: 4px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+}
+.nav button {
+    border: 0;
+    background: none;
+    color: var(--dim);
+    font: 500 0.92rem var(--sans);
+    padding: 8px 16px;
+    border-radius: 999px;
+    cursor: pointer;
+}
+.nav button:hover { color: var(--text); }
+.nav button[aria-current="page"] {
+    color: var(--accent-ink);
+    background: var(--accent);
+}
+.tabbar { display: none; }
+main {
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 clamp(16px, 4vw, 48px) 120px;
+}
+.view { display: none; }
+.view.on { display: block; }
+.view.enter { animation: viewIn 0.55s cubic-bezier(.2, .8, .2, 1) both; }
+@keyframes viewIn {
+    from { opacity: 0; transform: scale(0.55); }
+}
+h2 {
+    font-family: var(--display);
+    font-weight: 400;
+    font-size: clamp(1.3rem, 3vw, 1.9rem);
+    margin: 56px 0 8px;
+}
+h2:focus { outline: none; }
+.lede {
+    color: var(--dim);
+    margin: 0 0 28px;
+    max-width: 60ch;
+}
+.hud {
+    position: relative;
+    border: 1px solid var(--line);
+    background: linear-gradient(
+        var(--panel),
+        color-mix(in srgb, var(--panel) 40%, transparent)
+    );
+}
+.hud::before, .hud::after {
+    content: "";
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border: 2px solid var(--accent);
+    pointer-events: none;
+}
+.hud::before {
+    top: -2px;
+    left: -2px;
+    border-right: 0;
+    border-bottom: 0;
+}
+.hud::after {
+    bottom: -2px;
+    right: -2px;
+    border-left: 0;
+    border-top: 0;
+}
+.count {
+    font-family: var(--mono);
+    color: var(--faint);
+    font-size: 0.8rem;
+    margin-left: 10px;
+}
+.back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--line);
+    background: none;
+    color: var(--text);
+    font: 500 0.9rem var(--sans);
+    padding: 8px 14px;
+    cursor: pointer;
+}
+.back:hover { border-color: var(--accent); }
+.ctitle {
+    font-family: var(--display);
+    font-size: 1.05rem;
+    margin: 18px 0 12px;
+}
+.chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0 0 18px;
+}
+.chips button {
+    border: 1px solid var(--line);
+    background: none;
+    color: var(--dim);
+    font: 500 0.88rem var(--sans);
+    padding: 6px 12px;
+    cursor: pointer;
+}
+.chips button:hover {
+    color: var(--text);
+    border-color: color-mix(in srgb, var(--accent) 50%, transparent);
+}
+.chips button[aria-pressed="true"] {
+    color: var(--accent-ink);
+    background: var(--accent);
+    border-color: var(--accent);
+}
+.detail { padding: 26px 28px; }
+.detail header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+}
+.detail h3 {
+    font-family: var(--display);
+    font-weight: 400;
+    font-size: 1.1rem;
+    margin: 0 0 4px;
+    line-height: 1.4;
+}
+.detail .body {
+    max-width: 68ch;
+    color: var(--dim);
+}
+.arrows {
+    display: flex;
+    gap: 8px;
+    flex: none;
+}
+.arrows button {
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--line);
+    background: color-mix(in srgb, var(--void) 60%, transparent);
+    color: var(--text);
+    font-size: 1.05rem;
+    cursor: pointer;
+}
+.arrows button:hover:not(:disabled) { border-color: var(--accent); }
+.arrows button:disabled {
+    opacity: 0.3;
+    cursor: default;
+}
+.body a, .lede a, .devpedia a {
+    color: var(--accent);
+    text-decoration: none;
+    background: linear-gradient(currentColor, currentColor) 0 100% / 100% 1px no-repeat;
+    padding-bottom: 1px;
+    transition: background-size 0.25s, color 0.2s;
+}
+.body a:hover, .body a:focus-visible, .lede a:hover,
+.devpedia a:hover, .devpedia a:focus-visible {
+    background-size: 100% 2px;
+    color: #f6d08f;
+}
+.body strong { color: var(--text); font-weight: 600; }
+.devpedia {
+    margin: 18px 0 0;
+    color: var(--dim);
+    font-size: 0.95rem;
+    max-width: 68ch;
+}
+.lede + .devpedia { margin: -14px 0 28px; }
+.legend + .devpedia { margin-top: 22px; }
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.tags li {
+    font: 400 0.8rem var(--mono);
+    padding: 3px 8px;
+    border: 1px solid var(--line);
+}
+@media (max-width: 880px) {
+    .nav { display: none; }
+    .detail { padding: 22px 18px; }
+    .tabbar {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        position: fixed;
+        left: 10px;
+        right: 10px;
+        bottom: 10px;
+        z-index: 6;
+        padding: 6px;
+        border-radius: 22px;
+        border: 1px solid var(--line);
+        background: color-mix(in srgb, var(--panel) 90%, transparent);
+        backdrop-filter: blur(14px);
+    }
+    .tabbar button {
+        border: 0;
+        background: none;
+        color: var(--dim);
+        font: 500 0.78rem var(--sans);
+        padding: 12px 0;
+        border-radius: 16px;
+        cursor: pointer;
+    }
+    .tabbar button[aria-current="page"] {
+        color: var(--accent);
+        background: var(--accent-soft);
+    }
+}
+[data-instant] * { transition: none !important; }
