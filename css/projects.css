@@ -172,6 +172,10 @@ docs/design/s6/mockup.css). Chargée après css/journey.css par index.html.
 }
 
 .planet {
+  cursor: zoom-in; /* au repos, comme le soleil : un clic zoome le système */
+}
+
+.sys.on .planet {
   cursor: pointer;
 }
 

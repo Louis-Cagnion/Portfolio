@@ -508,7 +508,7 @@
   },
   "projects": {
     "title": "My projects",
-    "lede": "Four star systems, one per world: each orbiting planet is a project. Select a system to fly closer, or a planet to open its project directly.",
+    "lede": "Four star systems, one per world: each orbiting planet is a project. Select a system to fly closer, then a planet to open its project.",
     "back": "All systems",
     "count": "{n} projects",
     "approach": "Approach the {name} system",

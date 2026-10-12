@@ -13,6 +13,7 @@ API :
   placeLabel(planet, point, view)       décalage et échelle de l'étiquette (pur)
   renderPlanet(planet, system, view)    applique placePlanet aux nœuds de la planète
   rescalePhone(system, planets, width)  rayons de la Piscine téléphone selon la largeur
+  setPlanetActive(node, active)         planète active (tabindex 0) ou inerte (-1, aria-hidden)
   textWidth(text), remeasureLabels(planets)   mesure par canvas, à refaire aux polices
 
 `view` : { u, camera: { cx, w }, zoomedIndex } ; u = unités du plan par pixel d'écran,
@@ -254,6 +255,20 @@ function buildSun(system, center, text) {
 }
 
 /**
+ * @brief Rend une planète active (focalisable, annoncée) ou inerte (hors tabulation, masquée).
+ *
+ * Seuls `tabindex` et `aria-hidden` changent : `role` et `aria-label` restent.
+ *
+ * @param {Element} node `g.planet`
+ * @param {boolean} active vrai si le système de la planète est zoomé
+ */
+export function setPlanetActive(node, active) {
+  node.setAttribute('tabindex', active ? '0' : '-1');
+  if (active) node.removeAttribute('aria-hidden');
+  else node.setAttribute('aria-hidden', 'true');
+}
+
+/**
  * @brief Nœuds d'une planète et de son étiquette (titre en texte, jamais en HTML).
  *
  * @param {string} systemId identifiant du système (teinte)
@@ -283,7 +298,6 @@ function buildPlanetNodes(systemId, title, shape, box) {
     'g',
     {
       class: phonePis ? 'planet nearest' : 'planet',
-      tabindex: 0,
       role: 'button',
       'aria-label': title,
     },
@@ -291,6 +305,7 @@ function buildPlanetNodes(systemId, title, shape, box) {
     body,
     label,
   );
+  setPlanetActive(g, false);
   return { g, hit, body, label, bg, name };
 }
 

@@ -21,7 +21,7 @@ import {
   watchReduced,
 } from '../core/motion.js';
 import { initSheet } from '../ui/sheet.js';
-import { phoneUnit } from './projects-art.js';
+import { phoneUnit, setPlanetActive } from './projects-art.js';
 
 const TAU = 2 * Math.PI;
 const ENTER_MS = 1000;
@@ -249,6 +249,7 @@ export function createZoom({ parts, state, renderAll, showSystem }) {
       each.g.classList.toggle('on', k === index);
       each.g.classList.toggle('dim', k !== index);
     });
+    for (const planet of planetsOf(index)) setPlanetActive(planet.nodes.g, true);
     plan.classList.add('zoomed');
     plan.classList.toggle('bleed', system.phonePis);
     layout.classList.add('zfocus');
@@ -267,6 +268,7 @@ export function createZoom({ parts, state, renderAll, showSystem }) {
     layout.classList.remove('zfocus');
     if (head.contains(document.activeElement)) system.sun.focus({ preventScroll: true });
     for (const each of built.systems) each.g.classList.remove('on', 'dim');
+    for (const planet of planetsOf(system.index)) setPlanetActive(planet.nodes.g, false);
     setHeight(plan, (columnWidth(plan) * built.height) / built.width);
     start('out', system, planetsOf(system.index));
   };

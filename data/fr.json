@@ -508,7 +508,7 @@
   },
   "projects": {
     "title": "Mes projets",
-    "lede": "Quatre systèmes stellaires, un par univers : chaque planète en orbite est un projet. Sélectionne un système pour t'en approcher, ou directement une planète pour ouvrir son projet.",
+    "lede": "Quatre systèmes stellaires, un par univers : chaque planète en orbite est un projet. Sélectionne un système pour t'en approcher, puis une planète pour ouvrir son projet.",
     "back": "Tous les systèmes",
     "count": "{n} projets",
     "approach": "Approcher le système {name}",

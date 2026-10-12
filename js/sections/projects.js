@@ -308,12 +308,13 @@ export function mount(root) {
 
   const zoom = createZoom({ parts, state, renderAll, showSystem });
 
-  /** Branche les soleils (zoom), les planètes (fiche, remontée au survol) d'un dessin neuf. */
+  /**
+   * Branche les systèmes (zoom), les planètes (fiche si leur système est zoomé, remontée au
+   * survol) d'un dessin neuf.
+   */
   const wire = ({ systems, planets }) => {
     for (const system of systems) {
-      system.g.addEventListener('click', (event) => {
-        if (!event.target.closest('.planet')) zoom.enter(system.index);
-      });
+      system.g.addEventListener('click', () => zoom.enter(system.index));
       onActivate(system.sun, () => zoom.enter(system.index));
     }
     planets.forEach((planet, k) => {
@@ -321,8 +322,11 @@ export function mount(root) {
       const next = planets[k + 1]?.systemIndex === planet.systemIndex
         ? planets[k + 1].nodes.g
         : null;
-      g.addEventListener('click', () => open(planet.id, g));
-      onActivate(g, () => open(planet.id, g));
+      const openIfActive = () => {
+        if (g.closest('.sys.on')) open(planet.id, g);
+      };
+      g.addEventListener('click', openIfActive);
+      onActivate(g, openIfActive);
       bindRaise(g, next);
     });
   };

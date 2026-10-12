@@ -146,7 +146,7 @@ export function initSheet(doc) {
   };
 
   const restoreFocus = () => {
-    const planet = [...doc.querySelectorAll('#projects .planet[aria-label]')]
+    const planet = [...doc.querySelectorAll('#projects .planet[tabindex="0"][aria-label]')]
       .find((node) => node.getAttribute('aria-label') === state.title);
     const targets = [state.origin, planet, doc.querySelector('#projects h2')];
     for (const target of targets) {
