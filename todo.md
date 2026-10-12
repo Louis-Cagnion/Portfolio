@@ -1,4 +1,4 @@
-> Prochaine tâche : S6 « Projets et fiche », feuille S6.B3 de `arbre-s6.md` (groupe navigateur `projets`, `tests/browser/projects.js`, tous les choix de design sont pris), puis S6.C1 à C5, puis S8, S9 et S10 jusqu'à une V1 présentable sur ordinateur et mobile, puis le pré-mortem. Contexte des agents : `~/.claude/references/projects/portfolio/contexte.md`. Session Linux : Node 22, ports 5510 à 5519 pour les agents, 5520 et plus pour le moniteur.
+> Prochaine tâche : S6 « Projets et fiche », feuille S6.C1 de `arbre-s6.md` (`js/ui/sheet.js`, groupe `fiche` à rendre vert), puis S6.C2 à C5, puis S8, S9 et S10 jusqu'à une V1 présentable sur ordinateur et mobile, puis le pré-mortem. Contexte des agents : `~/.claude/references/projects/portfolio/contexte.md`. Session Linux : Node 22, ports 5510 à 5519 pour les agents, 5520 et plus pour le moniteur.
 
 ## Refonte spatiale
 
