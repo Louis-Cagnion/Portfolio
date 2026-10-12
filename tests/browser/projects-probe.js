@@ -210,12 +210,21 @@ function signature(site) {
   ].join('|');
 }
 
-/** Attend que la rubrique ne bouge plus (quatre relevés identiques de suite, 4 s au plus). */
+/** Vrai tant que la fiche (`#sheet`) joue une transition ou une animation. */
+function sheetBusy(site) {
+  const sheet = site.doc.getElementById('sheet');
+  return !!sheet && sheet.getAnimations().length > 0;
+}
+
+/**
+ * Attend que la rubrique et la fiche ne bougent plus (quatre relevés identiques de suite,
+ * aucune animation de la fiche, 4 s au plus).
+ */
 export async function rest(site) {
   const end = performance.now() + 4000;
   let last = null;
   let same = 0;
-  while (performance.now() < end && same < STABLE_POLLS) {
+  while (performance.now() < end && (same < STABLE_POLLS || sheetBusy(site))) {
     const now = signature(site);
     same = now === last ? same + 1 : 0;
     last = now;
