@@ -31,7 +31,7 @@ import { expectEqual, skip, test } from './runner.js';
 import { normalize } from './text.js';
 
 export const GROUP = 'Indisponible';
-export const MOUNTED = ['skills', 'projects', 'contact'];
+export const MOUNTED = ['skills', 'contact'];
 const PANEL = '.status.hud[data-state="error"]';
 const GAP = 32; // px, bas du chapeau à haut du panneau
 const TOLERANCE = 1; // px : arrondis de sous-pixel
@@ -327,8 +327,9 @@ async function runBehaviour(width) {
       return onePanel(site, 'skills').problems;
     });
     const fastName = 'bascules rapides de langue : dernière langue, un seul panneau';
-    await test({ ...ctx, section: 'projects' }, fastName, async () => {
-      await goTo(site, 'projects');
+    const [fastId] = MOUNTED; // première rubrique encore montée par mountSimple
+    await test({ ...ctx, section: fastId }, fastName, async () => {
+      await goTo(site, fastId);
       const buttons = ['en', 'fr', 'en', 'fr', 'en'].map((code) =>
         site.doc.querySelector(`header.bar .lang button[data-lang="${code}"]`));
       for (const button of buttons) click(site, button);
@@ -339,15 +340,15 @@ async function runBehaviour(width) {
       );
       const want = await unavailableTexts('en');
       await waitFor(
-        () => textOf(view(site, 'projects')?.querySelector(`${PANEL} h2, ${PANEL} h3`)) ===
+        () => textOf(view(site, fastId)?.querySelector(`${PANEL} h2, ${PANEL} h3`)) ===
           normalize(want.title),
         5000,
         'titre du panneau en anglais',
-        () => textOf(view(site, 'projects')?.querySelector(PANEL)),
+        () => textOf(view(site, fastId)?.querySelector(PANEL)),
       );
-      const problems = await textProblems(site, 'projects', 'en');
+      const problems = await textProblems(site, fastId, 'en');
       await switchTo(site, 'fr');
-      return [...problems, ...await textProblems(site, 'projects', 'fr')];
+      return [...problems, ...await textProblems(site, fastId, 'fr')];
     });
     await test(
       { ...ctx, section: null },

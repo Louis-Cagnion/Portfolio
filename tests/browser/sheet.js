@@ -16,8 +16,9 @@
   rendu à `origin`, sinon à la planète du projet (`.planet[aria-label]` égal au titre, dans
   #projects), sinon au h2 de #projects (tabindex="-1") ; mouvement réduit (matchMedia
   bouchonné, voir warp.js) : ouverture et fermeture immédiates.
-Fixtures du banc dans #projects (pas encore de planètes) : un bouton d'origine et deux
-`svg g.planet[role=button][tabindex=0][aria-label]` (un autre projet, puis le projet). */
+Fixtures du banc dans #projects (en plus des vraies planètes) : un bouton d'origine et deux
+`svg g.planet[role=button][tabindex=0][aria-label]` (un autre projet, puis le projet) ;
+les replis du focus sont dans sheet-focus.js. */
 import {
   ROOT,
   bounded,
@@ -56,7 +57,7 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 let viewsCache = null;
 /** Fiche du projet au plus long contenu de chaque langue (data/<lang>.json). */
-function sheetViews() {
+export function sheetViews() {
   viewsCache ||= (async () => {
     const views = {};
     for (const lang of ['fr', 'en']) {
@@ -96,7 +97,7 @@ function loadSheet() {
 // ---------- Site, fixtures, attentes ----------
 
 /** Site ouvert sur Projets, mouvement réduit réglable par `site.motion.set(bool)`. */
-async function openSheetSite(width) {
+export async function openSheetSite(width) {
   const motion = { reduce: false };
   const site = await openSite({
     width,
@@ -135,7 +136,7 @@ const frame = (win) => bounded(
 ).catch(() => {});
 
 /** Attend le démarrage puis la fin des animations CSS, puis une image peinte. */
-async function rest(site) {
+export async function rest(site) {
   for (let i = 0; i < 3; i++) await frame(site.win); // transition lancée à l'image suivante
   await waitFor(
     () => !site.doc.getAnimations().some(
@@ -149,7 +150,7 @@ async function rest(site) {
 }
 
 /** Pose les fixtures de #projects : origine, planète d'un autre projet, planète du projet. */
-function addFixtures(site, view, { planet = true } = {}) {
+export function addFixtures(site, view, { planet = true } = {}) {
   const { doc } = site;
   const host = doc.getElementById('projects');
   const origin = doc.createElement('button');
@@ -201,7 +202,7 @@ async function reset(site, mod) {
 }
 
 /** Cas qui charge le module, remet à zéro puis joue `fn(ctl, parts, mod)`. */
-function check(ctx, name, site, fn) {
+export function check(ctx, name, site, fn) {
   return test(ctx, name, async () => {
     const { mod, error } = await loadSheet();
     if (error) return [error];
@@ -245,10 +246,10 @@ function viewport(site) {
 }
 
 const near = (a, b, tolerance = TOLERANCE) => Math.abs(a - b) <= tolerance;
-const ko = (problems, bad, message) => {
+export const ko = (problems, bad, message) => {
   if (bad) problems.push(message);
 };
-const focusText = (site) => describe(site.doc.activeElement);
+export const focusText = (site) => describe(site.doc.activeElement);
 
 // ---------- Contenu rendu ----------
 
@@ -461,7 +462,7 @@ async function focusTests(ctx, site, view) {
 }
 
 /** Ferme par `how`, rend le focus attendu ou un problème. */
-async function closeBy(site, how) {
+export async function closeBy(site, how) {
   const p = parts(site);
   if (how === 'bouton') click(site, p.close);
   else if (how === 'voile') click(site, p.bg);
@@ -484,30 +485,6 @@ async function closeTests(ctx, site, view) {
         return [...problems, ...closedProblems(site)];
       });
   }
-  const fallbacks = [
-    ['origine détachée', (o) => o.remove(), true],
-    ['origine masquée', (o) => { o.style.display = 'none'; }, true],
-    ['origine détachée et aucune planète', (o) => o.remove(), false],
-  ];
-  for (const [name, spoil, planet] of fallbacks)
-    await check(ctx, `${name} : focus sur ${planet ? 'la planète' : 'le h2'}`, site,
-      async (ctl) => {
-        const fx = addFixtures(site, view, { planet });
-        ctl.open(view, fx.origin);
-        await rest(site);
-        spoil(fx.origin);
-        await closeBy(site, 'bouton');
-        const wanted = planet ? fx.planet : site.doc.querySelector('#projects h2');
-        const active = site.doc.activeElement;
-        const problems = [];
-        if (!wanted) return ['cible de repli introuvable (h2 de #projects)'];
-        if (active !== wanted) problems.push(`focus sur ${focusText(site)}`);
-        if (!active.isConnected || !isVisible(active))
-          problems.push('focus sur un élément détruit ou masqué');
-        if (!planet && wanted.getAttribute('tabindex') !== '-1')
-          problems.push('h2 de #projects sans tabindex="-1"');
-        return problems;
-      });
 }
 
 async function updateTest(ctx, site, views) {

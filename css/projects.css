@@ -1,7 +1,8 @@
 /*
-Projets : fiche d'un projet (voile et panneau). Valeurs : maquette validée
-(docs/design/prototype/prototype.template.html:228-235 et 312). Le CSS des systèmes
-viendra avec leurs feuilles. Chargée après css/journey.css par index.html.
+Projets : fiche d'un projet (voile et panneau), dessin des systèmes (orbites, soleils,
+planètes) et mise en page de la rubrique (plan, en-tête de zoom, introduction, liste).
+Valeurs : maquette validée (docs/design/prototype/prototype.template.html:228-235 et 312,
+docs/design/s6/mockup.css). Chargée après css/journey.css par index.html.
 */
 
 /* ───── Voile ───── */
@@ -223,4 +224,163 @@ viendra avec leurs feuilles. Chargée après css/journey.css par index.html.
 .sys.on .planet.nearest,
 .sys.on .planet.nearest .pl-label {
   pointer-events: none;
+}
+
+/* ───── Plan : le svg rogne ses étiquettes invisibles (la maquette les laisse sortir) ───── */
+.sys-layout {
+  position: relative;
+}
+
+.sys-plan {
+  position: relative;
+  min-width: 0;
+}
+
+.systems {
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: height var(--dur-height) var(--ease-inout);
+}
+
+.systems.bleed {
+  width: calc(100% + 24px);
+  margin: 0 -12px;
+}
+
+.sys {
+  transition: opacity 0.6s; /* 0,6 s : valeur de la maquette, sans jeton */
+}
+
+.sys.dim {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ───── En-tête du système zoomé : retour, nom et compte ───── */
+.sys-head {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.4s,
+    visibility 0s 0.4s;
+}
+
+.zfocus .sys-head {
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity 0.4s 0.5s,
+    visibility 0s;
+}
+
+.sys-head .back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--line);
+  background: none;
+  color: var(--text);
+  font: 500 0.9rem var(--sans);
+  padding: 8px 14px;
+  cursor: pointer;
+}
+
+.sys-head .back:hover,
+.sys-head .back:focus-visible {
+  border-color: var(--accent);
+}
+
+.sys-head .ctitle {
+  font-family: var(--display);
+  font-size: 1.05rem;
+  margin: 0;
+}
+
+.sys-head .count {
+  font-family: var(--mono);
+  color: var(--faint);
+  font-size: 0.8rem;
+}
+
+@media (max-width: 55em) {
+  .sys-layout:not(.zfocus) .sys-head {
+    display: none;
+  }
+
+  .sys-head {
+    position: relative;
+    margin-bottom: 8px;
+  }
+}
+
+/* ───── Introduction du système : sous le plan, pleine largeur, seulement zoomé ───── */
+.intro-c {
+  display: none;
+  margin-top: 18px;
+}
+
+.zfocus + .intro-c {
+  display: block;
+}
+
+.sys-intro {
+  margin: 0;
+  color: var(--dim);
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+/* ───── Liste des projets : visible au repos, masquée pendant un zoom ───── */
+.plist {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr));
+  gap: 8px 22px;
+  list-style: none;
+  margin: 26px 0 0;
+  padding: 0;
+}
+
+.zfocus ~ .plist {
+  display: none;
+}
+
+.plist button {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  background: none;
+  border: 0;
+  color: var(--dim);
+  font: inherit;
+  font-size: 0.92rem;
+  text-align: left;
+  padding: 4px 0;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+
+.plist button:hover,
+.plist button:focus-visible {
+  color: var(--text);
+}
+
+.plist i {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex: none;
+}
+
+/* ───── Mouvement réduit lu en JS (data-still) : aucune transition dans la rubrique ───── */
+#projects[data-still] * {
+  transition: none;
 }
