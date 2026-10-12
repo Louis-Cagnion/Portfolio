@@ -1,4 +1,4 @@
-> Prochaine tâche : S6 « Projets et fiche », feuille S6.C3 de `arbre-s6.md` (`js/sections/projects-art.js` et CSS des soleils, planètes et orbites), puis S6.C4 et C5, puis S8, S9 et S10 jusqu'à une V1 présentable sur ordinateur et mobile, puis le pré-mortem. Contexte des agents : `~/.claude/references/projects/portfolio/contexte.md`. Session Linux : Node 22, ports 5510 à 5519 pour les agents, 5520 et plus pour le moniteur.
+> Prochaine tâche : S6 « Projets et fiche », feuille S6.C3 de `arbre-s6.md` (`js/sections/projects-art.js` et CSS des soleils, planètes et orbites ; brouillon sur la branche `wip/s6-c3`, voir l'arbre), puis S6.C4 et C5, puis S8, S9 et S10 jusqu'à une V1 présentable sur ordinateur et mobile, puis le pré-mortem. Contexte des agents : `~/.claude/references/projects/portfolio/contexte.md`. Session Linux : Node 22, ports 5510 à 5519 pour les agents, 5520 et plus pour le moniteur.
 
 ## Refonte spatiale
 
