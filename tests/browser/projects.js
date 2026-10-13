@@ -50,7 +50,7 @@ import {
 } from './projects-probe.js';
 import { runInert } from './projects-inert.js';
 import { runLoops, runReducedMotion } from './projects-motion.js';
-import { runPhonePiscine } from './projects-phone.js';
+import { runHitDesktop, runHitRest, runPhonePiscine } from './projects-phone.js';
 import { runSwitch } from './projects-lang.js';
 
 export const GROUP = 'Projets';
@@ -321,6 +321,8 @@ async function systemFlow(site, ctx, text, systems, index) {
   });
   if (system.id === 'piscine' && ctx.width <= PHONE_MAX)
     await runPhonePiscine(site, ctx, { text, system });
+  if (system.id === 'piscine' && ctx.width >= DESKTOP_MIN)
+    await runHitDesktop(site, ctx, system);
   await zoomed('aucun débordement horizontal', () => overflowProblems(site));
   await zoomed('cibles de 44 px (exceptions de la maquette)', () => {
     const found = targetProblems(site, [parts(site).root]);
@@ -449,6 +451,7 @@ async function runSite(width, lang, datas, mainWidth) {
   try {
     await restTests(site, ctx, text, systems);
     await layoutTests(site, ctx, 'repos');
+    if (ctx.width <= PHONE_MAX) await runHitRest(site, ctx);
     await listTests(site, ctx, text, systems);
     await triggerTests(site, ctx, text, systems);
     await backFocusTests(site, ctx, text, systems);

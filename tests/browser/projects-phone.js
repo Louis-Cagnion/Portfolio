@@ -5,13 +5,16 @@ arbre-s6.md:11, :15 et :41). Hypothèses de contrat, tirées de docs/design/s6/m
 Invariants testés, jamais des rayons : 20 planètes et 20 étiquettes visibles et lisibles dans
 le cadre, aucune étiquette sur une autre, centres à 44 px au moins, zones de 44 px, toucher aux
 coordonnées (clic au point, scrollIntoView avant) : la planète au centre le plus proche gagne.
-Le site est joué en mouvement réduit : planètes figées, coordonnées stables. */
+Le site est joué en mouvement réduit : planètes figées, coordonnées stables.
+Zones de toucher (`.pl-hit`) : visibles (remplissage et filet de teinte `--live`) dans la
+Piscine zoomée sur téléphone, transparentes au bureau et au repos (plan.md, 13/10/2026). */
 import { describe, isVisible } from './harness.js';
 import { capped } from './checks.js';
 import {
   centre,
   ficheCheck,
   isZoomed,
+  labelOf,
   parts,
   planetOf,
   plain,
@@ -25,6 +28,11 @@ const OVERLAP_PX = 1; // recouvrement toléré (arrondis)
 const MIN_TEXT_PX = 10; // hauteur minimale du texte d'une étiquette à l'écran
 const NEAR_OFFSET = 15; // décalage du point touché vers la planète voisine
 const CLOSEST_PAIRS = 3;
+const FILL_ALPHA = [0.03, 0.12]; // alpha du remplissage visible (maquette : 0,06)
+const STROKE_ALPHA = [0.2, 0.5]; // alpha du filet visible (maquette : 0,35)
+const TINT = [143, 227, 191]; // teinte --live (#8fe3bf)
+const TINT_TOLERANCE = 3;
+const STROKE_PX = 1;
 
 const rect = (el) => el.getBoundingClientRect();
 const bare = (text) => text.replace(/\s+/g, '');
@@ -150,6 +158,49 @@ function pointNear(near, far) {
   return { x: from.x + (to.x - from.x) * step, y: from.y + (to.y - from.y) * step };
 }
 
+const styleOf = (site, el) => site.win.getComputedStyle(el);
+
+/** Canaux et alpha d'une couleur calculée `rgb()` ou `rgba()` ; null si illisible. */
+function colorOf(value) {
+  const match = /^rgba?\((.*)\)$/.exec(value);
+  if (!match) return null;
+  const numbers = match[1].split(/[\s,/]+/).filter(Boolean).map(Number);
+  if (numbers.length < 3 || numbers.some(Number.isNaN)) return null;
+  return { rgb: numbers.slice(0, 3), alpha: numbers[3] ?? 1 };
+}
+
+const inRange = (value, [min, max]) => value >= min && value <= max;
+const isTint = (rgb) => rgb.every((c, k) => Math.abs(c - TINT[k]) <= TINT_TOLERANCE);
+
+/** Problèmes d'une zone de toucher visible : remplissage, filet, épaisseur et teinte. */
+function visibleHitProblems(name, style, width) {
+  const where = `${name} à ${width} px`;
+  const fill = colorOf(style.fill);
+  const stroke = colorOf(style.stroke);
+  if (!fill) return [`${where} : remplissage « ${style.fill} » illisible`];
+  if (fill.alpha === 0) return [`${where} : zone transparente (remplissage ${style.fill})`];
+  const problems = [];
+  if (!inRange(fill.alpha, FILL_ALPHA) || !isTint(fill.rgb))
+    problems.push(`${where} : remplissage ${style.fill}`);
+  if (!stroke || !inRange(stroke.alpha, STROKE_ALPHA) || !isTint(stroke.rgb))
+    problems.push(`${where} : filet ${style.stroke}`);
+  if (parseFloat(style.strokeWidth) !== STROKE_PX)
+    problems.push(`${where} : épaisseur de filet ${style.strokeWidth}`);
+  return problems;
+}
+
+/** Problèmes d'une zone de toucher cachée : remplissage transparent, aucun filet. */
+function hiddenHitProblems(name, style, width) {
+  const where = `${name} à ${width} px`;
+  const fill = colorOf(style.fill);
+  const problems = [];
+  if (!fill || fill.alpha !== 0)
+    problems.push(`${where} : remplissage ${style.fill} au lieu de transparent`);
+  if (style.stroke !== 'none')
+    problems.push(`${where} : filet ${style.stroke} au lieu de none`);
+  return problems;
+}
+
 /**
  * Joue les cas de la Piscine zoomée sur téléphone. `context` = { text, system } (texte de la
  * langue, système de la Piscine) ; `site` est zoomé sur la Piscine.
@@ -170,6 +221,13 @@ export async function runPhonePiscine(site, ctx, context) {
     return capped(problems);
   });
   await run('Piscine : centres à 44 px au moins, zones de toucher de 44 px', distanceProblems);
+  await run('Piscine : zones de toucher visibles', ({ planets }) => capped(
+    planets.flatMap((p) => visibleHitProblems(
+      plain(p.project.title),
+      styleOf(site, p.hit),
+      ctx.width,
+    )),
+  ));
   await run('Piscine : toucher entre deux voisines, le centre le plus proche gagne',
     async ({ planets }) => {
       const problems = [];
@@ -190,4 +248,28 @@ export async function runPhonePiscine(site, ctx, context) {
       }
       return capped(problems);
     });
+}
+
+/** Au repos sur téléphone (aucun système zoomé), aucune zone de toucher n'est visible. */
+export async function runHitRest(site, ctx) {
+  await test(ctx, 'repos : aucune zone de toucher visible', () => {
+    if (isZoomed(site)) return ['non joué : système zoomé'];
+    const hits = [...site.doc.querySelectorAll('#projects .pl-hit')];
+    if (!hits.length) return ['aucune zone .pl-hit dans la rubrique'];
+    return capped(hits.flatMap((hit) => hiddenHitProblems(
+      labelOf(hit.closest('.planet')),
+      styleOf(site, hit),
+      ctx.width,
+    )));
+  });
+}
+
+/** Sur ordinateur, Piscine zoomée : les zones de toucher restent transparentes. */
+export function runHitDesktop(site, ctx, system) {
+  return zoomedCase(ctx, 'Piscine bureau : zones de toucher transparentes', site, system,
+    ({ planets }) => capped(planets.flatMap((p) => hiddenHitProblems(
+      plain(p.project.title),
+      styleOf(site, p.hit),
+      ctx.width,
+    ))));
 }
