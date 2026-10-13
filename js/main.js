@@ -12,6 +12,7 @@ import { createRouter, listViews } from './core/router.js';
 import { mount as mountHome } from './sections/home.js';
 import { mount as mountJourney } from './sections/journey.js';
 import { mount as mountProjects } from './sections/projects.js';
+import { mount as mountSkills } from './sections/skills.js';
 import { createNav } from './ui/nav.js';
 import { createSky } from './ui/starfield.js';
 import { createStatus } from './ui/status.js';
@@ -108,7 +109,7 @@ mountSimple disparaît avec la rubrique simple, quand son module la remplace. */
 const MOUNTS = {
   home: mountHome,
   journey: mountJourney,
-  skills: (root) => mountSimple(root, (c) => [c.skills.title, c.skills.lede]),
+  skills: mountSkills,
   projects: mountProjects,
   contact: (root) => mountSimple(root, (c) => [c.contact.title, c.contact.question]),
 };

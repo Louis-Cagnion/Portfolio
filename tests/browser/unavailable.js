@@ -1,6 +1,6 @@
 /* Contenu indisponible des rubriques à venir (S5b). Contrat
 (docs/design/plan.md:122 et :151) : sous le titre (h2) et le chapeau (p.lede) de chaque
-rubrique encore montée par mountSimple (skills, projects, contact), un panneau
+rubrique encore montée par mountSimple (MOUNTED : contact), un panneau
 `.status.hud[data-state="error"]` :
 - titre, message (ui.unavailable.title, message), barre en pointillés (élément dont la
   classe contient « bar », fond repeating-linear-gradient ou bordure dashed), bouton
@@ -31,7 +31,7 @@ import { expectEqual, skip, test } from './runner.js';
 import { normalize } from './text.js';
 
 export const GROUP = 'Indisponible';
-export const MOUNTED = ['skills', 'contact'];
+export const MOUNTED = ['contact'];
 const PANEL = '.status.hud[data-state="error"]';
 const GAP = 32; // px, bas du chapeau à haut du panneau
 const TOLERANCE = 1; // px : arrondis de sous-pixel
@@ -316,20 +316,20 @@ async function runBehaviour(width) {
     });
     const exitName = 'sortie par le bouton puis retour sur la rubrique : ' +
       'un seul panneau';
-    await test({ ...ctx, section: 'skills' }, exitName, async () => {
-      await goTo(site, 'skills');
-      const { panel } = onePanel(site, 'skills');
+    const [firstId] = MOUNTED; // première rubrique encore montée par mountSimple
+    await test({ ...ctx, section: firstId }, exitName, async () => {
+      await goTo(site, firstId);
+      const { panel } = onePanel(site, firstId);
       if (panel) {
         click(site, parts(panel).button);
         await settle(site, 'home');
       }
-      await goTo(site, 'skills');
-      return onePanel(site, 'skills').problems;
+      await goTo(site, firstId);
+      return onePanel(site, firstId).problems;
     });
     const fastName = 'bascules rapides de langue : dernière langue, un seul panneau';
-    const [fastId] = MOUNTED; // première rubrique encore montée par mountSimple
-    await test({ ...ctx, section: fastId }, fastName, async () => {
-      await goTo(site, fastId);
+    await test({ ...ctx, section: firstId }, fastName, async () => {
+      await goTo(site, firstId);
       const buttons = ['en', 'fr', 'en', 'fr', 'en'].map((code) =>
         site.doc.querySelector(`header.bar .lang button[data-lang="${code}"]`));
       for (const button of buttons) click(site, button);
@@ -340,15 +340,15 @@ async function runBehaviour(width) {
       );
       const want = await unavailableTexts('en');
       await waitFor(
-        () => textOf(view(site, fastId)?.querySelector(`${PANEL} h2, ${PANEL} h3`)) ===
+        () => textOf(view(site, firstId)?.querySelector(`${PANEL} h2, ${PANEL} h3`)) ===
           normalize(want.title),
         5000,
         'titre du panneau en anglais',
-        () => textOf(view(site, fastId)?.querySelector(PANEL)),
+        () => textOf(view(site, firstId)?.querySelector(PANEL)),
       );
-      const problems = await textProblems(site, fastId, 'en');
+      const problems = await textProblems(site, firstId, 'en');
       await switchTo(site, 'fr');
-      return [...problems, ...await textProblems(site, fastId, 'fr')];
+      return [...problems, ...await textProblems(site, firstId, 'fr')];
     });
     await test(
       { ...ctx, section: null },
@@ -364,7 +364,8 @@ async function runBehaviour(width) {
 const LONG_TITLE = 'Informationsunzugänglichkeitsmeldungstitel';
 
 async function runLongTitle() {
-  const ctx = { group: GROUP, width: 320, lang: 'fr', section: 'skills' };
+  const [id] = MOUNTED; // première rubrique encore montée par mountSimple
+  const ctx = { group: GROUP, width: 320, lang: 'fr', section: id };
   let site;
   try {
     site = await open(320, 'fr', longTitleFetch(LONG_TITLE));
@@ -377,11 +378,11 @@ async function runLongTitle() {
       ctx,
       'titre d\'un mot long sans espace : ni panneau ni page ne débordent',
       async () => {
-        await goTo(site, 'skills');
-        const { panel, problems } = onePanel(site, 'skills');
+        await goTo(site, id);
+        const { panel, problems } = onePanel(site, id);
         if (!panel) return problems;
         expectEqual(problems, 'titre du panneau', textOf(parts(panel).heading), LONG_TITLE);
-        return [...problems, ...widthProblems(site, 'skills')];
+        return [...problems, ...widthProblems(site, id)];
       },
     );
   } finally {

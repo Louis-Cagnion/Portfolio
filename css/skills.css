@@ -1,8 +1,135 @@
 /*
-Compétences : constellations et dessins des astres (js/sections/skills-art.js).
-Règles de la maquette (docs/design/prototype/prototype.template.html:146-184) ; le mouvement
-réduit est déjà coupé pour toutes les animations par css/layout.css.
+Compétences : mise en page de la rubrique (js/sections/skills.js), constellations et dessins
+des astres (js/sections/skills-art.js).
+Règles de la maquette (docs/design/prototype/prototype.template.html:143-207 et 300-307) ; le
+mouvement réduit est déjà coupé pour toutes les animations par css/layout.css.
 */
+
+/* ───── Mise en page : plan, aide, panneau de compétence (vide au repos), légende ───── */
+.skills-layout {
+  position: relative;
+}
+
+.viz {
+  width: 100%;
+  height: 460px;
+  display: block;
+  transition: height var(--dur-height) var(--ease-inout);
+}
+
+.hint {
+  color: var(--faint);
+  font-size: 0.9rem;
+  margin: 10px 0 0;
+  transition: opacity 0.4s; /* 0,4 s : valeur de la maquette, sans jeton */
+}
+
+.skills-layout.focus .hint {
+  opacity: 0;
+}
+
+/* Au repos le panneau est invisible et inerte (attribut inert posé par skills.js) ;
+   0,3 s, 0,35 s et 0,8 s : valeurs de la maquette, sans jeton. */
+.focus-panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(46%, 540px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) transparent;
+  padding: 22px 24px;
+  background: color-mix(in srgb, var(--panel) 52%, transparent);
+  -webkit-backdrop-filter: blur(var(--blur));
+  backdrop-filter: blur(var(--blur));
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(24px);
+  transition:
+    opacity var(--dur-slow) 0.3s,
+    transform var(--dur-slow) 0.3s,
+    visibility 0s 0.8s;
+}
+
+.skills-layout.focus .focus-panel {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition:
+    opacity var(--dur-slow) 0.35s,
+    transform var(--dur-slow) 0.35s,
+    visibility 0s;
+}
+
+/* Téléphone : le panneau passe sous le plan (collant pendant le déploiement) et remonte de
+   34vw sur lui ; absent au repos. */
+@media (max-width: 55em) {
+  .viz {
+    height: auto;
+  }
+
+  .skills-layout:not(.focus) .focus-panel {
+    display: none;
+  }
+
+  .skills-layout.focus .viz-wrap {
+    position: sticky;
+    top: var(--bar-h);
+    z-index: 0;
+  }
+
+  .focus-panel {
+    position: relative;
+    z-index: 1;
+    width: auto;
+    margin-top: -34vw;
+    overflow: visible;
+    transform: translateY(24px);
+  }
+
+  .skills-layout.focus .focus-panel {
+    transform: none;
+  }
+}
+
+/* Légende : une phrase, puis un astre par niveau. */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 22px;
+  color: var(--faint);
+  font-size: 0.85rem;
+  margin-top: 18px;
+}
+
+.legend > span:first-child {
+  flex-basis: 100%;
+  color: var(--dim);
+}
+
+.mag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+/* Sous 880 px, une entrée trop longue pour la ligne (police agrandie) passe à la ligne. */
+@media (max-width: 55em) {
+  .mag {
+    white-space: normal;
+  }
+}
+
+.ico {
+  width: 26px;
+  height: 26px;
+  flex: none;
+  overflow: visible;
+}
 
 /* ───── Constellations ───── */
 .viz text {
