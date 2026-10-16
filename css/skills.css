@@ -94,6 +94,101 @@ mouvement réduit est déjà coupé pour toutes les animations par css/layout.cs
   }
 }
 
+/* ───── Panneau de compétence (js/sections/skills-panel.js) ───── */
+.focus-panel .ctitle {
+  margin: 18px 0 12px;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 0 18px;
+}
+
+.chips button {
+  border: 1px solid var(--line);
+  background: none;
+  color: var(--dim);
+  font: 500 0.88rem var(--sans);
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.chips button:hover {
+  color: var(--text);
+  border-color: color-mix(in srgb, var(--accent) 50%, transparent);
+}
+
+.chips button[aria-pressed="true"] {
+  color: var(--accent-ink);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+/* Détail imbriqué : ni bordure ni coins ; fondu de 0,3 s pendant un saut (maquette). */
+.skill {
+  margin-top: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  transition:
+    opacity 0.3s,
+    transform 0.3s;
+}
+
+.skill::before,
+.skill::after {
+  display: none;
+}
+
+.skill.traveling {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.skill header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.skill h3 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 1.1rem;
+  line-height: 1.4;
+  margin: 0 0 4px;
+}
+
+.skill .body {
+  color: var(--dim);
+}
+
+.skill .lvl {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--dim);
+  font-size: 0.9rem;
+  margin-top: 2px;
+}
+
+.related {
+  margin: 18px 0 0;
+}
+
+.related p {
+  margin: 0 0 8px;
+  color: var(--faint);
+  font-size: 0.85rem;
+}
+
+.related .chips {
+  margin: 0;
+}
+
 /* Légende : une phrase, puis un astre par niveau. */
 .legend {
   display: flex;
