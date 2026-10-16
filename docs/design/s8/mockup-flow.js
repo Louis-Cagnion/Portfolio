@@ -58,6 +58,7 @@ function closeSheet() {
     const planet = sheetOrigin && planetOf(sheetOrigin.id);
     const target = [sheetOrigin && sheetOrigin.node, planet && planet.g].find(canFocus);
     (target || views.projects.querySelector('h2')).focus({ preventScroll: true });
+    backToSystem();
     if (!target && !views.projects.classList.contains('on')) {
         views.skills.querySelector('h2').focus({ preventScroll: true });
     }
@@ -80,13 +81,31 @@ async function playRelated(entry, chip) {
     }
     showView('projects');
     await wait(750);
-    if (RELATED === 'r2') {
-        if (zoomSys >= 0 && zoomSys !== entry.si) await exitZoom();
-        const pl = planetOf(entry.p.id);
-        pl.g.classList.add('peek');
-        await zoomTo(entry.si);
-    }
+    if (RELATED !== 'r1') await playSystem(entry);
     openSheet(entry, chip);
+}
+/* R2 et ses lectures : R2a deux temps (système puis planète), R2b un seul mouvement
+   jusqu'à la planète, R2c et R2 système zoomé seulement. Retour de caméra à la fermeture
+   de la fiche pour R2a et R2b : le zoom reste sur le système, le focus va à la planète. */
+async function playSystem(entry) {
+    if (zoomSys >= 0 && zoomSys !== entry.si) await exitZoom();
+    const pl = planetOf(entry.p.id);
+    pl.g.classList.add('peek');
+    const toPlanet = () => planetCam(pl);
+    if (RELATED === 'r2b' && zoomSys < 0) await zoomTo(entry.si, toPlanet);
+    else {
+        if (zoomSys < 0) await zoomTo(entry.si);
+        if (RELATED === 'r2a' || RELATED === 'r2b') {
+            await scam.tween(toPlanet, 900, () => planets.forEach(placePlanet));
+        }
+    }
+    cameraOnPlanet = RELATED === 'r2a' || RELATED === 'r2b';
+}
+let cameraOnPlanet = false;
+function backToSystem() {
+    if (!cameraOnPlanet || zoomSys < 0) return;
+    cameraOnPlanet = false;
+    scam.tween(() => focusCamSys(zoomSys), 800, () => planets.forEach(placePlanet));
 }
 
 /* lien Devpedia : la phrase des données telle quelle, « intro », une espace, le lien */

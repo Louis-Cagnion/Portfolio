@@ -35,6 +35,7 @@ async function restoreState() {
     delete document.documentElement.dataset.instant;
 }
 async function init() {
+    document.body.classList.add(`plunge-${PLUNGE}`);
     const data = await (await fetch(`../../../data/${LANG}.json`)).json();
     buildBars(data);
     fillSkills(data);

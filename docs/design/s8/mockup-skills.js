@@ -157,7 +157,8 @@ function layoutStars(g, t) {
         s.body.setAttribute('transform', `translate(${s.cx} ${s.cy})`);
         const off = (BODY_R[s.lv] * curBS * (s.lv === 3 ? 0.6 : 1) + 9) * u;
         s.label.setAttribute('x', s.cx);
-        s.label.setAttribute('y', s.cy - off);
+        const below = PLUNGE === 'p2' && narrow.matches;
+        s.label.setAttribute('y', below ? s.cy + off + 12 * u : s.cy - off);
     });
     g.links.forEach((l, j) => {
         const a = g.stars[j], b = g.stars[j + 1];

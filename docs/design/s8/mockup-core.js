@@ -1,5 +1,6 @@
 /* Maquette S8 : outils communs (options d'URL, texte riche, caméra, animation).
-   Options d'URL : lang=fr|en, devpedia=d1..d4, related=r1..r3, focus=<id constellation>,
+   Options d'URL : lang=fr|en, devpedia=d1..d4, related=r1, r2, r2a, r2b, r2c, r3,
+   plunge=p1..p3, focus=<id constellation>,
    star=<id étoile ou longest>, view=<skills|projects>, fonts=web (polices du site, réseau).
    Scripts classiques (pas de modules) : la page s'ouvre aussi par file://. */
 const NS = 'http://www.w3.org/2000/svg';
@@ -7,7 +8,8 @@ const OPT = new URLSearchParams(location.search);
 const pick = (key, list, fallback) => list.includes(OPT.get(key)) ? OPT.get(key) : fallback;
 const LANG = pick('lang', ['fr', 'en'], 'fr');
 const DEVPEDIA = pick('devpedia', ['d1', 'd2', 'd3', 'd4'], '');
-const RELATED = pick('related', ['r1', 'r2', 'r3'], 'r3');
+const RELATED = pick('related', ['r1', 'r2', 'r2a', 'r2b', 'r2c', 'r3'], 'r3');
+const PLUNGE = pick('plunge', ['p1', 'p2', 'p3'], 'p1');
 const motion = { instant: false };
 const narrow = matchMedia('(max-width: 880px)');
 const reduce = () => matchMedia('(prefers-reduced-motion: reduce)').matches;

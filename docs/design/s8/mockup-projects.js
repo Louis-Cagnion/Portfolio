@@ -151,7 +151,7 @@ function buildSun(s, i, sysG, cx, cy) {
 function setPlanetTabs(on) {
     planets.forEach(pl => pl.g.setAttribute('tabindex', pl.si === on ? '0' : '-1'));
 }
-async function zoomTo(i) {
+async function zoomTo(i, camFn = () => focusCamSys(i)) {
     if (zoomSys >= 0 || zMoving) return;
     zoomSys = i;
     zMoving = true;
@@ -170,7 +170,7 @@ async function zoomTo(i) {
         const top = sysLayout.getBoundingClientRect().top + scrollY - 70;
         scrollTo({ top, behavior: scrollMode() });
     }
-    await scam.tween(() => focusCamSys(i), 1000, () => planets.forEach(placePlanet));
+    await scam.tween(camFn, 1000, () => planets.forEach(placePlanet));
     zMoving = false;
 }
 async function exitZoom() {
@@ -205,6 +205,15 @@ function projectById(id) {
         if (p) return { p, s, si: SYS.indexOf(s) };
     }
     return null;
+}
+/* plan serré sur une planète : la caméra va jusqu'à elle */
+function planetCam(pl) {
+    const S = systems[pl.si];
+    return {
+        cx: S.cx + pl.r * Math.cos(pl.a),
+        cy: S.cy + pl.r * TILT * Math.sin(pl.a),
+        w: 170,
+    };
 }
 const planetOf = id => planets.find(pl => pl.p.id === id) || null;
 function fillProjects(data) {

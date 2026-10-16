@@ -186,3 +186,11 @@
     }
     .focus .focus-panel { transform: none; }
 }
+
+/* P3 : le panneau de détail passe sous le plan, sans chevaucher l'astre ni son nom */
+@media (max-width: 880px) {
+    .plunge-p3 .focus-panel {
+        margin-top: 0;
+        background: var(--panel);
+    }
+}
