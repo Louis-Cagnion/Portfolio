@@ -225,6 +225,13 @@ docs/design/s6/mockup.css). Chargée après css/journey.css par index.html.
   stroke: none;
 }
 
+/* Décision de Louis du 13/10/2026 : zones visibles dans la Piscine zoomée, teinte --live */
+.sys.on .planet.nearest .pl-hit {
+  fill: color-mix(in srgb, var(--live) 6%, transparent);
+  stroke: color-mix(in srgb, var(--live) 35%, transparent);
+  stroke-width: 1px;
+}
+
 .sys.on .planet.nearest,
 .sys.on .planet.nearest .pl-label {
   pointer-events: none;

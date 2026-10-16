@@ -50,7 +50,12 @@ import {
 } from './projects-probe.js';
 import { runInert } from './projects-inert.js';
 import { runLoops, runReducedMotion } from './projects-motion.js';
-import { runHitDesktop, runHitRest, runPhonePiscine } from './projects-phone.js';
+import {
+  runHitDesktop,
+  runHitRest,
+  runHitVisible,
+  runPhonePiscine,
+} from './projects-phone.js';
 import { runSwitch } from './projects-lang.js';
 
 export const GROUP = 'Projets';
@@ -321,6 +326,9 @@ async function systemFlow(site, ctx, text, systems, index) {
   });
   if (system.id === 'piscine' && ctx.width <= PHONE_MAX)
     await runPhonePiscine(site, ctx, { text, system });
+  // Entre téléphone et bureau (768 px) : le mode téléphone joue, seul ce cas est joué
+  if (system.id === 'piscine' && ctx.width > PHONE_MAX && ctx.width < DESKTOP_MIN)
+    await runHitVisible(site, ctx, system);
   if (system.id === 'piscine' && ctx.width >= DESKTOP_MIN)
     await runHitDesktop(site, ctx, system);
   await zoomed('aucun débordement horizontal', () => overflowProblems(site));

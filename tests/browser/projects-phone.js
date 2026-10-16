@@ -7,7 +7,8 @@ le cadre, aucune étiquette sur une autre, centres à 44 px au moins, zones de 4
 coordonnées (clic au point, scrollIntoView avant) : la planète au centre le plus proche gagne.
 Le site est joué en mouvement réduit : planètes figées, coordonnées stables.
 Zones de toucher (`.pl-hit`) : visibles (remplissage et filet de teinte `--live`) dans la
-Piscine zoomée sur téléphone, transparentes au bureau et au repos (plan.md, 13/10/2026). */
+Piscine zoomée sur téléphone et à 768 px, transparentes au bureau et au repos
+(plan.md, 13/10/2026). */
 import { describe, isVisible } from './harness.js';
 import { capped } from './checks.js';
 import {
@@ -160,8 +161,20 @@ function pointNear(near, far) {
 
 const styleOf = (site, el) => site.win.getComputedStyle(el);
 
-/** Canaux et alpha d'une couleur calculée `rgb()` ou `rgba()` ; null si illisible. */
+/**
+ * Canaux et alpha d'une couleur calculée : `rgb()`, `rgba()`, ou `color(srgb r g b / a)` que
+ * Chrome rend pour `color-mix()` (canaux en fraction de 1). Null si illisible.
+ */
 function colorOf(value) {
+  const srgb = /^color\(srgb (.*)\)$/.exec(value);
+  if (srgb) {
+    const parts = srgb[1].split(/[\s/]+/).filter(Boolean).map(Number);
+    if (parts.length < 3 || parts.length > 4 || parts.some(Number.isNaN)) return null;
+    return {
+      rgb: parts.slice(0, 3).map((c) => Math.round(c * 255)),
+      alpha: parts[3] ?? 1,
+    };
+  }
   const match = /^rgba?\((.*)\)$/.exec(value);
   if (!match) return null;
   const numbers = match[1].split(/[\s,/]+/).filter(Boolean).map(Number);
@@ -202,6 +215,19 @@ function hiddenHitProblems(name, style, width) {
 }
 
 /**
+ * Zones de toucher visibles dans la Piscine zoomée (mode téléphone, jusqu'à 880 px) : seul
+ * cas joué à 768 px, où `runPhonePiscine` ne joue pas. `site` est zoomé sur la Piscine.
+ */
+export function runHitVisible(site, ctx, system) {
+  return zoomedCase(ctx, 'Piscine : zones de toucher visibles', site, system, ({ planets }) =>
+    capped(planets.flatMap((p) => visibleHitProblems(
+      plain(p.project.title),
+      styleOf(site, p.hit),
+      ctx.width,
+    ))));
+}
+
+/**
  * Joue les cas de la Piscine zoomée sur téléphone. `context` = { text, system } (texte de la
  * langue, système de la Piscine) ; `site` est zoomé sur la Piscine.
  */
@@ -221,13 +247,7 @@ export async function runPhonePiscine(site, ctx, context) {
     return capped(problems);
   });
   await run('Piscine : centres à 44 px au moins, zones de toucher de 44 px', distanceProblems);
-  await run('Piscine : zones de toucher visibles', ({ planets }) => capped(
-    planets.flatMap((p) => visibleHitProblems(
-      plain(p.project.title),
-      styleOf(site, p.hit),
-      ctx.width,
-    )),
-  ));
+  await runHitVisible(site, ctx, system);
   await run('Piscine : toucher entre deux voisines, le centre le plus proche gagne',
     async ({ planets }) => {
       const problems = [];
