@@ -314,7 +314,11 @@ export function mount(root) {
    */
   const wire = ({ systems, planets }) => {
     for (const system of systems) {
-      system.g.addEventListener('click', () => zoom.enter(system.index));
+      system.g.addEventListener('click', (event) => {
+        // Le clic d'entrée est consommé : le plan ne le prend pas pour un toucher
+        if (state.view.zoomedIndex < 0) event.preventDefault();
+        zoom.enter(system.index);
+      });
       onActivate(system.sun, () => zoom.enter(system.index));
     }
     planets.forEach((planet, k) => {
@@ -391,6 +395,7 @@ export function mount(root) {
   const syncStill = () => root.toggleAttribute('data-still', reduced());
 
   parts.plan.addEventListener('click', (event) => {
+    if (event.defaultPrevented) return;
     const { built, view } = state;
     const index = view.zoomedIndex;
     if (index < 0 || !built.systems[index].phonePis) return;

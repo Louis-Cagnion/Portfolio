@@ -198,6 +198,22 @@ function activate(site, el, how) {
   return press(site, el, how === 'Espace' ? ' ' : 'Enter');
 }
 
+/**
+ * Clic réel sur `el` : au centre de son rectangle (défilé à l'écran d'abord), envoyé à
+ * l'élément qui s'y trouve (`elementFromPoint`), avec les coordonnées du clic. Rend la
+ * cible, ou null si rien n'est à ce point.
+ */
+export async function clickAtCentre(site, el) {
+  el.scrollIntoView({ block: 'center' });
+  await new Promise((resolve) => site.win.requestAnimationFrame(resolve));
+  await sleep(POLL_MS);
+  const { x, y } = centre(el.getBoundingClientRect());
+  const target = site.doc.elementFromPoint(x, y);
+  const init = { bubbles: true, cancelable: true, clientX: x, clientY: y };
+  target?.dispatchEvent(new site.win.MouseEvent('click', init));
+  return target;
+}
+
 /** État qui change tant que le zoom, la caméra ou une transition de hauteur bougent. */
 function signature(site) {
   const { svg, head, layout } = parts(site);

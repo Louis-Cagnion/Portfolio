@@ -27,6 +27,7 @@ import { normalize } from './text.js';
 import { recordExceptions, skip, test } from './runner.js';
 import {
   approachOf,
+  clickAtCentre,
   countOf,
   ficheCycle,
   gate,
@@ -42,6 +43,7 @@ import {
   pressEscape,
   projectsData,
   rest,
+  sheetOpen,
   sleep,
   suns,
   sunOf,
@@ -64,6 +66,7 @@ const PHONE_MAX = 430;
 const TOLERANCE = 2;
 const GRID_TOLERANCE = 8; // px d'écart admis entre soleils alignés
 const LANGS = ['fr', 'en'];
+const SHEET_CHECK_MS = 300; // l'ouverture de la fiche suit le clic de peu
 const BACK_CHECK_MS = 100; // relevé du focus, bien avant la fin de la sortie (900 ms)
 
 const uncaught = (site) => site.uncaught.map((e) => `exception non rattrapée : ${e}`);
@@ -442,6 +445,47 @@ async function triggerTests(site, ctx, text, systems) {
   });
 }
 
+/** Ferme la fiche puis quitte le zoom (Échap), pour rendre le site au repos. */
+async function backToRest(site) {
+  await rest(site);
+  if (sheetOpen(site)) {
+    pressEscape(site);
+    await waitFor(() => !sheetOpen(site), 3000, 'fiche fermée par Échap');
+    await rest(site);
+  }
+  if (isZoomed(site)) {
+    pressEscape(site);
+    await waitFor(() => !isZoomed(site), 3000, 'sortie du zoom par Échap');
+  }
+  await rest(site);
+}
+
+/**
+ * Un clic réel (aux coordonnées du centre du soleil) sur la Piscine zoome sans ouvrir de
+ * fiche : le clic d'entrée ne compte pas comme un toucher sur le plan zoomé.
+ */
+async function sunClickTests(site, ctx, text, systems) {
+  const system = systems.find((each) => each.id === 'piscine');
+  const name = `${system.name} : un clic réel sur le soleil zoome, aucune fiche ouverte`;
+  await test(ctx, name, async () => {
+    const sun = sunOf(site, text, system);
+    if (!sun) return ['soleil introuvable'];
+    const target = await clickAtCentre(site, sun);
+    if (!target) return ['aucun élément au centre du soleil'];
+    const problems = [];
+    try {
+      await waitFor(() => isZoomed(site), 3000, 'classe zfocus après le clic');
+    } catch (error) {
+      problems.push(error.message);
+    }
+    await sleep(SHEET_CHECK_MS);
+    if (sheetOpen(site))
+      problems.push(`fiche ouverte par le clic d'entrée (cible ${describe(target)})`);
+    await backToRest(site);
+    return problems;
+  });
+}
+
 // ---------- Lancement ----------
 
 async function runSite(width, lang, datas, mainWidth) {
@@ -462,6 +506,7 @@ async function runSite(width, lang, datas, mainWidth) {
     if (ctx.width <= PHONE_MAX) await runHitRest(site, ctx);
     await listTests(site, ctx, text, systems);
     await triggerTests(site, ctx, text, systems);
+    await sunClickTests(site, ctx, text, systems);
     await backFocusTests(site, ctx, text, systems);
     await runInert(site, ctx, text, systems);
     await raiseTests(site, ctx, text, systems);
