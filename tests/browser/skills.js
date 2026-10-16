@@ -11,9 +11,9 @@ sont dans S8.B3 et S8.B4. Contrat DOM fixé par arbre-s8.md:22 (S8.B2) :
 - trente et une étoiles .st-g (astre .body, nom text.name), chacune dans la constellation de
   son groupe, au repos tabindex="-1" (jamais dans l'ordre de tabulation) ;
 - légende : un astre par niveau (skills.levels, skills.bodies), texte « {body} : {level} »
-  en français et « {body}: {level} » en anglais, niveau en minuscules (toLocaleLowerCase
-  (langue)), par exemple « Galaxie : avancé » et « Galaxy: advanced » ; clé de données
-  skills.legendItem (feuille C0) ;
+  en français et « {body}: {level} » en anglais, niveau tel que skills.levels, par
+  exemple « Galaxie : Avancé » et « Galaxy: Advanced » ; clé de données skills.legendItem
+  (feuille C0) ;
 - placement (js/sections/skills-layout.js, S8.C1) : bureau (plus de 880 px) quatre colonnes
   de 275 x 220 sur deux rangées, téléphone deux colonnes de 170 x 200 sur quatre rangées ;
   chaque étoile reste dans la cellule de sa constellation, aucune paire d'étoiles d'une
@@ -139,13 +139,13 @@ function textProblems(site, text) {
   return problems;
 }
 
-function legendProblems(site, text, lang) {
+function legendProblems(site, text) {
   const { legend } = parts(site);
   if (!legend) return ['.legend introuvable'];
   const problems = [];
   const found = [];
   for (const level of LEVEL_ORDER) {
-    const wanted = legendOf(text, lang, level);
+    const wanted = legendOf(text, level);
     const hits = exactTexts(legend, wanted);
     if (hits.length !== 1) problems.push(`légende « ${wanted} » : ${hits.length} élément(s)`);
     found.push(hits[0]);
@@ -158,7 +158,7 @@ function legendProblems(site, text, lang) {
   return problems;
 }
 
-async function structureTests(site, ctx, text, lang) {
+async function structureTests(site, ctx, text) {
   await test(ctx, 'structure : h2, chapeau, plan nommé, aide, panneau, légende', () => {
     const missing = gate(site);
     return missing.length ? missing : structureProblems(site, text);
@@ -191,8 +191,9 @@ async function structureTests(site, ctx, text, lang) {
       problems.push(`.focus-panel non vide : « ${textOf(panel).slice(0, 40)} »`);
     return problems;
   });
-  await test(ctx, 'légende : un astre par niveau, « {body} : {level} » en minuscules',
-    () => legendProblems(site, text, lang));
+  await test(ctx,
+    'légende : un astre par niveau, « {body} : {level} », niveau tel que skills.levels',
+    () => legendProblems(site, text));
 }
 
 // ---------- Constellations et étoiles ----------
@@ -376,7 +377,7 @@ function keptNodes(site) {
   ];
 }
 
-function translatedProblems(site, other, lang) {
+function translatedProblems(site, other) {
   const problems = [...textProblems(site, other)];
   const groups = groupEls(site);
   other.groups.forEach((group, k) => {
@@ -391,7 +392,7 @@ function translatedProblems(site, other, lang) {
   });
   const name = accessibleName(site, parts(site).svg);
   if (name !== plain(other.title)) problems.push(`svg#constSvg : nom « ${name} » non traduit`);
-  return [...problems, ...legendProblems(site, other, lang)];
+  return [...problems, ...legendProblems(site, other)];
 }
 
 async function switchTests(site, ctx, lang, datas) {
@@ -413,7 +414,7 @@ async function switchTests(site, ctx, lang, datas) {
       problems.push('nœuds de la rubrique remplacés (update(content) doit les réutiliser)');
     if (site.doc.activeElement !== groups[2])
       problems.push(`focus sur ${describe(site.doc.activeElement)}, pas la constellation`);
-    problems.push(...translatedProblems(site, datas[other], other));
+    problems.push(...translatedProblems(site, datas[other]));
     return [...problems, ...await noForeignText(site, other)];
   });
 }
@@ -462,7 +463,7 @@ async function runSite(width, lang, datas, mainWidth) {
     return;
   }
   try {
-    await structureTests(site, ctx, text, lang);
+    await structureTests(site, ctx, text);
     await groupTests(site, ctx, text);
     await layoutShapeTests(site, ctx, text, width);
     await layoutTests(site, ctx, 'repos');
@@ -485,7 +486,7 @@ async function runWide(datas) {
     return;
   }
   try {
-    await structureTests(site, ctx, datas.fr, 'fr');
+    await structureTests(site, ctx, datas.fr);
     await groupTests(site, ctx, datas.fr);
     await layoutShapeTests(site, ctx, datas.fr, WIDE_WIDTH);
     await layoutTests(site, ctx, 'repos');

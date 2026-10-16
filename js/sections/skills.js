@@ -109,7 +109,6 @@ export function mount(root, { focus = idleFocus } = {}) {
   const camera = makeCamera(parts.plan);
   const state = {
     skills: null, // données `skills` de la langue affichée
-    lang: '', // langue affichée
     signature: '', // idsOf des données affichées
     built: null, // résultat de buildOverview
     phone: narrow.matches,
@@ -151,7 +150,7 @@ export function mount(root, { focus = idleFocus } = {}) {
 
   /** Légende, aide et chapeau dans la langue affichée. */
   const translateTexts = () => {
-    const { skills, lang } = state;
+    const { skills } = state;
     const { legend } = parts;
     parts.heading.textContent = skills.title;
     parts.lede.textContent = skills.lede;
@@ -161,7 +160,7 @@ export function mount(root, { focus = idleFocus } = {}) {
     for (const { level, text } of legend.items)
       text.data = format(skills.legendItem, {
         body: skills.bodies[level],
-        level: skills.levels[level].toLocaleLowerCase(lang),
+        level: skills.levels[level],
       });
   };
 
@@ -175,9 +174,9 @@ export function mount(root, { focus = idleFocus } = {}) {
 
   root.append(parts.heading, parts.lede, parts.layout, parts.legend.node);
 
-  return ({ meta, skills }) => {
+  return ({ skills }) => {
     const same = state.built && idsOf(skills.groups) === state.signature;
-    Object.assign(state, { skills, lang: meta.lang });
+    Object.assign(state, { skills });
     translateTexts();
     if (same) retext(state.built, skills.groups, skills);
     else {

@@ -41,9 +41,9 @@ export function format(template, values) {
   return template.replace(/\{(\w+)\}/g, (_, key) => String(values[key] ?? `{${key}}`));
 }
 export const exploreOf = (text, group) => format(text.explore, { name: group.title });
-export const legendOf = (text, lang, level) => format(text.legendItem, {
+export const legendOf = (text, level) => format(text.legendItem, {
   body: text.bodies[level],
-  level: text.levels[level].toLocaleLowerCase(lang),
+  level: text.levels[level],
 });
 
 /** Grille attendue pour `width` : colonnes, rangées et cellule en unités du dessin. */
