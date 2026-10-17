@@ -1,49 +1,9 @@
-/* Rubrique Compétences (S8), AU REPOS : le déploiement, la plongée, le clavier et le mouvement
-sont dans S8.B3 et S8.B4. Contrat DOM fixé par arbre-s8.md:22 (S8.B2) :
-- js/sections/skills.js monte la rubrique réelle dans section#skills (main.js) ; elle contient
-  h2[tabindex="-1"] (texte skills.title), p.lede (skills.lede), #skillsLayout.skills-layout >
-  .viz-wrap > svg#constSvg.viz.const[role="group"] dont le nom accessible est skills.title,
-  p.hint (skills.hint), .focus-panel.hud (vide et `inert` au repos) et .legend ; aucun
-  .status ;
-- huit constellations .group[role="button"][tabindex="0"] dans le plan, une par groupe de
-  data/*.json skills.groups, nommées format(skills.explore, { name: titre }), .cname = `short`,
-  chacune avec sa cellule rect.cell (arbre-s8.md:40) ;
-- trente et une étoiles .st-g (astre .body, nom text.name), chacune dans la constellation de
-  son groupe, au repos tabindex="-1" (jamais dans l'ordre de tabulation) ;
-- légende : un astre par niveau (skills.levels, skills.bodies), texte « {body} : {level} »
-  en français et « {body}: {level} » en anglais, niveau tel que skills.levels, par
-  exemple « Galaxie : Avancé » et « Galaxy: Advanced » ; clé de données skills.legendItem
-  (feuille C0) ;
-- placement (js/sections/skills-layout.js, S8.C1) : bureau (plus de 880 px) quatre colonnes
-  de 275 x 220 sur deux rangées, téléphone deux colonnes de 170 x 200 sur quatre rangées ;
-  chaque étoile reste dans la cellule de sa constellation, aucune paire d'étoiles d'une
-  constellation ne se superpose ; positions identiques en français et en anglais (le placement
-  dépend de `id`) ; la bascule de langue garde les mêmes nœuds et le focus.
-Critères (mot pour mot) :
-- docs/design/plan.md:125 « Déploiement, plongée, retour sans à-coup, projets liés qui
-  ouvrent la fiche, lien Devpedia placé selon la maquette validée » (la suite : B3 et B4) ;
-- docs/design/plan.md:149 « chacun remplace dans `js/main.js` le montage minimal de sa
-  rubrique » ;
-- docs/design/plan.md:122 « chaque module S6 à S9 retire le panneau de sa rubrique » (donc
-  aucun panneau `.status` « indisponible » dans #skills) ;
-- docs/design-checklist.md:141 « Panneaux HUD : [...] panneau de compétences. Le détail de
-  compétence imbriqué (`.skill`) n'a ni bordure ni coins. » ;
-- :277 « `documentElement.scrollWidth <= clientWidth` à chacune de ces largeurs et dans chaque
-  rubrique » ;
-- :285 « Compétences : constellations sur 2 colonnes (170 × 200), plan de zoom ratio
-  `1 / 1.15`, panneau de détail placé sous le plan collant avec `margin-top: -34vw` » ;
-- :268 « `.back` (environ 36px), `.chips button` (environ 32px) » ;
-- :270 « étoiles 18 (`s.hit`) » ;
-- :314 « Les groupes SVG focalisables (escales, constellations, soleils, cœur du disque)
-  portent `tabindex="0"`, `role="button"`, `aria-label` et gèrent Entrée et Espace » ;
-- :322 « Après un changement de rubrique, le focus est déplacé sur le titre h2 de la nouvelle
-  rubrique (`tabindex="-1"`) » ;
-- :133 « chacun reçoit un anneau net en `:focus-visible` [...] sur sa zone cliquable » (rendu
-  d'un focus clavier : le lanceur headless n'a pas de focus visible, cas des groupes en B3) ;
-- :352 « `grep -rn innerHTML js/` ne renvoie que `js/core/dom.js` » (déjà couvert par les
-  tests de source de tests/texts.test.mjs, hors de ce fichier).
-Cas par site (largeur, langue) ; le mouvement est réduit hors de la largeur principale pour
-tenir le temps de la suite. Un cas supplémentaire à 2560 px (français). */
+/* Rubrique Compétences (S8), AU REPOS : structure, constellations, étoiles, légende,
+disposition, placement, bascule de langue, débordement et cibles. Le déploiement, la
+plongée, le clavier et le mouvement sont dans skills-focus.js (S8.B3), les projets liés et
+le lien Devpedia dans S8.B4. Contrat DOM et critères (mot pour mot) : README.md, groupe
+competences. Cas par site (largeur, langue) ; le mouvement est réduit hors de la largeur
+principale pour tenir le temps de la suite. Un cas supplémentaire à 2560 px (français). */
 import { overflowProblems, targetProblems } from './checks.js';
 import { describe, waitFor } from './harness.js';
 import { noForeignText, switchTo } from './language.js';
@@ -68,6 +28,7 @@ import {
   surveyOf,
   textOf,
 } from './skills-probe.js';
+import { runSkillsFocus } from './skills-focus.js';
 import { normalize } from './text.js';
 
 export const GROUP = 'Compétences';
@@ -498,12 +459,12 @@ async function runWide(datas) {
 
 /**
  * Groupe « Compétences » : cas au repos par largeur et langue ; le cas à 2560 px avec la
- * largeur principale.
+ * largeur principale ; puis le déploiement (skills-focus.js).
  */
 export async function runSkills(widths, mainWidth) {
   const datas = await skillsData();
   for (const width of widths)
     for (const lang of LANGS) await runSite(width, lang, datas, mainWidth);
-  if (!widths.includes(mainWidth)) return;
-  await runWide(datas);
+  if (widths.includes(mainWidth)) await runWide(datas);
+  await runSkillsFocus(widths, mainWidth);
 }

@@ -1,7 +1,7 @@
 /* Sonde du groupe « Compétences » : données réelles, site ouvert sur la rubrique, éléments du
-contrat DOM (en-tête de tests/browser/skills.js), mesures de géométrie en pixels rendus (le
-plan est un svg à viewBox : tout est comparé en rapports, jamais en unités du dessin).
-Aucun libellé en dur : tout vient de data/. */
+contrat DOM (README.md, groupe competences), mesures de géométrie en pixels rendus (le plan
+est un svg à viewBox : tout est comparé en rapports, jamais en unités du dessin). Sonde du
+déploiement : skills-focus-probe.js. Aucun libellé en dur : tout vient de data/. */
 import {
   goTo,
   isVisible,
@@ -11,6 +11,7 @@ import {
   settle,
   waitStatus,
 } from './harness.js';
+import { countLoops } from './projects-probe.js';
 import { normalize } from './text.js';
 import { stubMotion } from './warp.js';
 
@@ -56,16 +57,58 @@ export function gridFor(width, count) {
 // ---------- Site ----------
 
 /**
+ * Compte, en plus de `countLoops`, les demandes de requestAnimationFrame (`requests`) et le
+ * plus grand nombre de rappels en attente ensemble (`peak`).
+ */
+function trackFrames(site) {
+  const { win } = site;
+  const loops = countLoops(site);
+  const request = win.requestAnimationFrame;
+  Object.assign(loops, { requests: 0, peak: 0 });
+  win.requestAnimationFrame = (callback) => {
+    const id = request(callback);
+    loops.requests++;
+    loops.peak = Math.max(loops.peak, loops.pending.size);
+    return id;
+  };
+  return loops;
+}
+
+/**
+ * Le banc ne règle pas le média `prefers-reduced-motion` : sous mouvement réduit (`motion`),
+ * une feuille jetable rejoue la règle de css/layout.css (ni transition ni animation), pour
+ * que les transitions CSS ne ralentissent pas les cas ; `motion.set` la suit.
+ */
+function stillStyle(site, motion) {
+  const style = site.doc.createElement('style');
+  style.textContent = '*, *::before, *::after { animation: none !important; ' +
+    'transition: none !important; }';
+  site.doc.head.append(style);
+  style.disabled = !motion.reduce;
+  const set = motion.set;
+  motion.set = (reduce) => {
+    set(reduce);
+    style.disabled = !reduce;
+  };
+}
+
+/**
  * Site ouvert sur Compétences (`visit` faux : resté sur l'accueil). `reduce` fixe le mouvement
- * réduit dès l'amorçage.
+ * réduit dès l'amorçage ; `loops` compte les requestAnimationFrame (`site.loops`) ;
+ * `site.rawFrame` demande une image sans être compté.
  */
 export async function openSkillsSite(width, options = {}) {
-  const { lang = 'fr', reduce = false, visit = true } = options;
+  const { lang = 'fr', reduce = false, visit = true, loops = false } = options;
   const motion = { reduce };
   const site = await openSite({
     width,
     storage: makeStorage(lang === 'en' ? { lang } : {}),
-    prepare: (opened) => stubMotion(opened, motion),
+    prepare: (opened) => {
+      stubMotion(opened, motion);
+      stillStyle(opened, motion);
+      opened.rawFrame = opened.win.requestAnimationFrame.bind(opened.win);
+      if (loops) opened.loops = trackFrames(opened);
+    },
   });
   site.motion = motion;
   try {
@@ -187,15 +230,28 @@ export function surveyOf(site, width, count) {
 function signature(site) {
   const { svg, layout } = parts(site);
   const rect = svg?.getBoundingClientRect();
-  return [svg?.getAttribute('viewBox'), rect?.height.toFixed(1), layout?.className].join('|');
+  const skill = site.doc.getElementById('skill');
+  return [
+    svg?.getAttribute('viewBox'),
+    rect?.height.toFixed(1),
+    layout?.className,
+    skill?.className,
+  ].join('|');
 }
 
-/** Attend que le plan ne bouge plus (quatre relevés identiques de suite, 4 s au plus). */
+/** Vrai tant qu'une transition CSS de la rubrique tourne (hauteur du plan, fondus). */
+const transitioning = (site) => !!parts(site).root?.getAnimations({ subtree: true })
+  .some((a) => a instanceof site.win.CSSTransition && a.playState === 'running');
+
+/**
+ * Attend que le plan ne bouge plus (quatre relevés identiques de suite, 4 s au plus) puis que
+ * les transitions CSS de la rubrique soient finies.
+ */
 export async function rest(site) {
   const end = performance.now() + 4000;
   let last = null;
   let same = 0;
-  while (performance.now() < end && same < STABLE_POLLS) {
+  while (performance.now() < end && (same < STABLE_POLLS || transitioning(site))) {
     const now = signature(site);
     same = now === last ? same + 1 : 0;
     last = now;
