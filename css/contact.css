@@ -190,9 +190,20 @@ n'ont pas de jeton : valeurs de la maquette, notées à leur règle.
   fill: transparent;
 }
 
+/* Anneau sombre : l'or rend le clair illisible (6,49:1 pour --arc-ink sur #d9a54d). */
 #contact .rec-hit:focus-visible .core {
-  stroke: #fff3cf;
+  stroke: var(--arc-ink);
   stroke-width: 2;
+}
+
+/* Sillon focalisé au clavier : un trait sombre de 2 px de chaque côté de la piste allumée. */
+#contact .disc:has(.rec-hit:focus-visible) .groove-track.lit {
+  filter:
+    drop-shadow(2px 0 0 var(--arc-ink))
+    drop-shadow(-2px 0 0 var(--arc-ink))
+    drop-shadow(0 2px 0 var(--arc-ink))
+    drop-shadow(0 -2px 0 var(--arc-ink))
+    drop-shadow(0 0 6px #ffd27a);
 }
 
 /* ───── Téléphone : le disque se verrouille, puis s'ouvre sur sa moitié haute ───── */

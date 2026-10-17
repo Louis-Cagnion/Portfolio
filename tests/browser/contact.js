@@ -239,6 +239,72 @@ async function copyTests(ctx, width) {
   });
 }
 
+// ---------- Focus visible du disque ----------
+
+const ARC_INK = 'rgb(59, 37, 7)'; // --arc-ink : #3b2507
+
+const rulesOf = (sheet) => {
+  try {
+    return [...sheet.cssRules];
+  } catch {
+    return []; // feuille d'une autre origine : règles illisibles
+  }
+};
+
+/**
+ * Le lanceur headless n'a pas de focus visible : les règles `:focus-visible` de #contact sont
+ * copiées avec la classe `.kbd` à la place, posée sur l'élément. Rend la fonction qui
+ * défait.
+ */
+function simulateFocusVisible(site, target) {
+  const rules = [...site.doc.styleSheets]
+    .flatMap(rulesOf)
+    .filter((r) => r.cssText.includes('#contact') && r.cssText.includes(':focus-visible'));
+  const style = site.doc.createElement('style');
+  style.textContent = rules
+    .map((r) => r.cssText.replaceAll(':focus-visible', '.kbd'))
+    .join('\n');
+  site.doc.head.append(style);
+  target.classList.add('kbd');
+  return () => {
+    target.classList.remove('kbd');
+    style.remove();
+  };
+}
+
+async function discFocusRingTests(ctx, width) {
+  const site = await openContact(width);
+  try {
+    const name = 'focus clavier : traits sombres du sillon, anneau sombre du cœur';
+    await check(ctx, name, site, async (p) => {
+      const problems = [];
+      const win = site.doc.defaultView;
+      for (let k = 0; k < 4; k++) {
+        focusOn(site, p.links[k]);
+        const release = simulateFocusVisible(site, p.links[k]);
+        const inks = () => win.getComputedStyle(p.tracks[k]).filter.match(/rgb\(59, 37, 7\)/g);
+        const dark = () => (inks()?.length ?? 0) >= 2;
+        await waitFor(dark, 2000, 'traits sombres').catch(() => {});
+        const shadows = inks();
+        if ((shadows?.length ?? 0) < 2)
+          problems.push(`sillon ${k + 1} focalisé : moins de deux traits sombres de piste`);
+        release();
+      }
+      focusOn(site, p.core);
+      const release = simulateFocusVisible(site, p.core);
+      const ring = win.getComputedStyle(p.core.querySelector('.core'));
+      if (ring.stroke !== ARC_INK)
+        problems.push(`cœur : trait ${ring.stroke} au lieu de ${ARC_INK}`);
+      if (parseFloat(ring.strokeWidth) !== 2)
+        problems.push(`cœur : trait de ${ring.strokeWidth}`);
+      release();
+      return problems;
+    });
+  } finally {
+    site.close();
+  }
+}
+
 // ---------- Sillons au clavier ----------
 
 async function grooveFocusTests(ctx, width, label) {
@@ -730,6 +796,7 @@ export async function runContact(widths, mainWidth) {
   await step('copie', () => copyTests(ctx, wideWidth));
   await step('sillons (grand écran)', () => grooveFocusTests(ctx, wideWidth, 'grand écran'));
   await step('sillons (téléphone)', () => grooveFocusTests(ctx, phoneWidth, 'téléphone'));
+  await step('focus visible du disque', () => discFocusRingTests(ctx, wideWidth));
   await step('toucher', () => armedTests(ctx));
   await step('téléphone', () => phoneTests(ctx, phoneWidth));
   await step('redimensionnement', () => resizeTests(ctx));
