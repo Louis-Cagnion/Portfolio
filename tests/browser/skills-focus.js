@@ -41,6 +41,7 @@ import {
   walkProblems,
 } from './skills-focus-probe.js';
 import { nameCases } from './skills-focus-names.js';
+import { runLeaveHeight } from './skills-focus-leave.js';
 import { runMotion } from './skills-focus-motion.js';
 import {
   groupEls,
@@ -58,6 +59,7 @@ const LANGS = ['fr', 'en'];
 const HOWS = ['clic', 'Entrée', 'Espace'];
 const PHONE_WIDTHS = [320, 390, 430];
 const REAL_WIDTHS = [390, 1280];
+const LEAVE_WIDTHS = [320, 390]; // retour en mouvement réel : téléphone seulement
 const WIDE_WIDTH = 2560;
 
 // ---------- Déploiement et plongée ----------
@@ -140,8 +142,8 @@ async function jumpCases(kit) {
     await ready(kit, k, 'clic', true);
     const ids = idsOf(site, text, k);
     const stars = starsOf(groupEls(site)[k]);
-    const open = stars.filter((s) => s !== curStar(site) && s.tabIndex >= 0);
-    const problems = need([], open.length >= 2, `${open.length} étoile(s) focalisable(s)`);
+    const open = stars.filter((s) => s !== curStar(site)).slice(0, 2);
+    const problems = need([], open.length === 2, `${open.length} étoile(s) non courante(s)`);
     for (const [key, star] of [['Enter', open[0]], [' ', open[1] ?? open[0]]]) {
       if (!star) continue;
       star.focus();
@@ -284,6 +286,24 @@ async function keyboardCases(kit) {
       need(problems, panel.every((el, i) => at(el) > (i ? at(panel[i - 1]) : at(cur))),
         'panneau absent ou dans le désordre (étoile, retour, puces, flèches)');
       return problems;
+    });
+  await test(ctx, 'plongée : seule l\'étoile courante est tabulable, les puces le restent',
+    async () => {
+      await ready(kit, k, 'clic', true);
+      const order = tabOrder(site);
+      const cur = curStar(site);
+      const stars = starsOf(groupEls(site)[k]);
+      const loose = stars.filter((star) => star !== cur && order.includes(star));
+      const problems = need([], !!cur && order.includes(cur), 'étoile courante non tabulable');
+      need(problems, !loose.length,
+        `${loose.length} étoile(s) non courante(s) tabulable(s) sur ${stars.length - 1}`);
+      const wrong = stars.filter((star) => star !== cur && star.tabIndex !== -1);
+      need(problems, !wrong.length,
+        `${wrong.length} étoile(s) non courante(s) sans tabIndex -1`);
+      const chips = panelParts(site, text).chips;
+      need(problems, chips.length > 0, 'aucune puce');
+      const lost = chips.filter((chip) => !order.includes(chip));
+      return need(problems, !lost.length, `${lost.length} puce(s) hors de la tabulation`);
     });
   await test(ctx, 'retour, puces et flèches : des button focalisables (Entrée, Espace natifs)',
     async () => {
@@ -489,6 +509,7 @@ export async function runSkillsFocus(widths, mainWidth) {
   for (const width of widths) {
     for (const lang of LANGS) await runSite(width, lang, datas);
     if (REAL_WIDTHS.includes(width)) await runMotion(width, datas);
+    if (LEAVE_WIDTHS.includes(width)) await runLeaveHeight(width, datas);
   }
   if (widths.includes(mainWidth)) await runWide(datas);
 }
