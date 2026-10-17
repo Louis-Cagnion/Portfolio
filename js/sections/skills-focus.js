@@ -428,6 +428,13 @@ export function createFocus({ root, parts, state, camera, onRelated }) {
   /** Recadre l'étoile courante après un redimensionnement (jamais pendant une séquence). */
   const recentre = () => {
     if (busy || !deck || !plan.clientWidth) return;
+    if (phone()) {
+      plan.style.transition = 'none'; // pose directe : la vue lit aussitôt la hauteur finale
+      plan.style.aspectRatio = '';
+      plan.style.height = `${view().width * PHONE_RATIO}px`;
+      view();
+      plan.style.removeProperty('transition');
+    }
     const target = aim(deck.rank);
     camera.set(target.cam);
     setScale(target.scale);
