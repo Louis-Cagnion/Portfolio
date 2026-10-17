@@ -20,8 +20,8 @@ import {
   waitFor,
 } from './harness.js';
 import { MIN_TARGET, overflowProblems, targetProblems } from './checks.js';
-import { noForeignText, switchTo } from './language.js';
 import { recordExceptions, skip, test } from './runner.js';
+import { languageTests } from './contact-lang.js';
 import {
   blurOn,
   boxProblems,
@@ -30,36 +30,35 @@ import {
   collect,
   contactData,
   copy,
+  DISC_PHONE_MAX,
+  DISC_WIDE_MAX,
   escape,
   failedText,
+  FULL,
   focusOn,
+  GROUP,
   grooveText,
+  HALF,
   hitAt,
   mailOf,
   openContact,
+  PANEL,
   parts,
+  PHONE_MAX,
   press,
   probeClick,
+  REVERT_MS,
   reaches,
+  RING_LABEL,
+  RING_RADII,
+  RING_WIDTHS,
   sameBox,
   sleep,
   textOf,
+  TOLERANCE,
   viewBoxOf,
   waitAnnounce,
 } from './contact-probe.js';
-
-export const GROUP = 'Contact';
-const PHONE_MAX = 820; // @media (max-width: 51.25em), maquette:262
-const DISC_PHONE_MAX = 320; // maquette:264
-const DISC_WIDE_MAX = 460; // maquette:259
-const TOLERANCE = 1;
-const FULL = [-250, -250, 500, 500];
-const HALF = [-125, -250, 250, 250];
-const RING_RADII = [117, 150, 182, 219]; // milieu des anneaux : (100+134)/2 ... (198+240)/2
-const RING_WIDTHS = [34, 32, 32, 42]; // épaisseur des anneaux (REC_EDGES, maquette:1112)
-const REVERT_MS = 2200; // maquette:1163
-const PANEL = '.status.hud[data-state="error"]';
-const RING_LABEL = 'taille fixée par la maquette validée';
 
 // ---------- Contrat statique ----------
 
@@ -682,99 +681,6 @@ async function layoutTests(ctx, width) {
   } finally {
     site.close();
   }
-}
-
-// ---------- Langue ----------
-
-/** Problèmes de textes de la rubrique par rapport aux données `c` d'une langue. */
-function textProblems(c, p) {
-  const [problems, eq] = collect();
-  eq('h2', textOf(p.h2), c.title);
-  eq('h3', textOf(p.msg.querySelector('h3')), c.question);
-  eq('message', textOf(p.msg.querySelector('p')), c.message);
-  eq('aria-label du disque', p.disc.getAttribute('aria-label'), c.discLabel);
-  p.links.forEach((a, k) => {
-    eq(`aria-label du sillon ${k + 1}`, a.getAttribute('aria-label'), grooveText(c, k));
-    eq(`nom gravé ${k + 1}`, textOf(p.names[k]), c.channels[k].name.toUpperCase());
-  });
-  return problems;
-}
-
-async function switchTests(ctx, width, fr, en) {
-  const site = await openContact(width);
-  try {
-    const phone = width <= PHONE_MAX;
-    const toEn = 'bascule FR vers EN : textes, libellés, noms gravés, aide';
-    await check(ctx, toEn, site, async (p) => {
-      if (phone) click(site, p.disc);
-      await switchTo(site, 'en');
-      const q = parts(site);
-      const problems = textProblems(en, q);
-      if (textOf(q.coreText) !== en.copyHint)
-        problems.push(`gravure « ${textOf(q.coreText)} » au lieu de « ${en.copyHint} »`);
-      if (phone && !textOf(q.hint).includes(en.backHint))
-        problems.push(`aide ouverte « ${textOf(q.hint)} » sans « ${en.backHint} »`);
-      problems.push(...(await noForeignText(site, 'en')));
-      return problems;
-    });
-    await check(ctx, 'bascule EN vers FR : tout revient, aide cohérente', site, async () => {
-      await switchTo(site, 'fr');
-      const q = parts(site);
-      const problems = textProblems(fr, q);
-      problems.push(...(await noForeignText(site, 'fr')));
-      if (phone) {
-        const open = q.disc.classList.contains('open');
-        const expected = open ? fr.backHint : fr.tapHint;
-        if (!textOf(q.hint).includes(expected))
-          problems.push(`aide « ${textOf(q.hint)} » incohérente avec l'état`);
-      }
-      return problems;
-    });
-  } finally {
-    site.close();
-  }
-}
-
-async function announceSwitchTests(ctx, width, fr, en) {
-  for (const mode of ['ok', 'reject']) {
-    const site = await openContact(width, { mode });
-    const ok = mode === 'ok';
-    const name = `bascule pendant une annonce (copie ${ok ? 'réussie' : 'en échec'})`;
-    try {
-      await check(ctx, name, site, async (p) => {
-        const problems = [];
-        copy(site, p);
-        await waitAnnounce(site, 'annonce', () => textOf(p.status) !== '');
-        await switchTo(site, 'en');
-        const q = parts(site);
-        const said = textOf(q.status);
-        const frText = ok ? fr.copiedStatus : failedText(fr);
-        const enText = ok ? en.copiedStatus : failedText(en);
-        if (said !== '' && said !== enText)
-          problems.push(`annonce « ${said} » après bascule : ni vide ni « ${enText} »`);
-        if (said === frText) problems.push('annonce restée en français');
-        const engraved = textOf(q.coreText);
-        if (![en.copied, en.copyHint].includes(engraved))
-          problems.push(`gravure « ${engraved} » ni EN copié ni EN invite`);
-        problems.push(...(await noForeignText(site, 'en')));
-        site.clip.mode = 'ok';
-        copy(site, q);
-        await waitAnnounce(site, 'annonce EN', () => textOf(q.status) === en.copiedStatus);
-        const back = () => !textOf(q.status) && textOf(q.coreText) === en.copyHint;
-        await waitAnnounce(site, 'retour EN', back);
-        return problems;
-      });
-    } finally {
-      site.close();
-    }
-  }
-}
-
-async function languageTests(ctx, width) {
-  const fr = await contactData('fr');
-  const en = await contactData('en');
-  await switchTests(ctx, width, fr, en);
-  await announceSwitchTests(ctx, width, fr, en);
 }
 
 // ---------- Lancement ----------
