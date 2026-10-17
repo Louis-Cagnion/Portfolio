@@ -204,12 +204,16 @@ function starNode(star, scale) {
     svg('g', { class: 'body-in' }, ...bodyArt(level)),
   );
   const hit = svg('circle', { cx: star.x, cy: star.y, r: HIT_RADIUS, fill: 'transparent' });
-  const label = svg('text', {
-    class: 'name',
-    'text-anchor': 'middle',
-    x: star.x,
-    y: star.y - labelOffset(level, scale),
-  }, star.name);
+  const label = svg(
+    'text',
+    {
+      class: 'name',
+      'text-anchor': 'middle',
+      x: star.x,
+      y: star.y - labelOffset(level, scale),
+    },
+    star.name,
+  );
   const element = svg('g', { class: `st-g lv${level}` }, body, hit, label);
   return { element, body, hit, label };
 }

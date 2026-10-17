@@ -268,7 +268,7 @@ export function createFocus({ root, parts, state, camera, onRelated }) {
       element.classList.toggle('cur', j === rank);
       element.setAttribute('tabindex', j === rank ? '0' : '-1'); // tabulation itinérante
     });
-    state.selection = { group: built.id, star: built.stars[rank].id };
+    state.selection = { group: built.id };
     host.querySelector('#skill').classList.remove('traveling');
   };
 
@@ -297,7 +297,7 @@ export function createFocus({ root, parts, state, camera, onRelated }) {
     busy = true;
     const token = epoch;
     const { built } = deck;
-    state.selection = { group: null, star: null };
+    state.selection = { group: null };
     if (phone()) startFold();
     layout.classList.remove('focus');
     plan.classList.remove('focused');
@@ -356,7 +356,7 @@ export function createFocus({ root, parts, state, camera, onRelated }) {
     busy = true;
     const token = epoch;
     const spots = spreadOf(built.stars, built.center, { phone: phone() });
-    state.selection = { group: built.id, star: built.stars[0].id };
+    state.selection = { group: built.id };
     mark(index, true);
     arm(built, true);
     plan.classList.add('focused');

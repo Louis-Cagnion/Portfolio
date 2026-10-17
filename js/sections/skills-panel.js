@@ -5,7 +5,7 @@ Balisage et remplissage de la maquette : docs/design/prototype/prototype.templat
 et 849-870 ; styles dans css/skills.css (flèches, retour et titre dans css/panel.css).
 
 Contrat :
-  createPanel(root, { onBack, onStar, onRelated }) -> { node, show, update }
+  createPanel(root, { onBack, onStar, onRelated }) -> { show, update }
   show(index, texts)  affiche l'étoile de rang `index` de `texts.stars` (construit les puces
                       si leur nombre change, sinon réécrit seulement les textes)
   update(texts)       réécrit les textes sans rien reconstruire (bascule de langue) : le focus
@@ -156,7 +156,6 @@ export function createPanel(root, { onBack, onStar, onRelated }) {
     syncArrows();
   };
   return {
-    node: root,
     show(index, texts) {
       state.index = index;
       state.texts = texts;

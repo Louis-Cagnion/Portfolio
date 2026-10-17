@@ -113,8 +113,7 @@ export function mount(root) {
     built: null, // résultat de buildOverview
     phone: narrow.matches,
     width: 0, // largeur affichée du plan, 0 tant que la rubrique n'est pas affichée
-    selection: { group: null, star: null }, // identifiants, gardés d'une langue à l'autre
-    camera,
+    selection: { group: null }, // identifiants, gardés d'une langue à l'autre
   };
   const focus = createFocus({ root, parts, state, camera, onRelated: openRelated });
 
@@ -141,7 +140,7 @@ export function mount(root) {
     state.phone = narrow.matches;
     const built = buildOverview({ groups: skills.groups, text: skills, phone: state.phone });
     state.built = built;
-    state.selection = { group: null, star: null };
+    state.selection = { group: null };
     parts.plan.replaceChildren(...built.children);
     parts.plan.setAttribute('viewBox', `0 0 ${built.width} ${built.height}`);
     parts.plan.style.aspectRatio = `${built.width} / ${built.height}`;
