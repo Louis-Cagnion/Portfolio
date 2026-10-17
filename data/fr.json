@@ -1594,6 +1594,9 @@
     "armed": "Touche-le encore pour l'ouvrir.",
     "tapHint": "Touche le disque pour choisir un contact",
     "backHint": "Revenir au disque entier",
+    "copyFocus": "Copier l'email",
+    "copyFailedHint": "COPIE IMPOSSIBLE",
+    "copyLabel": "Copier l'adresse e-mail",
     "channels": [
       { "id": "mail", "name": "Écrire un e-mail", "href": "mailto:louis.cagnion.pro@gmail.com" },
       {

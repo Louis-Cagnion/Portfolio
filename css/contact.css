@@ -1,0 +1,252 @@
+/*
+Contact : disque d'or (js/sections/contact.js et contact-disc.js). Règles de la maquette
+(docs/design/prototype/prototype.template.html:260-294) ; le mouvement réduit est déjà coupé
+pour toutes les animations par css/layout.css. Les dorés du disque et les opacités d'ombre
+n'ont pas de jeton : valeurs de la maquette, notées à leur règle.
+*/
+
+/* ───── Mise en page : disque et message côte à côte, une colonne sur téléphone ───── */
+#contact .record-wrap {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-areas: "disc msg";
+  gap: 0 48px;
+  align-items: center;
+  margin-top: 28px;
+}
+
+#contact .disc {
+  grid-area: disc;
+  width: 100%;
+  max-width: 460px;
+  justify-self: center;
+  overflow: visible;
+  filter: drop-shadow(var(--shadow-disc));
+}
+
+#contact .msg {
+  grid-area: msg;
+}
+
+#contact .msg h3 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 1.15rem;
+  margin: 0 0 10px;
+  line-height: 1.5;
+}
+
+#contact .msg p {
+  color: var(--dim);
+  margin: 0 0 14px;
+}
+
+/* Lue seulement par les lecteurs d'écran : les arcs gravés disent déjà aux voyants où mène
+   un sillon. */
+#contact .rec-status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+#contact .rec-hint {
+  display: none;
+}
+
+/* ───── Disque : or, reflet, sillons, gravures ───── */
+#contact .gold-0 {
+  stop-color: #ffe7a8;
+}
+
+#contact .gold-1 {
+  stop-color: var(--accent);
+}
+
+#contact .gold-2 {
+  stop-color: #b47a2a;
+}
+
+#contact .gold-3 {
+  stop-color: #7a4f17;
+}
+
+#contact .sheen-edge {
+  stop-color: #fff;
+  stop-opacity: 0;
+}
+
+#contact .sheen-core {
+  stop-color: #fff;
+  stop-opacity: 0.35;
+}
+
+#contact .face {
+  fill: url(#recGold);
+}
+
+#contact .sheen {
+  fill: url(#recSheen);
+  opacity: 0.6;
+}
+
+#contact .rec-label {
+  fill: #d9a54d;
+  stroke: var(--engrave);
+  stroke-width: 1.5;
+  transition: filter var(--dur-fast);
+}
+
+#contact .rec-label.hot {
+  filter: brightness(1.12);
+}
+
+#contact .spindle {
+  fill: #5a3b10;
+}
+
+#contact .grooves {
+  animation: contact-turn 60s linear infinite;
+  transform-origin: 0 0;
+}
+
+#contact .grooves circle {
+  fill: none;
+  stroke: var(--groove);
+  stroke-width: 0.7;
+}
+
+@keyframes contact-turn {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+#contact .groove-track {
+  fill: none;
+  stroke: var(--groove);
+  stroke-width: 7;
+  transition: stroke var(--dur), filter var(--dur);
+}
+
+#contact .groove-track.lit {
+  stroke: var(--groove-lit);
+  filter: drop-shadow(0 0 6px #ffd27a);
+}
+
+#contact .engrave {
+  fill: none;
+  stroke: var(--engrave);
+  stroke-width: 1.1;
+  stroke-linecap: round;
+}
+
+#contact .engrave-dot {
+  fill: var(--engrave);
+}
+
+#contact .engrave-text {
+  fill: var(--engrave-text);
+  font: 600 9.5px var(--mono);
+  letter-spacing: 1.5px;
+}
+
+#contact .arc-name {
+  fill: var(--arc-ink);
+  font: 700 15px var(--mono);
+  letter-spacing: 2.5px;
+  dominant-baseline: central;
+  paint-order: stroke;
+  stroke: var(--arc-halo);
+  stroke-width: 2px;
+  opacity: 0;
+  transition: opacity var(--dur);
+  pointer-events: none;
+}
+
+#contact .arc-name.on {
+  opacity: 1;
+}
+
+/* ───── Zones actives : anneaux larges des sillons, cœur ───── */
+#contact .rec-hit {
+  cursor: pointer;
+}
+
+#contact .rec-hit:focus {
+  outline: none;
+}
+
+#contact .rec-hit .ring {
+  fill: none;
+  stroke: transparent;
+  pointer-events: stroke;
+}
+
+#contact .rec-hit .core {
+  fill: transparent;
+}
+
+#contact .rec-hit:focus-visible .core {
+  stroke: #fff3cf;
+  stroke-width: 2;
+}
+
+/* ───── Téléphone : le disque se verrouille, puis s'ouvre sur sa moitié haute ───── */
+@media (max-width: 51.25em) {
+  #contact .record-wrap {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "msg"
+      "disc"
+      "hint";
+    gap: 12px;
+  }
+
+  #contact .disc {
+    max-width: 320px;
+  }
+
+  /* Les sillons sont trop fins au doigt : le disque s'ouvre d'abord sur sa moitié haute. */
+  #contact .disc.locked {
+    cursor: pointer;
+    animation: contact-call 3s ease-in-out infinite;
+  }
+
+  #contact .disc.locked .hits,
+  #contact .disc.locked .rec-hit .ring {
+    pointer-events: none;
+  }
+
+  #contact .disc.open {
+    max-width: none;
+    overflow: hidden;
+  }
+
+  #contact .disc.open .arc-name {
+    opacity: 1;
+  }
+
+  #contact .rec-hint {
+    grid-area: hint;
+    justify-self: center;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 10px 16px;
+    border: 1px solid var(--line);
+    background: none;
+    color: var(--accent);
+    font: 500 0.85rem var(--mono);
+    cursor: pointer;
+  }
+}
+
+@keyframes contact-call {
+  50% {
+    filter: drop-shadow(var(--shadow-disc)) drop-shadow(var(--glow-disc));
+  }
+}

@@ -1,6 +1,6 @@
 /* Contenu indisponible des rubriques à venir (S5b). Contrat
 (docs/design/plan.md:122 et :151) : sous le titre (h2) et le chapeau (p.lede) de chaque
-rubrique encore montée par mountSimple (MOUNTED : contact), un panneau
+rubrique encore montée par mountSimple (MOUNTED, vide depuis S9), un panneau
 `.status.hud[data-state="error"]` :
 - titre, message (ui.unavailable.title, message), barre en pointillés (élément dont la
   classe contient « bar », fond repeating-linear-gradient ou bordure dashed), bouton
@@ -31,7 +31,7 @@ import { expectEqual, skip, test } from './runner.js';
 import { normalize } from './text.js';
 
 export const GROUP = 'Indisponible';
-export const MOUNTED = ['contact'];
+export const MOUNTED = [];
 const PANEL = '.status.hud[data-state="error"]';
 const GAP = 32; // px, bas du chapeau à haut du panneau
 const TOLERANCE = 1; // px : arrondis de sous-pixel
@@ -392,6 +392,7 @@ async function runLongTitle() {
 
 export async function runUnavailable(widths, mainWidth) {
   for (const width of widths) await runWidth(width);
+  if (!MOUNTED.length) return; // plus aucune rubrique montée par mountSimple (fin de S9)
   await runBehaviour(mainWidth);
   await runLongTitle();
 }

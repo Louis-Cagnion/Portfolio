@@ -9,6 +9,7 @@ import { el } from './core/dom.js';
 import { startFitWords } from './core/fit-words.js';
 import { initialLang, otherLang } from './core/i18n.js';
 import { createRouter, listViews } from './core/router.js';
+import { mount as mountContact } from './sections/contact.js';
 import { mount as mountHome } from './sections/home.js';
 import { mount as mountJourney } from './sections/journey.js';
 import { mount as mountProjects } from './sections/projects.js';
@@ -111,7 +112,7 @@ const MOUNTS = {
   journey: mountJourney,
   skills: mountSkills,
   projects: mountProjects,
-  contact: (root) => mountSimple(root, (c) => [c.contact.title, c.contact.question]),
+  contact: mountContact,
 };
 
 /**
