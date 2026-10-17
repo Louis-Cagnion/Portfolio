@@ -269,6 +269,20 @@ export function createFocus({ root, parts, state, camera }) {
     if (root.classList.contains('on')) node.focus({ preventScroll: true });
   };
 
+  /** Garde le panneau dans le flux le temps du retour (téléphone), replié par `--fold`. */
+  const startFold = () => {
+    host.style.setProperty('--fold-h', `${host.offsetHeight}px`);
+    host.style.setProperty('--fold', '1');
+    layout.classList.add('leaving');
+  };
+
+  /** Fin du retour : le panneau quitte le flux. */
+  const endFold = () => {
+    layout.classList.remove('leaving');
+    host.style.removeProperty('--fold');
+    host.style.removeProperty('--fold-h');
+  };
+
   /** Retour à la vue d'ensemble (bouton « Toutes les compétences », Échap). */
   const exit = async () => {
     if (busy || !deck) return;
@@ -276,6 +290,7 @@ export function createFocus({ root, parts, state, camera }) {
     const token = epoch;
     const { built } = deck;
     state.selection = { group: null, star: null };
+    if (phone()) startFold();
     layout.classList.remove('focus');
     plan.classList.remove('focused');
     built.links.forEach((link) => link.classList.remove('walk'));
@@ -289,12 +304,14 @@ export function createFocus({ root, parts, state, camera }) {
     const rest = bodyScale({ phone: phone(), focused: false });
     await play(EXIT_MS, (k) => {
       const e = ease(k);
+      host.style.setProperty('--fold', String(1 - e));
       travel(begin, overviewCamera(overview, view().ratio), e);
       setScale(lerp(scale0, rest, e));
       placeLabels(overview, unit());
       arrange(1 - e, 1 - e);
     });
     if (token !== epoch) return;
+    endFold();
     plan.style.removeProperty('height');
     plan.style.aspectRatio = `${overview.width} / ${overview.height}`;
     camera.set(overviewCamera(overview, view().ratio));
@@ -383,6 +400,7 @@ export function createFocus({ root, parts, state, camera }) {
     epoch += 1;
     step?.abort();
     settle();
+    endFold();
     layout.classList.remove('focus');
     plan.classList.remove('focused');
     plan.style.removeProperty('height');

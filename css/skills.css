@@ -85,8 +85,19 @@ mouvement réduit est déjà coupé pour toutes les animations par css/layout.cs
     height: auto;
   }
 
-  .skills-layout:not(.focus) .focus-panel {
+  .skills-layout:not(.focus):not(.leaving) .focus-panel {
     display: none;
+  }
+
+  /* Retour : le panneau, masqué d'emblée, reste dans le flux et se replie (--fold de 1 à 0,
+     posé par skills-focus.js) pendant que le plan regrandit. */
+  .skills-layout.leaving .focus-panel {
+    visibility: hidden;
+    transition: none;
+    overflow: hidden;
+    height: calc(var(--fold-h) * var(--fold));
+    margin-top: calc(-34vw * var(--fold));
+    padding-block: calc(22px * var(--fold));
   }
 
   .skills-layout.focus .viz-wrap {
