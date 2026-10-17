@@ -1,15 +1,18 @@
 /* Compétences (S8.B4), PROJETS LIÉS et lien Devpedia. Cas écrits avant le code (S8.C7).
 Contrat DOM (README.md, groupe competences, à la livraison de C7) :
 - `#skill .related button` : une puce par projet lié de l'étoile, texte = titre sans balise ;
-- clic : saut vers `#projects` ; sous mouvement réel la caméra de `svg#systems` (viewBox) va
-  d'un seul mouvement de la vue d'ensemble à la planète du projet, puis `#sheet` s'ouvre
-  quand `html[data-warp]` a disparu ; sous mouvement réduit, ouverture immédiate ;
+- clic : saut vers `#projects` ; sous mouvement réel la caméra de `svg#systems` (viewBox) reste
+  sur la vue d'ensemble tant que `html[data-warp]` est présent, part dès qu'il a disparu, va
+  d'un seul mouvement jusqu'à la planète du projet, puis `#sheet` s'ouvre dès son arrivée
+  (jamais pendant `html[data-warp]`, aucun délai fixe) ; sous mouvement réduit, ouverture
+  immédiate, caméra déjà sur la planète ;
 - fermeture (bouton, fond, un Échap) : focus sur la `.planet` du projet, caméra de retour sur
   le système, `#sysLayout.zfocus` gardé ; la fiche suit la bascule de langue ;
 - lien Devpedia : `p` sous le plan, sur toute la largeur, `intro` + espace + `a[href]`
   (`target="_blank"`, `rel="noopener"`), tutoyée, lien en ligne exempté (checks.js:106-112).
-Mesures : skills-focus-probe.js (étoiles) et projects-probe.js (Projets). Nombre de cas : 12
-par site (mouvement réel : 14), sondes aux deux largeurs 390 et 1280 px. */
+Mesures : skills-focus-probe.js (étoiles) et projects-probe.js (Projets). Cas par site
+(largeur, langue) : 5 au repos, puis 6 par parcours (7 sous mouvement réel, dont la fin du
+saut), aux deux largeurs 390 et 1280 px. */
 import { isInlineTextLink, overflowProblems, targetProblems } from './checks.js';
 import { activeViews, click, describe, waitFor } from './harness.js';
 import { switchTo } from './language.js';
@@ -54,6 +57,9 @@ const TIGHT_SHARE = 0.7; // largeur finale / largeur du système : au plus
 const CENTRE_SHARE = 0.12; // planète à moins de cette part de la largeur du centre du plan
 const BACK_SHARE = 0.005; // caméra de retour égale à celle du système à 0,5 % près
 const SHEET_WAIT = { real: 8000, still: 1500 };
+const WARP_STILL = 0.001; // caméra encore sur la vue d'ensemble pendant le saut : part de w
+const START_MS = 400; // la caméra part au plus 400 ms après la fin de html[data-warp]
+const OPEN_MS = 400; // la fiche s'ouvre au plus 400 ms après l'arrivée de la caméra
 
 // ---------- Choix des projets et caméra de référence ----------
 
@@ -212,16 +218,22 @@ function cameraProblemsOf(kit, run, cams, s) {
   const [first, last] = [frames[0], frames.at(-1)];
   const problems = cameraProblems('départ', first, cams.overview, BACK_SHARE, ['w']);
   const unit = cams.overview.w;
-  need(problems, last.w <= TIGHT_SHARE * cams.systems[s].w,
+  need(
+    problems,
+    last.w <= TIGHT_SHARE * cams.systems[s].w,
     `caméra non serrée : largeur ${last.w.toFixed(0)} pour ` +
-    `${cams.systems[s].w.toFixed(0)} au système`);
+      `${cams.systems[s].w.toFixed(0)} au système`,
+  );
   const frame = projectParts(kit.site).svg.getBoundingClientRect();
   const off = last.point
     ? Math.hypot(last.point.x - last.cx, last.point.y - last.cy) / last.w
     : Infinity;
   const pct = (off * 100).toFixed(0);
-  need(problems, off <= CENTRE_SHARE,
-    `planète à ${pct} % du centre du plan (cadre ${frame.width.toFixed(0)} px)`);
+  need(
+    problems,
+    off <= CENTRE_SHARE,
+    `planète à ${pct} % du centre du plan (cadre ${frame.width.toFixed(0)} px)`,
+  );
   if (!kit.real) return problems;
   const moving = frames.map((f, i) => i > 0 && stepOf(frames[i - 1], f) > MOVE * f.w);
   const [from, to] = [moving.indexOf(true), moving.lastIndexOf(true)];
@@ -257,6 +269,40 @@ function stallProblems(frames, from, to) {
   return [];
 }
 
+/**
+ * Fin du saut (mouvement réel) : ni fiche ni mouvement de caméra tant que `html[data-warp]`
+ * est présent, la caméra part dès qu'il a disparu, la fiche s'ouvre dès son arrivée.
+ */
+function warpProblems(run) {
+  const { frames } = run;
+  const warps = frames.filter((f) => f.warp);
+  if (!warps.length) return ['aucune image avec html[data-warp] : pas de saut vers Projets'];
+  const [first, final, end] = [frames[0], frames.at(-1), warps.at(-1).at];
+  const problems = [];
+  const early = warps.find((f) => stepOf(first, f) > WARP_STILL * f.w);
+  if (early)
+    problems.push(
+      `caméra partie ${(end - early.at).toFixed(0)} ms avant la fin de html[data-warp]`,
+    );
+  const sheet = frames.find((f) => f.sheet);
+  need(problems, !sheet || sheet.at > end, 'fiche ouverte avant la fin de html[data-warp]');
+  const start = frames.find((f) => !f.warp && stepOf(first, f) > WARP_STILL * f.w);
+  if (start)
+    need(
+      problems,
+      start.at - end <= START_MS,
+      `caméra partie ${(start.at - end).toFixed(0)} ms après la fin de html[data-warp]`,
+    );
+  const arrival = frames.find((f) => stepOf(f, final) <= BACK_SHARE * final.w);
+  if (sheet && arrival)
+    need(
+      problems,
+      sheet.at - arrival.at <= OPEN_MS,
+      `fiche ouverte ${(sheet.at - arrival.at).toFixed(0)} ms après l'arrivée de la caméra`,
+    );
+  return problems;
+}
+
 /** Fiche : bon projet, ouverte à l'arrivée du saut (fin de data-warp), caméra arrivée. */
 function sheetProblems(kit, run, pick) {
   const { site, text } = kit;
@@ -270,19 +316,28 @@ function sheetProblems(kit, run, pick) {
   const wanted = plain(project.title);
   need(problems, title === wanted, `#sTitle « ${title} » au lieu de « ${wanted} »`);
   const cat = sheetText(site, 'sCat');
-  need(problems, cat === categoryOf(text.projects, system),
-    `#sCat « ${cat} » au lieu de « ${categoryOf(text.projects, system)} »`);
+  need(
+    problems,
+    cat === categoryOf(text.projects, system),
+    `#sCat « ${cat} » au lieu de « ${categoryOf(text.projects, system)} »`,
+  );
   need(problems, !opened.warp, 'fiche ouverte avant la fin de html[data-warp]');
   need(problems, opened.view === 'projects', `fiche ouverte sur #${opened.view}`);
   const final = frames.at(-1);
-  const moved = Math.max(Math.abs(final.cx - opened.cx), Math.abs(final.cy - opened.cy),
-    Math.abs(final.w - opened.w));
+  const moved = Math.max(
+    Math.abs(final.cx - opened.cx),
+    Math.abs(final.cy - opened.cy),
+    Math.abs(final.w - opened.w),
+  );
   if (kit.real)
     need(problems, moved <= BACK_SHARE * final.w, 'fiche ouverte avant la fin du mouvement');
   else
-    need(problems, opened.at - run.start <= 2 * IMMEDIATE_MS,
+    need(
+      problems,
+      opened.at - run.start <= 2 * IMMEDIATE_MS,
       `fiche ouverte ${(opened.at - run.start).toFixed(0)} ms après le clic sous mouvement ` +
-      'réduit');
+        'réduit',
+    );
   return problems;
 }
 
@@ -304,14 +359,22 @@ function closeProblems(kit, run, cams, s) {
   const planet = planetOf(site, run.project);
   const problems = [];
   const active = site.doc.activeElement;
-  need(problems, !!planet && active === planet,
-    `focus sur ${describe(active)}, pas sur la planète`);
+  need(
+    problems,
+    !!planet && active === planet,
+    `focus sur ${describe(active)}, pas sur la planète`,
+  );
   need(problems, found.layout.classList.contains('zfocus'), 'zoom du système quitté');
   need(problems, !!found.svg.querySelector('.sys.on'), 'aucun système zoomé');
   return [
     ...problems,
-    ...cameraProblems('retour sur le système', viewBoxOf(found.svg), cams.systems[s],
-      BACK_SHARE, ['cx', 'cy', 'w']),
+    ...cameraProblems(
+      'retour sur le système',
+      viewBoxOf(found.svg),
+      cams.systems[s],
+      BACK_SHARE,
+      ['cx', 'cy', 'w'],
+    ),
   ];
 }
 
@@ -326,11 +389,17 @@ async function languageProblems(kit, pick) {
   const problems = [];
   need(problems, sheetOpen(site), 'fiche fermée par la bascule de langue');
   const title = sheetText(site, 'sTitle');
-  need(problems, title === plain(project.title),
-    `#sTitle « ${title} » au lieu de « ${plain(project.title)} »`);
+  need(
+    problems,
+    title === plain(project.title),
+    `#sTitle « ${title} » au lieu de « ${plain(project.title)} »`,
+  );
   const cat = sheetText(site, 'sCat');
-  need(problems, cat === categoryOf(pd[other], system),
-    `#sCat « ${cat} » au lieu de « ${categoryOf(pd[other], system)} »`);
+  need(
+    problems,
+    cat === categoryOf(pd[other], system),
+    `#sCat « ${cat} » au lieu de « ${categoryOf(pd[other], system)} »`,
+  );
   await switchTo(site, lang);
   await sleep(150);
   return problems;
@@ -356,16 +425,25 @@ function devpediaProblems(kit) {
   need(problems, !!para, 'lien Devpedia hors d\'un p');
   if (!para) return problems;
   const sentence = `${text.link.intro} ${text.link.label}`;
-  need(problems, textOf(para).startsWith(sentence),
-    `phrase « ${textOf(para).slice(0, 40)} » au lieu de « ${sentence.slice(0, 40)} »`);
+  need(
+    problems,
+    textOf(para).startsWith(sentence),
+    `phrase « ${textOf(para).slice(0, 40)} » au lieu de « ${sentence.slice(0, 40)} »`,
+  );
   need(problems, textOf(anchor) === text.link.label, `lien « ${textOf(anchor)} »`);
   need(problems, box.top >= plan.bottom - 1, 'phrase au-dessus du bas du plan');
   const layout = parts(site).layout.getBoundingClientRect();
-  need(problems, box.width >= layout.width - 2 && Math.abs(box.left - layout.left) <= 2,
-    `phrase large de ${box.width.toFixed(0)} px pour ${layout.width.toFixed(0)} px de page`);
+  need(
+    problems,
+    box.width >= layout.width - 2 && Math.abs(box.left - layout.left) <= 2,
+    `phrase large de ${box.width.toFixed(0)} px pour ${layout.width.toFixed(0)} px de page`,
+  );
   if (lang === 'fr')
-    need(problems, /\btu\b/i.test(text.link.intro) && !/\bvous\b/i.test(text.link.intro),
-      `phrase non tutoyée : « ${text.link.intro} »`);
+    need(
+      problems,
+      /\btu\b/i.test(text.link.intro) && !/\bvous\b/i.test(text.link.intro),
+      `phrase non tutoyée : « ${text.link.intro} »`,
+    );
   return problems;
 }
 
@@ -388,8 +466,11 @@ function devpediaFitProblems(kit) {
   problems.push(...sized.problems);
   need(problems, isInlineTextLink(site, anchor), 'lien non exempté : pas un lien en ligne');
   const box = para.getBoundingClientRect();
-  need(problems, box.left >= 0 && box.right <= site.win.innerWidth,
-    'phrase hors de la fenêtre');
+  need(
+    problems,
+    box.left >= 0 && box.right <= site.win.innerWidth,
+    'phrase hors de la fenêtre',
+  );
   return problems;
 }
 
@@ -415,14 +496,26 @@ async function restCases(width, lang, datas) {
   const { ctx, site } = kit;
   try {
     await rest(site);
-    await test(ctx, 'lien Devpedia : phrase tutoyée sous le plan, sur toute la largeur',
-      () => devpediaProblems(kit));
-    await test(ctx, 'lien Devpedia : target="_blank" et rel="noopener"',
-      () => devpediaLinkProblems(kit));
-    await test(ctx, 'lien Devpedia : aucun débordement, lien en ligne exempté',
-      () => devpediaFitProblems(kit));
-    await test(ctx, 'projets liés : une puce par projet existant, titre sans balise',
-      () => chipProblems(kit, datas.projects));
+    await test(
+      ctx,
+      'lien Devpedia : phrase tutoyée sous le plan, sur toute la largeur',
+      () => devpediaProblems(kit),
+    );
+    await test(
+      ctx,
+      'lien Devpedia : target="_blank" et rel="noopener"',
+      () => devpediaLinkProblems(kit),
+    );
+    await test(
+      ctx,
+      'lien Devpedia : aucun débordement, lien en ligne exempté',
+      () => devpediaFitProblems(kit),
+    );
+    await test(
+      ctx,
+      'projets liés : une puce par projet existant, titre sans balise',
+      () => chipProblems(kit, datas.projects),
+    );
     await test(ctx, 'aucune exception non rattrapée', () => uncaught(site));
   } finally {
     site.close();
@@ -449,15 +542,18 @@ async function tripCases(width, lang, datas, s, real) {
     });
     const names = {
       camera: `${tag} : caméra d'un seul mouvement jusqu'à la planète`,
+      warp: `${tag} : caméra et fiche attendent la fin de html[data-warp]`,
       sheet: `${tag} : fiche du bon projet ouverte à l'arrivée`,
       lang: `${tag} : bascule de langue fiche ouverte, même projet`,
       close: `${tag} : fermeture par ${closer}, focus sur la planète, zoom gardé`,
     };
+    if (!real) delete names.warp; // sous mouvement réduit, aucun saut animé
     if (!run) {
       skip(ctx, Object.values(names), 'la puce n\'a pas pu être cliquée');
       return;
     }
     await test(ctx, names.camera, () => cameraProblemsOf(kit, run, cams, s));
+    if (real) await test(ctx, names.warp, () => warpProblems(run));
     await test(ctx, names.sheet, () => sheetProblems(kit, run, pick));
     if (!sheetOpen(site)) {
       skip(ctx, [names.lang, names.close], 'la fiche ne s\'est pas ouverte');
