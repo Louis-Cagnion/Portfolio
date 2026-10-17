@@ -9,8 +9,9 @@ demande aucune image, il avance dans `step(dt)` (progression cumulée des pas de
 Mouvement réduit : l'état final est posé sur-le-champ, sans image ni transition.
 
 Couture avec projects.js : `createZoom({ parts, state, renderAll, showSystem })` rend
-`{ enter, exit, step }` ; `state.view = { u, camera: { cx, w }, zoomedIndex }` est tenu à jour
-(unité d'écran, caméra, système zoomé), `renderAll` replace les planètes.
+`{ enter, exit, step, toPlanet, release }` ; `state.view = { u, camera: { cx, w },
+zoomedIndex }` est tenu à jour (unité d'écran, caméra, système zoomé), `renderAll` replace
+les planètes.
 */
 import {
   ease,
@@ -114,9 +115,9 @@ function columnWidth(plan) {
  *
  * `enter(index)` est appelée à chaque clic ou touche sur un soleil (ignorée si un zoom est
  * posé), `exit()` par le bouton retour et Échap, `step(dt)` par la boucle de la rubrique.
- * `toPlanet(planet)` (projet lié de Compétences) emmène la caméra jusqu'à une planète d'un
- * seul mouvement, depuis la vue d'ensemble ou depuis son système zoomé, puis fige la rotation
- * du système ; `release()` rend la caméra au système et relance la rotation.
+ * `toPlanet(planet)` (projet lié de Compétences) emmène la caméra jusqu'à une planète, puis
+ * fige la rotation du système (d'un seul mouvement, sauf si un autre système est zoomé :
+ * sortie puis entrée) ; `release()` rend la caméra au système et relance la rotation.
  *
  * @param {object} context fermetures de `mount` : `parts` (nœuds fixes), `state` (`built`,
  *   `view`, `phone`), `renderAll` (replace les planètes), `showSystem` (en-tête et intro)
@@ -198,17 +199,18 @@ export function createZoom({ parts, state, renderAll, showSystem }) {
     });
   };
 
-  /** Fin de l'animation : seule la sortie remet le repos ; `resolve` prévient l'appelant. */
+  /** Fin de l'animation : la sortie remet le repos, puis `resolve` prévient l'appelant. */
   const conclude = (finished) => {
+    if (finished.kind === 'out') {
+      const { view, built } = state;
+      view.zoomedIndex = -1;
+      plan.classList.remove('zoomed', 'bleed');
+      plan.style.removeProperty('height');
+      plan.style.aspectRatio = `${built.width} / ${built.height}`;
+      place(overview());
+      finished.system.sun.focus({ preventScroll: true });
+    }
     finished.resolve?.();
-    if (finished.kind !== 'out') return;
-    const { view, built } = state;
-    view.zoomedIndex = -1;
-    plan.classList.remove('zoomed', 'bleed');
-    plan.style.removeProperty('height');
-    plan.style.aspectRatio = `${built.width} / ${built.height}`;
-    place(overview());
-    finished.system.sun.focus({ preventScroll: true });
   };
 
   /** Termine l'animation sur-le-champ : état final, rendu, focus. */
@@ -291,8 +293,12 @@ export function createZoom({ parts, state, renderAll, showSystem }) {
     start('in', system, planetsOf(index), options);
   };
 
-  /** Sort du zoom (sans effet au repos ou pendant une animation) ; focus rendu au soleil. */
-  const exit = () => {
+  /**
+   * Sort du zoom (sans effet au repos ou pendant une animation) ; focus rendu au soleil.
+   *
+   * @param {object} [options] `resolve` : rappel une fois le plan revenu au repos
+   */
+  const exit = (options = {}) => {
     const { built, view } = state;
     if (view.zoomedIndex < 0 || run) return;
     const system = built.systems[view.zoomedIndex];
@@ -302,13 +308,14 @@ export function createZoom({ parts, state, renderAll, showSystem }) {
     for (const each of built.systems) each.g.classList.remove('on', 'dim');
     for (const planet of planetsOf(system.index)) setPlanetActive(planet.nodes.g, false);
     setHeight(plan, (columnWidth(plan) * built.height) / built.width);
-    start('out', system, planetsOf(system.index));
+    start('out', system, planetsOf(system.index), options);
   };
 
   /**
-   * Emmène la caméra jusqu'à `planet` d'un seul mouvement : zoom du système si le plan est au
-   * repos, sinon du système à la planète. Sans effet (résolue aussitôt) si un autre système
-   * est zoomé ou si une animation tourne.
+   * Emmène la caméra jusqu'à `planet` : d'un seul mouvement depuis la vue d'ensemble (zoom du
+   * système) ou depuis son système zoomé (du système à la planète) ; en deux temps si un autre
+   * système est zoomé (sortie de ce zoom, puis entrée dans celui de la planète). Sans effet
+   * (résolue aussitôt) si une animation tourne ou si le plan a été reconstruit entre-temps.
    *
    * @param {object} planet planète de `state.built.planets`
    *
@@ -317,13 +324,24 @@ export function createZoom({ parts, state, renderAll, showSystem }) {
   const toPlanet = (planet) => new Promise((resolve) => {
     const { built, view } = state;
     const index = planet.systemIndex;
-    if (!built || run || (view.zoomedIndex >= 0 && view.zoomedIndex !== index)) {
+    if (!built || run) {
       resolve();
       return;
     }
-    lock = planet;
-    if (view.zoomedIndex < 0) enter(index, { planet, resolve });
-    else start('track', built.systems[index], planetsOf(index), { planet, resolve });
+    const approach = () => {
+      if (state.built !== built || view.zoomedIndex >= 0) {
+        resolve(); // plan reconstruit ou zoom repris pendant la sortie
+        return;
+      }
+      lock = planet;
+      enter(index, { planet, resolve });
+    };
+    if (view.zoomedIndex < 0) approach();
+    else if (view.zoomedIndex !== index) exit({ resolve: approach });
+    else {
+      lock = planet;
+      start('track', built.systems[index], planetsOf(index), { planet, resolve });
+    }
   });
 
   /** Rend la caméra au système (fiche d'un projet lié fermée) ; sans effet sinon. */
