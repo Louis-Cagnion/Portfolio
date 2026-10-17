@@ -255,11 +255,14 @@ export function createFocus({ root, parts, state, camera }) {
     }
   };
 
-  /** Fiche de l'étoile courante : panneau, `.cur`, sélection gardée par identifiant. */
+  /** Fiche de l'étoile courante : panneau, `.cur` (seule tabulable), sélection gardée. */
   const showCurrent = () => {
     const { built, rank, panel } = deck;
     panel.show(rank, textsOf());
-    built.stars.forEach(({ element }, j) => element.classList.toggle('cur', j === rank));
+    built.stars.forEach(({ element }, j) => {
+      element.classList.toggle('cur', j === rank);
+      element.setAttribute('tabindex', j === rank ? '0' : '-1'); // tabulation itinérante
+    });
     state.selection = { group: built.id, star: built.stars[rank].id };
     host.querySelector('#skill').classList.remove('traveling');
   };

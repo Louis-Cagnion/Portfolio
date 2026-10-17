@@ -277,8 +277,6 @@ async function keyboardCases(kit) {
       const cur = curStar(site);
       const problems = [];
       need(problems, order.includes(cur), 'étoile courante hors de la tabulation');
-      const loose = starsOf(groupEls(site)[k]).filter((star) => !order.includes(star));
-      need(problems, !loose.length, `${loose.length} étoile(s) hors de la tabulation`);
       for (const dim of site.doc.querySelectorAll('#constSvg .dim'))
         need(problems, !order.some((el) => dim.contains(el)), `${describe(dim)} tabulable`);
       const panel = [p.back, ...p.chips, p.prev, p.next].filter((el) => el && !el.disabled);
