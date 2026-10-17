@@ -3,8 +3,8 @@ Compétences : huit constellations dont chaque étoile est une compétence, lég
 Dessin dans skills-art.js, placement dans skills-layout.js, construction de la vue
 d'ensemble dans skills-scene.js, styles dans css/skills.css.
 Ce fichier monte la structure, cadre la caméra, câble les constellations et traduit.
-Le déploiement d'une constellation, la plongée sur un astre et le panneau de compétence ne
-sont pas encore là (S8.C5 et S8.C6) : voir `idleFocus`.
+Le déploiement d'une constellation, la plongée sur un astre et le panneau de compétence sont
+dans skills-focus.js (caméra, séquences) et skills-panel.js (panneau).
 Structure et mécanique de la maquette : docs/design/prototype/prototype.template.html:388-408
 (HTML) et 810-847 (construction).
 */
@@ -12,18 +12,11 @@ import { BREAKPOINTS, el, svg } from '../core/dom.js';
 import { format } from '../core/i18n.js';
 import { makeCamera } from '../core/motion.js';
 import { bodyIcon } from './skills-art.js';
+import { createFocus, onActivate } from './skills-focus.js';
 import { overviewCamera } from './skills-layout.js';
 import { buildOverview, LEVELS, placeLabels, retext } from './skills-scene.js';
 
 const LEGEND_ORDER = ['advanced', 'intermediate', 'beginner', 'unknown']; // maquette:932
-
-/**
- * Déploiement d'une constellation, en attente de S8.C6 (`createFocus` de skills-focus.js, sur
- * le modèle de `createZoom` de projects-zoom.js) : `enter(index)` déploie la constellation
- * de rang `index` dans `state.built.groups`, `exit()` revient à la vue d'ensemble. Sans effet
- * ici.
- */
-const idleFocus = Object.freeze({ enter: () => {}, exit: () => {} });
 
 /**
  * @brief Empreinte de la structure des données : identifiants des groupes et des étoiles.
@@ -35,20 +28,6 @@ const idleFocus = Object.freeze({ enter: () => {}, exit: () => {} });
 const idsOf = (groups) => groups
   .map((group) => [group.id, ...group.items.map((item) => item.id)].join())
   .join('|');
-
-/**
- * @brief Lie Entrée et Espace d'un nœud à une action (la touche n'y défile pas).
- *
- * @param {Element} node nœud focalisable
- * @param {() => void} action rappel
- */
-function onActivate(node, action) {
-  node.addEventListener('keydown', (event) => {
-    if (event.key !== 'Enter' && event.key !== ' ') return;
-    event.preventDefault();
-    action();
-  });
-}
 
 /**
  * @brief Légende : une phrase puis un astre par niveau, textes vides jusqu'au premier update.
@@ -99,11 +78,10 @@ function buildParts() {
  * nœuds, donc le focus) ; le passage de 880 px reconstruit la vue d'ensemble.
  *
  * @param {HTMLElement} root section.view#skills
- * @param {object} [hooks] commandes de déploiement à la place de `idleFocus` (essais)
  *
  * @returns {(content: object) => void} update(content) : textes d'une langue
  */
-export function mount(root, { focus = idleFocus } = {}) {
+export function mount(root) {
   const narrow = matchMedia(BREAKPOINTS.narrow);
   const parts = buildParts();
   const camera = makeCamera(parts.plan);
@@ -116,11 +94,12 @@ export function mount(root, { focus = idleFocus } = {}) {
     selection: { group: null, star: null }, // identifiants, gardés d'une langue à l'autre
     camera,
   };
+  const focus = createFocus({ root, parts, state, camera });
 
   /** Cadre la vue d'ensemble sur la largeur affichée et replace les noms (jamais masquée). */
   const fit = () => {
     const { built, width, selection } = state;
-    if (!built || !width || selection.group) return;
+    if (!built || !width || selection.group || focus.moving()) return;
     camera.set(overviewCamera(built, camera.ratio()));
     placeLabels(built, camera.w / width);
   };
@@ -136,6 +115,7 @@ export function mount(root, { focus = idleFocus } = {}) {
   /** Construit la vue d'ensemble (nœuds neufs, aucun déploiement) depuis les données. */
   const build = () => {
     const { skills } = state;
+    focus.reset();
     state.phone = narrow.matches;
     const built = buildOverview({ groups: skills.groups, text: skills, phone: state.phone });
     state.built = built;
@@ -145,6 +125,7 @@ export function mount(root, { focus = idleFocus } = {}) {
     parts.plan.style.aspectRatio = `${built.width} / ${built.height}`;
     parts.plan.style.setProperty('--bs', built.scale);
     wire(built);
+    focus.attach(built);
     fit();
   };
 
@@ -167,6 +148,7 @@ export function mount(root, { focus = idleFocus } = {}) {
   new ResizeObserver((entries) => {
     state.width = entries[0].contentRect.width;
     fit();
+    focus.recentre();
   }).observe(parts.plan);
   narrow.addEventListener('change', () => {
     if (state.skills) build();
@@ -178,8 +160,10 @@ export function mount(root, { focus = idleFocus } = {}) {
     const same = state.built && idsOf(skills.groups) === state.signature;
     Object.assign(state, { skills });
     translateTexts();
-    if (same) retext(state.built, skills.groups, skills);
-    else {
+    if (same) {
+      retext(state.built, skills.groups, skills);
+      focus.relabel();
+    } else {
       state.signature = idsOf(skills.groups);
       build();
     }

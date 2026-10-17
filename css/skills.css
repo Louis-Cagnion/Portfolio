@@ -6,6 +6,12 @@ mouvement réduit est déjà coupé pour toutes les animations par css/layout.cs
 */
 
 /* ───── Mise en page : plan, aide, panneau de compétence (vide au repos), légende ───── */
+/* Pas d'ancrage de défilement : le plan change de hauteur pendant un déploiement et Chrome
+   annulerait le défilement vers lui (téléphone). */
+#skills {
+  overflow-anchor: none;
+}
+
 .skills-layout {
   position: relative;
 }
@@ -17,6 +23,11 @@ mouvement réduit est déjà coupé pour toutes les animations par css/layout.cs
   transition: height var(--dur-height) var(--ease-inout);
 }
 
+/* Déployé au bureau : plan de 540 px (sur téléphone, skills-focus.js anime des pixels). */
+.viz.focused {
+  height: 540px;
+}
+
 .hint {
   color: var(--faint);
   font-size: 0.9rem;
@@ -24,8 +35,11 @@ mouvement réduit est déjà coupé pour toutes les animations par css/layout.cs
   transition: opacity 0.4s; /* 0,4 s : valeur de la maquette, sans jeton */
 }
 
+/* Masquée aussi pour les lecteurs d'écran, une fois le fondu fini. */
 .skills-layout.focus .hint {
   opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s, visibility 0s 0.4s;
 }
 
 /* Au repos le panneau est invisible et inerte (attribut inert posé par skills.js) ;
@@ -66,7 +80,8 @@ mouvement réduit est déjà coupé pour toutes les animations par css/layout.cs
 /* Téléphone : le panneau passe sous le plan (collant pendant le déploiement) et remonte de
    34vw sur lui ; absent au repos. */
 @media (max-width: 55em) {
-  .viz {
+  .viz,
+  .viz.focused {
     height: auto;
   }
 
@@ -320,6 +335,17 @@ mouvement réduit est déjà coupé pour toutes les animations par css/layout.cs
 
 .const.focused .st-g {
   cursor: pointer;
+}
+
+/* Étoile focalisable (déploiement seulement) : anneau de 2 px sur sa zone cliquable. */
+.const .st-g:focus {
+  outline: none;
+}
+
+.const .st-g:focus-visible circle {
+  stroke: var(--accent);
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
 }
 
 .const .link.walk {
