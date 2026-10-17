@@ -1,0 +1,4 @@
+[
+ {"path":"assets/fonts/*","type":"font","source_url":"https://fonts.google.com (Michroma, IBM Plex Sans, IBM Plex Mono)","license":"SIL OFL 1.1","used_in":"all text"},
+ {"path":"assets/portfolio/*","type":"code/css","source_url":"local snapshot of the Portfolio repo (journey-art.js, dom.js, tokens.css)","license":"own project","used_in":"ship, bodies, tokens"}
+]

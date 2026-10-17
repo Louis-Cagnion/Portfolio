@@ -1,0 +1,265 @@
+{
+ "nav": {
+  "home": "Home",
+  "journey": "Journey",
+  "skills": "Skills",
+  "projects": "Projects",
+  "contact": "Contact"
+ },
+ "home": {
+  "mission": "Mission: from the 42 piscine to artificial intelligence",
+  "name": "Louis Cagnion",
+  "pitch": "Tech & Data Engineering Apprentice at Groupe Tressol-Chabrier, trained at 42 Perpignan.",
+  "ctas": {
+   "projects": "See my projects",
+   "contact": "Contact me"
+  },
+  "telemetry": {
+   "title": "Telemetry",
+   "rows": [
+    {
+     "label": "Lift-off",
+     "value": "42 piscine, 2024",
+     "live": false
+    },
+    {
+     "label": "42 common core",
+     "value": "Completed in 18 months",
+     "live": false
+    },
+    {
+     "label": "Current position",
+     "value": "Groupe Tressol-Chabrier, 2-year RNCP level 6 work-study",
+     "live": true
+    },
+    {
+     "label": "Next stage",
+     "value": "RNCP level 7 in AI, 1-year work-study",
+     "live": false
+    },
+    {
+     "label": "Destination",
+     "value": "AI research",
+     "live": false
+    }
+   ]
+  }
+ },
+ "stops": [
+  {
+   "id": "piscine",
+   "body": "earth",
+   "at": 0,
+   "now": false,
+   "title": "First piscine",
+   "when": "July-August 2024",
+   "paragraphs": [
+    "I humbly started coding during my first piscine at 42. Yes, I knew absolutely nothing about this world before starting the school's selection process. I did not even know what a terminal or an IDE was.",
+    "Someone told me about the school, their approach to learning programming, and the possible career paths after the core curriculum: it sounded interesting. So I tried the 42 piscine to see what I was capable of in this new environment.",
+    "As it turned out, I discovered a genuine passion during that selection process, even though starting from scratch was not easy.",
+    "One moment stood out in particular. At first, I was asking for help on the early exercises from people who already had programming experience. Then, when we moved on to C for most of the piscine, they were the ones coming to me for help because I had progressed further than them.",
+    "That was when I realised I might have potential in this field and, more importantly, that I genuinely loved practicing and improving. And yes, for those wondering, I helped them gladly. People had helped me get started, so it felt natural to give back.",
+    "Unfortunately, I did not pass my first piscine on the first try, even though my results were around the average of other candidates. I was disappointed, almost sad, but I went home with a new goal: try again and get into the school."
+   ]
+  },
+  {
+   "id": "core",
+   "body": "mars",
+   "at": 0.25,
+   "now": false,
+   "title": "Common core",
+   "when": "Nov. 2024 to Jan. 2026",
+   "paragraphs": [
+    "We theoretically had three years ahead of us to complete the core curriculum. For my part, I wanted to throw myself fully into learning to code. I chose to challenge myself by completing every possible bonus on the projects I picked.",
+    "I also wanted to move quickly while maintaining quality work, because going fast without actually learning anything would have been pointless. That is what I tried to do throughout my studies.",
+    "Even if I was not as fast as some friends I met during my piscines who finished the curriculum in six months, I still managed to complete all core curriculum projects in a year and a half, with bonuses whenever possible."
+   ]
+  },
+  {
+   "id": "tressol",
+   "body": "station",
+   "at": 0.5,
+   "now": true,
+   "title": "Tressol-Chabrier",
+   "when": "since July 2026",
+   "paragraphs": [
+    "I focus on projects I consider useful, either to advance toward my future programming goals, or because they can bring something valuable to others or to myself.",
+    "Once I completed my common core, I joined the Groupe Tressol-Chabrier headquarters in Montpellier as a full-time developer. There, I took part in the design of internal applications (data search, dashboards, admin back-office), working on both the frontend and backend, which let me put my skills into practice in real-world conditions.",
+    "You can find the projects I have worked on in the \"My projects\" section."
+   ]
+  },
+  {
+   "id": "rncp7",
+   "body": "nebula",
+   "at": 0.83,
+   "now": false,
+   "title": "RNCP 7 in AI",
+   "when": "next",
+   "paragraphs": [
+    "My underlying goal has not changed: once I complete this RNCP6, I plan to pursue a further one-year work-study program to earn an RNCP7 in AI and algorithmics. So I want to deepen my knowledge in the areas related to both qualifications, starting with software development, then AI and algorithmics for what comes next."
+   ]
+  },
+  {
+   "id": "research",
+   "body": "galaxy",
+   "at": 1,
+   "now": false,
+   "title": "AI research",
+   "when": "on the horizon",
+   "paragraphs": [
+    "In the longer term, my ambition is to contribute to AI research, with the goal of taking part in the advances toward artificial general intelligence (AGI), and beyond."
+   ]
+  }
+ ],
+ "journeyTitle": "My journey",
+ "skills": {
+  "title": "My skills",
+  "legend": "Each skill is a celestial body: the larger it is, the better I master it.",
+  "groups": [
+   {
+    "id": "languages",
+    "short": "Languages",
+    "items": [
+     {
+      "name": "C",
+      "level": "advanced"
+     },
+     {
+      "name": "C++",
+      "level": "intermediate"
+     },
+     {
+      "name": "Python",
+      "level": "intermediate"
+     },
+     {
+      "name": "JavaScript",
+      "level": "intermediate"
+     },
+     {
+      "name": "Bash",
+      "level": "intermediate"
+     },
+     {
+      "name": "PHP",
+      "level": "intermediate"
+     },
+     {
+      "name": "TypeScript",
+      "level": "beginner"
+     }
+    ]
+   },
+   {
+    "id": "devtools",
+    "short": "Dev tools",
+    "items": [
+     {
+      "name": "Makefiles",
+      "level": "intermediate"
+     },
+     {
+      "name": "Git",
+      "level": "intermediate"
+     },
+     {
+      "name": "GitHub",
+      "level": "intermediate"
+     },
+     {
+      "name": "JavaScript unit tests",
+      "level": "beginner"
+     },
+     {
+      "name": "Azure DevOps Pipelines",
+      "level": "beginner"
+     },
+     {
+      "name": "Playwright",
+      "level": "beginner"
+     }
+    ]
+   },
+   {
+    "id": "network",
+    "short": "Network and DB",
+    "items": [
+     {
+      "name": "TCP sockets and HTTP/1.1",
+      "level": "intermediate"
+     },
+     {
+      "name": "IP networking",
+      "level": "intermediate"
+     },
+     {
+      "name": "APIs",
+      "level": "intermediate"
+     },
+     {
+      "name": "SQL / PDO",
+      "level": "intermediate"
+     },
+     {
+      "name": "Elasticsearch",
+      "level": "beginner"
+     }
+    ]
+   },
+   {
+    "id": "data",
+    "short": "Data and AI",
+    "items": [
+     {
+      "name": "NumPy",
+      "level": "beginner"
+     },
+     {
+      "name": "Matplotlib",
+      "level": "beginner"
+     },
+     {
+      "name": "TensorFlow / Keras",
+      "level": "beginner"
+     }
+    ]
+   }
+  ]
+ },
+ "projects": {
+  "title": "My projects",
+  "count": "{n} projects",
+  "systems": [
+   {
+    "id": "pro",
+    "name": "Tressol-Chabrier",
+    "n": 8
+   },
+   {
+    "id": "perso",
+    "name": "Personal projects",
+    "n": 9
+   },
+   {
+    "id": "school",
+    "name": "42 Perpignan",
+    "n": 16
+   },
+   {
+    "id": "piscine",
+    "name": "Piscine 42",
+    "n": 20
+   }
+  ]
+ },
+ "contact": {
+  "title": "Contact me",
+  "question": "A question, an opportunity, or just want to talk?",
+  "channels": [
+   "Write an email",
+   "LinkedIn",
+   "GitHub",
+   "Codewars"
+  ]
+ }
+}

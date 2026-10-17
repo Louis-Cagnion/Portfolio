@@ -1,0 +1,16 @@
+{
+  "duration": 15,
+  "fps": 30,
+  "warps": [3.2, 7.6, 9.4, 11.2],
+  "warpOut": 0.3,
+  "warpIn": 0.4,
+  "warpLeadIn": 0.5,
+  "warpTail": 0.35,
+  "views": ["home", "journey", "skills", "projects", "contact"],
+  "journey": {
+    "depart": [4.05, 4.8, 5.8, 6.55],
+    "arrive": [4.5, 5.3, 6.3, 7.05]
+  },
+  "fadeInEnd": 0.35,
+  "fadeOutStart": 14.55
+}

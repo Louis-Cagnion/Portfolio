@@ -1,0 +1,16 @@
+{
+ "voice": "en_US-ryan-high (Piper, local)",
+ "note": "'say' = texte lu par la voix (graphies phonétiques pour les noms français) ; 'show' = texte de référence",
+ "sections": [
+  {"id":"home","show":"Meet Louis Cagnion, a Tech and Data Engineering apprentice at Groupe Tressol-Chabrier, trained at 42 Perpignan. His mission: from the 42 piscine to artificial intelligence.",
+   "say":"Meet Louis Kanyon, a Tech and Data Engineering apprentice at Groupe Tressol Shabree-ay, trained at forty-two Perpeenyan. His mission: from the forty-two pee-seen to artificial intelligence."},
+  {"id":"journey","show":"His journey began in 2024 with a first piscine at 42, continued through the common core, and today leads him to Groupe Tressol-Chabrier. Next stop: a level 7 degree in AI, with AI research on the horizon.",
+   "say":"His journey began in twenty twenty-four with a first pee-seen at forty-two, continued through the common core, and today leads him to Groupe Tressol Shabree-ay. Next stop: a level seven degree in A I, with A I research on the horizon."},
+  {"id":"skills","show":"His skills are grouped in constellations: the larger the celestial body, the stronger his mastery. C is his strongest language.",
+   "say":"His skills are grouped in constellations: the larger the celestial body, the stronger his mastery. C is his strongest language."},
+  {"id":"projects","show":"Four star systems hold his projects: his work at Tressol-Chabrier, his personal projects, and his school projects from 42 Perpignan and the piscine.",
+   "say":"Four star systems hold his projects: his work at Tressol Shabree-ay, his personal projects, and his school projects from forty-two Perpeenyan and the pee-seen."},
+  {"id":"contact","show":"Want to talk? Reach him by email, LinkedIn, GitHub or Codewars, and discover the full portfolio at louis-cagnion.github.io/Portfolio.",
+   "say":"Want to talk? Reach him by email, LinkedIn, GitHub or Code Wars, and discover the full portfolio at Louis Kanyon dot github dot I O, slash Portfolio."}
+ ]
+}

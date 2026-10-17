@@ -1,0 +1,125 @@
+{
+ "duration": 61.557,
+ "fps": 30,
+ "warps": [
+  12.455,
+  28.42,
+  37.918,
+  49.191
+ ],
+ "warpOut": 0.3,
+ "warpIn": 0.4,
+ "warpLeadIn": 0.5,
+ "warpTail": 0.35,
+ "views": [
+  "home",
+  "journey",
+  "skills",
+  "projects",
+  "contact"
+ ],
+ "journey": {
+  "depart": [
+   17.874,
+   20.031,
+   22.426,
+   24.582
+  ],
+  "arrive": [
+   18.974,
+   21.131,
+   23.526,
+   25.682
+  ]
+ },
+ "fadeInEnd": 0.35,
+ "fadeOutStart": 60.757,
+ "scenes": {
+  "home": {
+   "start": 0.0,
+   "voiceFile": "assets/vo/1-home.wav",
+   "voiceStart": 0.8,
+   "speechStart": 0.8,
+   "speechEnd": 11.355147,
+   "clip": 10.555147
+  },
+  "journey": {
+   "start": 12.455,
+   "voiceFile": "assets/vo/2-journey.wav",
+   "voiceStart": 13.305,
+   "speechStart": 13.305,
+   "speechEnd": 27.319921,
+   "clip": 14.014921
+  },
+  "skills": {
+   "start": 28.42,
+   "voiceFile": "assets/vo/3-skills.wav",
+   "voiceStart": 29.270000000000003,
+   "speechStart": 29.270000000000003,
+   "speechEnd": 36.818163000000006,
+   "clip": 7.548163
+  },
+  "projects": {
+   "start": 37.918,
+   "voiceFile": "assets/vo/4-projects.wav",
+   "voiceStart": 38.768,
+   "speechStart": 38.768,
+   "speechEnd": 48.090812,
+   "clip": 9.322812
+  },
+  "contact": {
+   "start": 49.191,
+   "voiceFile": "assets/vo/5-contact.wav",
+   "voiceStart": 50.041000000000004,
+   "speechStart": 50.041000000000004,
+   "speechEnd": 59.156510000000004,
+   "clip": 9.11551
+  }
+ },
+ "cues": {
+  "home": {
+   "name": 0.879,
+   "pitch": 1.661,
+   "mission": 7.358,
+   "telemetry": 8.084,
+   "ctas": 10.755
+  },
+  "journey": {
+   "stops": [
+    15.92,
+    18.974,
+    21.131,
+    23.526,
+    25.682
+   ]
+  },
+  "skills": {
+   "clusters": [
+    29.962,
+    30.462,
+    30.962,
+    31.462
+   ],
+   "legend": 31.566,
+   "c": 34.954
+  },
+  "projects": {
+   "systems": [
+    40.737,
+    42.614,
+    44.431,
+    47.129
+   ]
+  },
+  "contact": {
+   "chips": [
+    51.493,
+    51.921,
+    52.533,
+    53.145
+   ],
+   "site": 55.163,
+   "sign": 56.063
+  }
+ }
+}

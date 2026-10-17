@@ -1,0 +1,96 @@
+/* Teaser 15 s : habillage de la page de rendu. Jetons (couleurs, polices) : css/tokens.css du portfolio. */
+*, *::before, *::after { box-sizing: border-box; transition: none !important; }
+html, body { margin: 0; background: var(--void); overflow: hidden; }
+body { width: 1920px; height: 1080px; color: var(--text); font-family: var(--sans); }
+#frame { position: relative; width: 1920px; height: 1080px; overflow: hidden; background: var(--void); }
+#sky { position: absolute; inset: 0; width: 1920px; height: 1080px; z-index: var(--z-sky); }
+#views { position: absolute; inset: 0; z-index: var(--z-main); }
+.view { position: absolute; inset: 0; padding: 150px 96px 0; display: none; transform-origin: 50% 50%; }
+.stage { position: absolute; inset: 0; width: 1920px; height: 1080px; pointer-events: none; overflow: visible; }
+
+/* ───── Barre (css/layout.css:55-140, agrandie pour la vidéo) ───── */
+.bar {
+  position: absolute; top: 0; left: 0; right: 0; z-index: var(--z-bar);
+  display: flex; align-items: center; justify-content: space-between; gap: 24px;
+  padding: 16px 64px;
+  background: color-mix(in srgb, var(--void) 82%, transparent);
+  border-bottom: 1px solid var(--line);
+}
+.brand { display: flex; align-items: center; gap: 14px; font-family: var(--display); font-size: 1.05rem; letter-spacing: 0.03em; }
+.brand i { width: 10px; height: 10px; border-radius: 50%; background: var(--live); box-shadow: var(--glow-live); }
+.nav { position: relative; display: flex; gap: 4px; padding: 4px; border: 1px solid var(--line); border-radius: var(--radius-pill); background: color-mix(in srgb, var(--panel) 70%, transparent); }
+.nav button { position: relative; z-index: 1; border: 0; background: none; color: var(--dim); font: 500 1.12rem var(--sans); padding: 10px 22px; border-radius: var(--radius-pill); }
+.nav button.cur { color: var(--accent-ink); }
+.nav .pill { position: absolute; top: 4px; bottom: 4px; border-radius: var(--radius-pill); background: var(--accent); }
+.lang { display: flex; gap: 6px; font: 500 1rem var(--mono); color: var(--faint); }
+.lang span { padding: 6px 10px; border-radius: var(--radius-lang); }
+.lang .on { color: var(--text); border: 1px solid var(--line); }
+
+/* ───── Titres (css/layout.css:37-60) ───── */
+h1 { font-family: var(--display); font-weight: 400; font-size: 118px; line-height: 1.04; letter-spacing: -0.01em; margin: 0 0 30px; }
+h2 { font-family: var(--display); font-weight: 400; font-size: 60px; line-height: 1.1; margin: 0 0 12px; }
+.mission { color: var(--accent); font-weight: 500; font-size: 30px; margin: 0 0 26px; letter-spacing: 0.01em; }
+.pitch { max-width: 860px; color: var(--dim); font-size: 36px; line-height: 1.4; margin: 0 0 44px; }
+.btn { display: inline-block; padding: 18px 32px; font: 600 26px var(--sans); border: 1px solid var(--line); color: var(--text); margin-right: 18px; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+
+/* ───── Panneau HUD (css/layout.css:234-265) ───── */
+.hud { position: relative; border: 1px solid var(--line); background: linear-gradient(var(--panel), color-mix(in srgb, var(--panel) 40%, transparent)); }
+.hud::before, .hud::after { content: ""; position: absolute; width: 20px; height: 20px; border: 3px solid var(--accent); }
+.hud::before { top: -3px; left: -3px; border-right: 0; border-bottom: 0; }
+.hud::after { bottom: -3px; right: -3px; border-left: 0; border-top: 0; }
+
+.hero { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 72px; align-items: center; height: 760px; }
+.telemetry { padding: 34px 38px; }
+.telemetry h3 { margin: 0 0 22px; font: 600 22px var(--mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); }
+.telemetry dl { margin: 0; }
+.telemetry .row { padding: 15px 0; border-top: 1px solid var(--line); }
+.telemetry dt { font: 500 18px var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--faint); margin-bottom: 5px; }
+.telemetry dd { margin: 0; font-size: 28px; line-height: 1.25; }
+.telemetry dd.live { color: var(--live); text-shadow: var(--glow-live); }
+
+/* ───── Vaisseau, traînée, astres (css/journey.css:140-210, css/panel.css:58-72) ───── */
+.trail circle { fill: var(--trail); }
+.ship-g { filter: drop-shadow(var(--glow-ship)); }
+.ship-g .flame { opacity: 0.35; transform-box: fill-box; transform-origin: 100% 50%; }
+.ship-g.thrust .flame { opacity: 1; animation: ship-flame 0.14s steps(2, end) infinite; }
+@keyframes ship-flame { 50% { transform: scaleX(1.4); } }
+.ship-g .hull { animation: ship-bob 3.2s ease-in-out infinite; }
+@keyframes ship-bob { 50% { transform: translateY(-1.2px); } }
+.b-spin { animation: body-spin 60s linear infinite; }
+.b-drift { transform-box: fill-box; transform-origin: center; animation: body-drift 9s ease-in-out infinite; }
+@keyframes body-spin { to { transform: rotate(360deg); } }
+@keyframes body-drift { 50% { transform: rotate(8deg) scale(1.06); opacity: 0.85; } }
+
+/* ───── Parcours ───── */
+.jtitle { position: absolute; left: 96px; top: 150px; }
+.jtitle .kick, .kick { font: 500 22px var(--mono); letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+.slabel { position: absolute; width: 520px; }
+.slabel .t { font: 600 34px var(--sans); line-height: 1.15; }
+.slabel .w { font: 400 22px var(--mono); color: var(--dim); margin-top: 6px; }
+.slabel.now .t { color: var(--live); text-shadow: var(--glow-live); }
+.slabel .tag { display: inline-block; margin-top: 10px; padding: 4px 12px; font: 600 16px var(--mono); letter-spacing: 0.14em; color: var(--accent-ink); background: var(--live); }
+.slabel.right { text-align: right; }
+.slabel.center { text-align: center; }
+
+/* ───── Compétences et projets ───── */
+.sk-name { font: 600 26px var(--mono); letter-spacing: 0.14em; text-transform: uppercase; fill: var(--accent); }
+.sk-item { font: 500 24px var(--mono); fill: var(--dim); }
+.legend { position: absolute; left: 96px; bottom: 64px; font: 400 26px var(--sans); color: var(--dim); max-width: 900px; }
+.sys-name { font: 400 30px var(--display); fill: var(--text); text-anchor: middle; }
+.sys-count { font: 500 21px var(--mono); fill: var(--dim); text-anchor: middle; letter-spacing: 0.08em; }
+
+/* ───── Contact ───── */
+.contact-text { position: absolute; left: 96px; top: 200px; width: 800px; }
+.contact-text .q { font-size: 38px; line-height: 1.4; color: var(--dim); margin: 14px 0 38px; }
+.chips { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; width: 700px; }
+.chip { padding: 16px 22px; border: 1px solid var(--line); font: 500 24px var(--mono); background: color-mix(in srgb, var(--panel) 70%, transparent); }
+.chip i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: var(--glow-stop); margin-right: 14px; }
+.site { position: absolute; left: 96px; bottom: 118px; font: 600 40px var(--mono); color: var(--accent); letter-spacing: 0.01em; }
+.sign { position: absolute; left: 96px; bottom: 64px; font: 400 24px var(--sans); color: var(--dim); }
+.glare { position: absolute; border-radius: 50%; pointer-events: none; mix-blend-mode: screen; }
+
+/* ───── Flash du saut (css/layout.css:552-568), renforcé pour la vidéo ───── */
+.flash { position: absolute; inset: 0; z-index: var(--z-flash); pointer-events: none; opacity: 0;
+  background: radial-gradient(circle, rgba(var(--star), 0.7), rgba(var(--star), 0.16) 42%, transparent 68%); }
+.veil { position: absolute; inset: 0; z-index: 30; pointer-events: none; background: var(--void); opacity: 0; }
