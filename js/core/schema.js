@@ -242,10 +242,9 @@ const LOCALE = record({
     armed: label,
     tapHint: label,
     backHint: label,
-    // Facultatifs tant que tests/fixtures/valid-locale.json n'a pas ces trois clés (S9).
-    copyFocus: optional(label),
-    copyFailedHint: optional(label),
-    copyLabel: optional(label),
+    copyFocus: label,
+    copyFailedHint: label,
+    copyLabel: label,
     channels: list(record({ id, name: label, href: text(HREF) })),
   }),
 });

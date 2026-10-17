@@ -5,7 +5,6 @@ boot(env) est injectable (tests/browser/README.md) ; le module s'amorce seul, sa
 <html data-noboot> ; il pose alors <html data-booted>, que js/boot-guard.js attend.
 */
 import { cachedLocale, loadLocale, LocaleError } from './core/data.js';
-import { el } from './core/dom.js';
 import { startFitWords } from './core/fit-words.js';
 import { initialLang, otherLang } from './core/i18n.js';
 import { createRouter, listViews } from './core/router.js';
@@ -57,39 +56,6 @@ function languageMemory(storage) {
 }
 
 /**
- * @brief Monte le contenu minimal d'une rubrique : titre h2, chapeau et panneau
- *   « contenu indisponible » (retiré par le module qui remplace cette rubrique).
- *
- * @param {HTMLElement} root section.view de la rubrique
- * @param {(content: object) => string[]} pick [titre, chapeau] tirés des données d'une langue
- *
- * @returns {(content: object) => void} mise à jour des textes pour une langue
- */
-function mountSimple(root, pick) {
-  const title = el('h2', { tabindex: '-1' });
-  const lede = el('p', { class: 'lede' });
-  const heading = el('h3');
-  const message = el('p');
-  const home = el('button', { type: 'button', class: 'btn primary', 'data-go': 'home' });
-  const panel = el(
-    'div',
-    { class: 'status hud', 'data-state': 'error' },
-    heading,
-    message,
-    el('div', { class: 'status-bar', 'aria-hidden': 'true' }, el('i')),
-    el('div', { class: 'status-actions' }, home),
-  );
-  root.append(title, lede, panel);
-  return (content) => {
-    [title.textContent, lede.textContent] = pick(content);
-    const { unavailable } = content.ui;
-    heading.textContent = unavailable.title;
-    message.textContent = unavailable.message;
-    home.textContent = unavailable.home;
-  };
-}
-
-/**
  * @brief Démarre le ciel animé de canvas#sky ; son échec (décor seul) part en console.error.
  *
  * @returns {{ warp: Function, calm: Function } | null} commandes du ciel, null en cas d'échec
@@ -103,10 +69,8 @@ function startSky() {
   }
 }
 
-/* Contenu minimal de chaque rubrique, par identifiant de section.view, en attendant les
-modules js/sections/ (S5 à S9) : chaque montage insère sa structure d'un bloc, en dernier
-(rien s'il lève), et rend la mise à jour des textes. Le panneau « indisponible » de
-mountSimple disparaît avec la rubrique simple, quand son module la remplace. */
+/* Contenu de chaque rubrique, par identifiant de section.view : chaque montage insère
+sa structure d'un bloc, en dernier (rien s'il lève), et rend la mise à jour des textes. */
 const MOUNTS = {
   home: mountHome,
   journey: mountJourney,
