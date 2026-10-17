@@ -175,6 +175,7 @@ mouvement réduit est déjà coupé pour toutes les animations par css/layout.cs
 
 .skill header {
   display: flex;
+  flex-wrap: wrap; /* police agrandie : les flèches passent sous le nom */
   justify-content: space-between;
   align-items: flex-start;
   gap: 16px;
