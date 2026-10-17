@@ -61,7 +61,10 @@ function setRich(target, html) {
 }
 const plainTitle = t => t.replace(/<[^>]+>/g, '');
 
-/* caméra : anime le viewBox d'un SVG (centre et largeur), la hauteur suit le ratio */
+/* caméra : anime le viewBox d'un SVG (centre et largeur), la hauteur suit le ratio.
+   Le temps se lit par performance.now() à chaque image, jamais par l'argument de
+   requestAnimationFrame : dans un cadre créé après la page, ce dernier a une autre origine
+   (écart de plusieurs secondes), k devient très négatif et le viewBox part à l'infini. */
 function makeCamera(svg) {
     const c = { cx: 0, cy: 0, w: 1, raf: 0, pending: null };
     const settle = () => {
@@ -88,15 +91,16 @@ function makeCamera(svg) {
         const d = reduce() || motion.instant ? 0 : dur;
         return new Promise(res => {
             c.pending = res;
-            (function f(now) {
-                const k = d ? Math.min(1, (now - t0) / d) : 1, e = ease(k), to = target();
+            (function f() {
+                const k = d ? Math.min(1, (performance.now() - t0) / d) : 1;
+                const e = ease(k), to = target();
                 c.cx = lerp(from.cx, to.cx, e);
                 c.cy = lerp(from.cy, to.cy, e);
                 c.w = lerp(from.w, to.w, e);
                 c.apply();
                 onFrame && onFrame(e);
                 if (k < 1) c.raf = requestAnimationFrame(f); else settle();
-            })(t0);
+            })();
         });
     };
     return c;
@@ -104,11 +108,11 @@ function makeCamera(svg) {
 function animate(dur, frame) {
     return new Promise(res => {
         const t0 = performance.now(), d = reduce() || motion.instant ? 0 : dur;
-        (function f(now) {
-            const k = d ? Math.min(1, (now - t0) / d) : 1;
+        (function f() {
+            const k = d ? Math.min(1, (performance.now() - t0) / d) : 1;
             frame(k);
             if (k < 1) requestAnimationFrame(f); else res();
-        })(t0);
+        })();
     });
 }
 
