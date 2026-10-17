@@ -30,6 +30,7 @@ import {
 } from './skills-probe.js';
 import { runSkillsFocus } from './skills-focus.js';
 import { runSkillsRelated } from './skills-related.js';
+import { runSkillsReview } from './skills-review.js';
 import { normalize } from './text.js';
 
 export const GROUP = 'Compétences';
@@ -469,4 +470,5 @@ export async function runSkills(widths, mainWidth) {
   if (widths.includes(mainWidth)) await runWide(datas);
   await runSkillsFocus(widths, mainWidth);
   await runSkillsRelated(widths, mainWidth);
+  await runSkillsReview(widths, mainWidth);
 }
