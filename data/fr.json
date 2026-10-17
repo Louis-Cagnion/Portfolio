@@ -213,7 +213,7 @@
     },
     "legendItem": "{body} : {level}",
     "link": {
-      "intro": "Pour une vue plus complète et détaillée de mes connaissances en développement, vous pouvez consulter",
+      "intro": "Tu peux consulter la fiche détaillée de chaque compétence sur",
       "label": "Devpedia",
       "href": "https://louis-cagnion.github.io/Devpedia/"
     },

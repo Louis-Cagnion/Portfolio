@@ -215,6 +215,13 @@ mouvement réduit est déjà coupé pour toutes les animations par css/layout.cs
   margin: 0;
 }
 
+/* Lien Devpedia : une phrase sous le plan, sur toute la largeur de la rubrique. */
+.devpedia {
+  margin: 18px 0 0;
+  color: var(--dim);
+  font-size: 0.95rem;
+}
+
 /* Légende : une phrase, puis un astre par niveau. */
 .legend {
   display: flex;

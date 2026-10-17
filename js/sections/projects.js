@@ -22,7 +22,7 @@ import { createZoom } from './projects-zoom.js';
 
 const ARROW = '←';
 const HELD = ':hover, :focus-visible'; // une planète survolée ou focalisée cesse de tourner
-let openById = null; // ouverture de la fiche par la rubrique montée (openProject)
+let revealById = null; // ouverture d'un projet lié par la rubrique montée (openProject)
 
 /**
  * @brief Titre sans balise, comme celui que projects-art.js affiche.
@@ -308,6 +308,34 @@ export function mount(root) {
 
   const zoom = createZoom({ parts, state, renderAll, showSystem });
 
+  /** Rend la caméra au système dès que la fiche est fermée (Échap, bouton ou fond). */
+  const releaseOnClose = () => {
+    const watch = new MutationObserver(() => {
+      if (initSheet(document).isOpen()) return;
+      watch.disconnect();
+      zoom.release();
+    });
+    watch.observe(document.getElementById('sheet'), {
+      attributes: true,
+      attributeFilter: ['class'],
+    });
+  };
+
+  /**
+   * Projet lié : la caméra va d'un seul mouvement jusqu'à la planète, puis la fiche s'ouvre.
+   * À la fermeture, le focus va à la planète et la caméra revient sur le système zoomé.
+   */
+  const reveal = async (id, origin) => {
+    const planet = state.built?.planets.find((each) => each.id === id);
+    if (!planet) {
+      open(id, origin); // rubrique pas rendue ou projet inconnu : l'erreur est citée
+      return;
+    }
+    await zoom.toPlanet(planet);
+    open(id, origin);
+    releaseOnClose();
+  };
+
   /**
    * Branche les systèmes (zoom), les planètes (fiche si leur système est zoomé, remontée au
    * survol) d'un dessin neuf.
@@ -415,7 +443,7 @@ export function mount(root) {
   syncStill();
 
   root.append(parts.heading, parts.lede, parts.layout, parts.introBox, parts.list);
-  openById = open;
+  revealById = reveal;
   loop.sync();
 
   return ({ projects }) => {
@@ -439,15 +467,19 @@ export function mount(root) {
 }
 
 /**
- * @brief Ouvre la fiche d'un projet par son identifiant (API partagée : Compétences s'en
- *   servira pour ses projets liés).
+ * @brief Ouvre la fiche d'un projet par son identifiant (projets liés de Compétences) : la
+ *   caméra du plan va d'abord jusqu'à sa planète ; à la fermeture elle revient sur le système.
  *
  * @param {string} id identifiant d'un projet de `projects.systems[].projects[]`
  * @param {HTMLElement | null} origin élément qui reprend le focus à la fermeture de la fiche
+ *   (à défaut de pouvoir le recevoir, la planète du projet)
  *
- * @throws {Error} Rubrique pas montée ou pas rendue, ou identifiant inconnu (cité).
+ * @returns {Promise<void>} résolue à l'ouverture de la fiche (aussitôt sous mouvement réduit)
+ *
+ * @throws {Error} Rubrique pas montée (levée aussitôt) ; pas rendue ou identifiant inconnu
+ *   (citée, par la Promise rejetée).
  */
 export function openProject(id, origin) {
-  if (!openById) throw new Error('openProject : rubrique Projets non montée');
-  openById(id, origin);
+  if (!revealById) throw new Error('openProject : rubrique Projets non montée');
+  return revealById(id, origin);
 }

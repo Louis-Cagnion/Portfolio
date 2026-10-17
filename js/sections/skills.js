@@ -3,6 +3,8 @@ Compétences : huit constellations dont chaque étoile est une compétence, lég
 Dessin dans skills-art.js, placement dans skills-layout.js, construction de la vue
 d'ensemble dans skills-scene.js, styles dans css/skills.css.
 Ce fichier monte la structure, cadre la caméra, câble les constellations et traduit.
+Les projets liés (puces du panneau) sont dans skills-related.js ; la phrase Devpedia, sous le
+plan et sur toute la largeur, est montée ici.
 Le déploiement d'une constellation, la plongée sur un astre et le panneau de compétence sont
 dans skills-focus.js (caméra, séquences) et skills-panel.js (panneau).
 Structure et mécanique de la maquette : docs/design/prototype/prototype.template.html:388-408
@@ -14,6 +16,7 @@ import { makeCamera } from '../core/motion.js';
 import { bodyIcon } from './skills-art.js';
 import { createFocus, onActivate } from './skills-focus.js';
 import { overviewCamera } from './skills-layout.js';
+import { openRelated } from './skills-related.js';
 import { buildOverview, LEVELS, placeLabels, retext } from './skills-scene.js';
 
 const LEGEND_ORDER = ['advanced', 'intermediate', 'beginner', 'unknown']; // maquette:932
@@ -45,9 +48,26 @@ function buildLegend() {
 }
 
 /**
+ * @brief Phrase du lien Devpedia : l'introduction, une espace, le lien, un point final.
+ *
+ * @returns {{ node: HTMLElement, intro: Text, anchor: HTMLAnchorElement }} la phrase, son
+ *   introduction et son lien, textes vides jusqu'au premier update
+ */
+function buildLink() {
+  const intro = document.createTextNode('');
+  const anchor = el('a', { target: '_blank', rel: 'noopener' });
+  const dot = document.createTextNode('.'); // point final en dur : la donnée n'en porte pas
+  return {
+    node: el('p', { class: 'devpedia' }, intro, anchor, dot),
+    intro,
+    anchor,
+  };
+}
+
+/**
  * @brief Éléments fixes de la rubrique, construits une fois et insérés d'un bloc.
  *
- * @returns {object} nœuds : heading, lede, layout, plan (svg), hint, panel, legend
+ * @returns {object} nœuds : heading, lede, layout, plan (svg), hint, panel, link, legend
  */
 function buildParts() {
   const plan = svg('svg', { class: 'viz const', id: 'constSvg', role: 'group' });
@@ -66,6 +86,7 @@ function buildParts() {
     plan,
     hint,
     panel,
+    link: buildLink(),
     legend: buildLegend(),
   };
 }
@@ -87,6 +108,7 @@ export function mount(root) {
   const camera = makeCamera(parts.plan);
   const state = {
     skills: null, // données `skills` de la langue affichée
+    projects: null, // données `projects` de la langue affichée (titres des projets liés)
     signature: '', // idsOf des données affichées
     built: null, // résultat de buildOverview
     phone: narrow.matches,
@@ -94,7 +116,7 @@ export function mount(root) {
     selection: { group: null, star: null }, // identifiants, gardés d'une langue à l'autre
     camera,
   };
-  const focus = createFocus({ root, parts, state, camera });
+  const focus = createFocus({ root, parts, state, camera, onRelated: openRelated });
 
   /** Cadre la vue d'ensemble sur la largeur affichée et replace les noms (jamais masquée). */
   const fit = () => {
@@ -129,6 +151,17 @@ export function mount(root) {
     fit();
   };
 
+  /** Phrase Devpedia : une chaîne absente est signalée, jamais inventée. */
+  const translateLink = () => {
+    const { link } = state.skills;
+    for (const key of ['intro', 'label', 'href'])
+      if (typeof link?.[key] !== 'string')
+        console.error(`skills : chaîne absente skills.link.${key}`);
+    parts.link.intro.data = `${link?.intro ?? ''} `;
+    parts.link.anchor.textContent = link?.label ?? '';
+    parts.link.anchor.setAttribute('href', link?.href ?? '');
+  };
+
   /** Légende, aide et chapeau dans la langue affichée. */
   const translateTexts = () => {
     const { skills } = state;
@@ -138,6 +171,7 @@ export function mount(root) {
     parts.hint.textContent = skills.hint;
     parts.plan.setAttribute('aria-label', skills.title);
     legend.intro.textContent = skills.legend;
+    translateLink();
     for (const { level, text } of legend.items)
       text.data = format(skills.legendItem, {
         body: skills.bodies[level],
@@ -154,11 +188,11 @@ export function mount(root) {
     if (state.skills) build();
   });
 
-  root.append(parts.heading, parts.lede, parts.layout, parts.legend.node);
+  root.append(parts.heading, parts.lede, parts.layout, parts.link.node, parts.legend.node);
 
-  return ({ skills }) => {
+  return ({ skills, projects }) => {
     const same = state.built && idsOf(skills.groups) === state.signature;
-    Object.assign(state, { skills });
+    Object.assign(state, { skills, projects });
     translateTexts();
     if (same) {
       retext(state.built, skills.groups, skills);

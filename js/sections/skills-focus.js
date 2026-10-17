@@ -12,6 +12,7 @@ progression ne dépend jamais de l'argument du rappel (origine différente dans 
 import { ease, lerp, reduced, scrollBehavior, watchReduced } from '../core/motion.js';
 import { initSheet } from '../ui/sheet.js';
 import { createPanel } from './skills-panel.js';
+import { relatedOf } from './skills-related.js';
 import {
   bodyScale,
   diveTarget,
@@ -88,15 +89,16 @@ function scrollToPlan(layout) {
  * @param {object} context fermetures de `mount` (skills.js)
  * @param {HTMLElement} context.root section.view#skills
  * @param {object} context.parts nœuds fixes : plan, layout, panel
- * @param {object} context.state `skills`, `built`, `phone`, `selection`
+ * @param {object} context.state `skills`, `projects`, `built`, `phone`, `selection`
  * @param {object} context.camera caméra du plan (`makeCamera`)
+ * @param {(id: string, button: HTMLButtonElement) => void} context.onRelated projet lié
  *
  * @returns {object} commandes : `enter(index)`, `go(rank)`, `exit()`, `attach(built)` (câble
  *   les étoiles d'une vue d'ensemble neuve), `reset()` (repos sans animation), `relabel()`
  *   (bascule de langue), `recentre()` (redimensionnement), `moving()` (vrai de l'entrée à
  *   la fin de la dernière animation)
  */
-export function createFocus({ root, parts, state, camera }) {
+export function createFocus({ root, parts, state, camera, onRelated }) {
   const { plan, layout, panel: host } = parts;
   let deck = null; // constellation déployée : { built, spots, rank, panel, frame, boxes }
   let busy = false; // une séquence tourne : entrée, saut ou retour (recentrage bloqué)
@@ -136,7 +138,10 @@ export function createFocus({ root, parts, state, camera }) {
     return {
       ui: state.skills,
       title: group.title,
-      stars: deck.built.stars.map((star) => ({ ...items.get(star.id), projects: [] })),
+      stars: deck.built.stars.map((star) => {
+        const item = items.get(star.id);
+        return { ...item, projects: relatedOf(state.projects, item.projects) };
+      }),
     };
   };
 
@@ -358,7 +363,7 @@ export function createFocus({ root, parts, state, camera }) {
     layout.classList.add('focus');
     host.inert = false;
     deck = { built, spots, rank: 0 };
-    deck.panel = createPanel(host, { onBack: exit, onStar: go, onRelated: () => {} });
+    deck.panel = createPanel(host, { onBack: exit, onStar: go, onRelated });
     deck.panel.show(0, textsOf());
     host.querySelector('#skill').classList.add('traveling');
     if (phone()) {

@@ -208,7 +208,8 @@ elle reste la même au repos et pendant le saut (rubrique en position: absolute)
 }
 
 .body a,
-.lede a {
+.lede a,
+.devpedia a {
   color: var(--accent);
   text-decoration: none;
   background: linear-gradient(currentColor, currentColor) 0 100% / 100% 1px no-repeat;
@@ -217,14 +218,16 @@ elle reste la même au repos et pendant le saut (rubrique en position: absolute)
 }
 
 .body a:focus-visible,
-.lede a:focus-visible {
+.lede a:focus-visible,
+.devpedia a:focus-visible {
   background-size: 100% 2px;
   color: var(--accent-hover);
 }
 
 @media (hover: hover) {
   .body a:hover,
-  .lede a:hover {
+  .lede a:hover,
+  .devpedia a:hover {
     background-size: 100% 2px;
     color: var(--accent-hover);
   }

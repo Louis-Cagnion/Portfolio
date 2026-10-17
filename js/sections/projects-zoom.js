@@ -26,6 +26,7 @@ import { phoneUnit, setPlanetActive } from './projects-art.js';
 const TAU = 2 * Math.PI;
 const ENTER_MS = 1000;
 const EXIT_MS = 900;
+const TRACK_MS = 800; // caméra d'un projet lié : du système à la planète, et retour
 const SPIN = 0.00005; // rad/ms : vitesse commune des planètes du système zoomé
 const DESK_HEIGHT = 520; // hauteur du plan zoomé au bureau, en pixels
 const PHONE_RATIO = 1.25; // téléphone : hauteur du plan zoomé, en largeurs
@@ -42,6 +43,7 @@ const ORBIT_PAD = 80; // marge latérale de la plus grande orbite
 const BLEED = 24; // débord du plan de la Piscine, 12 px de chaque côté
 const SCROLL_MARGIN = 8;
 const OVERVIEW_RATIO = 0.4; // hauteur sur largeur d'un plan pas encore mesuré
+const PLANET_SHARE = 0.45; // largeur de la caméra sur une planète, en part de celle du système
 
 /**
  * @brief Angle ramené dans l'intervalle ]-π, π].
@@ -112,18 +114,22 @@ function columnWidth(plan) {
  *
  * `enter(index)` est appelée à chaque clic ou touche sur un soleil (ignorée si un zoom est
  * posé), `exit()` par le bouton retour et Échap, `step(dt)` par la boucle de la rubrique.
+ * `toPlanet(planet)` (projet lié de Compétences) emmène la caméra jusqu'à une planète d'un
+ * seul mouvement, depuis la vue d'ensemble ou depuis son système zoomé, puis fige la rotation
+ * du système ; `release()` rend la caméra au système et relance la rotation.
  *
  * @param {object} context fermetures de `mount` : `parts` (nœuds fixes), `state` (`built`,
  *   `view`, `phone`), `renderAll` (replace les planètes), `showSystem` (en-tête et intro)
  *
- * @returns {{ enter: (index: number) => void, exit: () => void, step: (dt: number) => void }}
- *   commandes du zoom
+ * @returns {object} commandes du zoom : `enter(index)`, `exit()`, `step(dt)`,
+ *   `toPlanet(planet)` (Promise résolue à l'arrivée de la caméra) et `release()`
  */
 export function createZoom({ parts, state, renderAll, showSystem }) {
   const { plan, layout, head } = parts;
   const camera = makeCamera(plan);
   let run = null; // animation en cours : { kind, built, system, planets, shift, ... }
   let hovered = false;
+  let lock = null; // planète visée par toPlanet : caméra posée sur elle, rotation figée
 
   /** Planètes du système `index`, dans l'ordre des projets. */
   const planetsOf = (index) => state.built.planets
@@ -157,6 +163,16 @@ export function createZoom({ parts, state, renderAll, showSystem }) {
     return { cx: system.cx, cy: system.cy, w: width };
   };
 
+  /** Caméra serrée sur `planet` : sa position du moment, une part de la largeur du système. */
+  const planetCamera = (planet, system) => ({
+    cx: system.cx + planet.radius * Math.cos(planet.angle),
+    cy: system.cy + planet.radius * system.tilt * Math.sin(planet.angle),
+    w: PLANET_SHARE * focus(system).w,
+  });
+
+  /** Caméra du zoom posé : sur la planète suivie, sinon sur le système. */
+  const settled = (system) => (lock ? planetCamera(lock, system) : focus(system));
+
   /** Pose la caméra et recopie son centre, sa largeur et l'unité d'écran dans la vue. */
   const place = (target) => {
     camera.set(target);
@@ -182,9 +198,10 @@ export function createZoom({ parts, state, renderAll, showSystem }) {
     });
   };
 
-  /** Fin de l'animation : l'entrée n'a rien d'autre à faire, la sortie remet le repos. */
+  /** Fin de l'animation : seule la sortie remet le repos ; `resolve` prévient l'appelant. */
   const conclude = (finished) => {
-    if (finished.kind === 'in') return;
+    finished.resolve?.();
+    if (finished.kind !== 'out') return;
     const { view, built } = state;
     view.zoomedIndex = -1;
     plan.classList.remove('zoomed', 'bleed');
@@ -203,11 +220,23 @@ export function createZoom({ parts, state, renderAll, showSystem }) {
     renderAll();
   };
 
-  /** Lance l'animation `kind` ; sous mouvement réduit, elle se termine aussitôt. */
-  const start = (kind, system, planets) => {
+  /** Inclinaison visée en fin d'animation : zoomée, au repos ou inchangée. */
+  const tiltAt = (kind, system) => {
+    if (kind === 'in') return focusTilt(system, state.phone);
+    return kind === 'out' ? system.restTilt : system.tilt;
+  };
+
+  /**
+   * Lance l'animation `kind` (in, out, track, release) ; sous mouvement réduit, elle se
+   * termine aussitôt. `options.planet` : la caméra rejoint cette planète, `options.resolve` :
+   * rappel de la fin.
+   */
+  const start = (kind, system, planets, options = {}) => {
     const { built } = state;
     const entering = kind === 'in';
     const anchor = planets[0].angle;
+    const chase = options.planet ? () => planetCamera(options.planet, system) : null;
+    const toSystem = entering || kind === 'release' ? () => focus(system) : overview;
     run = {
       kind,
       built,
@@ -217,13 +246,14 @@ export function createZoom({ parts, state, renderAll, showSystem }) {
         entering ? wrapAngle(anchor + planet.rel - planet.angle) : 0
       )),
       from: { cx: camera.cx, cy: camera.cy, w: camera.w },
-      target: entering ? () => focus(system) : overview,
+      target: chase ?? toSystem,
       tilt: system.tilt,
-      tiltTo: entering ? focusTilt(system, state.phone) : system.restTilt,
+      tiltTo: tiltAt(kind, system),
       restTilt: system.restTilt,
-      duration: entering ? ENTER_MS : EXIT_MS,
+      duration: { in: ENTER_MS, out: EXIT_MS }[kind] ?? TRACK_MS,
       elapsed: 0,
       done: 0,
+      resolve: options.resolve,
     };
     if (reduced()) complete();
   };
@@ -238,8 +268,9 @@ export function createZoom({ parts, state, renderAll, showSystem }) {
    * @brief Zoome sur le système `index` ; sans effet si un zoom est déjà posé.
    *
    * @param {number} index rang du système dans `state.built.systems`
+   * @param {object} [options] `planet` (la caméra rejoint cette planète) et `resolve`
    */
-  const enter = (index) => {
+  const enter = (index, options = {}) => {
     const { built, view } = state;
     if (!built || view.zoomedIndex >= 0) return;
     const system = built.systems[index];
@@ -257,7 +288,7 @@ export function createZoom({ parts, state, renderAll, showSystem }) {
     setHeight(plan, zoomedHeight(system));
     if (state.phone) scrollToPlan();
     camera.set({ ...overview() });
-    start('in', system, planetsOf(index));
+    start('in', system, planetsOf(index), options);
   };
 
   /** Sort du zoom (sans effet au repos ou pendant une animation) ; focus rendu au soleil. */
@@ -265,12 +296,44 @@ export function createZoom({ parts, state, renderAll, showSystem }) {
     const { built, view } = state;
     if (view.zoomedIndex < 0 || run) return;
     const system = built.systems[view.zoomedIndex];
+    lock = null;
     layout.classList.remove('zfocus');
     if (head.contains(document.activeElement)) system.sun.focus({ preventScroll: true });
     for (const each of built.systems) each.g.classList.remove('on', 'dim');
     for (const planet of planetsOf(system.index)) setPlanetActive(planet.nodes.g, false);
     setHeight(plan, (columnWidth(plan) * built.height) / built.width);
     start('out', system, planetsOf(system.index));
+  };
+
+  /**
+   * Emmène la caméra jusqu'à `planet` d'un seul mouvement : zoom du système si le plan est au
+   * repos, sinon du système à la planète. Sans effet (résolue aussitôt) si un autre système
+   * est zoomé ou si une animation tourne.
+   *
+   * @param {object} planet planète de `state.built.planets`
+   *
+   * @returns {Promise<void>} résolue à l'arrivée de la caméra (aussitôt sous mouvement réduit)
+   */
+  const toPlanet = (planet) => new Promise((resolve) => {
+    const { built, view } = state;
+    const index = planet.systemIndex;
+    if (!built || run || (view.zoomedIndex >= 0 && view.zoomedIndex !== index)) {
+      resolve();
+      return;
+    }
+    lock = planet;
+    if (view.zoomedIndex < 0) enter(index, { planet, resolve });
+    else start('track', built.systems[index], planetsOf(index), { planet, resolve });
+  });
+
+  /** Rend la caméra au système (fiche d'un projet lié fermée) ; sans effet sinon. */
+  const release = () => {
+    const { built, view } = state;
+    if (!lock) return;
+    const system = built.systems[lock.systemIndex];
+    lock = null;
+    if (!run && view.zoomedIndex === system.index)
+      start('release', system, planetsOf(system.index));
   };
 
   /** Un pointeur sur le plan ou une planète focalisée au clavier arrête la rotation. */
@@ -283,14 +346,19 @@ export function createZoom({ parts, state, renderAll, showSystem }) {
    */
   const step = (dt) => {
     const { built, view } = state;
-    if (run && run.built !== built) run = null; // plan reconstruit : animation abandonnée
+    if (run && run.built !== built) {
+      run.resolve?.();
+      run = null; // plan reconstruit : animation abandonnée
+    }
+    if (lock && !built?.planets.includes(lock)) lock = null;
     if (run) {
       run.elapsed += dt;
       if (run.elapsed >= run.duration) complete();
       else advance(ease(run.elapsed / run.duration));
       return;
     }
-    if (!built || view.zoomedIndex < 0 || held()) return;
+    if (!built || view.zoomedIndex < 0) return;
+    if (held() || lock) return; // planète visée par un projet lié : le système reste figé
     for (const planet of built.planets)
       if (planet.systemIndex === view.zoomedIndex) planet.angle += SPIN * dt;
   };
@@ -314,9 +382,9 @@ export function createZoom({ parts, state, renderAll, showSystem }) {
     if (run || !built || view.zoomedIndex < 0) return;
     const system = built.systems[view.zoomedIndex];
     if (state.phone) plan.style.height = `${zoomedHeight(system)}px`;
-    place(focus(system));
+    place(settled(system));
     renderAll();
   }).observe(plan);
 
-  return { enter, exit, step };
+  return { enter, exit, step, toPlanet, release };
 }
