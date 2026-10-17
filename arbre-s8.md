@@ -1,6 +1,6 @@
 # Arbre : S8 « Compétences », étape 3/8 (feuilles validées 12/18 ; builder 9, tester 4, analyst 1, checker 1, Louis 2, fixer 1 (C4b) ; autres fixers selon la revue D1 ; A1b conditionnelle)
 Statuts : [ ] à faire, [~] en cours, [x] faite, [v] validée, [!] bloquée, [>] reportée au pré-mortem
-Prochaine étape : D1 (revue indépendante de S8.C, analyst opus/high), D2 à Dn (corrections), E1, E2 ; C6 corrigée, B4 vérifiée, C7 livrée (28ae29c) ; S9 commitée (bc5cce8 et corrections ae7fb96, 0858d48)
+Prochaine étape : E1 (à relancer), E2 (Louis) ; revue D1 et corrections D2 à D6 faites ; C6 corrigée, B4 vérifiée, C7 livrée (28ae29c) ; S9 commitée (bc5cce8 et corrections ae7fb96, 0858d48)
 Moniteur : sonnet/high (confirmé par Louis le 11/10/2026, réévalué à l'ouverture de S8 : convient, la décomposition vient d'un analyst opus/high et la revue D1 d'un analyst opus/high au-dessus du moniteur ; C6, caméra et plongée indivisibles, est relue de près)
 Arbre tiré du brouillon d'un analyst opus/high du 12/10/2026 (lecture seule), numéros de ligne relus ce jour à `e2c538c`.
 
@@ -63,7 +63,7 @@ Arbre tiré du brouillon d'un analyst opus/high du 12/10/2026 (lecture seule), n
     - [v] S8.D6 fixer (sonnet/low ; `state.camera`, `selection.star` et `node` de `createPanel` supprimés après grep exhaustif, appel de `skills-art.js` remis à un argument par ligne ; `competences` en `390,1280` 393 réussis, 0 rouge ; relu par le moniteur, aucun lecteur restant) MINEURS mécaniques 3 et 6 de la revue (le 7, contrat de `projects-zoom.js`, est confié à D5) : code mort (`state.camera` de `skills.js`, `selection.star`, `node` rendu par `createPanel`), appel enveloppé de `skills-art.js:207-212`, contrat de l'en-tête de `projects-zoom.js:11-13` ; niveau sonnet/low
     - MINEURS sans feuille (reportés dans `todo.md`) : 1 (texte Devpedia réécrit au-delà de la décision de `plan.md:163`, point final en dur : à faire confirmer par Louis en E2), 2 (exception à `docs/design-checklist.md:308`, panneau animé au retour sur téléphone, C6c), 4 (duplications `setHeight`, `LEVELS`/`LEVEL_RANK`, `CENTER_SHIFT_Y`), 5 (en-têtes trop longs de `skills-panel.js` et de `buildOverview`)
   - S8.E [nœud] : étape 8, finalisation de la V1 pour cette rubrique
-    - [ ] S8.E1 checker : `node --test` et suite navigateur complète, comparées au point de contrôle du nœud S8 groupe par groupe ; dépend de : S8.D ; niveau pressenti : haiku/medium (S6.E1 au même niveau)
+    - [ ] S8.E1 checker (lancé le 17/10 à 22 h 21 puis stoppé sans résultat à la demande de Louis ; à relancer : serveur et suites jouées groupe par groupe, `?groups=<groupe>` sans `widths=`) : `node --test` et suite navigateur complète, comparées au point de contrôle du nœud S8 groupe par groupe ; dépend de : S8.D ; niveau pressenti : haiku/medium (S6.E1 au même niveau)
     - [ ] S8.E2 Louis : rendu final dans Chrome sur ordinateur et en téléphone émulé, confirme le format de légende de C0 ; dépend de : S8.E1
     - moniteur : commit, clôture de S8 (`todo.md`, `docs/design/plan.md`, contexte des agents, mémoire)
 
