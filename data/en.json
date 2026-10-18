@@ -430,9 +430,9 @@
           {
             "id": "web-security",
             "name": "Web security",
-            "level": "intermediate",
+            "level": "beginner",
             "projects": ["search_tool"],
-            "description": "Seen in the conversational search tool: a crash-test campaign fixed about thirty bugs and vulnerabilities, with the help of Claude Code (HMAC-signed token, rate limiting per IP address, CSRF protection, access control per dealership, CSP headers, session fixation); I am comfortable with the essentials."
+            "description": "Seen in the conversational search tool, where a crash-test campaign fixed about thirty bugs and vulnerabilities with the help of Claude Code: I did not run it myself, I read up on the flaws encountered (HMAC-signed token, rate limiting per IP address, CSRF protection, access control per dealership, CSP headers, session fixation); I am taking my first steps and still rely a lot on the documentation and AI."
           }
         ]
       },

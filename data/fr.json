@@ -430,9 +430,9 @@
           {
             "id": "web-security",
             "name": "Sécurité web",
-            "level": "intermediate",
+            "level": "beginner",
             "projects": ["search_tool"],
-            "description": "Vu dans l'outil de recherche conversationnelle : une campagne de crash-test a permis de corriger une trentaine de bugs et de failles, avec l'assistance de Claude Code (token signé HMAC, limitation de débit par adresse IP, protection CSRF, contrôle d'accès par concession, en-têtes CSP, fixation de session) ; je suis à l'aise sur l'essentiel."
+            "description": "Vu dans l'outil de recherche conversationnelle, où une campagne de crash-test a permis de corriger une trentaine de bugs et de failles avec l'assistance de Claude Code : je ne l'ai pas menée moi-même, je me suis documenté sur les failles rencontrées (token signé HMAC, limitation de débit par adresse IP, protection CSRF, contrôle d'accès par concession, en-têtes CSP, fixation de session) ; j'en suis aux premiers pas et je m'aide encore beaucoup de la documentation et de l'IA."
           }
         ]
       },
