@@ -355,7 +355,7 @@
             "name": "Playwright",
             "level": "beginner",
             "projects": ["audit_infomediaires"],
-            "description": "Utilisé dans l'audit nocturne des boutiques en ligne, réalisé avec l'assistance de Claude Code (extraction en parallèle par plateforme, bandeaux cookies, contrôles anti-robot) ; j'en suis aux premiers pas et je m'aide encore beaucoup de la documentation et de l'IA."
+            "description": "Utilisé dans la vérification nocturne de la visibilité des boutiques en ligne, réalisé avec l'assistance de Claude Code (automatisation de navigateur, exécution en parallèle par plateforme) ; j'en suis aux premiers pas et je m'aide encore beaucoup de la documentation et de l'IA."
           }
         ]
       },
@@ -600,7 +600,7 @@
             "blocks": [
               {
                 "type": "text",
-                "html": "J'ai développé un pipeline Python qui vérifie chaque nuit que les boutiques de véhicules d'occasion du groupe sont bien visibles sur plusieurs plateformes d'annonces. Il compte les annonces réellement affichées, détecte les doublons de véhicules et mesure l'écart avec le stock de référence. L'extraction repose sur Playwright, en parallèle par plateforme, avec gestion des bandeaux cookies et des contrôles anti-robot."
+                "html": "J'ai développé un pipeline Python qui vérifie chaque nuit que les boutiques de véhicules d'occasion du groupe sont bien visibles sur plusieurs plateformes d'annonces. Il compte les annonces réellement affichées, détecte les doublons de véhicules et mesure l'écart avec le stock de référence. L'automatisation du navigateur repose sur Playwright, en parallèle par plateforme."
               },
               {
                 "type": "text",
