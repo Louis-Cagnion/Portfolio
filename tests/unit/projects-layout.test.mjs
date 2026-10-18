@@ -1,6 +1,6 @@
 /*
 Contrat testé : js/sections/projects-layout.js (placement des planètes de Projets).
-Module pur, sans accès au DOM. Source : docs/design/s6/mockup.js (maquette validée).
+Module pur, sans accès au DOM. Valeurs de la maquette validée (historique git, a49d2a5).
   planetSize(project) -> 7 + min(6, 1.4 x nombre de blocs) (text et list comptés) ;
   systemRadii(systemId, { phone, maxRadius }) -> rayons des orbites :
     - 'piscine' bureau : [0.28, 0.46, 0.64, 0.82, 1] x maxRadius ;
@@ -72,7 +72,7 @@ const makeSystem = (id, count) => ({
   projects: Array.from({ length: count }, (_, j) => makeProject(`${id}-${j}`, (j % 6) + 1)),
 });
 
-// Valeurs attendues figées : géométrie de la Piscine téléphone (mockup.js:32-36).
+// Valeurs attendues figées : géométrie de la Piscine téléphone.
 const PHONE_SLOTS = [
   [2, 4.42], [2, 4.995], [1, 6.059], [2, 1.875], [1, 3.043], [2, 5.448], [2, 1.296],
   [0, 1.113], [2, 0.444], [2, 0.902], [2, 0.007], [1, 1.565], [1, 3.903], [1, 0.659],

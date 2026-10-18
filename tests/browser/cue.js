@@ -1,13 +1,13 @@
-/* Repère de l'accueil qui s'efface (S5). Contrat fixé par le moniteur (docs/design/plan.md:121
-« repère qui s'efface », maquette docs/design/prototype/prototype.template.html:83-87 et
-1208-1212, docs/design-checklist.md:297-298 et 310) :
+/* Repère de l'accueil qui s'efface (S5). Contrat fixé par le moniteur (plan.md, Critères S5
+« repère qui s'efface » ; checklist §6, mouvement réduit ; §6, animation: none ;
+checklist §7, Entrée) :
 - a.cue#cue[href="#dossier"] : opacité 1, visible, sans .gone en haut de l'accueil ; la flèche
-  tourne en boucle (animation cue 2s infinite, maquette:85) ;
+  tourne en boucle (animation cue 2s infinite) ;
 - clic ou Entrée : #dossier à l'écran (défilement fluide, immédiat sous mouvement réduit),
   accueil toujours affiché, aucun html[data-warp] ;
-- .gone (opacity 0, visibility hidden, maquette:84) posée quand #dossier entre dans la zone
-  de rootMargin '0px 0px -15% 0px' (maquette:1210), retirée en remontant ;
-- mouvement réduit : aucune animation du repère ne tourne (animation: none, checklist:298).
+- .gone (opacity 0, visibility hidden) posée quand #dossier entre dans la zone
+  de rootMargin '0px 0px -15% 0px', retirée en remontant ;
+- mouvement réduit : aucune animation du repère ne tourne (checklist §6, animation: none).
 Limites du banc : Entrée est jouée par un keydown synthétique, puis par le clic que le
 navigateur déclenche sur un lien natif si keydown n'est pas annulé ; la marge de 15 % n'est pas
 mesurable dans une iframe (la racine implicite de l'observateur est la fenêtre de la suite) ;
@@ -30,7 +30,7 @@ const SETTLE_MS = 600; // marge laissée à l'observateur et à la transition de
 const SCROLL_MS = 4000; // défilement fluide jusqu'au dossier
 const IMMEDIATE_MS = 250; // défilement « immédiat » sous mouvement réduit
 const FADE_MS = 2000; // fondu du repère
-const OBSERVER_MARGIN = 0.15; // rootMargin '0px 0px -15% 0px' (maquette:1210)
+const OBSERVER_MARGIN = 0.15; // rootMargin '0px 0px -15% 0px'
 
 // ---------- Repère ----------
 
@@ -78,7 +78,7 @@ function cueRestProblems(site) {
   return problems;
 }
 
-/** Repère effacé (maquette:84) : .gone, opacité 0 et visibility hidden, en FADE_MS au plus. */
+/** Repère effacé : .gone, opacité 0 et visibility hidden, en FADE_MS au plus. */
 async function goneProblems(site) {
   const cue = cueOf(site);
   if (!cue) return ['a#cue absent'];

@@ -1,4 +1,4 @@
-/* Projets : bascule de langue (plan.md:123, critère 7). Après la bascule, la rubrique garde le
+/* Projets : bascule de langue (plan.md, Principes). Après la bascule, la rubrique garde le
 système zoomé et la fiche ouverte (mêmes nœuds, update(view)), traduit tous les textes et ne
 déplace pas le focus. Trois cas par site : pendant un zoom, pendant une fiche ouverte (retour
 à la langue de départ), puis au repos. Le projet suivi est celui qui a des liens et le plus de

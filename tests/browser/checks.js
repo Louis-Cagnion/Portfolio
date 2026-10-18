@@ -113,7 +113,7 @@ export function isInlineTextLink(site, el) {
 export const INLINE_LINK_LABEL = 'lien en ligne, exempté (WCAG 2.5.8)';
 
 /* Composants que la maquette validée dessine sous 44 px (décision de Louis du 08/10/2026,
-cf. docs/design-checklist.md, zones cliquables) ; les zones dessinées en SVG suivent le
+cf. checklist §4, MOCKUP_SIZED ; §4, zones SVG) ; les zones dessinées en SVG suivent le
 dessin. */
 const MOCKUP_SIZED = [
   '.nav button',

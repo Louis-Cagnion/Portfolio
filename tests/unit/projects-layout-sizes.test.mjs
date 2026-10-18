@@ -1,6 +1,6 @@
 /*
 Contrat testé : js/sections/projects-layout.js, taille (size) des planètes de la Piscine.
-Module pur, sans accès au DOM. Source : docs/design/plan.md, décision du 12/10/2026 (point 1).
+Module pur, sans accès au DOM. Source : plan.md, Décisions (12/10/2026), point 1.
   planetSlots(system, { phone, maxRadius }) -> size de chaque planète de la Piscine, bureau
     et téléphone : 8.4 + (13 - 8.4) x rang / (n - 1), avec n = 20 et rang (0 à n - 1) du projet
     classé par longueur croissante (somme de block.html, ou de items.join('') en liste) ;

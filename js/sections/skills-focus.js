@@ -5,7 +5,7 @@ d'ensemble (1200 ms). Même couture que `createZoom` de projects-zoom.js : skill
 `enter(index)`, `go(rank)` et `exit(options)` ; `options.quiet` (sortie par Échap) rend le
 focus sans anneau de focus clavier, dès le début du retour. Le panneau (skills-panel.js) naît
 au premier déploiement et se vide au retour.
-Mécanique de la maquette P2 (choix de Louis du 17/10/2026) : docs/design/s8/mockup-skills.js.
+Mécanique de la maquette P2 (choix de Louis du 17/10/2026).
 Calculs d'image : skills-pose.js ; règles : css/skills.css.
 Une seule boucle `requestAnimationFrame`, qui lit `performance.now()` à chaque image : la
 progression ne dépend jamais de l'argument du rappel (origine différente dans une iframe).

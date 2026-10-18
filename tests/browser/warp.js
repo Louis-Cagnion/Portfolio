@@ -25,8 +25,9 @@ import {
 } from './harness.js';
 import { expectEqual, skip, test } from './runner.js';
 
-const BEND_MS = 1000; // courbure, --dur-warp-out + --dur-warp-in (checklist, section 1)
-const LAST_FRAME_MS = 20; // saut complet en 1020 ms (checklist, section 1)
+// courbure, --dur-warp-out + --dur-warp-in (checklist §1, saut en hyperespace)
+const BEND_MS = 1000;
+const LAST_FRAME_MS = 20; // saut complet en 1020 ms (checklist §1, saut en hyperespace)
 const CSS_TIME = /^(\d*\.?\d+)(m?s)$/;
 const WARP_MARGIN_MS = 500; // marge du banc : sondage toutes les 25 ms, minuteurs du cadre
 const FOV_MAX = 0.3;
@@ -179,7 +180,8 @@ function stillProblems(entries, label) {
 
 /**
  * Durées du saut lues dans les jetons de html, comme js/core/router.js : { bend, total } en
- * ms et `problems` ; jeton illisible : signalé, remplacé par les durées de la checklist.
+ * ms et `problems` ; jeton illisible : signalé, remplacé par les durées de la checklist §1,
+ * saut en hyperespace.
  */
 function warpTiming(site) {
   const style = site.win.getComputedStyle(root(site));

@@ -1,4 +1,5 @@
-/* Projets : animation (plan.md:123, checklist:303-304). Une seule boucle requestAnimationFrame
+/* Projets : animation (plan.md, Critères S6 ; checklist §6, ciel figé ;
+§6, une boucle par rubrique). Une seule boucle requestAnimationFrame
 pour la rubrique visible, demandée depuis js/sections/projects*.js (la pile d'appels le dit,
 voir countLoops) : aucune avant la première visite, aucune sur les autres rubriques, aucune
 dans un onglet masqué (document.hidden et visibilitychange), relancée au retour. Mouvement

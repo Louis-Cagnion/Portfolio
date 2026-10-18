@@ -1,18 +1,18 @@
-/* Parcours (S7). Contrat (plan.md:124 : ouverture sur la position actuelle, flèches seules
-sur téléphone, toucher de l'escale actuelle qui descend à sa fiche) :
-- section#journey : h2, p.lede (lede.pointer ; lede.arrows à 700 px et moins, maquette:643),
-  div.jstage [svg.traj[role=group][aria-label=stopsLabel] : path.track, path.done, g.wp
+/* Parcours (S7). Contrat (plan.md, Critères S7) : ouverture sur la position actuelle, flèches
+seules sur téléphone, toucher de l'escale actuelle qui descend à sa fiche :
+- section#journey : h2, p.lede (lede.pointer ; lede.arrows à 700 px et moins), div.jstage
+  [svg.traj[role=group][aria-label=stopsLabel] : path.track, path.done, g.wp
   [tabindex=0][role=button][aria-label="titre, date"] (circle.hit, circle.pulse sur now seul,
   g.stop.<body>, text + text.y ; .future après now, .dest dernier, .sel actuelle), g.ship-g ;
-  div.jtitle (b, span) ; div.stage-arrows (2 button ↑ ↓)], article.hud.detail[aria-live]
-  (h3, .when, .count = counter, div.arrows 2 button ← →, div.body > p) (maquette:370-387,
-  653-666, 696-703 ; checklist:154) ; css/journey.css chargé ;
-- bureau : viewBox 0 0 1100 300, .jtitle et .stage-arrows masqués (maquette:141, 646) ;
-  téléphone (700 px et moins) : svg.traj.vertical, scène collante 58svh, .jtitle à 112 / 62,
-  flèches à droite à 36 %, fiche remontée de 20svh (maquette:317-331, 586, 642) ;
-- flèches 44 × 44, désactivées aux bornes, focus à l'autre flèche (checklist:149, 314), pas
-  de raccourci ArrowLeft/Right (checklist:313) ; toucher de l'actuelle sur téléphone : descente
-  à la fiche sans rejouer le trajet (maquette:688-693) ; SVG exemptés (checklist:269). */
+  div.jtitle (b, span) ; div.stage-arrows (2 button ↑ ↓)], article.hud.detail[aria-live] (h3,
+  .when, .count = counter, div.arrows 2 button ← →, div.body > p) (checklist §2 Boutons,
+  aria-label des flèches) ; css/journey.css chargé ; bureau : viewBox 0 0 1100 300, .jtitle et
+  .stage-arrows masqués ; téléphone (700 px et moins) : svg.traj.vertical, scène collante
+  58svh, .jtitle à 112 / 62, flèches à droite à 36 %, fiche remontée de 20svh ;
+- flèches 44 × 44, désactivées aux bornes, focus à l'autre flèche (checklist §2 Boutons,
+  flèches ; checklist §7, flèche désactivée), pas de raccourci ArrowLeft/Right (checklist §7,
+  pas de raccourci flèches) ; toucher de l'actuelle sur téléphone : descente à la fiche sans
+  rejouer le trajet ; SVG exemptés (checklist §4, zones SVG). */
 import { click, settle } from './harness.js';
 import { overflowProblems, targetProblems } from './checks.js';
 import { noForeignText, switchTo } from './language.js';

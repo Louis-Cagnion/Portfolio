@@ -7,8 +7,7 @@ Les projets liés (puces du panneau) sont dans skills-related.js ; la phrase Dev
 plan et sur toute la largeur, est montée ici.
 Le déploiement d'une constellation, la plongée sur un astre et le panneau de compétence sont
 dans skills-focus.js (caméra, séquences) et skills-panel.js (panneau).
-Structure et mécanique de la maquette : docs/design/prototype/prototype.template.html:388-408
-(HTML) et 810-847 (construction).
+Structure et mécanique de la maquette (HTML et construction).
 */
 import { BREAKPOINTS, el, svg } from '../core/dom.js';
 import { format } from '../core/i18n.js';
@@ -19,7 +18,7 @@ import { overviewCamera } from './skills-layout.js';
 import { openRelated } from './skills-related.js';
 import { buildOverview, LEVELS, placeLabels, retext } from './skills-scene.js';
 
-const LEGEND_ORDER = ['advanced', 'intermediate', 'beginner', 'unknown']; // maquette:932
+const LEGEND_ORDER = ['advanced', 'intermediate', 'beginner', 'unknown'];
 
 /**
  * @brief Empreinte de la structure des données : identifiants des groupes et des étoiles.

@@ -1,4 +1,5 @@
-/* Parcours (S7) : le focus d'une flèche suit au passage de 700 px (checklist:315, 319). */
+/* Parcours (S7) : le focus d'une flèche suit au passage de 700 px (checklist §7, flèche
+   désactivée ; checklist §7, origine absente). */
 import { test } from './runner.js';
 import { click } from './harness.js';
 import {

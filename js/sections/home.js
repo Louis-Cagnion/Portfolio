@@ -1,7 +1,7 @@
 /*
 Accueil : mission, nom, accroche, appels à l'action, télémétrie, repère « Dossier du pilote »
-qui s'efface à l'arrivée du dossier, puis dossier du pilote. Structure de la maquette
-(docs/design/prototype/prototype.template.html:344-368) ; mise en page dans css/home.css.
+qui s'efface à l'arrivée du dossier, puis dossier du pilote. Structure de la maquette ;
+mise en page dans css/home.css.
 */
 import { el, setRich } from '../core/dom.js';
 import { scrollBehavior } from '../core/motion.js';

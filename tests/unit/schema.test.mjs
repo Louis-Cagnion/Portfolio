@@ -2,7 +2,7 @@
 Contrat testé : js/core/schema.js (validation pure du JSON d'une langue).
   validateLocale(data) -> string[]
   - liste des chemins fautifs, forme `home.telemetry.rows[2].label` (points, crochets) ;
-  - tableau vide si `data` est conforme au schéma de docs/design/plan.md ;
+  - tableau vide si `data` est conforme au schéma de js/core/schema.js ;
   - champ manquant, mauvais type, tableau vide là où une liste est attendue,
     chaîne vide : chacun produit son chemin ;
   - ne lève jamais (même pour null, un nombre, un tableau) et ne modifie pas `data`.

@@ -1,5 +1,6 @@
-/* Projets : Piscine zoomée sur téléphone (320, 390 et 430 px ; plan.md:123 et :159).
-Hypothèses de contrat, tirées de docs/design/s6/mockup.js : chaque
+/* Projets : Piscine zoomée sur téléphone (320, 390 et 430 px ;
+plan.md, Critères S6 et Décisions (11/10/2026)).
+Hypothèses de contrat, tirées de la maquette validée (historique git, a49d2a5) : chaque
 `.planet` contient `.pl-body` (le disque, dont le centre est celui de la planète), `.pl-hit`
 (la zone de toucher) et `.pl-label` (l'étiquette, avec un `text`) ; plan dans `svg#systems`.
 Invariants testés, jamais des rayons : 20 planètes et 20 étiquettes visibles et lisibles dans
@@ -8,7 +9,7 @@ coordonnées (clic au point, scrollIntoView avant) : la planète au centre le pl
 Le site est joué en mouvement réduit : planètes figées, coordonnées stables.
 Zones de toucher (`.pl-hit`) : visibles (remplissage et filet de teinte `--live`) dans la
 Piscine zoomée sur téléphone et à 768 px, transparentes au bureau et au repos
-(plan.md, 13/10/2026). */
+(plan.md, Décisions (13/10/2026)). */
 import { describe, isVisible } from './harness.js';
 import { capped } from './checks.js';
 import {

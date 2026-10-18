@@ -1,4 +1,4 @@
-/* Rubrique Projets (S6). Contrat DOM (plan.md:123 et :159, docs/design/s6/mockup.*) :
+/* Rubrique Projets (S6). Contrat DOM (plan.md, Critères S6 et Décisions (11/10/2026)) :
 - js/sections/projects.js monte la rubrique réelle dans section.view#projects (main.js) ; la
   fiche s'ouvre par le vrai module js/ui/sheet.js (#sheet, #sTitle, #sCat, #close) ;
 - #sysLayout (classe zfocus pendant un zoom) contient .sys-head (.back, .ctitle, .count) et

@@ -1,5 +1,5 @@
 /* Projets : planètes actives ou inertes (S6.F2a). Décisions de Louis du 12/10/2026
-(docs/design/plan.md, bloc « trois décisions ») : « (2) tout le système est sélectionnable en
+(plan.md, Décisions (12/10/2026), points 2 et 3) : « (2) tout le système est sélectionnable en
 vue générale : un clic sur son soleil, sur une planète ou sur le reste de sa cellule le zoome ;
 (3) aucune planète ne s'ouvre ni ne se focalise tant qu'aucun système n'est zoomé (soleils et
 liste restent le chemin au clavier), elles ne le deviennent que dans le système zoomé ».

@@ -3,7 +3,7 @@ Projets : quatre systèmes stellaires (une planète par projet), liste des proje
 Dessin dans projects-art.js, placement dans projects-layout.js, boucle d'animation dans
 projects-loop.js, zoom sur un système dans projects-zoom.js, fiche dans ui/sheet.js, styles
 dans css/projects.css.
-Structure et mécanique de la maquette : docs/design/s6/mockup.js.
+Structure et mécanique de la maquette.
 */
 import { BREAKPOINTS, el, setRich, svg } from '../core/dom.js';
 import { format } from '../core/i18n.js';

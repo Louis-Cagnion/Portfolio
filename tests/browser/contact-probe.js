@@ -20,17 +20,17 @@ export const textOf = (el) => (el?.textContent ?? '').replace(/\s+/g, ' ').trim(
 // ---------- Constantes partagées ----------
 
 export const GROUP = 'Contact';
-export const PHONE_MAX = 820; // @media (max-width: 51.25em), maquette:262
-export const DISC_PHONE_MAX = 320; // maquette:264
-export const DISC_WIDE_MAX = 460; // maquette:259
+export const PHONE_MAX = 820; // @media (max-width: 51.25em)
+export const DISC_PHONE_MAX = 320; // Valeurs de la maquette validée (historique git, a49d2a5).
+export const DISC_WIDE_MAX = 460;
 export const TOLERANCE = 1;
 export const FULL = [-250, -250, 500, 500];
 export const HALF = [-125, -250, 250, 250];
 // milieu des anneaux : (100+134)/2 ... (198+240)/2
 export const RING_RADII = [117, 150, 182, 219];
-// épaisseur des anneaux (REC_EDGES, maquette:1112)
+// épaisseur des anneaux (REC_EDGES)
 export const RING_WIDTHS = [34, 32, 32, 42];
-export const REVERT_MS = 2200; // maquette:1163
+export const REVERT_MS = 2200;
 export const PANEL = '.status.hud[data-state="error"]';
 export const RING_LABEL = 'taille fixée par la maquette validée';
 

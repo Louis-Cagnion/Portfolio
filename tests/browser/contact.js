@@ -1,18 +1,17 @@
-/* Contact (S9). Contrat (docs/design/plan.md:126 ; maquette
-docs/design/prototype/prototype.template.html) :
-- #contact > h2 (contact.title, maquette:419) puis div.record-wrap (:420) [svg.disc[role=group]
-  [aria-label=discLabel][viewBox="-250 -250 500 500"] (:421), section.msg > h3 (question) + p
-  (message) (:439-442), p.rec-status[role=status] (:443), button.rec-hint[type=button] (:444)];
-- svg.disc : 4 a.rec-hit[href=channels[k].href][aria-label="Sillon n : nom"] (JS :1120, k>0 :
-  target=_blank rel=noopener :1121), 4 .groove-track, 4 .arc-name (nom en majuscules, :1119)
-  et un g.rec-hit[tabindex=0][role=button][aria-label] au centre (:1141), son .arc-name valant
-  copyHint puis copied (:1160) ; copie = writeText(adresse), annonce copiedStatus ou copyFailed
-  {mail} dans .rec-status (:1158-1161), retour à copyHint, annonce vide après 2200 ms (:1163) ;
-- Entrée et Espace copient (:1152) ; focus d'un sillon : piste .lit, nom .on, annonce (:1130) ;
-- <= 820 px (51,25em, checklist:285) : une colonne message, disque, aide ; disque <= 320 px
-  (:262), .locked sans pointeur (:263) ; clic = .open, viewBox "-125 -250 250 250" (:1195) ;
-  .rec-hint (44 px, :267) tapHint puis backHint ; Échap referme (checklist:316) ;
-- > 820 px : deux colonnes (:258), disque <= 460 px, aide masquée ; css/contact.css lié. */
+/* Contact (S9). Contrat (plan.md, Critères S9) :
+- #contact > h2 (contact.title) puis div.record-wrap [svg.disc[role=group]
+  [aria-label=discLabel][viewBox="-250 -250 500 500"], section.msg > h3 (question) + p
+  (message), p.rec-status[role=status], button.rec-hint[type=button]];
+- svg.disc : 4 a.rec-hit[href=channels[k].href][aria-label="Sillon n : nom"] (k>0 :
+  target=_blank rel=noopener), 4 .groove-track, 4 .arc-name (nom en majuscules)
+  et un g.rec-hit[tabindex=0][role=button][aria-label] au centre, son .arc-name valant
+  copyHint puis copied ; copie = writeText(adresse), annonce copiedStatus ou copyFailed
+  {mail} dans .rec-status, retour à copyHint, annonce vide après 2200 ms ;
+- Entrée et Espace copient ; focus d'un sillon : piste .lit, nom .on, annonce ;
+- <= 820 px (51,25em, checklist §5, 820 px) : une colonne message, disque, aide ;
+  disque <= 320 px, .locked sans pointeur ; clic = .open, viewBox "-125 -250 250 250" ;
+  .rec-hint (44 px) tapHint puis backHint ; Échap referme (checklist §7, Échap) ;
+- > 820 px : deux colonnes, disque <= 460 px, aide masquée ; css/contact.css lié. */
 import {
   click,
   isVisible,

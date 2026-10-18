@@ -1,10 +1,12 @@
-/* Fiche projet : replis du focus à la fermeture (docs/design-checklist.md:175-181, section 7).
+/* Fiche projet : replis du focus à la fermeture (checklist §2 Fiche projet,
+checklist §7, Échap à fiche dialog).
 Focus rendu à l'origine ; origine détachée ou masquée : la planète du même projet
 (`.planet[aria-label]` égal au titre, dans #projects) ; sans planète : le h2 de #projects
 (tabindex="-1"). La vraie rubrique Projets est montée : ses planètes de même titre passeraient
 avant la planète fixture, donc chaque cas neutralise leur `aria-label` le temps du cas.
 Planète du même titre INERTE (`tabindex="-1"`, `aria-hidden="true"`, règle de S6.F2a) : jamais
-une cible, le focus ne reste pas sur un élément masqué (design-checklist.md:320) ; repli sur
+une cible, le focus ne reste pas sur un élément masqué (checklist §7, origine
+absente) ; repli sur
 le h2 de #projects. Planète ACTIVE (`tabindex="0"`) : cible, comme avant. */
 import { isVisible } from './harness.js';
 import {

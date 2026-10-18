@@ -1,8 +1,8 @@
 /*
 Projets : fiche d'un projet (voile et panneau), dessin des systèmes (orbites, soleils,
 planètes) et mise en page de la rubrique (plan, en-tête de zoom, introduction, liste).
-Valeurs : maquette validée (docs/design/prototype/prototype.template.html:228-235 et 312,
-docs/design/s6/mockup.css). Chargée après css/journey.css par index.html.
+Valeurs de la maquette validée (historique git, a49d2a5).
+Chargée après css/journey.css par index.html.
 */
 
 /* ───── Voile ───── */
@@ -114,7 +114,7 @@ docs/design/s6/mockup.css). Chargée après css/journey.css par index.html.
   cursor: pointer;
 }
 
-/* ───── Systèmes : orbites, soleils, planètes (docs/design/s6/mockup.css:82-189) ───── */
+/* ───── Systèmes : orbites, soleils, planètes ───── */
 .sys-hit {
   fill: transparent;
   cursor: zoom-in;

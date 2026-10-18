@@ -2,9 +2,8 @@
 Mise en page commune : base, barre (marque, pilule, bascule de langue), rubriques, panneau HUD,
 boutons, liens en ligne, écran de chargement et d'erreur, barre d'onglets du bas, ciel, flash
 et saut en hyperespace.
-Valeurs : maquette validée (docs/design/prototype/prototype.template.html) et variante Console
-de docs/design/prototype/status-variants.html. Points de rupture : BREAKPOINTS de
-js/core/dom.js.
+Valeurs de la maquette validée (historique git, a49d2a5), variante Console comprise.
+Points de rupture : BREAKPOINTS de js/core/dom.js.
 */
 
 /* ───── Base ───── */

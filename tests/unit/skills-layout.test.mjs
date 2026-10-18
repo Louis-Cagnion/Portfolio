@@ -7,7 +7,7 @@ Contrat testé : js/sections/skills-layout.js (placement organique des constella
     (le placement ne dépend que de `id`) ;
   - deux étoiles ne se superposent jamais (distance minimale > 0) ;
   - dimension invalide (NaN, infinie, négative) : lève, ou renvoie des positions finies.
-Les groupes réels viennent de data/fr.json et data/en.json (schéma du plan).
+Les groupes réels viennent de data/fr.json et data/en.json (schéma de js/core/schema.js).
 Lancer : node --test (depuis la racine du dépôt).
 */
 import { test, describe } from 'node:test';
@@ -227,7 +227,7 @@ describe('layoutConstellation : groupes réels de data/*.json', () => {
     const groups = read(lang).skills?.groups;
     assert.ok(
       Array.isArray(groups) && groups.length > 0,
-      `data/${lang}.json : skills.groups absent (schéma attendu du plan)`,
+      `data/${lang}.json : skills.groups absent (schéma attendu de js/core/schema.js)`,
     );
     return groups;
   };

@@ -1,9 +1,9 @@
 /*
 Tests des textes du site : données (data/*.json), index.html, README.md.
-Critères : docs/design/plan.md (Schéma des données, Chaînes à créer, Tests) et
-docs/design-checklist.md (sections 8 et 9).
- - ui.errors : les dix clés du schéma du plan et langHint, non vides
- - textes imposés par le plan : ui.errors.unexpected, home.mission, dossier du pilote
+Critères : js/core/schema.js, PLAN_TEXTS, tests/browser/README.md et
+checklist §8, erreur ; checklist §9, contrôles de texte.
+ - ui.errors : les dix clés du schéma (js/core/schema.js) et langHint, non vides
+ - textes imposés (PLAN_TEXTS) : ui.errors.unexpected, home.mission, dossier du pilote
  - modèles <template data-lang> de #status (index.html) = ui.loading et ui.errors, mot pour
    mot (espaces normalisés comme js/ui/status.js), sans clé en trop
  - aucun tiret cadratin (U+2014) dans data/, js/, css/, index.html, README.md (jamais docs/
@@ -20,8 +20,8 @@ import { assertLinear, readLocale as locale, ROOT } from './helpers.mjs';
 
 const LANGS = ['fr', 'en'];
 
-// Clés de ui.errors du schéma du plan (titre, une par cause, boutons), plus l'indice langHint
-// ajouté en V1.F2 (phrase du panneau d'erreur, au-dessus des boutons).
+// Clés de ui.errors de js/core/schema.js (titre, une par cause, boutons), plus
+// l'indice langHint ajouté en V1.F2 (phrase du panneau d'erreur, au-dessus des boutons).
 const ERROR_KEYS = [
   'title',
   'network',
@@ -35,7 +35,7 @@ const ERROR_KEYS = [
   'langSwitch',
   'langHint',
 ];
-// Textes de la table « Chaînes à créer » du plan ; dossier : surtitre, titre, intitulés.
+// Textes imposés, validés par Louis (08/10/2026) ; dossier : surtitre, titre, intitulés.
 const PLAN_TEXTS = {
   fr: {
     unexpected: 'L\'intrication quantique a tenté de se faire avec les particules d\'une ' +
@@ -77,7 +77,7 @@ function matchingLines(text, pattern) {
 // Tiret cadratin brut, échappé (\u2014, \u{2014}) ou en entité (&mdash;, &#8212;, &#x2014;).
 const EM_DASH = /\u2014|\\u0*2014|\\u\{0*2014\}|&mdash;|&#0*8212;|&#x0*2014;/i;
 const emDashLines = (text) => matchingLines(text, EM_DASH);
-/* Mots de temps relatif de la checklist (section 9), sans casse comme son `grep -rniE` :
+/* Mots de temps relatif (checklist §9, temps relatif), sans casse comme son `grep -rniE` :
 « aujourd » couvre « aujourd'hui ». */
 const RELATIVE_TIME = /en cours|actuellement|aujourd/i;
 const relativeTimeLines = (text) => matchingLines(text, RELATIVE_TIME);
@@ -162,7 +162,7 @@ const findInFiles = (targets, detect) => targets.flatMap(filesUnder).flatMap((fi
 });
 
 // ---------- Textes du site ----------
-describe('textes imposés par le plan (Chaînes à créer)', () => {
+describe('textes imposés (PLAN_TEXTS)', () => {
   for (const lang of LANGS) {
     const plan = PLAN_TEXTS[lang];
     const expectText = (path, actual, expected) => assert.equal(
@@ -194,7 +194,7 @@ describe('textes imposés par le plan (Chaînes à créer)', () => {
 
 describe('écran #status : ui.errors et modèles de index.html', () => {
   for (const lang of LANGS) {
-    test(`${lang} : ui.errors porte les dix clés du plan, non vides`, () => {
+    test(`${lang} : ui.errors porte les dix clés du schéma, non vides`, () => {
       const errors = locale(lang).ui?.errors ?? {};
       const missing = ERROR_KEYS
         .filter((key) => typeof errors[key] !== 'string' || errors[key].trim() === '')

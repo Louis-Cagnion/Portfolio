@@ -1,7 +1,7 @@
 /*
 Vaisseau du parcours : pose du dessin sur le tracé (position, cap) et traînée de particules
-qu'il laisse en voyage. Valeurs de la maquette (docs/design/prototype/prototype.html:584-731) ;
-le dessin du vaisseau est dans journey-art.js, le trajet dans journey.js.
+qu'il laisse en voyage. Valeurs de la maquette validée (historique git, a49d2a5).
+Le dessin du vaisseau est dans journey-art.js, le trajet dans journey.js.
 */
 import { svg } from '../core/dom.js';
 import { reduced } from '../core/motion.js';
