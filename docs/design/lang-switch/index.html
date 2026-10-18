@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Changement de langue</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@500&display=swap">
+    <link rel="stylesheet" href="../../../css/tokens.css">
+    <style>
+        html,
+        body {
+            margin: 0;
+            height: 100%;
+            background: var(--void);
+        }
+
+        iframe {
+            display: block;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        .tag {
+            position: fixed;
+            left: 50%;
+            bottom: 110px;
+            transform: translateX(-50%);
+            max-width: calc(100% - 32px);
+            padding: 8px 14px;
+            border: 1px solid var(--accent-edge);
+            border-radius: var(--radius-pill);
+            background: var(--label-bg);
+            color: var(--text);
+            font: 500 14px/1.4 var(--sans);
+            text-align: center;
+            pointer-events: none;
+            transition: opacity 0.6s;
+        }
+
+        .tag b {
+            color: var(--accent);
+        }
+
+        .tag.gone {
+            opacity: 0;
+        }
+    </style>
+    <script type="module">
+        import { install } from './effects.js';
+
+        const LABELS = {
+            decode: ['A', 'Décodage', 'un brouillage qui se résout de gauche à droite'],
+            type: ['B', 'Réécriture', "l'ancien texte s'efface, le nouveau se tape"],
+            fade: ['C', 'Fondu enchaîné', "l'ancien s'estompe, le nouveau apparaît"],
+            flap: ['D', 'Tableau à palettes', 'chaque lettre bascule vers la nouvelle'],
+        };
+
+        const name = new URLSearchParams(location.search).get('effect');
+        const [letter, title, hint] = LABELS[name] ?? LABELS.decode;
+        document.title = `${letter} · ${title}`;
+        const tag = document.querySelector('.tag');
+        tag.innerHTML = `<b>${letter} · ${title}</b> : ${hint}. Clique sur FR ou EN.`;
+        setTimeout(() => tag.classList.add('gone'), 6000);
+        const frame = document.querySelector('iframe');
+        frame.addEventListener('load', () => install(frame.contentWindow, name in LABELS ? name : 'decode'));
+        frame.src = '../../../index.html';
+    </script>
+</head>
+<body>
+    <iframe title="Portfolio"></iframe>
+    <p class="tag"></p>
+</body>
+</html>
