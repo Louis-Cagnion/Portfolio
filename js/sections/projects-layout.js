@@ -41,9 +41,8 @@ const PHONE_SLOTS = [
  */
 export function planetSize(project) {
   const blocks = project?.blocks;
-  if (!Array.isArray(blocks)) {
+  if (!Array.isArray(blocks))
     throw new TypeError(`planetSize : blocks doit être un tableau, reçu ${String(blocks)}`);
-  }
   return SIZE_BASE + Math.min(SIZE_BONUS_MAX, SIZE_PER_BLOCK * blocks.length);
 }
 
@@ -100,9 +99,8 @@ function piscineSizes(projects) {
 export function systemRadii(systemId, { phone, maxRadius } = {}) {
   if (systemId !== PISCINE_ID) return [...DEFAULT_RADII];
   if (phone) return [...PHONE_RINGS_PX];
-  if (!Number.isFinite(maxRadius) || maxRadius <= 0) {
+  if (!Number.isFinite(maxRadius) || maxRadius <= 0)
     throw new RangeError(`systemRadii : maxRadius invalide (${String(maxRadius)})`);
-  }
   return DESK_RATIOS.map((ratio) => ratio * maxRadius);
 }
 
@@ -146,11 +144,10 @@ function phoneSlots() {
 function baseSlots(system, phone, maxRadius) {
   const count = system.projects.length;
   if (system.id === PISCINE_ID) {
-    if (count !== PISCINE_SIZE) {
+    if (count !== PISCINE_SIZE)
       throw new Error(
         `planetSlots : le système ${system.id} attend ${PISCINE_SIZE} projets, reçu ${count}`,
       );
-    }
     return phone ? phoneSlots() : deskSlots(systemRadii(system.id, { phone, maxRadius }));
   }
   const radii = systemRadii(system.id, { phone, maxRadius });
