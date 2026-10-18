@@ -2,7 +2,7 @@
   "meta": {
     "lang": "fr",
     "title": "Louis Cagnion Portfolio",
-    "description": "Portfolio de Louis Cagnion, développeur au Groupe Tressol-Chabrier formé à 42 Perpignan : parcours, compétences, projets et contact."
+    "description": "Portfolio de Louis Cagnion, développeur au sein du Groupe Tressol-Chabrier, formé à 42 Perpignan : parcours, compétences, projets et contact."
   },
   "ui": {
     "nav": {
@@ -19,14 +19,14 @@
     "errors": {
       "title": "Le centre de contrôle n'a pas pu établir la connexion avec le pilote",
       "network": "L'intrication quantique devait être instantanée, mais quelqu'un a regardé le pilote et tout s'est effondré. Vérifie ta connexion, puis réessaie.",
-      "timeout": "Le délai de chargement est dépassé. Réessaie dans un instant.",
+      "timeout": "L'ordinateur quantique a changé l'état d'un bit hors limites et le chargement tend maintenant vers l'infini. Réessaie dans un instant.",
       "http": "Nos particules intriquées se sont emmêlées : le pilote a reçu un chat à la fois mort et vivant au lieu du site (code {status}).",
-      "json": "Le fichier de contenu est invalide (JSON illisible).",
-      "schema": "Le contenu est incomplet : le champ {path} est manquant ou invalide.",
+      "json": "Qui est JSON ? (JSON illisible).",
+      "schema": "Le contenu est incomplet : le champ {path} est entré en collision avec son antimatière et a provoqué des explosions partout entre le vaisseau et le centre de contrôle.",
       "unexpected": "L'intrication quantique a tenté de se faire avec les particules d'une autre ligne temporelle. Réessaie.",
       "boot": "L'intrication quantique s'est rompue.",
       "retry": "Réessayer",
-      "langSwitch": "Voir le site en anglais"
+      "langSwitch": "Essayer en anglais"
     },
     "unavailable": {
       "title": "Contenu indisponible",
@@ -59,7 +59,7 @@
       "entries": [
         {
           "label": "Formation",
-          "html": "Ancien étudiant à 42 Perpignan, je suis aujourd'hui alternant développeur au sein du Groupe Tressol-Chabrier. Au cours de mon tronc commun à l'école, j'ai réalisé différents projets qui m'ont permis d'apprendre le C et le C++, ainsi que plusieurs outils pratiques comme la MinilibX pour le rendu graphique, Docker pour partager des applications compatibles avec la plupart des environnements, ou encore le fonctionnement des réseaux et des API. J'ai également appris à gérer des données sur un site web visité par des utilisateurs grâce au développement backend et frontend."
+          "html": "Ancien étudiant à 42 Perpignan, je suis alternant développeur au sein du Groupe Tressol-Chabrier. Au cours de mon tronc commun à l'école, j'ai réalisé différents projets qui m'ont permis d'apprendre le C et le C++, ainsi que plusieurs outils pratiques comme la MinilibX (rendu graphique), Docker (applications portables), ou encore le fonctionnement réseau et des API. J'ai également appris la gestion de données sur un site web visité régulièrement par des utilisateurs grâce au développement backend et frontend (pipelines en trois couches, mise en cache, traitement par lots avec reprise)."
         },
         {
           "label": "Entraînement continu",
@@ -236,14 +236,14 @@
               "cub3d",
               "codewars"
             ],
-            "description": "Mon langage de base : les projets C du tronc commun de 42, des algorithmes de tri de Push_swap au moteur graphique de Cub3D, avec les bonus dès que c'était possible, jusqu'à un Skyscraper de niveau Kyu 1 sur Codewars."
+            "description": "Mon langage de base : prédominant durant mon tronc commun et ma piscine à 42, j'ai pu apprendre et pousser pas mal de concepts en C (allocation dynamique, listes chaînées, arbres binaires, pointeurs sur fonctions, processus, signaux, threads, MinilibX) ; ce langage est naturel à lire pour moi."
           },
           {
             "id": "cpp",
             "name": "C++",
             "level": "intermediate",
             "projects": ["cpp_modules", "webserv"],
-            "description": "Appris avec les dix modules C++ de 42, de la programmation orientée objet aux templates et à la STL, puis mis en pratique dans Webserv, un serveur HTTP écrit de zéro en C++98."
+            "description": "Appris avec les dix modules C++ du tronc commun de 42 puis mis en pratique dans Webserv, un serveur HTTP écrit de zéro en C++98 : j'y ai pratiqué la programmation orientée objet (classes, templates, STL) ; je suis à l'aise sur l'essentiel et je consulte la documentation pour le reste."
           },
           {
             "id": "python",
@@ -256,35 +256,35 @@
               "codewars",
               "chatbot"
             ],
-            "description": "Appris par des tutoriels puis par Codewars, et utilisé en production avec l'assistance de Claude Code : un pipeline d'audit nocturne couvert par plusieurs centaines de tests et un parseur de PDF avec OCR."
+            "description": "Appris par des tutoriels puis par Codewars, et utilisé en production avec l'assistance de Claude Code : j'y ai pratiqué les pipelines de données et les scripts par lots (audit nocturne, parseur de PDF avec OCR, tests pytest) ; je suis à l'aise sur l'essentiel et je consulte la documentation pour le reste."
           },
           {
             "id": "javascript",
             "name": "JavaScript",
             "level": "intermediate",
             "projects": ["portfolio", "devpedia", "wiki", "supermarket_compare", "dashboards"],
-            "description": "Sans framework : ce portfolio, Devpedia et son parseur Markdown fait maison, le wiki Heartopia et, avec l'assistance de Claude Code, les graphiques ECharts des tableaux de bord professionnels."
+            "description": "Sans framework : ce portfolio, Devpedia et son parseur Markdown fait maison, le wiki Heartopia et, avec l'assistance de Claude Code, les graphiques ECharts des tableaux de bord professionnels (modules ES, manipulation du DOM, graphiques) ; je suis à l'aise sur l'essentiel et je consulte la documentation pour le reste."
           },
           {
             "id": "bash",
             "name": "Bash",
             "level": "intermediate",
             "projects": ["shell00", "shell01", "minishell"],
-            "description": "Scripts de la Piscine et scripts de mesure de mes solveurs, et surtout Minishell, qui m'a fait reproduire en C le comportement de Bash : redirections, variables d'environnement, signaux, opérateurs logiques et priorités."
+            "description": "Vu dans les scripts de la Piscine et de mesure de mes solveurs, et surtout dans Minishell, qui m'a fait reproduire en C le comportement de Bash (redirections, variables d'environnement, signaux, opérateurs logiques et priorités) ; je suis à l'aise sur l'essentiel et je consulte la documentation pour le reste."
           },
           {
             "id": "php",
             "name": "PHP",
             "level": "intermediate",
             "projects": ["admin_backoffice", "nps_scores", "audit_infomediaires", "call_resolution"],
-            "description": "Utilisé au Groupe Tressol-Chabrier : quatre modules de back-office (PHP 8 avec Slim 4) : scores NPS, audit, suivi et résolution des appels, développés avec l'assistance de Claude Code."
+            "description": "Utilisé au Groupe Tressol-Chabrier dans quatre modules de back-office (scores NPS, audit, suivi et résolution des appels), développés avec l'assistance de Claude Code (PHP 8 avec Slim 4, PDO, droits d'accès par module et par profil, cache fichier) ; je suis à l'aise sur l'essentiel et je consulte la documentation pour le reste."
           },
           {
             "id": "typescript",
             "name": "TypeScript",
             "level": "beginner",
             "projects": ["transcendence"],
-            "description": "Le Pong de Transcendence : l'IA adverse côté serveur et le rendu 3D côté client."
+            "description": "Vu avec le Pong de Transcendence : l'IA adverse côté serveur et le rendu 3D côté client ; j'en suis aux premiers pas et je m'aide encore beaucoup de la documentation."
           }
         ]
       },
@@ -298,14 +298,14 @@
             "name": "HTML",
             "level": "intermediate",
             "projects": ["portfolio", "devpedia", "wiki"],
-            "description": "La structure de mes sites : ce portfolio, Devpedia et le wiki Heartopia."
+            "description": "Vu dans la structure de mes sites : ce portfolio, Devpedia et le wiki Heartopia (structure des pages, navigation, accessibilité au clavier) ; je suis à l'aise sur l'essentiel et je consulte la documentation pour le reste."
           },
           {
             "id": "css",
             "name": "CSS",
             "level": "intermediate",
             "projects": ["portfolio", "devpedia", "dashboards"],
-            "description": "Mise en page responsive de mes sites et, avec l'assistance de Claude Code, refonte de l'interface des tableaux de bord professionnels pour un usage aussi bien sur ordinateur que sur mobile."
+            "description": "Vu dans mes sites et, avec l'assistance de Claude Code, dans la refonte de l'interface des tableaux de bord professionnels, pour un usage aussi bien sur ordinateur que sur mobile (mise en page responsive, variables CSS, animations) ; je suis à l'aise sur l'essentiel et je consulte la documentation pour le reste."
           }
         ]
       },
@@ -319,42 +319,42 @@
             "name": "Makefiles",
             "level": "intermediate",
             "projects": ["minishell", "cub3d", "philosophers", "c09"],
-            "description": "Chaque projet C du tronc commun de 42 se compile avec son propre Makefile."
+            "description": "Vu dans chaque projet C du tronc commun de 42, de Minishell à Cub3D, Philosophers et ma première bibliothèque statique (règles de compilation, dépendances, bibliothèque statique) ; je suis à l'aise sur l'essentiel et je consulte la documentation pour le reste."
           },
           {
             "id": "git",
             "name": "Git",
             "level": "intermediate",
             "projects": ["transcendence"],
-            "description": "Versionnement de tous mes projets ; Transcendence a exigé des commits propres et compréhensibles pour toute une équipe."
+            "description": "Utilisé pour tous mes projets ; Transcendence a exigé des commits propres et compréhensibles pour toute une équipe (commits lisibles, travail en équipe) ; je suis à l'aise sur l'essentiel et je consulte la documentation pour le reste."
           },
           {
             "id": "github",
             "name": "GitHub",
             "level": "intermediate",
             "projects": ["devpedia", "wiki", "portfolio"],
-            "description": "Hébergement de mon code et de mes sites, publiés sur GitHub Pages."
+            "description": "Hébergement de mon code et de mes sites, publiés sur GitHub Pages : Devpedia, le wiki Heartopia et ce portfolio (dépôts, GitHub Pages) ; je suis à l'aise sur l'essentiel et je consulte la documentation pour le reste."
           },
           {
             "id": "js-tests",
             "name": "Tests unitaires JavaScript",
             "level": "beginner",
             "projects": ["wiki", "supermarket_compare"],
-            "description": "Vitest pour le wiki Heartopia, node --test pour le comparateur de courses."
+            "description": "Vu avec Vitest pour le wiki Heartopia et node --test pour le comparateur de courses (tests unitaires) ; j'en suis aux premiers pas et je m'aide encore beaucoup de la documentation."
           },
           {
             "id": "azure-pipelines",
             "name": "Azure DevOps Pipelines",
             "level": "beginner",
             "projects": ["nps_scores", "audit_infomediaires"],
-            "description": "Déploiement planifié des pipelines NPS et d'audit, avec Ruff et pytest, mis en place avec l'assistance de Claude Code."
+            "description": "Utilisé pour le déploiement planifié des pipelines NPS et d'audit, mis en place avec l'assistance de Claude Code (validation avec Ruff et pytest, préproduction et production) ; j'en suis aux premiers pas et je m'aide encore beaucoup de la documentation."
           },
           {
             "id": "playwright",
             "name": "Playwright",
             "level": "beginner",
             "projects": ["audit_infomediaires"],
-            "description": "Extraction en parallèle par plateforme dans l'audit nocturne des boutiques en ligne, réalisée avec l'assistance de Claude Code."
+            "description": "Utilisé dans l'audit nocturne des boutiques en ligne, réalisé avec l'assistance de Claude Code (extraction en parallèle par plateforme, bandeaux cookies, contrôles anti-robot) ; j'en suis aux premiers pas et je m'aide encore beaucoup de la documentation."
           }
         ]
       },
@@ -368,14 +368,14 @@
             "name": "Threads, mutex et sémaphores",
             "level": "intermediate",
             "projects": ["philosophers"],
-            "description": "Philosophers : maintenir des philosophes en vie à la milliseconde près, avec des threads et des mutex, puis des processus et des sémaphores en bonus."
+            "description": "Vu dans Philosophers : maintenir des philosophes en vie à la milliseconde près (threads, mutex, puis processus et sémaphores en bonus) ; je suis à l'aise sur l'essentiel et je consulte la documentation pour le reste."
           },
           {
             "id": "processes",
             "name": "Processus, pipes et signaux",
             "level": "advanced",
             "projects": ["pipex", "minishell", "minitalk", "philosophers"],
-            "description": "fork, pipe, dup2 et execve dans Pipex puis dans les pipes de Minishell, signaux UNIX dans Minitalk, processus et sémaphores dans le bonus de Philosophers."
+            "description": "Vu dans Pipex, Minishell, Minitalk et le bonus de Philosophers (fork, pipe, dup2, execve, signaux UNIX, sémaphores) ; c'est un domaine où je suis très à l'aise."
           }
         ]
       },
@@ -389,35 +389,35 @@
             "name": "Sockets TCP et HTTP/1.1",
             "level": "intermediate",
             "projects": ["webserv"],
-            "description": "Webserv : requêtes GET, POST et DELETE, codes de statut, cookies et sessions, CGI, sur un serveur non bloquant écrit de zéro."
+            "description": "Vu dans Webserv, un serveur non bloquant écrit de zéro (requêtes GET, POST et DELETE, codes de statut, cookies et sessions, CGI) ; je suis à l'aise sur l'essentiel et je consulte la documentation pour le reste."
           },
           {
             "id": "ip-networking",
             "name": "Réseau IP",
             "level": "intermediate",
             "projects": ["netpractice", "born2beroot"],
-            "description": "Adresses, masques de sous-réseau et routage appris avec Netpractice, pare-feu et SSH configurés dans Born2beroot."
+            "description": "Vu dans Netpractice et Born2beroot (adresses, masques de sous-réseau, routage, pare-feu, SSH) ; je suis à l'aise sur l'essentiel et je consulte la documentation pour le reste."
           },
           {
             "id": "apis",
             "name": "APIs",
             "level": "intermediate",
             "projects": ["dashboards", "client_migration", "chatbot", "devpedia"],
-            "description": "Le tableau de bord de direction s'appuie sur 17 endpoints d'API, et j'ai contribué à une intégration Power BI ; les fiches clients sont envoyées par l'API du nouveau logiciel, le chatbot appelle l'API locale d'Ollama, et j'avais intégré l'API DeepL pour traduire Devpedia automatiquement. Le travail professionnel a été réalisé avec l'assistance de Claude Code."
+            "description": "Vu au Groupe Tressol-Chabrier avec l'assistance de Claude Code, et dans mes projets personnels (17 endpoints d'API d'un tableau de bord, intégration Power BI, envoi des fiches clients par l'API du nouveau logiciel, API locale d'Ollama, API DeepL pour traduire Devpedia automatiquement) ; je suis à l'aise sur l'essentiel et je consulte la documentation pour le reste."
           },
           {
             "id": "sql-pdo",
             "name": "SQL / PDO",
             "level": "intermediate",
             "projects": ["admin_backoffice", "nps_scores"],
-            "description": "Back-office sur SQL Server via PDO avec une base par module, et pipeline NPS en trois couches (Staging, Silver, Gold) validées par des tests de cohérence SQL, avec l'assistance de Claude Code."
+            "description": "Utilisé au Groupe avec l'assistance de Claude Code : back-office sur SQL Server via PDO, une base par module, et pipeline NPS en trois couches (Staging, Silver, Gold) validées par des tests de cohérence SQL ; je suis à l'aise sur l'essentiel et je consulte la documentation pour le reste."
           },
           {
             "id": "elasticsearch",
             "name": "Elasticsearch",
             "level": "beginner",
             "projects": ["search_tool"],
-            "description": "L'outil de recherche conversationnelle transforme une question en langage naturel en requête Elasticsearch sur le stock de véhicules. Le moteur de recherche existait avant ma reprise du projet : j'y ai corrigé les filtres et la qualité des données, avec l'assistance de Claude Code."
+            "description": "Vu dans l'outil de recherche conversationnelle, qui transforme une question en langage naturel en requête Elasticsearch sur le stock de véhicules : le moteur existait avant ma reprise du projet, j'y ai corrigé les filtres et la qualité des données avec l'assistance de Claude Code (requête construite par un LLM, filtres) ; j'en suis aux premiers pas et je m'aide encore beaucoup de la documentation."
           }
         ]
       },
@@ -431,7 +431,7 @@
             "name": "Sécurité web",
             "level": "intermediate",
             "projects": ["search_tool"],
-            "description": "Token signé HMAC, limitation de débit par adresse IP, protection CSRF, contrôle d'accès par concession, en-têtes CSP et fixation de session corrigés : une campagne de crash-test a permis de corriger une trentaine de bugs et de failles, avec l'assistance de Claude Code."
+            "description": "Vu dans l'outil de recherche conversationnelle : une campagne de crash-test a permis de corriger une trentaine de bugs et de failles, avec l'assistance de Claude Code (token signé HMAC, limitation de débit par adresse IP, protection CSRF, contrôle d'accès par concession, en-têtes CSP, fixation de session) ; je suis à l'aise sur l'essentiel et je consulte la documentation pour le reste."
           }
         ]
       },
@@ -445,21 +445,21 @@
             "name": "NumPy",
             "level": "beginner",
             "projects": ["chatbot"],
-            "description": "Mes expériences d'IA : statistiques, standardisation et valeurs manquantes."
+            "description": "Vu dans mes expériences d'IA (statistiques, standardisation, valeurs manquantes) ; j'en suis aux premiers pas et je m'aide encore beaucoup de la documentation."
           },
           {
             "id": "matplotlib",
             "name": "Matplotlib",
             "level": "beginner",
             "projects": ["chatbot"],
-            "description": "Courbes d'apprentissage et affichage d'images dans mes expériences d'IA."
+            "description": "Vu dans mes expériences d'IA (courbes d'apprentissage, affichage d'images) ; j'en suis aux premiers pas et je m'aide encore beaucoup de la documentation."
           },
           {
             "id": "keras",
             "name": "TensorFlow / Keras",
             "level": "beginner",
             "projects": ["chatbot"],
-            "description": "Mes premiers pas en deep learning : un réseau de neurones linéaire avec Keras dont je suis l'apprentissage, et la détection du GPU avec TensorFlow."
+            "description": "Mes premiers pas en deep learning, dans mes expériences d'IA (réseau de neurones linéaire dont je suis l'apprentissage, détection du GPU avec TensorFlow) ; j'en suis aux premiers pas et je m'aide encore beaucoup de la documentation."
           }
         ]
       },
@@ -473,35 +473,35 @@
             "name": "VirtualBox",
             "level": "intermediate",
             "projects": ["born2beroot", "inception"],
-            "description": "Debian installée et durcie dans Born2beroot, puis base d'Inception, dont l'infrastructure de conteneurs devait tourner dans une machine virtuelle."
+            "description": "Vu dans Born2beroot, avec une Debian installée et sécurisée à la main, puis dans Inception, dont l'infrastructure de conteneurs devait tourner dans une machine virtuelle (machines virtuelles, installation de Debian) ; je suis à l'aise sur l'essentiel et je consulte la documentation pour le reste."
           },
           {
             "id": "minilibx",
             "name": "MinilibX",
             "level": "intermediate",
             "projects": ["fract-ol", "cub3d"],
-            "description": "Tout le rendu de Fract-ol, puis la minimap, les déplacements et les collisions de Cub3D."
+            "description": "Vu dans Fract-ol, dont elle fait tout le rendu, puis dans Cub3D (fenêtre et images, minimap, déplacements, collisions) ; je suis à l'aise sur l'essentiel et je consulte la documentation pour le reste."
           },
           {
             "id": "valgrind",
             "name": "Valgrind",
             "level": "intermediate",
             "projects": ["minishell", "philosophers"],
-            "description": "Traque des fuites mémoire et des erreurs d'accès dans mes projets C, où la moindre fuite fait échouer l'évaluation."
+            "description": "Utilisé dans mes projets C, où la moindre fuite fait échouer l'évaluation (fuites mémoire, erreurs d'accès) ; je suis à l'aise sur l'essentiel et je consulte la documentation pour le reste."
           },
           {
             "id": "docker",
             "name": "Docker",
             "level": "beginner",
             "projects": ["inception"],
-            "description": "Dockerfiles et docker-compose écrits à la main pour Nginx, MariaDB et WordPress dans Inception."
+            "description": "Vu dans Inception, avec des Dockerfiles et un docker-compose écrits à la main (Nginx, MariaDB, WordPress) ; j'en suis aux premiers pas et je m'aide encore beaucoup de la documentation."
           },
           {
             "id": "threejs",
             "name": "Three.js",
             "level": "beginner",
             "projects": ["transcendence"],
-            "description": "La version 3D du Pong de Transcendence : modèles, éclairage et caméra animée."
+            "description": "Vu dans la version 3D du Pong de Transcendence (modèles, éclairage, caméra animée) ; j'en suis aux premiers pas et je m'aide encore beaucoup de la documentation."
           }
         ]
       }
@@ -691,7 +691,7 @@
           {
             "id": "portfolio",
             "title": "Ce portfolio",
-            "summary": "Ce site, écrit en HTML, CSS et JavaScript sans framework.",
+            "summary": "Ce site, écrit en HTML, CSS et JavaScript sans framework, redesigné avec l'aide de Claude.",
             "tags": ["HTML", "CSS", "JavaScript"],
             "blocks": [
               {
@@ -757,7 +757,7 @@
           {
             "id": "devpedia",
             "title": "Devpedia, une encyclopédie du développement",
-            "summary": "Encyclopédie du développement logiciel, rendue par un parseur Markdown écrit à la main et traduite en trois langues.",
+            "summary": "Encyclopédie du développement logiciel, rendue par un parseur Markdown écrit à la main et traduite en quatre langues.",
             "tags": ["JavaScript", "Markdown"],
             "blocks": [
               {
@@ -813,7 +813,7 @@
           {
             "id": "supermarket_compare",
             "title": "Un comparateur de courses",
-            "summary": "Une application web qui compare les prix de plusieurs supermarchés, toujours ramenés au kilo ou au litre.",
+            "summary": "Une application web qui compare les prix de plusieurs supermarchés, toujours ramenés au kilo ou au litre, et en tire la liste de courses la plus avantageuse.",
             "tags": ["JavaScript", "node --test"],
             "blocks": [
               {
@@ -904,7 +904,7 @@
           {
             "id": "born2beroot",
             "title": "Born2beroot",
-            "summary": "Mon premier serveur : une machine virtuelle Debian installée et durcie à la main.",
+            "summary": "Mon premier serveur : une machine virtuelle Debian installée et sécurisée à la main (pare-feu, accès SSH).",
             "tags": ["Debian", "VirtualBox", "LVM", "SSH", "UFW"],
             "blocks": [
               {
@@ -1004,7 +1004,7 @@
           {
             "id": "minishell",
             "title": "Minishell",
-            "summary": "Recréer un shell en groupe ; j'y ai écrit les pipes, des builtins et les opérateurs logiques avec leurs priorités.",
+            "summary": "Recréer un shell en groupe ; j'y ai écrit les pipes, des builtins, un arbre binaire et les opérateurs logiques avec leurs priorités.",
             "tags": ["C", "Arbres binaires"],
             "blocks": [
               {
@@ -1038,7 +1038,7 @@
           {
             "id": "philosophers",
             "title": "Philosophers",
-            "summary": "Maintenir des philosophes en vie à la milliseconde près, avec des threads et des mutex.",
+            "summary": "Maintenir des philosophes en vie à la milliseconde près, avec des threads et des mutex, puis des sémaphores en bonus.",
             "tags": ["C", "Threads", "Mutex", "Sémaphores"],
             "blocks": [
               {
@@ -1096,7 +1096,7 @@
           {
             "id": "cub3d",
             "title": "Cub3D",
-            "summary": "Un jeu inspiré de Wolfenstein 3D, avec un moteur en raycasting ; j'y ai écrit le parseur des cartes, les collisions, la minimap et les déplacements.",
+            "summary": "Un jeu inspiré de Wolfenstein 3D, avec un moteur en raycasting ; j'y ai écrit le parseur des cartes, les collisions, la minimap et les déplacements (joueur et caméra horizontale).",
             "tags": ["C", "MinilibX", "Raycasting"],
             "blocks": [
               {
@@ -1421,7 +1421,7 @@
           {
             "id": "c06",
             "title": "C06",
-            "summary": "Les arguments de la ligne de commande.",
+            "summary": "Les arguments de la ligne de commande (argc, argv).",
             "tags": ["C", "Arguments"],
             "blocks": [
               {
