@@ -19,15 +19,15 @@ import { normalize } from './text.js';
 import { stubMotion } from './warp.js';
 
 export const GROUP = 'Parcours';
-const PHONE_MAX = 700; // parcours vertical jusqu'à 700 px (maquette:317)
-const FOCUS_Y = 0.36; // maquette:586
-const STAGE_RATIO = 0.58; // height: 58svh (maquette:318)
-const DETAIL_LIFT = 0.2; // margin-top: -20svh (maquette:330)
-const TITLE_LEFT = 112; // maquette:325
+const PHONE_MAX = 700; // parcours vertical jusqu'à 700 px
+const FOCUS_Y = 0.36;
+const STAGE_RATIO = 0.58; // height: 58svh
+const DETAIL_LIFT = 0.2; // margin-top: -20svh
+const TITLE_LEFT = 112;
 const TITLE_RIGHT = 62;
-const ARROW_GAP = 8; // maquette:329
-export const BAR_GAP = 8; // maquette:691
-const HIT_PHONE = 30; // checklist:269
+const ARROW_GAP = 8;
+export const BAR_GAP = 8;
+const HIT_PHONE = 30; // checklist §4, zones SVG
 const HIT_DESKTOP = 22;
 export const TOL = 3; // px : arrondis et fin de défilement
 export const EDGE_WIDTHS = [700, 701, 880, 881];
@@ -329,8 +329,8 @@ export function positionProblems(site, journey, index, width) {
 export const nowIndex = (journey) => journey.stops.findIndex((s) => s.now);
 
 /**
- * Ordre de tabulation des escales (plan.md:156) : sur téléphone, seule l'escale choisie
- * est à `tabindex="0"`, les autres à `-1` ; au bureau, toutes sont à `0`.
+ * Ordre de tabulation des escales (plan.md, Décisions (10/10/2026)) : sur téléphone, seule
+ * l'escale choisie est à `tabindex="0"`, les autres à `-1` ; au bureau, toutes sont à `0`.
  */
 export function tabindexProblems(site, width) {
   const list = wps(site);
@@ -346,7 +346,7 @@ export function tabindexProblems(site, width) {
   return problems;
 }
 
-/** Structure DOM de la maquette (370-387, 653-666), sans les textes. */
+/** Structure DOM de la maquette, sans les textes. */
 export function structureProblems(site, journey, width) {
   const root = view(site);
   if (!root) return ['section.view#journey absente'];
@@ -404,7 +404,7 @@ export function structureProblems(site, journey, width) {
   });
   const track = one(site, 'path.track')?.getAttribute('d');
   if (!track || one(site, 'path.done')?.getAttribute('d') !== track)
-    problems.push('path.done : tracé différent de path.track (maquette:647)');
+    problems.push('path.done : tracé différent de path.track');
   return problems;
 }
 

@@ -1,5 +1,6 @@
 /* Contenu indisponible des rubriques à venir (S5b). Contrat
-(docs/design/plan.md:122 et :151) : sous le titre (h2) et le chapeau (p.lede) de chaque
+(plan.md, Critères S5b et Décisions (10/10/2026)) :
+sous le titre (h2) et le chapeau (p.lede) de chaque
 rubrique encore montée par mountSimple (MOUNTED, vide depuis S9), un panneau
 `.status.hud[data-state="error"]` :
 - titre, message (ui.unavailable.title, message), barre en pointillés (élément dont la

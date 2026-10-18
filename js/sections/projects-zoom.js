@@ -1,7 +1,7 @@
 /*
 Zoom sur un système de la rubrique Projets : la caméra approche, les orbites
 s'inclinent, les autres systèmes s'effacent, l'en-tête et l'introduction apparaissent.
-Mécanique de la maquette validée (docs/design/s6/mockup.js:330-431) ; la caméra est
+Mécanique de la maquette validée ; la caméra est
 makeCamera (js/core/motion.js), la même que celle de Parcours.
 
 Une seule boucle requestAnimationFrame par rubrique : celle de projects-loop.js. Le zoom ne

@@ -55,7 +55,7 @@ export async function walkProblems(site, journey, width) {
     if ((dir > 0 ? index === last : index === 0) && focused !== pair[dir > 0 ? 0 : 1])
       problems.push(
         `bord atteint : le focus est sur ${focused && describe(focused)} ` +
-          'au lieu de l\'autre flèche (checklist:314)',
+          'au lieu de l\'autre flèche (checklist §7, flèche désactivée)',
       );
     return found.length === 0;
   };

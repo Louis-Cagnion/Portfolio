@@ -1,6 +1,6 @@
 /*
 Parcours : scène du trajet (tracé, escales, vaisseau), fiche de l'escale et flèches.
-Valeurs : maquette validée (docs/design/prototype/prototype.html:98-141 et 303-331). Les
+Valeurs de la maquette validée (historique git, a49d2a5). Les
 règles de fiche (.detail, .when, .count) sont limitées à #journey ; flèches et rotations des
 corps sont dans css/panel.css. Chargée après css/layout.css par index.html.
 */
@@ -81,7 +81,8 @@ corps sont dans css/panel.css. Chargée après css/layout.css par index.html.
   cursor: pointer;
 }
 
-/* Anneau net sur la zone cliquable à la place du contour (checklist, focus des SVG). */
+/* Anneau net sur la zone cliquable à la place du contour
+   (checklist §2 Focus visible, outline). */
 .traj .wp:focus {
   outline: none;
 }

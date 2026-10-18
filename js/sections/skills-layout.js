@@ -1,9 +1,9 @@
 /*
 Placement et caméras de la section Compétences : module pur, sans accès au DOM, sans hasard.
-Source des formules : docs/design/prototype/prototype.template.html (lignes 738 à 840).
-Critères : docs/design/plan.md:43 « Le placement organique des constellations est calculé
-à partir de `id`, jamais du nom traduit. » ; plan.md:103 « placement des constellations
-indépendant de la langue ». Le placement ne lit donc que `group.id` et le nombre d'étoiles.
+Formules de la maquette validée (historique git, a49d2a5).
+Critères : plan.md, Principes : « Le placement organique des constellations est calculé
+à partir de `id`, jamais du nom traduit. » ; vérifié par tests/unit/skills-layout.test.mjs.
+Le placement ne lit donc que `group.id` et le nombre d'étoiles.
 */
 
 const DESK_GRID = { cols: 4, cellWidth: 275, cellHeight: 220 };

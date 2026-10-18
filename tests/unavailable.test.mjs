@@ -1,6 +1,6 @@
 /*
-Tests du bloc ui.unavailable (S5b, docs/design/plan.md:122 et :151) : « Contenu indisponible »
-des rubriques encore sans contenu.
+Tests du bloc ui.unavailable (plan.md, Critères S5b et Décisions (10/10/2026)) :
+« Contenu indisponible » des rubriques encore sans contenu.
  - data/fr.json et data/en.json : ui.unavailable.{title, message, home}, chaînes non vides,
    textes validés par Louis (10/10/2026), mot pour mot
  - parité de structure FR/EN du bloc (mêmes clés, aucune en trop)

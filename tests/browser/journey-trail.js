@@ -1,8 +1,8 @@
-/* Parcours : traînée du vaisseau. Elle suit le temps et non la cadence d'images (checklist:305
-et 307) : sur 500 ms de voyage, le nombre de particules émises et leur durée de vie (476 ms,
-une particule par image à 60 Hz dans la maquette, prototype.html:584-731) sont les mêmes à 31,
-60 et 390 images/s, et la traînée ne dépasse jamais 41 particules. Test direct de makeShip, sur
-une horloge fictive (requestAnimationFrame et performance.now remplacés le temps du cas). */
+/* Parcours : traînée du vaisseau. Elle suit le temps et non la cadence d'images (checklist §6,
+pas plafonné) : sur 500 ms de voyage, le nombre de particules émises et leur durée de vie (476
+ms, une particule par image à 60 Hz dans la maquette) sont les mêmes à 31, 60 et 390 images/s,
+et la traînée ne dépasse jamais 41 particules. Test direct de makeShip, sur une horloge fictive
+(requestAnimationFrame et performance.now remplacés le temps du cas). */
 import { test } from './runner.js';
 import { context } from './journey-probe.js';
 import { makeShip } from '../../js/sections/journey-ship.js';

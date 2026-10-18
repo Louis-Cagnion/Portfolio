@@ -200,7 +200,8 @@ const grow = (r, by) => ({
 
 /**
  * Défile à la position de lecture sur téléphone : haut de la rubrique sous la barre, plan
- * collant à sa place d'origine, panneau à son recouvrement de départ (-34vw, checklist :285).
+ * collant à sa place d'origine, panneau à son recouvrement de départ (-34vw,
+ * checklist §5, 880 px).
  */
 export function scrollToPlan(site) {
   const bar = site.doc.querySelector('header.bar')?.getBoundingClientRect().bottom ?? 0;
@@ -242,7 +243,8 @@ const SLOW_CAP = 2; // une image lente (charge de la machine) relâche la limite
 const FRAME_MS = 20;
 const MOVE = 1e-4; // mouvement de caméra perceptible : part de la largeur du viewBox
 const DESK_PLAN = { rest: 460, focus: 540 }; // px : hauteur du plan au bureau (arbre S8.B3)
-const PHONE_FOCUS_RATIO = 1.15; // téléphone déployé : hauteur du plan en largeurs (:285)
+// téléphone déployé : hauteur du plan en largeurs (checklist §5, 880 px)
+const PHONE_FOCUS_RATIO = 1.15;
 const PLAN_MARGIN = 8; // px entre la barre du haut et le plan (maquette)
 const LABEL_TOLERANCE = 2; // px : centre du nom sur celui de l'astre
 const isDesk = (kit) => kit.width >= DESKTOP_MIN;
@@ -486,7 +488,8 @@ function tokenColor(site, name) {
   return color;
 }
 
-/** Puces : une seule `aria-pressed="true"`, fond --accent et texte --accent-ink (:152). */
+/** Puces : une seule `aria-pressed="true"`, fond --accent et texte --accent-ink
+ * (checklist §2 Boutons, puces). */
 export function chipProblems(site, text) {
   const { chips } = panelParts(site, text);
   const problems = [];

@@ -1,35 +1,36 @@
 /*
 Contrat testé : fonctions pures de js/sections/skills-layout.js, hors layoutConstellation
-(testée dans skills-layout.test.mjs). Formules : maquette validée
-docs/design/prototype/prototype.template.html (lignes entre parenthèses).
-  gridOf(count, { phone }) -> { cols, cellWidth, cellHeight, width, height }  (813-814)
+(testée dans skills-layout.test.mjs). Formules : valeurs de la maquette validée
+(historique git, a49d2a5).
+  gridOf(count, { phone }) -> { cols, cellWidth, cellHeight, width, height }
     bureau 4 x 275 x 220, téléphone 2 x 170 x 200 ; width = cols x cellWidth,
     height = ceil(count / cols) x cellHeight ; count entier >= 1, sinon Error nommant count.
-  walkOrder(positions, center) -> [id]  (823-825) ; positions = [{ id, x, y }] ; tri par
+  walkOrder(positions, center) -> [id] ; positions = [{ id, x, y }] ; tri par
     Math.atan2(y - center.y, x - center.x) croissant (égalité : ordre des données), puis
     rotation pour que positions[0].id ouvre ; permutation ; [] donne [] ; Error nommant
     positions (position non finie) ou center (centre invalide).
-  spreadOf(positions, center, { phone }) -> [{ id, x, y }]  (826) ; même ordre ;
+  spreadOf(positions, center, { phone }) -> [{ id, x, y }] ; même ordre ;
     center + (point - center) x spread, 2.1 bureau, 1.8 téléphone ; entrée intacte.
-  extentOf(positions) -> { width, height }  (840) ; écarts max - min de x puis de y ;
+  extentOf(positions) -> { width, height } ; écarts max - min de x puis de y ;
     [] : Error nommant positions.
-  overviewCamera({ width, height }, ratio) -> { cx, cy, w }  (798) ; cx = width / 2,
+  overviewCamera({ width, height }, ratio) -> { cx, cy, w } ; cx = width / 2,
     cy = height / 2, w = max(width, height / ratio) ; ratio fini > 0, sinon Error (ratio).
-  focusCamera(star, extent, ratio, { phone }) -> { cx, cy, w }  (799-804) ;
+  focusCamera(star, extent, ratio, { phone }) -> { cx, cy, w } ;
     téléphone : w = max(extent.width + 70, (extent.height + 90) / ratio, 200) ;
     bureau : w = max(extent.width x 0.75 + 190, (extent.height + 140) / ratio, 340) ;
     h = w x ratio ; téléphone : cx = star.x, cy = star.y + 0.2 x h ;
     bureau : cx = star.x + 0.22 x w, cy = star.y.
-  bodyRadius(level) -> nombre  (736) ; unknown 14, beginner 12, intermediate 22,
+  bodyRadius(level) -> nombre ; unknown 14, beginner 12, intermediate 22,
     advanced 30 ; autre niveau : Error nommant level.
-  diveTarget(star, view, { phone }) -> { cam: { cx, cy, w }, scale }  (743-748) ;
+  diveTarget(star, view, { phone }) -> { cam: { cx, cy, w }, scale } ;
     star = { x, y, level }, view = { width, height, ratio } ; w = width / (phone ? 7 : 9),
     h = w x ratio, visibleWidth = phone ? width : width x 0.54,
     scale = min(visibleWidth x 0.34, height x 0.34) / bodyRadius(level) ; cam : focusCamera.
-  bodyScale({ phone, focused }) -> nombre  (738) ; bureau 0.6 et 1.4, téléphone 0.5 et 1.15.
-Critères : docs/design/plan.md:43 « Le placement organique des constellations est calculé
-à partir de `id`, jamais du nom traduit. » ; plan.md:103 « placement des constellations
-indépendant de la langue ». Lancer : node --test tests/unit/skills-geometry.test.mjs.
+  bodyScale({ phone, focused }) -> nombre ; bureau 0.6 et 1.4, téléphone 0.5 et 1.15.
+Critères : plan.md, Principes « Le placement organique des constellations est calculé
+à partir de `id`, jamais du nom traduit. » ; tests/unit/skills-layout.test.mjs, « placement
+identique en français et en anglais ». Lancer : node --test
+tests/unit/skills-geometry.test.mjs.
 */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';

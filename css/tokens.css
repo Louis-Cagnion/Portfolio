@@ -1,7 +1,7 @@
 /*
 Jetons de design du site : seule source des couleurs, polices, rayons, empilements, ombres,
-courbes et durées des feuilles de style. Valeurs relevées dans la maquette validée
-(docs/design-checklist.md, section 1).
+courbes et durées des feuilles de style. Valeurs relevées dans la maquette validée ;
+règles d'usage : docs/design-checklist.md, §1.
 */
 
 :root {

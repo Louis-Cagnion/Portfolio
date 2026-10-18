@@ -1,5 +1,5 @@
 /* États de #status : chargement visible, une erreur par cause, Réessayer qui aboutit.
-Contrat de la cause « unexpected » (fixé par le moniteur ; checklist de design, section 8) :
+Contrat de la cause « unexpected » (fixé par le moniteur ; checklist §8, erreur) :
 - toute exception autre que LocaleError levée pendant request(), au chargement ou à
   l'affichage, met #status en data-state="error" avec le texte ui.errors.unexpected de la
   langue demandée, role="alert", focus sur le titre du panneau, Réessayer visible ;

@@ -2,7 +2,7 @@
 Dessins de la rubrique Compétences : un astre par niveau (0 inconnu = magma, 1 débutant =
 géante jaune, 2 intermédiaire = nébuleuse, 3 avancé = galaxie), centré sur 0,0 et dimensionné
 en pixels d'écran, son icône et le groupe SVG d'une constellation. Formes, couleurs et
-rayons de la maquette (docs/design/prototype/prototype.template.html:768-795 et 815-859).
+rayons de la maquette.
 Le placement vient de skills-layout.js ; aucun écouteur, aucun texte, aucun état ici.
 Le nom d'une étoile est un `text.name` : une ligne, ou deux `tspan` quand l'étoile porte
 `lines` (`nameLines` des données) ; `setName` et `moveLabel` sont les seuls à le toucher.

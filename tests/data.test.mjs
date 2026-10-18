@@ -1,6 +1,6 @@
 /*
 Tests des données réelles (data/fr.json, data/en.json).
-Critères : docs/design/plan.md (sections Schéma des données et Tests).
+Critères : js/core/schema.js.
  - conformité à validateLocale (js/core/schema.js : string[] de chemins fautifs)
  - parité FR/EN : mêmes clés et longueurs ; champs non textuels égaux (id, ordre, href,
    level, body, at, now, type, live, références `projects`)
@@ -8,7 +8,8 @@ Critères : docs/design/plan.md (sections Schéma des données et Tests).
  - aucune chaîne vide ou d'espaces ; HTML limité à <strong>, <em>, <a href="https:|mailto:">
    et seulement dans html, paragraphs[], blocks[].html, blocks[].items[]
  - un seul canal mailto: dans contact
-Textes du site (plan, #status, tirets cadratins, temps relatif) : tests/texts.test.mjs.
+Textes du site (textes imposés, #status, tirets cadratins, temps relatif) :
+tests/texts.test.mjs.
 Les détecteurs sont eux-mêmes vérifiés (sections « détecteurs ») et testés en volume.
 Lancer : node --test (depuis la racine du dépôt).
 */
@@ -38,7 +39,7 @@ function list(lang, path) {
   const value = get(locale(lang), path);
   assert.ok(
     Array.isArray(value) && value.length > 0,
-    `data/${lang}.json : ${path} absent ou vide (schéma du plan attendu)`,
+    `data/${lang}.json : ${path} absent ou vide (schéma de js/core/schema.js attendu)`,
   );
   return value;
 }
@@ -391,7 +392,7 @@ describe('détecteurs : parité et chaînes vides', () => {
 
 // ---------- Format de la légende des compétences (S8.B2, ajouté par S8.C0) ----------
 /* Étape S8.C0 : clé `skills.legendItem`, « {body} : {level} » en français et
-« {body}: {level} » en anglais (maquette, prototype.template.html:932) ; le niveau est affiché
+« {body}: {level} » en anglais (maquette) ; le niveau est affiché
 tel que la donnée (`skills.levels`), sans transformation par le code. */
 describe('légende des compétences : skills.legendItem', () => {
   const EXPECTED = { fr: '{body} : {level}', en: '{body}: {level}' };

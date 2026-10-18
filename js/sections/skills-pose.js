@@ -5,7 +5,7 @@ image de l'animation. Un nom sur deux lignes (deux `tspan`) garde sa seconde lig
 d'un nom d'une ligne et monte d'une interligne (`nameRise`) : sous l'astre il descend d'autant,
 et la caméra du téléphone compte cette hauteur de plus au-dessus de l'astre. Au repos il est
 décalé de `NAME_SHIFT` px à gauche de l'astre ; ce décalage se résorbe avec `t` (nul déployé).
-Formules de la maquette P2 : docs/design/s8/mockup-skills.js (`layoutStars`, `dive`) ;
+Formules de la maquette P2 (`layoutStars`, `dive`) ;
 cadrage du nuage entier sur téléphone : critère de Louis du 13/10/2026 (31 noms entiers).
 */
 import { ease, lerp } from '../core/motion.js';
@@ -13,15 +13,15 @@ import { labelOffset, moveLabel, NAME_SHIFT, nameRise } from './skills-art.js';
 import { bodyRadius, bodyScale, extentOf } from './skills-layout.js';
 import { LEVELS } from './skills-scene.js';
 
-export const PHONE_RATIO = 1.15; // hauteur du plan déployé en largeurs (plan.md : 1 / 1.15)
-const NAME_DROP = 12; // maquette:layoutStars : nom sous l'astre, 12 px sous son bord
+export const PHONE_RATIO = 1.15; // hauteur déployée en largeurs (design-checklist.md, §5)
+const NAME_DROP = 12; // nom sous l'astre, 12 px sous son bord
 const NAME_HEIGHT = 18; // px : hauteur d'une ligne de nom (14 px de police)
 const NAME_LINE = 16; // px : interligne d'un nom sur deux lignes (1,15 em de 14 px)
 const NAME_GAP = 9; // px : écart entre l'astre et un nom placé au-dessus
 const EDGE = 6; // px : marge entre un nom ou un astre et le bord du cadre
 const FIT_WIDTH = { min: 200, max: 4000 }; // largeur visible du cadrage du nuage
-const HOP_FACTOR = 2.4; // maquette:dive : recul à 2,4 fois la distance entre les deux étoiles
-const HOP_MIN = 160; // maquette:dive : largeur minimale du recul
+const HOP_FACTOR = 2.4; // recul à 2,4 fois la distance entre les deux étoiles
+const HOP_MIN = 160; // largeur minimale du recul
 
 /**
  * @brief Place les étoiles d'une constellation entre le repos et l'écartement, avec leurs

@@ -1,6 +1,6 @@
 /*
 Placement des planètes de la section Projets : module pur, sans accès au DOM.
-Source des valeurs : docs/design/s6/mockup.js (maquette validée).
+Valeurs de la maquette validée (historique git, a49d2a5).
 Le placement ne dépend que de l'identifiant du système. La taille dépend du nombre de blocs,
 sauf à la Piscine, où elle dépend de la longueur du texte.
 */

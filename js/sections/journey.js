@@ -3,8 +3,8 @@ Parcours : un vaisseau voyage d'escale en escale sur une trajectoire, de la Terr
 à une galaxie (destination), et la fiche de l'escale choisie s'affiche dessous. Au-dessus
 de 700 px, courbe horizontale fixe (viewBox 0 0 1100 300) ; à 700 px et moins, courbe
 verticale suivie par une caméra, flèches ↑ ↓ sur la scène, et le toucher de l'escale où se
-trouve déjà le vaisseau descend à sa fiche. Structure et mouvements de la maquette
-(docs/design/prototype/prototype.html:370-387 et 584-731) ; dessins dans journey-art.js,
+trouve déjà le vaisseau descend à sa fiche. Structure et mouvements de la maquette ;
+dessins dans journey-art.js,
 vaisseau et traînée dans journey-ship.js, troncature des libellés dans journey-labels.js,
 mise en page dans css/journey.css.
 */

@@ -1,5 +1,5 @@
-/* Fiche projet (S6). Contrat (décidé par le moniteur ; docs/design-checklist.md:175-181,
-183-189, 318-321) :
+/* Fiche projet (S6). Contrat (décidé par le moniteur ; checklist §2 Fiche projet,
+checklist §2 Liens en ligne, checklist §7, Échap à fiche dialog) :
 - js/ui/sheet.js exporte initSheet(doc), idempotent par document (un second appel avec le
   même doc rend le même contrôleur, sans doubler les écouteurs) ; il rend
   { open(view, origin), update(view), close(), isOpen() }, view = { category, title,

@@ -1,6 +1,6 @@
 /*
-Validation pure du JSON d'une langue (schéma de docs/design/plan.md, section Schéma des
-données). Chaque nœud du schéma est une fonction (valeur, chemin, fautes) qui ajoute à
+Validation pure du JSON d'une langue.
+Chaque nœud du schéma est une fonction (valeur, chemin, fautes) qui ajoute à
 `fautes` le chemin de tout champ absent, vide ou mal typé ; rien n'est jamais levé.
 */
 

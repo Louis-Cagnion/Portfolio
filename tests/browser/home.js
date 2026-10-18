@@ -1,6 +1,6 @@
-/* Accueil et dossier du pilote (S5). Contrat fixé par le moniteur (docs/design/plan.md:121 :
+/* Accueil et dossier du pilote (S5). Contrat fixé par le moniteur (plan.md, Critères S5 :
 « Conforme à la maquette, repère qui s'efface, aucun débordement à 320 px ») :
-- structure (maquette docs/design/prototype/prototype.template.html:344-368) : #home > .hero
+- structure : #home > .hero
   [div (p.mission, h1, p.pitch, div.ctas > button.btn.primary[data-go=projects] et
   button.btn[data-go=contact]), aside.hud.telemetry (h3, dl.rows > div > dt + dd)], puis
   a.cue#cue[href="#dossier"] avec un span[aria-hidden=true], puis section.dossier#dossier
@@ -8,7 +8,7 @@
 - textes (data/fr.json:31-62, data/en.json) : home.mission, name, pitch, ctas, telemetry.title,
   telemetry.rows[] ({label, value, live}), dossier.kicker, title, entries[] ({label, html}) ;
   une seule dd.live, celle de la ligne live: true ; le repère affiche home.dossier.kicker
-  (aucune clé propre, maquette:359 lui donne le texte du kicker, maquette:361).
+  (aucune clé propre, la maquette donne le texte du kicker).
 Limites du banc : le repère et Entrée se jugent dans cue.js ; mise en page : constantes
 WIDE_MIN à ARROW ; mouvement réduit : le bouchon matchMedia n'atteint pas le CSS, la règle
 est lue dans le CSSOM. */
@@ -28,20 +28,20 @@ import { expectEqual, skip, test } from './runner.js';
 import { normalize } from './text.js';
 import { stubMotion } from './warp.js';
 
-const WIDE_MIN = 881; // deux colonnes au-dessus de 880 px (maquette:300)
-const HERO_GAP_WIDE = 48; // maquette:64
-const HERO_GAP_NARROW = 32; // maquette:302
-const HERO_RATIO = 1.1 / 0.9; // grid-template-columns: 1.1fr 0.9fr (maquette:64)
+const WIDE_MIN = 881; // deux colonnes au-dessus de 880 px
+const HERO_GAP_WIDE = 48;
+const HERO_GAP_NARROW = 32;
+const HERO_RATIO = 1.1 / 0.9; // grid-template-columns: 1.1fr 0.9fr
 const RATIO_TOLERANCE = 0.05;
-const HERO_MIN_OFFSET = 180; // min-height: calc(100vh - 180px) (maquette:64)
-const DOSSIER_WIDE_MIN = 701; // une colonne jusqu'à 700 px (maquette:95)
-const DT_WIDTH = 200; // grid-template-columns: 200px 1fr (maquette:91)
+const HERO_MIN_OFFSET = 180; // min-height: calc(100vh - 180px)
+const DOSSIER_WIDE_MIN = 701; // une colonne jusqu'à 700 px
+const DT_WIDTH = 200; // grid-template-columns: 200px 1fr
 const DOSSIER_GAP_WIDE = 24;
 const DOSSIER_GAP_NARROW = 4;
 export const TOLERANCE = 1; // px : arrondis de sous-pixel
 const EDGE_WIDTHS = [700, 701, 880, 881]; // de part et d'autre des deux ruptures
 const LONG_WORD = 'a'.repeat(70);
-const ARROW = '↓'; // &#8595; (maquette:360)
+const ARROW = '↓'; // &#8595;
 export const GROUP = 'Accueil';
 
 export const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -127,7 +127,7 @@ function pairsProblems(label, list) {
   return problems;
 }
 
-/** Structure DOM de la maquette (344-368), sans les textes. */
+/** Structure DOM de la maquette, sans les textes. */
 function structureProblems(site) {
   const root = homeOf(site);
   if (!root) return ['section.view#home absente'];
@@ -499,8 +499,8 @@ async function runEdited() {
 
 /**
  * Groupe « Accueil » : contenu, mise en page par largeur, ruptures, cas limites. Aucun
- * débordement horizontal à 320, 390, 430, 768 et 1280 px, en français et en anglais
- * (checklist:272-276), mot long du dossier compris (overflow-wrap, checklist:107).
+ * débordement horizontal, FR et EN (checklist §5, largeurs de contrôle ; §5, scrollWidth),
+ * mot long du dossier compris (overflow-wrap, checklist §1 Polices, textes rédigés).
  */
 export async function runHome(widths, mainWidth) {
   await runContent(mainWidth);

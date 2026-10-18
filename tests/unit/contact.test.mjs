@@ -1,7 +1,7 @@
 /*
-Tests Node de la rubrique Contact (S9, docs/design/plan.md:126). Le comportement se joue dans
+Tests Node de la rubrique Contact (plan.md, Critères S9). Le comportement se joue dans
 le navigateur (tests/browser/contact.js) ; ici, ce qui se juge sans DOM :
- - données (maquette docs/design/prototype/prototype.template.html:1110-1111 et :1167-1190) :
+ - données (maquette) :
    quatre sillons dans l'ordre e-mail, LinkedIn, GitHub, Codewars ; l'adresse copiée vient du
    premier href (mailto:) ; modèles « {n} », « {name} » et « {mail} » présents en FR et EN ;
  - fichiers : js/sections/contact.js exporte mount, css/contact.css existe et est chargé par

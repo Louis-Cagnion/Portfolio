@@ -1,7 +1,8 @@
-/* Parcours : boucles d'animation. Une boucle par rubrique (checklist:303-304) : pendant un
-trajet du vaisseau et jusqu'à l'extinction de la traînée, au plus 2 requestAnimationFrame sont
-en attente (le ciel et une boucle de la rubrique) ; la traînée s'éteint après l'arrivée ; au
-repos complet il ne reste que le ciel. Mouvement non réduit, trajet lancé par une flèche. */
+/* Parcours : boucles d'animation. Une boucle par rubrique (checklist §6, une boucle par
+rubrique ; §6, compteur de rAF) : pendant un trajet du vaisseau et jusqu'à l'extinction de la
+traînée, au plus 2 requestAnimationFrame sont en attente (le ciel et une boucle de la rubrique)
+; la traînée s'éteint après l'arrivée ; au repos complet il ne reste que le ciel. Mouvement non
+réduit, trajet lancé par une flèche. */
 import { test } from './runner.js';
 import {
   NO_PAIR,

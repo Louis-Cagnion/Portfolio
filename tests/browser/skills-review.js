@@ -57,7 +57,8 @@ const SHEET_WAIT = { real: 8000, still: 1500 };
 const TIGHT_SHARE = 0.7; // largeur finale / largeur du système : au plus
 const CENTRE_SHARE = 0.12; // planète à moins de cette part de la largeur du centre du plan
 const MASKED_MAX = 1; // % du nom masqué au-delà duquel l'étoile est fautive
-const PHONE_RATIO = 1.15; // téléphone déployé : hauteur du plan en largeurs (checklist :285)
+// téléphone déployé : hauteur du plan en largeurs (checklist §5, 880 px)
+const PHONE_RATIO = 1.15;
 const RATIO_SLACK = 0.05; // écart relatif toléré au rapport attendu
 const RESIZES = [700, 844]; // largeurs de redimensionnement depuis 390 px
 
