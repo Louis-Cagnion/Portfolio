@@ -3,7 +3,10 @@ l'élément d'origine (constellation, soleil, planète) avec `focus({ focusVisib
 pas d'anneau de focus clavier après une touche. Une sortie par clic (bouton retour, fermeture
 de la fiche) garde `focus()` nu. Un Échap du banc est synthétique : il ne change pas la
 modalité du navigateur, donc les cas espionnent les options de `focus()` (spyCalls) au lieu de
-`:focus-visible`. Un cas par sortie, à 390 et 1280 px, en français, mouvement réduit. */
+`:focus-visible`. Un cas par sortie, à 390 et 1280 px, en français, mouvement réduit.
+Le focus pendant le retour (V1.F6, 18/10/2026) se relève 300 ms après Échap, en mouvement réel
+(`reduce: false`) : il doit déjà être sur la constellation ou le soleil, ni sur l'étoile, la
+planète ni le panneau. */
 import { click, describe, waitFor } from './harness.js';
 import { closeBy } from './sheet.js';
 import {
@@ -16,14 +19,22 @@ import {
   projectsData,
   rest as projectRest,
   sheetOpen,
+  sleep,
   sunOf,
   zoomIn,
 } from './projects-probe.js';
 import { test } from './runner.js';
-import { deploy, isDeployed, panelParts, spyCalls } from './skills-focus-probe.js';
+import {
+  curStar,
+  deploy,
+  isDeployed,
+  panelParts,
+  spyCalls,
+} from './skills-focus-probe.js';
 import {
   groupEls,
   openSkillsSite,
+  parts as skillParts,
   rest as skillRest,
   skillsData,
 } from './skills-probe.js';
@@ -33,6 +44,7 @@ const PROJECTS = 'Projets';
 const SHEET = 'Fiche';
 const WIDTHS = [390, 1280];
 const WAIT_MS = 3000;
+const MID_RETURN_MS = 300; // pendant le retour (1200 ms à la constellation, 900 ms au soleil)
 
 /** Largeurs de WIDTHS que la suite joue (filtre `?widths=`). */
 const pick = (widths) => WIDTHS.filter((width) => widths.includes(width));
@@ -67,6 +79,23 @@ function returnProblems(site, calls, node, { quiet, name }) {
     problems.push(`${name} : focus() avec focusVisible: false après un clic`);
   if (site.doc.activeElement !== node)
     problems.push(`focus sur ${describe(site.doc.activeElement)}`);
+  return problems;
+}
+
+/**
+ * Sort par Échap, puis relève le focus 300 ms plus tard, pendant le retour animé : la vue doit
+ * encore bouger, et le focus être déjà sur `node` (constellation ou soleil).
+ */
+async function escapeMidReturn(site, node, { view, name }) {
+  const before = view(site);
+  pressEscape(site);
+  await sleep(MID_RETURN_MS);
+  const problems = [];
+  if (view(site) === before) problems.push(`${name} : retour achevé avant 300 ms`);
+  if (site.doc.activeElement !== node) {
+    const active = describe(site.doc.activeElement);
+    problems.push(`focus sur ${active} 300 ms après Échap, au lieu de ${name}`);
+  }
   return problems;
 }
 
@@ -126,6 +155,32 @@ export async function runEscapeSkills(widths) {
         return returnProblems(site, calls, group, { quiet: false, name: 'constellation' });
       },
     );
+    const live = () => openSkillsSite(width, { lang: 'fr', reduce: false });
+    const skillView = (site) => skillParts(site).svg?.getAttribute('viewBox');
+    await caseWith(
+      ctx,
+      'Échap pendant le retour : focus rendu à la constellation, pas à l’étoile',
+      live,
+      async (site) => {
+        const group = groupEls(site)[0];
+        await deploy(site, 0, 'clic');
+        curStar(site).focus();
+        return escapeMidReturn(site, group, { view: skillView, name: 'constellation' });
+      },
+    );
+    await caseWith(
+      ctx,
+      'Échap pendant le retour : focus rendu à la constellation, pas au panneau',
+      live,
+      async (site) => {
+        const group = groupEls(site)[0];
+        await deploy(site, 0, 'clic');
+        const { back } = panelParts(site, datas.fr);
+        if (!back) return ['bouton « Toutes les compétences » absent'];
+        back.focus();
+        return escapeMidReturn(site, group, { view: skillView, name: 'constellation' });
+      },
+    );
   }
 }
 
@@ -161,6 +216,20 @@ export async function runEscapeProjects(widths) {
         await waitFor(() => !isZoomed(site), WAIT_MS, 'zoom quitté').catch(() => {});
         await projectRest(site);
         return returnProblems(site, calls, sun, { quiet: false, name: 'soleil' });
+      },
+    );
+    const live = () => openProjectsSite(width, { lang: 'fr', reduce: false });
+    const projectView = (site) => projectParts(site).svg?.getAttribute('viewBox');
+    await caseWith(
+      ctx,
+      'Échap pendant le retour : focus rendu au soleil, pas à la planète',
+      live,
+      async (site) => {
+        const sun = await zoomFirst(site, fr);
+        const planet = planetOf(site, fr.systems[0].projects[0]);
+        if (!planet) return ['planète du premier projet introuvable'];
+        planet.focus();
+        return escapeMidReturn(site, sun, { view: projectView, name: 'soleil' });
       },
     );
   }

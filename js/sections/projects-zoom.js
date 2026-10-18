@@ -11,7 +11,7 @@ Mouvement réduit : l'état final est posé sur-le-champ, sans image ni transiti
 Couture avec projects.js : `createZoom({ parts, state, renderAll, showSystem })` rend
 `{ enter, exit, step, toPlanet, release }` ; `state.view = { u, camera: { cx, w },
 zoomedIndex }` est tenu à jour (unité d'écran, caméra, système zoomé), `renderAll` replace
-les planètes.
+les planètes. `exit({ quiet })` (Échap) rend le focus au soleil sans anneau, dès le début.
 */
 import {
   ease,
@@ -311,8 +311,8 @@ export function createZoom({ parts, state, renderAll, showSystem }) {
   /**
    * Sort du zoom (sans effet au repos ou pendant une animation) ; focus rendu au soleil.
    *
-   * @param {object} [options] `quiet` : sortie par Échap, focus sans anneau ; `resolve` :
-   *   rappel une fois le plan revenu au repos
+   * @param {object} [options] `quiet` : sortie par Échap, focus sans anneau dès le début du
+   *   retour ; `resolve` : rappel une fois le plan revenu au repos
    */
   const exit = (options = {}) => {
     const { built, view } = state;
@@ -321,7 +321,7 @@ export function createZoom({ parts, state, renderAll, showSystem }) {
     const quiet = options?.quiet === true;
     lock = null;
     layout.classList.remove('zfocus');
-    if (head.contains(document.activeElement)) focusSun(system.sun, quiet);
+    if (quiet || head.contains(document.activeElement)) focusSun(system.sun, quiet);
     for (const each of built.systems) each.g.classList.remove('on', 'dim');
     for (const planet of planetsOf(system.index)) setPlanetActive(planet.nodes.g, false);
     setHeight(plan, (columnWidth(plan) * built.height) / built.width);

@@ -3,8 +3,8 @@ Compétences, déploiement d'une constellation : étoiles écartées et caméra 
 sur la première étoile (950 ms), saut d'étoile avec recul (1400 ms), retour à la vue
 d'ensemble (1200 ms). Même couture que `createZoom` de projects-zoom.js : skills.js appelle
 `enter(index)`, `go(rank)` et `exit(options)` ; `options.quiet` (sortie par Échap) rend le
-focus sans anneau de focus clavier. Le panneau (skills-panel.js) naît au premier déploiement
-et se vide au retour.
+focus sans anneau de focus clavier, dès le début du retour. Le panneau (skills-panel.js) naît
+au premier déploiement et se vide au retour.
 Mécanique de la maquette P2 (choix de Louis du 17/10/2026) : docs/design/s8/mockup-skills.js.
 Calculs d'image : skills-pose.js ; règles : css/skills.css.
 Une seule boucle `requestAnimationFrame`, qui lit `performance.now()` à chaque image : la
@@ -296,11 +296,15 @@ export function createFocus({ root, parts, state, camera, onRelated }) {
     host.style.removeProperty('--fold-h');
   };
 
-  /** Retour à la vue d'ensemble (bouton, Échap) ; `options.quiet` : focus sans anneau. */
+  /**
+   * Retour à la vue d'ensemble (bouton, Échap). `options.quiet` : focus sans anneau, dès
+   * le début du retour.
+   */
   const exit = async (options) => {
     if (busy || !deck) return;
     busy = true;
     const token = epoch;
+    const quiet = options?.quiet === true;
     const { built } = deck;
     state.selection = { group: null };
     if (phone()) startFold();
@@ -310,6 +314,7 @@ export function createFocus({ root, parts, state, camera, onRelated }) {
     built.stars.forEach(({ element }) => element.classList.remove('cur'));
     mark(-1, false);
     arm(built, false);
+    if (quiet) focusIfShown(built.node, true); // avant `inert`, qui ferait perdre le focus
     host.inert = true;
     const { built: overview } = state;
     if (phone()) setHeight(plan, (view().width * overview.height) / overview.width);
@@ -334,7 +339,7 @@ export function createFocus({ root, parts, state, camera, onRelated }) {
     host.replaceChildren();
     deck = null;
     settle();
-    focusIfShown(built.node, options?.quiet === true);
+    focusIfShown(built.node, quiet);
   };
 
   /** Saut à l'étoile de rang `to` : puce, flèche, clic ou touche sur une étoile. */
