@@ -50,7 +50,7 @@ const idsOf = (systems) => systems
  * @brief Lie Entrée et Espace d'un nœud à une action (la touche n'y défile pas).
  *
  * @param {Element} node nœud focalisable
- * @param {() => void} action rappel
+ * @param {() => void} action fonction sans argument ni retour
  */
 function onActivate(node, action) {
   node.addEventListener('keydown', (event) => {
@@ -238,7 +238,7 @@ function planetUnder(point, planets) {
  *   `update`.
  *
  * La bascule de langue réécrit les textes sur place (nœuds des planètes stables, fiche
- * ouverte par `update`, système zoomé gardé) ; le passage de 880 px reconstruit le plan.
+ * ouverte par `update`, système zoomé gardé) ; le passage de 55 em reconstruit le plan.
  *
  * @param {HTMLElement} root section.view#projects
  *
@@ -318,8 +318,12 @@ export function mount(root) {
   };
 
   /**
-   * Projet lié : la caméra va d'un seul mouvement jusqu'à la planète, puis la fiche s'ouvre.
+   * @brief Projet lié : la caméra rejoint la planète, puis la fiche s'ouvre.
+   *
    * À la fermeture, le focus va à la planète et la caméra revient sur le système zoomé.
+   *
+   * @param {string} id identifiant d'un projet de `projects.systems`
+   * @param {Element} origin nœud qui reçoit le focus à la fermeture de la fiche
    */
   const reveal = async (id, origin) => {
     const planet = state.built?.planets.find((each) => each.id === id);
@@ -333,8 +337,9 @@ export function mount(root) {
   };
 
   /**
-   * Branche les systèmes (zoom), les planètes (fiche si leur système est zoomé, remontée au
-   * survol) d'un dessin neuf.
+   * @brief Branche les systèmes (zoom) et les planètes (fiche, remontée au survol).
+   *
+   * @param {{ systems: object[], planets: object[] }} built résultat de `buildSystems`
    */
   const wire = ({ systems, planets }) => {
     for (const system of systems) {

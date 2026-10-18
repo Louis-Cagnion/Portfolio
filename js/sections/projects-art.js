@@ -4,17 +4,7 @@ Valeurs de la maquette validée (docs/design/s6/mockup.js:17-23, 112-130, 136-29
 écouteur, aucune boucle d'animation, aucun HTML brut : les textes entrent par des nœuds texte.
 Le placement vient de projects-layout.js ; le zoom, la boucle et la liste sont ailleurs.
 
-API :
-  TINTS, tintOf(id)                     teintes des quatre systèmes ; id inconnu : erreur
-  geometry(count, phone)                plan : largeur, hauteur et cellules des systèmes
-  phoneUnit(width)                      unités du plan par pixel d'écran, Piscine téléphone
-  buildSystems(systems, text, options)  nœuds au repos et références (voir sa docstring)
-  placePlanet(planet, system, view)     position, opacité et étiquette d'une planète (pur)
-  placeLabel(planet, point, view)       décalage et échelle de l'étiquette (pur)
-  renderPlanet(planet, system, view)    applique placePlanet aux nœuds de la planète
-  rescalePhone(system, planets, width)  rayons de la Piscine téléphone selon la largeur
-  setPlanetActive(node, active)         planète active (tabindex 0) ou inerte (-1, aria-hidden)
-  textWidth(text), remeasureLabels(planets)   mesure par canvas, à refaire aux polices
+Chaque export est documenté par son docstring.
 
 `view` : { u, camera: { cx, w }, zoomedIndex } ; u = unités du plan par pixel d'écran,
 camera = centre et largeur du plan visible, zoomedIndex = système zoomé (-1 au repos).
@@ -350,7 +340,7 @@ function buildPlanet(system, project, slot, phone) {
  * @brief Écart d'angle de chaque planète à la première, pour l'espacement régulier du zoom.
  *
  * @param {object[]} slots emplacements du système, dans l'ordre des projets
- * @param {boolean} isPiscine la Piscine garde l'écart de ses cases, les autres un pas égal
+ * @param {boolean} isPiscine vrai pour le système de la Piscine, faux pour les autres
  *
  * @returns {number[]} `rel` de chaque planète
  */
@@ -364,7 +354,7 @@ function relativeAngles(slots, isPiscine) {
  * @brief Système au repos : cellule, orbites, soleil et planètes.
  *
  * @param {object} data système de `projects.systems`
- * @param {number} index indice du système (ajouté aux angles, comme la maquette)
+ * @param {number} index rang du système dans `projects.systems`, entier de 0 à 3
  * @param {object} cell cellule { x, y, w, h } du plan
  * @param {{ text: object, phone: boolean, width: number }} context textes, mode, largeur
  *
@@ -415,22 +405,17 @@ function buildSystem(data, index, cell, context) {
 /**
  * @brief Nœuds et références des systèmes au repos, au bureau ou sur téléphone.
  *
- * Le contenu vient des données ; `text` porte `projects.approach` (nom accessible du soleil,
- * « {name} ») et `projects.count` (« {n} »). L'appelant pose `children` dans le SVG, règle
- * son `viewBox` sur `0 0 width height` et appelle `remeasureLabels` quand les polices sont
- * prêtes. La Piscine hors de 20 projets lève l'erreur de `planetSlots`.
+ * Appelant : pose `children`, `viewBox` sur `0 0 width height`, `remeasureLabels` aux polices.
  *
  * @param {object[]} systems `projects.systems`, dans l'ordre d'affichage
- * @param {{ approach: string, count: string }} text modèles de textes
- * @param {{ phone?: boolean, width?: number }} [options] mode téléphone et largeur affichée
- *   du SVG en pixels (0 si inconnue)
+ * @param {{ approach: string, count: string }} text modèles « {name} » et « {n} »
+ * @param {{ phone?: boolean, width?: number }} [options] mode téléphone, largeur du SVG en px
  *
  * @returns {{ children: SVGElement[], width: number, height: number, unit: number,
- *   systems: object[], planets: object[] }} nœuds à poser, dimensions du plan, unité d'écran
- *   au repos, systèmes (`id`, `index`, `g`, `cx`, `cy`, `tilt`, `orbits`, `maxRadius`,
- *   `phonePis`) et planètes à plat (`id`, `nodes`, `size`, `radius`, `angle`, `speed`, `rel`,
- *   `ring`, `systemIndex`, `lines`, `labelWidth`, `labelHeight`, `below`)
- * @throws {Error} Entrée invalide : le message nomme le système ou le projet fautif.
+ *   systems: object[], planets: object[] }} systèmes (`id`, `index`, `g`, `cx`, `cy`, `tilt`,
+ *   `orbits`, `maxRadius`, `phonePis`), planètes (`id`, `nodes`, `size`, `radius`, `angle`,
+ *   `speed`, `rel`, `ring`, `systemIndex`, `lines`, `labelWidth`, `labelHeight`, `below`)
+ * @throws {Error} Entrée invalide (dont Piscine hors de 20 projets) : nomme le fautif.
  */
 export function buildSystems(systems, text, { phone = false, width = 0 } = {}) {
   validate(systems);

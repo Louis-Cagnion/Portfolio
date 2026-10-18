@@ -1,5 +1,5 @@
 /*
-Zoom sur un système de la rubrique Projets (S6.C5) : la caméra approche, les orbites
+Zoom sur un système de la rubrique Projets : la caméra approche, les orbites
 s'inclinent, les autres systèmes s'effacent, l'en-tête et l'introduction apparaissent.
 Mécanique de la maquette validée (docs/design/s6/mockup.js:330-431) ; la caméra est
 makeCamera (js/core/motion.js), la même que celle de Parcours.
@@ -115,7 +115,7 @@ function columnWidth(plan) {
  * le focus, pour que `focusVisible: false` s'applique.
  *
  * @param {SVGGElement} sun soleil du système sorti
- * @param {boolean} quiet sortie par Échap
+ * @param {boolean} quiet vrai pour une sortie par Échap, faux pour le bouton retour
  */
 function focusSun(sun, quiet) {
   if (quiet && document.activeElement === sun) sun.blur();
@@ -241,9 +241,13 @@ export function createZoom({ parts, state, renderAll, showSystem }) {
   };
 
   /**
-   * Lance l'animation `kind` (in, out, track, release) ; sous mouvement réduit, elle se
-   * termine aussitôt. `options.planet` : la caméra rejoint cette planète, `options.resolve` :
-   * rappel de la fin, `options.quiet` : sortie par Échap (focus du soleil sans anneau).
+   * @brief Lance l'animation d'un système ; sous mouvement réduit, elle se termine aussitôt.
+   *
+   * @param {'in' | 'out' | 'track' | 'release'} kind entrée, sortie, suivi de planète, retour
+   * @param {object} system système de `state.built.systems`
+   * @param {object[]} planets planètes de ce système, dans l'ordre des projets
+   * @param {{ planet?: object, resolve?: () => void, quiet?: boolean }} [options]
+   *   planète rejointe par la caméra, rappel de fin, sortie par Échap
    */
   const start = (kind, system, planets, options = {}) => {
     const { built } = state;
@@ -325,10 +329,11 @@ export function createZoom({ parts, state, renderAll, showSystem }) {
   };
 
   /**
-   * Emmène la caméra jusqu'à `planet` : d'un seul mouvement depuis la vue d'ensemble (zoom du
-   * système) ou depuis son système zoomé (du système à la planète) ; en deux temps si un autre
-   * système est zoomé (sortie de ce zoom, puis entrée dans celui de la planète). Sans effet
-   * (résolue aussitôt) si une animation tourne ou si le plan a été reconstruit entre-temps.
+   * @brief Emmène la caméra jusqu'à une planète, en deux temps si un autre système est zoomé.
+   *
+   * Un seul mouvement depuis la vue d'ensemble (zoom du système) ou depuis le système déjà
+   * zoomé (du système à la planète) ; deux temps si un autre est zoomé (sortie, puis entrée).
+   * Sans effet (résolue aussitôt) si une animation tourne ou si le plan a été reconstruit.
    *
    * @param {object} planet planète de `state.built.planets`
    *
@@ -373,7 +378,7 @@ export function createZoom({ parts, state, renderAll, showSystem }) {
   /**
    * @brief Avance l'animation en cours, ou la rotation du système zoomé.
    *
-   * @param {number} dt pas de la boucle en ms (50 au plus)
+   * @param {number} dt pas de la boucle en ms
    */
   const step = (dt) => {
     const { built, view } = state;
