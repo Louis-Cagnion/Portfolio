@@ -284,7 +284,7 @@
             "name": "TypeScript",
             "level": "beginner",
             "projects": ["transcendence"],
-            "description": "Seen with the Transcendence Pong: the opposing AI on the server side and the 3D rendering on the client side ; I am taking my first steps and still rely a lot on the documentation."
+            "description": "Seen with the Transcendence Pong: the opposing AI on the server side and the 3D rendering on the client side ; I am taking my first steps and still rely a lot on the documentation and AI."
           }
         ]
       },
@@ -340,21 +340,21 @@
             "name": "JavaScript unit tests",
             "level": "beginner",
             "projects": ["wiki", "supermarket_compare"],
-            "description": "Seen with Vitest for the Heartopia wiki and node --test for the grocery comparison app (unit tests) ; I am taking my first steps and still rely a lot on the documentation."
+            "description": "Seen with Vitest for the Heartopia wiki and node --test for the grocery comparison app (unit tests) ; I am taking my first steps and still rely a lot on the documentation and AI."
           },
           {
             "id": "azure-pipelines",
             "name": "Azure DevOps Pipelines",
             "level": "beginner",
             "projects": ["nps_scores", "audit_infomediaires"],
-            "description": "Used for the scheduled deployment of the NPS and audit pipelines, set up with the help of Claude Code (validation with Ruff and pytest, staging and production) ; I am taking my first steps and still rely a lot on the documentation."
+            "description": "Used for the scheduled deployment of the NPS and audit pipelines, set up with the help of Claude Code (validation with Ruff and pytest, staging and production) ; I am taking my first steps and still rely a lot on the documentation and AI."
           },
           {
             "id": "playwright",
             "name": "Playwright",
             "level": "beginner",
             "projects": ["audit_infomediaires"],
-            "description": "Used in the nightly audit of the online shops, built with the help of Claude Code (parallel extraction per platform, cookie banners, anti-bot checks) ; I am taking my first steps and still rely a lot on the documentation."
+            "description": "Used in the nightly audit of the online shops, built with the help of Claude Code (parallel extraction per platform, cookie banners, anti-bot checks) ; I am taking my first steps and still rely a lot on the documentation and AI."
           }
         ]
       },
@@ -417,7 +417,7 @@
             "name": "Elasticsearch",
             "level": "beginner",
             "projects": ["search_tool"],
-            "description": "Seen in the conversational search tool, which turns a natural-language question into an Elasticsearch query on the vehicle stock: the engine existed before I took over the project, I fixed the filters and the data quality there with the help of Claude Code (query built by an LLM, filters) ; I am taking my first steps and still rely a lot on the documentation."
+            "description": "Seen in the conversational search tool, which turns a natural-language question into an Elasticsearch query on the vehicle stock: the engine existed before I took over the project, I fixed the filters and the data quality there with the help of Claude Code (query built by an LLM, filters) ; I am taking my first steps and still rely a lot on the documentation and AI."
           }
         ]
       },
@@ -445,21 +445,21 @@
             "name": "NumPy",
             "level": "beginner",
             "projects": ["chatbot"],
-            "description": "Seen in my AI experiments (statistics, standardisation, missing values) ; I am taking my first steps and still rely a lot on the documentation."
+            "description": "Seen in my AI experiments (statistics, standardisation, missing values) ; I am taking my first steps and still rely a lot on the documentation and AI."
           },
           {
             "id": "matplotlib",
             "name": "Matplotlib",
             "level": "beginner",
             "projects": ["chatbot"],
-            "description": "Seen in my AI experiments (learning curves, image display) ; I am taking my first steps and still rely a lot on the documentation."
+            "description": "Seen in my AI experiments (learning curves, image display) ; I am taking my first steps and still rely a lot on the documentation and AI."
           },
           {
             "id": "keras",
             "name": "TensorFlow / Keras",
             "level": "beginner",
             "projects": ["chatbot"],
-            "description": "My first steps in deep learning, in my AI experiments (a linear neural network whose training I follow, GPU detection with TensorFlow) ; I am taking my first steps and still rely a lot on the documentation."
+            "description": "My first steps in deep learning, in my AI experiments (a linear neural network whose training I follow, GPU detection with TensorFlow) ; I am taking my first steps and still rely a lot on the documentation and AI."
           }
         ]
       },
@@ -494,14 +494,14 @@
             "name": "Docker",
             "level": "beginner",
             "projects": ["inception"],
-            "description": "Seen in Inception, with Dockerfiles and a docker-compose written by hand (Nginx, MariaDB, WordPress) ; I am taking my first steps and still rely a lot on the documentation."
+            "description": "Seen in Inception, with Dockerfiles and a docker-compose written by hand (Nginx, MariaDB, WordPress) ; I am taking my first steps and still rely a lot on the documentation and AI."
           },
           {
             "id": "threejs",
             "name": "Three.js",
             "level": "beginner",
             "projects": ["transcendence"],
-            "description": "Seen in the 3D version of the Transcendence Pong (models, lighting, animated camera) ; I am taking my first steps and still rely a lot on the documentation."
+            "description": "Seen in the 3D version of the Transcendence Pong (models, lighting, animated camera) ; I am taking my first steps and still rely a lot on the documentation and AI."
           }
         ]
       }

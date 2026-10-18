@@ -284,7 +284,7 @@
             "name": "TypeScript",
             "level": "beginner",
             "projects": ["transcendence"],
-            "description": "Vu avec le Pong de Transcendence : l'IA adverse côté serveur et le rendu 3D côté client ; j'en suis aux premiers pas et je m'aide encore beaucoup de la documentation."
+            "description": "Vu avec le Pong de Transcendence : l'IA adverse côté serveur et le rendu 3D côté client ; j'en suis aux premiers pas et je m'aide encore beaucoup de la documentation et de l'IA."
           }
         ]
       },
@@ -340,21 +340,21 @@
             "name": "Tests unitaires JavaScript",
             "level": "beginner",
             "projects": ["wiki", "supermarket_compare"],
-            "description": "Vu avec Vitest pour le wiki Heartopia et node --test pour le comparateur de courses (tests unitaires) ; j'en suis aux premiers pas et je m'aide encore beaucoup de la documentation."
+            "description": "Vu avec Vitest pour le wiki Heartopia et node --test pour le comparateur de courses (tests unitaires) ; j'en suis aux premiers pas et je m'aide encore beaucoup de la documentation et de l'IA."
           },
           {
             "id": "azure-pipelines",
             "name": "Azure DevOps Pipelines",
             "level": "beginner",
             "projects": ["nps_scores", "audit_infomediaires"],
-            "description": "Utilisé pour le déploiement planifié des pipelines NPS et d'audit, mis en place avec l'assistance de Claude Code (validation avec Ruff et pytest, préproduction et production) ; j'en suis aux premiers pas et je m'aide encore beaucoup de la documentation."
+            "description": "Utilisé pour le déploiement planifié des pipelines NPS et d'audit, mis en place avec l'assistance de Claude Code (validation avec Ruff et pytest, préproduction et production) ; j'en suis aux premiers pas et je m'aide encore beaucoup de la documentation et de l'IA."
           },
           {
             "id": "playwright",
             "name": "Playwright",
             "level": "beginner",
             "projects": ["audit_infomediaires"],
-            "description": "Utilisé dans l'audit nocturne des boutiques en ligne, réalisé avec l'assistance de Claude Code (extraction en parallèle par plateforme, bandeaux cookies, contrôles anti-robot) ; j'en suis aux premiers pas et je m'aide encore beaucoup de la documentation."
+            "description": "Utilisé dans l'audit nocturne des boutiques en ligne, réalisé avec l'assistance de Claude Code (extraction en parallèle par plateforme, bandeaux cookies, contrôles anti-robot) ; j'en suis aux premiers pas et je m'aide encore beaucoup de la documentation et de l'IA."
           }
         ]
       },
@@ -417,7 +417,7 @@
             "name": "Elasticsearch",
             "level": "beginner",
             "projects": ["search_tool"],
-            "description": "Vu dans l'outil de recherche conversationnelle, qui transforme une question en langage naturel en requête Elasticsearch sur le stock de véhicules : le moteur existait avant ma reprise du projet, j'y ai corrigé les filtres et la qualité des données avec l'assistance de Claude Code (requête construite par un LLM, filtres) ; j'en suis aux premiers pas et je m'aide encore beaucoup de la documentation."
+            "description": "Vu dans l'outil de recherche conversationnelle, qui transforme une question en langage naturel en requête Elasticsearch sur le stock de véhicules : le moteur existait avant ma reprise du projet, j'y ai corrigé les filtres et la qualité des données avec l'assistance de Claude Code (requête construite par un LLM, filtres) ; j'en suis aux premiers pas et je m'aide encore beaucoup de la documentation et de l'IA."
           }
         ]
       },
@@ -445,21 +445,21 @@
             "name": "NumPy",
             "level": "beginner",
             "projects": ["chatbot"],
-            "description": "Vu dans mes expériences d'IA (statistiques, standardisation, valeurs manquantes) ; j'en suis aux premiers pas et je m'aide encore beaucoup de la documentation."
+            "description": "Vu dans mes expériences d'IA (statistiques, standardisation, valeurs manquantes) ; j'en suis aux premiers pas et je m'aide encore beaucoup de la documentation et de l'IA."
           },
           {
             "id": "matplotlib",
             "name": "Matplotlib",
             "level": "beginner",
             "projects": ["chatbot"],
-            "description": "Vu dans mes expériences d'IA (courbes d'apprentissage, affichage d'images) ; j'en suis aux premiers pas et je m'aide encore beaucoup de la documentation."
+            "description": "Vu dans mes expériences d'IA (courbes d'apprentissage, affichage d'images) ; j'en suis aux premiers pas et je m'aide encore beaucoup de la documentation et de l'IA."
           },
           {
             "id": "keras",
             "name": "TensorFlow / Keras",
             "level": "beginner",
             "projects": ["chatbot"],
-            "description": "Mes premiers pas en deep learning, dans mes expériences d'IA (réseau de neurones linéaire dont je suis l'apprentissage, détection du GPU avec TensorFlow) ; j'en suis aux premiers pas et je m'aide encore beaucoup de la documentation."
+            "description": "Mes premiers pas en deep learning, dans mes expériences d'IA (réseau de neurones linéaire dont je suis l'apprentissage, détection du GPU avec TensorFlow) ; j'en suis aux premiers pas et je m'aide encore beaucoup de la documentation et de l'IA."
           }
         ]
       },
@@ -494,14 +494,14 @@
             "name": "Docker",
             "level": "beginner",
             "projects": ["inception"],
-            "description": "Vu dans Inception, avec des Dockerfiles et un docker-compose écrits à la main (Nginx, MariaDB, WordPress) ; j'en suis aux premiers pas et je m'aide encore beaucoup de la documentation."
+            "description": "Vu dans Inception, avec des Dockerfiles et un docker-compose écrits à la main (Nginx, MariaDB, WordPress) ; j'en suis aux premiers pas et je m'aide encore beaucoup de la documentation et de l'IA."
           },
           {
             "id": "threejs",
             "name": "Three.js",
             "level": "beginner",
             "projects": ["transcendence"],
-            "description": "Vu dans la version 3D du Pong de Transcendence (modèles, éclairage, caméra animée) ; j'en suis aux premiers pas et je m'aide encore beaucoup de la documentation."
+            "description": "Vu dans la version 3D du Pong de Transcendence (modèles, éclairage, caméra animée) ; j'en suis aux premiers pas et je m'aide encore beaucoup de la documentation et de l'IA."
           }
         ]
       }
