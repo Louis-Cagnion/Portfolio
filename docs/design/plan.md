@@ -12,6 +12,7 @@ Sections : [Principes](#principes), [Critères par rubrique](#critères-par-rubr
 - Contraintes : JavaScript vanilla en modules ES, 320 px minimum, `prefers-reduced-motion`, aucune barre de défilement horizontale, fichiers sous 750 lignes, aucun tiret cadratin.
 - Tests Node : `node --test` depuis la racine ; `node --test tests/` prend le dossier pour un fichier et échoue.
 - Vérifications manuelles dans Chrome : interactions réellement déclenchées ; mouvement réduit via le réglage Windows « Afficher les animations ».
+- Méthode de revue : chaque proposition de design est montrée à Louis en pages réellement rendues et ouvertes dans Chrome (extension Claude in Chrome), un onglet par option ; il tranche sur le rendu, jamais sur un schéma texte.
 - Pièges de la maquette (mesures, polices, boucle d'animation, recentrage) : `docs/design-checklist.md` §6, §8 et §9.
 
 ## Critères par rubrique
@@ -27,7 +28,7 @@ Chaque rubrique (S5 à S9) se termine par sa chasse aux cas limites et une véri
 | S8 | Compétences | `js/sections/skills*.js`, `css/skills.css` | Déploiement, plongée, retour sans à-coup, projets liés qui ouvrent la fiche, lien Devpedia placé selon la maquette validée |
 | S9 | Contact | `js/sections/contact*.js`, `css/contact.css` | Copie avec repli, sillons, disque verrouillé puis moitié haute sur téléphone, annonces aux lecteurs d'écran |
 
-S1 à S4 et S10 n'ont plus de critère propre : `docs/design-checklist.md` (§1 à §9), `tests/data.test.mjs`, `tests/texts.test.mjs`, `README.md` et les groupes `etats`, `langue`, `navigation` et `saut` de `tests/browser/README.md` les couvrent.
+S1 à S4 et S10 n'ont plus de critère propre : `docs/design-checklist.md` (§1 à §9), `tests/data.test.mjs`, `tests/texts.test.mjs`, `README.md` et les groupes `etats`, `langue`, `navigation` et `saut` de la suite navigateur (`tests/browser/`) les couvrent.
 
 ## Décisions de Louis
 
