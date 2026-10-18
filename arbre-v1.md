@@ -1,6 +1,6 @@
 # Arbre : fin de la V1 (S10, crash-test, corrections, fusion dans `main`)
 Statuts : [ ] à faire, [~] en cours, [x] faite, [v] validée, [!] bloquée, [>] reportée au pré-mortem
-Prochaine étape : V1.F1 et V1.F3 en cours (agents haiku), V1.C et V1.D attendent Louis
+Prochaine étape : V1.C et V1.D (Louis), puis V1.G et V1.H
 Moniteur : sonnet/high (réglage `settings.json`, 18/10/2026) : convient pour trier un rapport et chaîner des feuilles de correction ; le crash-test (V1.E) et la relecture avant fusion (V1.H) sont confiés à opus, au-dessus du moniteur
 Objectif de Louis (18/10/2026) : finir la V1 dans la journée.
 
@@ -10,9 +10,9 @@ Objectif de Louis (18/10/2026) : finir la V1 dans la journée.
   - [~] V1.C Louis : relit les textes provisoires sur la page de relecture ; première série de corrections reportée (fichier de Louis du 18/10, plus ses retours du fil : « actuellement » gardé, mention de la documentation retirée aux niveaux Intermédiaire, IA ajoutée aux niveaux Débutant, mention de Claude et des skills de design, Playwright sans allusion au scraping) ; il relit une seconde fois après son repas ; dépend de : rien
   - [ ] V1.D Louis : S8.E2, rendu final des Compétences à 1280 px et en téléphone émulé, confirme la phrase Devpedia réécrite et la lecture « constellation déployée au retour » ; dépend de : S8.E1 (validée)
   - [v] V1.E crashtester opus/high (18/10/2026, 70 min, rapport : aucun bloquant ni majeur, deux mineurs B1 et B2 et divers, tous reportés au pré-mortem dans `todo.md`) : lecture seule, toute la V1 à 320, 390, 768, 1280 et 2560 px, FR et EN, police de 100 % à 200 %, périmètre V1 seulement (aucun cas niche, aucune interruption d'animation, aucun axe du pré-mortem) ; rapport trié bloquant / majeur / mineur ; dépend de : V1.A
-  - [ ] V1.F arbre de correction : aucun constat du crash-test n'y entre (aucun bloquant ni majeur) ; il contient les demandes de Louis du 18/10 ; dépend de : V1.E
-    - [~] V1.F1 fixer haiku/high : l'anneau clavier ne s'allume plus après Échap (sortie d'une constellation, d'un zoom de Projets, fermeture de la fiche ; `focus({ focusVisible: false })`, mesuré dans Chrome 155)
+  - [v] V1.F arbre de correction : aucun constat du crash-test n'y entre (aucun bloquant ni majeur) ; il contient les demandes de Louis du 18/10 ; dépend de : V1.E
+    - [v] V1.F1 fixer haiku/high (commit f3f1bc6 ; vérifié par le moniteur avec de vraies touches dans Chrome) : l'anneau clavier ne s'allume plus après Échap (sortie d'une constellation, d'un zoom de Projets, fermeture de la fiche ; `focus({ focusVisible: false })`, mesuré dans Chrome 155)
     - [v] V1.F2 builder haiku/high : phrase d'indice `ui.errors.langHint` au-dessus des boutons de l'écran d'erreur, version A de Louis avec 28 px de marge haute (commit 364c9a9)
-    - [~] V1.F3 builder haiku/high : phrase Devpedia avant les constellations (entre le chapeau et le plan), décision de Louis du 18/10 qui remplace D4
+    - [v] V1.F3 builder haiku/high (commit e58d9c1 ; vérifié par le moniteur dans Chrome à 1280 px) : phrase Devpedia avant les constellations (entre le chapeau et le plan), décision de Louis du 18/10 qui remplace D4
   - [ ] V1.G Louis : valide la V1 dans Chrome ; dépend de : V1.F, V1.C, V1.D
   - [ ] V1.H moniteur : fusion dans `main` (seulement `index.html`, `css/`, `js/`, `data/`, `assets/` et `README.md`, décision du 10/10/2026), push, puis le pré-mortem ; dépend de : V1.G
