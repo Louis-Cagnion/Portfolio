@@ -445,9 +445,8 @@ export function buildSystems(systems, text, { phone = false, width = 0 } = {}) {
     planets: built.flatMap(({ planets }) => planets),
   };
   const view = { u: unit, camera: { cx: plan.width / 2, w: plan.width }, zoomedIndex: -1 };
-  for (const planet of result.planets) {
+  for (const planet of result.planets)
     renderPlanet(planet, result.systems[planet.systemIndex], view);
-  }
   return result;
 }
 
@@ -467,26 +466,29 @@ export function buildSystems(systems, text, { phone = false, width = 0 } = {}) {
 export function placeLabel(planet, point, view) {
   const { u, camera, zoomedIndex } = view;
   const { x, y } = point;
-  const lw = planet.labelWidth * u;
-  const lh = planet.labelHeight * u;
-  const d = planet.size + GAP * u;
-  let bx = x + d;
-  let by = y - lh / 2;
+  const labelWidth = planet.labelWidth * u;
+  const labelHeight = planet.labelHeight * u;
+  const offset = planet.size + GAP * u;
+  let boxX = x + offset;
+  let boxY = y - labelHeight / 2;
   const left = camera.cx - camera.w / 2 + EDGE * u;
   const right = camera.cx + camera.w / 2 - EDGE * u;
-  if (zoomedIndex === planet.systemIndex && planet.below) {
-    bx = Math.max(left, Math.min(right - lw, x - lw / 2));
-    by = y + planet.size + EDGE * u;
-  } else if (zoomedIndex === planet.systemIndex) {
-    const c = Math.cos(planet.angle);
-    const s = Math.sin(planet.angle);
-    bx = x + d * c - (lw * (1 - c)) / 2;
-    by = y + d * s - (lh * (1 - s)) / 2;
-    const clamped = Math.max(left, Math.min(right - lw, bx));
-    if (Math.abs(clamped - bx) > 1 && Math.abs(s) < 0.6) by = s >= 0 ? y + d : y - d - lh;
-    bx = clamped;
+  if (zoomedIndex === planet.systemIndex) {
+    if (planet.below) {
+      boxX = Math.max(left, Math.min(right - labelWidth, x - labelWidth / 2));
+      boxY = y + planet.size + EDGE * u;
+    } else {
+      const cos = Math.cos(planet.angle);
+      const sin = Math.sin(planet.angle);
+      boxX = x + offset * cos - (labelWidth * (1 - cos)) / 2;
+      boxY = y + offset * sin - (labelHeight * (1 - sin)) / 2;
+      const clamped = Math.max(left, Math.min(right - labelWidth, boxX));
+      if (Math.abs(clamped - boxX) > 1 && Math.abs(sin) < 0.6)
+        boxY = sin >= 0 ? y + offset : y - offset - labelHeight;
+      boxX = clamped;
+    }
   }
-  return { dx: bx - x, dy: by - y, scale: u };
+  return { dx: boxX - x, dy: boxY - y, scale: u };
 }
 
 /**

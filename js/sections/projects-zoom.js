@@ -304,7 +304,7 @@ export function createZoom({ parts, state, renderAll, showSystem }) {
     showSystem(index);
     setHeight(plan, zoomedHeight(system));
     if (state.phone) scrollToPlan();
-    camera.set({ ...overview() });
+    camera.set(overview());
     start('in', system, planetsOf(index), options);
   };
 
@@ -318,7 +318,7 @@ export function createZoom({ parts, state, renderAll, showSystem }) {
     const { built, view } = state;
     if (view.zoomedIndex < 0 || run) return;
     const system = built.systems[view.zoomedIndex];
-    const quiet = options?.quiet === true;
+    const quiet = options.quiet === true;
     lock = null;
     layout.classList.remove('zfocus');
     if (quiet || head.contains(document.activeElement)) focusSun(system.sun, quiet);

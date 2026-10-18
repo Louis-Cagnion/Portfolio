@@ -36,10 +36,11 @@ export function createLoop(root, step) {
   };
 
   const sync = () => {
-    if (wanted() && !handle) {
+    const want = wanted();
+    if (want && !handle) {
       last = performance.now();
       handle = requestAnimationFrame(frame);
-    } else if (!wanted() && handle) {
+    } else if (!want && handle) {
       cancelAnimationFrame(handle);
       handle = 0;
     }
