@@ -486,9 +486,9 @@
           {
             "id": "valgrind",
             "name": "Valgrind",
-            "level": "intermediate",
+            "level": "advanced",
             "projects": ["minishell", "philosophers"],
-            "description": "Utilisé dans mes projets C, où la moindre fuite fait échouer l'évaluation (fuites mémoire, erreurs d'accès) ; je suis à l'aise sur l'essentiel."
+            "description": "Utilisé dans mes projets C, où la moindre fuite fait échouer l'évaluation : j'ai appris à remonter à l'origine d'un bug même quand les fuites venaient d'un autre endroit du code, par exemple une variable mal allouée à l'origine de la première erreur (fuites mémoire, erreurs d'accès) ; c'est un domaine où je suis très à l'aise."
           },
           {
             "id": "docker",

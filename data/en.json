@@ -486,9 +486,9 @@
           {
             "id": "valgrind",
             "name": "Valgrind",
-            "level": "intermediate",
+            "level": "advanced",
             "projects": ["minishell", "philosophers"],
-            "description": "Used in my C projects, where the slightest leak fails the evaluation (memory leaks, access errors); I am comfortable with the essentials."
+            "description": "Used in my C projects, where the slightest leak fails the evaluation: I learned to trace a bug back to its origin even when the leaks came from elsewhere in the code, for example a badly allocated variable behind the first error (memory leaks, access errors); this is an area where I am very comfortable."
           },
           {
             "id": "docker",
