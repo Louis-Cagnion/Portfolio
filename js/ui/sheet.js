@@ -1,6 +1,7 @@
 /*
 Fiche projet : volet à droite (feuille du bas à 880 px et moins) qui détaille un projet.
-Contrat : initSheet(doc) rend { open(view, origin), update(view), close(), isOpen() } ;
+Contrat : initSheet(doc) rend { open(view, origin), update(view), close(options), isOpen() } ;
+`options.quiet` (fermeture par Échap) rend le focus sans anneau de focus clavier.
 view = { category, title, tags, blocks: [{ type: 'text', html } | { type: 'list', items }],
 links: [{ intro, label, href }] }. Les `html` ne passent que par setRich. S8 réutilise ce
 module pour ouvrir un projet lié. Balisage et styles : index.html, css/projects.css.
@@ -75,7 +76,8 @@ function shapeOf(view) {
  *
  * @returns {{ open: Function, update: Function, close: Function, isOpen: Function }}
  *   open(view, origin) affiche la fiche (origin reçoit le focus à la fermeture), update(view)
- *   réécrit ses textes sur place, close() la ferme, isOpen() dit si elle est ouverte
+ *   réécrit ses textes sur place, close(options) la ferme (`quiet` : par Échap, focus sans
+ *   anneau), isOpen() dit si elle est ouverte
  */
 export function initSheet(doc) {
   if (controllers.has(doc)) return controllers.get(doc);
@@ -145,12 +147,13 @@ export function initSheet(doc) {
     list[event.shiftKey ? list.length - 1 : 0]?.focus();
   };
 
-  const restoreFocus = () => {
+  const restoreFocus = (quiet) => {
     const planet = [...doc.querySelectorAll('#projects .planet[tabindex="0"][aria-label]')]
       .find((node) => node.getAttribute('aria-label') === state.title);
     const targets = [state.origin, planet, doc.querySelector('#projects h2')];
+    const options = quiet ? { focusVisible: false } : undefined;
     for (const target of targets) {
-      target?.focus?.();
+      target?.focus?.(options);
       if (target && doc.activeElement === target) return;
     }
   };
@@ -180,7 +183,7 @@ export function initSheet(doc) {
     parts.close.focus();
   };
 
-  const close = () => {
+  const close = (options) => {
     if (!state.open) return;
     state.open = false;
     setStill();
@@ -191,7 +194,7 @@ export function initSheet(doc) {
       node.inert = false;
     });
     state.held = [];
-    restoreFocus();
+    restoreFocus(options?.quiet === true);
     if (still()) hide();
     else state.timer = setTimeout(hide, HIDE_DELAY_MS);
   };
@@ -205,7 +208,7 @@ export function initSheet(doc) {
   doc.addEventListener('keydown', (event) => {
     if (event.key !== 'Escape' || !state.open) return;
     event.preventDefault();
-    close();
+    close({ quiet: true });
   });
 
   const controller = {

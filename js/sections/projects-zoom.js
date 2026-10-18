@@ -111,10 +111,24 @@ function columnWidth(plan) {
 }
 
 /**
+ * @brief Rend le focus au soleil, sans anneau de focus clavier après Échap (`quiet`).
+ *
+ * Un soleil déjà focalisé (zoom par Entrée, puis Échap) ignore `focus()` : il perd d'abord
+ * le focus, pour que `focusVisible: false` s'applique.
+ *
+ * @param {SVGGElement} sun soleil du système sorti
+ * @param {boolean} quiet sortie par Échap
+ */
+function focusSun(sun, quiet) {
+  if (quiet && document.activeElement === sun) sun.blur();
+  sun.focus(quiet ? { preventScroll: true, focusVisible: false } : { preventScroll: true });
+}
+
+/**
  * @brief Couture du zoom : entrée, sortie et pas d'animation d'un système.
  *
  * `enter(index)` est appelée à chaque clic ou touche sur un soleil (ignorée si un zoom est
- * posé), `exit()` par le bouton retour et Échap, `step(dt)` par la boucle de la rubrique.
+ * posé), `exit(options)` par le bouton retour et Échap (`quiet`), `step(dt)` par la boucle.
  * `toPlanet(planet)` (projet lié de Compétences) emmène la caméra jusqu'à une planète, puis
  * fige la rotation du système (d'un seul mouvement, sauf si un autre système est zoomé :
  * sortie puis entrée) ; `release()` rend la caméra au système et relance la rotation.
@@ -122,7 +136,7 @@ function columnWidth(plan) {
  * @param {object} context fermetures de `mount` : `parts` (nœuds fixes), `state` (`built`,
  *   `view`, `phone`), `renderAll` (replace les planètes), `showSystem` (en-tête et intro)
  *
- * @returns {object} commandes du zoom : `enter(index)`, `exit()`, `step(dt)`,
+ * @returns {object} commandes du zoom : `enter(index)`, `exit(options)`, `step(dt)`,
  *   `toPlanet(planet)` (Promise résolue à l'arrivée de la caméra) et `release()`
  */
 export function createZoom({ parts, state, renderAll, showSystem }) {
@@ -208,7 +222,7 @@ export function createZoom({ parts, state, renderAll, showSystem }) {
       plan.style.removeProperty('height');
       plan.style.aspectRatio = `${built.width} / ${built.height}`;
       place(overview());
-      finished.system.sun.focus({ preventScroll: true });
+      focusSun(finished.system.sun, finished.quiet);
     }
     finished.resolve?.();
   };
@@ -231,7 +245,7 @@ export function createZoom({ parts, state, renderAll, showSystem }) {
   /**
    * Lance l'animation `kind` (in, out, track, release) ; sous mouvement réduit, elle se
    * termine aussitôt. `options.planet` : la caméra rejoint cette planète, `options.resolve` :
-   * rappel de la fin.
+   * rappel de la fin, `options.quiet` : sortie par Échap (focus du soleil sans anneau).
    */
   const start = (kind, system, planets, options = {}) => {
     const { built } = state;
@@ -256,6 +270,7 @@ export function createZoom({ parts, state, renderAll, showSystem }) {
       elapsed: 0,
       done: 0,
       resolve: options.resolve,
+      quiet: options.quiet === true,
     };
     if (reduced()) complete();
   };
@@ -296,15 +311,17 @@ export function createZoom({ parts, state, renderAll, showSystem }) {
   /**
    * Sort du zoom (sans effet au repos ou pendant une animation) ; focus rendu au soleil.
    *
-   * @param {object} [options] `resolve` : rappel une fois le plan revenu au repos
+   * @param {object} [options] `quiet` : sortie par Échap, focus sans anneau ; `resolve` :
+   *   rappel une fois le plan revenu au repos
    */
   const exit = (options = {}) => {
     const { built, view } = state;
     if (view.zoomedIndex < 0 || run) return;
     const system = built.systems[view.zoomedIndex];
+    const quiet = options?.quiet === true;
     lock = null;
     layout.classList.remove('zfocus');
-    if (head.contains(document.activeElement)) system.sun.focus({ preventScroll: true });
+    if (head.contains(document.activeElement)) focusSun(system.sun, quiet);
     for (const each of built.systems) each.g.classList.remove('on', 'dim');
     for (const planet of planetsOf(system.index)) setPlanetActive(planet.nodes.g, false);
     setHeight(plan, (columnWidth(plan) * built.height) / built.width);
@@ -384,7 +401,7 @@ export function createZoom({ parts, state, renderAll, showSystem }) {
   document.addEventListener('keydown', (event) => {
     if (event.defaultPrevented || event.key !== 'Escape' || state.view.zoomedIndex < 0) return;
     if (!layout.parentElement?.classList.contains('on')) return;
-    if (!initSheet(document).isOpen()) exit();
+    if (!initSheet(document).isOpen()) exit({ quiet: true });
   });
   plan.addEventListener('pointerenter', () => {
     hovered = true;

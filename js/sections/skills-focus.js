@@ -2,8 +2,9 @@
 Compétences, déploiement d'une constellation : étoiles écartées et caméra (1000 ms), plongée
 sur la première étoile (950 ms), saut d'étoile avec recul (1400 ms), retour à la vue
 d'ensemble (1200 ms). Même couture que `createZoom` de projects-zoom.js : skills.js appelle
-`enter(index)`, `go(rank)` et `exit()` ; le panneau (skills-panel.js) naît au premier
-déploiement et se vide au retour.
+`enter(index)`, `go(rank)` et `exit(options)` ; `options.quiet` (sortie par Échap) rend le
+focus sans anneau de focus clavier. Le panneau (skills-panel.js) naît au premier déploiement
+et se vide au retour.
 Mécanique de la maquette P2 (choix de Louis du 17/10/2026) : docs/design/s8/mockup-skills.js.
 Calculs d'image : skills-pose.js ; règles : css/skills.css.
 Une seule boucle `requestAnimationFrame`, qui lit `performance.now()` à chaque image : la
@@ -93,10 +94,10 @@ function scrollToPlan(layout) {
  * @param {object} context.camera caméra du plan (`makeCamera`)
  * @param {(id: string, button: HTMLButtonElement) => void} context.onRelated projet lié
  *
- * @returns {object} commandes : `enter(index)`, `go(rank)`, `exit()`, `attach(built)` (câble
- *   les étoiles d'une vue d'ensemble neuve), `reset()` (repos sans animation), `relabel()`
- *   (bascule de langue), `recentre()` (redimensionnement), `moving()` (vrai de l'entrée à
- *   la fin de la dernière animation)
+ * @returns {object} commandes : `enter(index)`, `go(rank)`, `exit(options)`,
+ *   `attach(built)` (câble les étoiles d'une vue d'ensemble neuve), `reset()` (repos sans
+ *   animation), `relabel()` (bascule de langue), `recentre()` (redimensionnement), `moving()`
+ *   (vrai de l'entrée à la fin de la dernière animation)
  */
 export function createFocus({ root, parts, state, camera, onRelated }) {
   const { plan, layout, panel: host } = parts;
@@ -272,9 +273,13 @@ export function createFocus({ root, parts, state, camera, onRelated }) {
     host.querySelector('#skill').classList.remove('traveling');
   };
 
-  /** Rend le focus à `node` si la rubrique est encore affichée (jamais pendant un saut). */
-  const focusIfShown = (node) => {
-    if (root.classList.contains('on')) node.focus({ preventScroll: true });
+  /**
+   * Rend le focus à `node` si la rubrique est encore affichée (jamais pendant un saut) ;
+   * `quiet` (retour par Échap) le rend sans anneau de focus clavier.
+   */
+  const focusIfShown = (node, quiet = false) => {
+    if (!root.classList.contains('on')) return;
+    node.focus(quiet ? { preventScroll: true, focusVisible: false } : { preventScroll: true });
   };
 
   /** Garde le panneau dans le flux le temps du retour (téléphone), replié par `--fold`. */
@@ -291,8 +296,8 @@ export function createFocus({ root, parts, state, camera, onRelated }) {
     host.style.removeProperty('--fold-h');
   };
 
-  /** Retour à la vue d'ensemble (bouton « Toutes les compétences », Échap). */
-  const exit = async () => {
+  /** Retour à la vue d'ensemble (bouton, Échap) ; `options.quiet` : focus sans anneau. */
+  const exit = async (options) => {
     if (busy || !deck) return;
     busy = true;
     const token = epoch;
@@ -329,7 +334,7 @@ export function createFocus({ root, parts, state, camera, onRelated }) {
     host.replaceChildren();
     deck = null;
     settle();
-    focusIfShown(built.node);
+    focusIfShown(built.node, options?.quiet === true);
   };
 
   /** Saut à l'étoile de rang `to` : puce, flèche, clic ou touche sur une étoile. */
@@ -444,7 +449,7 @@ export function createFocus({ root, parts, state, camera, onRelated }) {
   document.addEventListener('keydown', (event) => {
     if (event.defaultPrevented || event.key !== 'Escape' || !state.selection.group) return;
     if (!root.classList.contains('on')) return;
-    if (!initSheet(document).isOpen()) exit();
+    if (!initSheet(document).isOpen()) exit({ quiet: true });
   });
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) hurryUp();

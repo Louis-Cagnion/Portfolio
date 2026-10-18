@@ -43,6 +43,7 @@ import { runUnavailable } from './unavailable.js';
 import { runContact } from './contact.js';
 import { runSheet } from './sheet.js';
 import { runSheetFocus } from './sheet-focus.js';
+import { runEscapeProjects, runEscapeSheet, runEscapeSkills } from './escape-focus.js';
 import { runProjects } from './projects.js';
 import { runSkills } from './skills.js';
 import { runJourney } from './journey.js';
@@ -449,13 +450,18 @@ async function main() {
     if (groups.includes('fiche')) {
       await scenario('fiche', () => runSheet(widths, mainWidth));
       await scenario('fiche (replis du focus)', () => runSheetFocus(widths));
+      await scenario('fiche (retour par Échap et clic)', () => runEscapeSheet(widths));
     }
-    if (groups.includes('projets'))
+    if (groups.includes('projets')) {
       for (const width of widths)
         await scenario(`projets ${width}`, () => runProjects([width], mainWidth));
-    if (groups.includes('competences'))
+      await scenario('projets (retour par Échap et clic)', () => runEscapeProjects(widths));
+    }
+    if (groups.includes('competences')) {
       for (const width of widths)
         await scenario(`competences ${width}`, () => runSkills([width], mainWidth));
+      await scenario('competences (retour par Échap et clic)', () => runEscapeSkills(widths));
+    }
     if (groups.includes('parcours'))
       await scenario('parcours', () => runJourney(widths, mainWidth));
     if (groups.includes('etroit')) await scenario('barres étroites', runNarrow);
