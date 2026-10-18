@@ -135,9 +135,9 @@ function sheetView(projects, { system, project }) {
   return {
     category: format(projects.systemOf, { name: system.name }),
     title: plainTitle(project.title),
-    tags: project.tags,
+    tags: project.tags ?? [],
     blocks: project.blocks,
-    links: project.links,
+    links: project.links ?? [],
   };
 }
 
@@ -310,12 +310,15 @@ export function mount(root) {
 
   /** Rend la caméra au système dès que la fiche est fermée (Échap, bouton ou fond). */
   const releaseOnClose = () => {
+    const sheet = document.getElementById('sheet');
+    if (!sheet)
+      throw new Error('projects : élément #sheet absent de la page');
     const watch = new MutationObserver(() => {
       if (initSheet(document).isOpen()) return;
       watch.disconnect();
       zoom.release();
     });
-    watch.observe(document.getElementById('sheet'), {
+    watch.observe(sheet, {
       attributes: true,
       attributeFilter: ['class'],
     });
