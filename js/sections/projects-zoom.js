@@ -40,7 +40,8 @@ const TILT_PHONE = 0.9;
 const TILT_PISCINE = 1; // orbites en cercles
 const FOCUS_PAD = 46; // marge au-dessus et au-dessous de la plus grande orbite
 const ORBIT_PAD = 80; // marge latérale de la plus grande orbite
-const BLEED = 24; // débord du plan de la Piscine, 12 px de chaque côté
+// débord du plan de la Piscine, 12 px de chaque côté, égal au débord de css/projects.css
+const BLEED = 24;
 const SCROLL_MARGIN = 8;
 const PLANET_SHARE = 0.45; // largeur de la caméra sur une planète, en part de celle du système
 

@@ -38,7 +38,8 @@ const SUN_RADIUS = 16;
 const SUN_NAME_Y = 112;
 const SUN_COUNT_Y = 132;
 const HIT_MARGIN = 10; // zone de survol : rayon de la planète plus cette marge
-const LABEL_FONT = '500 12.5px "IBM Plex Sans", sans-serif';
+const LABEL_FONT_SIZE = 12.5; // px
+const LABEL_FONT = `500 ${LABEL_FONT_SIZE}px "IBM Plex Sans", sans-serif`;
 const LABEL_PAD = 16;
 const LABEL_LINE = 14;
 const LABEL_BASE = 8;
@@ -48,8 +49,19 @@ const LABEL_RADIUS = 4;
 const SPLIT_OVER = 20; // téléphone : un titre de plus de 20 caractères se coupe en deux
 const GAP = 6; // écart entre planète et étiquette, en pixels d'écran
 const EDGE = 4; // marge de l'étiquette zoomée au bord de la vue, en pixels d'écran
-const FALLBACK_EM = 0.6; // largeur d'un caractère sans contexte 2D, en fraction de 12,5 px
-const SPEED_UNIT = 0.00012 * 180;
+const FALLBACK_EM = 0.6; // largeur d'un caractère sans contexte 2D, en fraction de la police
+const REF_SPEED = 0.00012; // rad/ms à REF_RADIUS
+const REF_RADIUS = 180; // rayon de référence des vitesses, en unités du plan
+const SPEED_UNIT = REF_SPEED * REF_RADIUS; // la vitesse angulaire varie en 1/rayon
+const LABEL_CLAMP_TOLERANCE = 1; // débord toléré avant de passer l'étiquette dessus/dessous
+const LABEL_SIDE_SIN = 0.6; // sinus en dessous duquel la planète est sur un côté
+const FAR_OPACITY = 0.75; // planète derrière le soleil
+const SUN_GLOW_STOP = 0.55; // part du rayon où la lueur du soleil commence à s'éteindre
+const PLANET_SHINE = { cx: 0.35, cy: 0.3, r: 0.8 }; // reflet des planètes (haut gauche)
+// décimales des attributs SVG écrits : positions, rayons, échelle
+const POSITION_DIGITS = 1;
+const RADIUS_DIGITS = 2;
+const SCALE_DIGITS = 4;
 
 let measurer = null; // contexte canvas de mesure, créé une seule fois
 
@@ -126,7 +138,7 @@ function measuringContext() {
  */
 export function textWidth(text) {
   const context = measuringContext();
-  if (!context) return text.length * FALLBACK_EM * 12.5;
+  if (!context) return text.length * FALLBACK_EM * LABEL_FONT_SIZE;
   context.font = LABEL_FONT;
   return context.measureText(text).width;
 }
@@ -210,9 +222,9 @@ function gradients(id) {
   }));
   return [
     svg('radialGradient', { id: `sun-${id}` }, ...stops([
-      [0, sun[0]], [0.55, sun[1]], [1, sun[1], 0],
+      [0, sun[0]], [SUN_GLOW_STOP, sun[1]], [1, sun[1], 0],
     ])),
-    svg('radialGradient', { id: `planet-${id}`, cx: 0.35, cy: 0.3, r: 0.8 }, ...stops([
+    svg('radialGradient', { id: `planet-${id}`, ...PLANET_SHINE }, ...stops([
       [0, planet[0]], [1, planet[1]],
     ])),
   ];
@@ -473,7 +485,7 @@ export function placeLabel(planet, point, view) {
       boxX = x + offset * cos - (labelWidth * (1 - cos)) / 2;
       boxY = y + offset * sin - (labelHeight * (1 - sin)) / 2;
       const clamped = Math.max(left, Math.min(right - labelWidth, boxX));
-      if (Math.abs(clamped - boxX) > 1 && Math.abs(sin) < 0.6)
+      if (Math.abs(clamped - boxX) > LABEL_CLAMP_TOLERANCE && Math.abs(sin) < LABEL_SIDE_SIN)
         boxY = sin >= 0 ? y + offset : y - offset - labelHeight;
       boxX = clamped;
     }
@@ -498,7 +510,7 @@ export function placePlanet(planet, system, view) {
   return {
     x,
     y,
-    opacity: Math.sin(planet.angle) < 0 ? 0.75 : 1,
+    opacity: Math.sin(planet.angle) < 0 ? FAR_OPACITY : 1,
     hitRadius: planet.below ? HIT_RADIUS * view.u : null,
     label: placeLabel(planet, { x, y }, view),
   };
@@ -517,13 +529,17 @@ export function renderPlanet(planet, system, view) {
   const placed = placePlanet(planet, system, view);
   const { nodes } = planet;
   const { dx, dy, scale } = placed.label;
-  const position = `translate(${placed.x.toFixed(1)} ${placed.y.toFixed(1)})`;
+  const px = placed.x.toFixed(POSITION_DIGITS);
+  const py = placed.y.toFixed(POSITION_DIGITS);
+  const position = `translate(${px} ${py})`;
   nodes.g.setAttribute('transform', position);
   nodes.g.style.opacity = placed.opacity;
-  if (placed.hitRadius !== null) nodes.hit.setAttribute('r', placed.hitRadius.toFixed(2));
+  if (placed.hitRadius !== null)
+    nodes.hit.setAttribute('r', placed.hitRadius.toFixed(RADIUS_DIGITS));
   nodes.label.setAttribute(
     'transform',
-    `translate(${dx.toFixed(1)} ${dy.toFixed(1)}) scale(${scale.toFixed(4)})`,
+    `translate(${dx.toFixed(POSITION_DIGITS)} ${dy.toFixed(POSITION_DIGITS)})`
+      + ` scale(${scale.toFixed(SCALE_DIGITS)})`,
   );
   return placed;
 }
@@ -535,7 +551,7 @@ export function renderPlanet(planet, system, view) {
  * @param {number} tilt rapport de l'axe vertical sur l'axe horizontal
  */
 export function tiltOrbit(orbit, tilt) {
-  orbit.setAttribute('ry', (Number(orbit.getAttribute('rx')) * tilt).toFixed(2));
+  orbit.setAttribute('ry', (Number(orbit.getAttribute('rx')) * tilt).toFixed(RADIUS_DIGITS));
 }
 
 /**
@@ -565,7 +581,7 @@ export function rescalePhone(system, planets, width) {
   const k = phoneUnit(width);
   const rings = systemRadii(system.id, { phone: true }).map((radius) => radius * k);
   system.orbits.forEach((orbit, n) => {
-    orbit.setAttribute('rx', rings[n].toFixed(2));
+    orbit.setAttribute('rx', rings[n].toFixed(RADIUS_DIGITS));
     tiltOrbit(orbit, system.tilt);
   });
   for (const planet of planets) {
