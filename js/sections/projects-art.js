@@ -20,6 +20,7 @@ API :
 camera = centre et largeur du plan visible, zoomedIndex = système zoomé (-1 au repos).
 */
 import { svg } from '../core/dom.js';
+import { format } from '../core/i18n.js';
 import {
   HIT_RADIUS,
   PISCINE_ID,
@@ -239,14 +240,14 @@ function gradients(id) {
  */
 function buildSun(system, center, text) {
   const { x, y } = center;
-  const count = text.count.replace('{n}', system.projects.length);
+  const count = format(text.count, { n: system.projects.length });
   return svg(
     'g',
     {
       class: 'sun-btn',
       tabindex: 0,
       role: 'button',
-      'aria-label': text.approach.replace('{name}', system.name),
+      'aria-label': format(text.approach, { name: system.name }),
     },
     svg('circle', {
       class: 'sun-glow', cx: x, cy: y, r: SUN_GLOW_RADIUS, fill: `url(#sun-${system.id})`,
@@ -394,6 +395,7 @@ function buildSystem(data, index, cell, context) {
     cx: center.x,
     cy: center.y,
     tilt: TILT,
+    restTilt: TILT,
     orbits,
     maxRadius: Math.max(...radii),
     phonePis,
@@ -447,7 +449,7 @@ export function buildSystems(systems, text, { phone = false, width = 0 } = {}) {
     systems: built.map(({ system }) => system),
     planets: built.flatMap(({ planets }) => planets),
   };
-  const view = { u: unit, camera: { cx: plan.width / 2, w: plan.width }, zoomedIndex: -1 };
+  const view = restView(plan.width, unit);
   for (const planet of result.planets)
     renderPlanet(planet, result.systems[planet.systemIndex], view);
   return result;
@@ -542,6 +544,29 @@ export function renderPlanet(planet, system, view) {
 }
 
 /**
+ * @brief Pose le petit axe d'une orbite : `ry` = `rx` fois l'inclinaison.
+ *
+ * @param {Element} orbit ellipse de l'orbite, dont `rx` est déjà posé
+ * @param {number} tilt rapport de l'axe vertical sur l'axe horizontal
+ */
+export function tiltOrbit(orbit, tilt) {
+  orbit.setAttribute('ry', (Number(orbit.getAttribute('rx')) * tilt).toFixed(2));
+}
+
+/**
+ * @brief Vue au repos : caméra centrée sur tout le plan, aucun système zoomé.
+ *
+ * @param {number} width largeur du plan, en unités du viewBox
+ * @param {number} unit unité de mesure du plan
+ *
+ * @returns {{ u: number, camera: { cx: number, w: number }, zoomedIndex: number }}
+ *   objet neuf, à muter par l'appelant
+ */
+export function restView(width, unit) {
+  return { u: unit, camera: { cx: width / 2, w: width }, zoomedIndex: -1 };
+}
+
+/**
  * @brief Rayons de la Piscine sur téléphone : fixes en pixels, donc suivent la largeur.
  *
  * Sans effet sur les autres systèmes. L'appelant replace ensuite les planètes.
@@ -556,7 +581,7 @@ export function rescalePhone(system, planets, width) {
   const rings = systemRadii(system.id, { phone: true }).map((radius) => radius * k);
   system.orbits.forEach((orbit, n) => {
     orbit.setAttribute('rx', rings[n].toFixed(2));
-    orbit.setAttribute('ry', (rings[n] * system.tilt).toFixed(2));
+    tiltOrbit(orbit, system.tilt);
   });
   for (const planet of planets) {
     if (planet.systemIndex === system.index) planet.radius = rings[planet.ring];
