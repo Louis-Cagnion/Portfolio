@@ -1,6 +1,6 @@
 # Arbre : fin de la V1 (S10, crash-test, corrections, fusion dans `main`)
 Statuts : [ ] à faire, [~] en cours, [x] faite, [v] validée, [!] bloquée, [>] reportée au pré-mortem
-Prochaine étape : V1.F4 (agent), puis V1.D et V1.G (Louis), V1.H
+Prochaine étape : V1.D et V1.G (Louis), puis V1.H (fusion dans `main`)
 Moniteur : sonnet/high (réglage `settings.json`, 18/10/2026) : convient pour trier un rapport et chaîner des feuilles de correction ; le crash-test (V1.E) et la relecture avant fusion (V1.H) sont confiés à opus, au-dessus du moniteur
 Objectif de Louis (18/10/2026) : finir la V1 dans la journée.
 
@@ -14,6 +14,7 @@ Objectif de Louis (18/10/2026) : finir la V1 dans la journée.
     - [v] V1.F1 fixer haiku/high (commit f3f1bc6 ; vérifié par le moniteur avec de vraies touches dans Chrome) : l'anneau clavier ne s'allume plus après Échap (sortie d'une constellation, d'un zoom de Projets, fermeture de la fiche ; `focus({ focusVisible: false })`, mesuré dans Chrome 155)
     - [v] V1.F2 builder haiku/high : phrase d'indice `ui.errors.langHint` au-dessus des boutons de l'écran d'erreur, version A de Louis avec 28 px de marge haute (commit 364c9a9)
     - [v] V1.F3 builder haiku/high (commit e58d9c1 ; vérifié par le moniteur dans Chrome à 1280 px) : phrase Devpedia avant les constellations (entre le chapeau et le plan), décision de Louis du 18/10 qui remplace D4
-    - [~] V1.F4 builder sonnet/high : le nom de l'étoile « Tests unitaires JavaScript » sur deux lignes en vue d'ensemble (champ optionnel `nameLines`), dernière demande de Louis avant sa validation
+    - [v] V1.F4 builder sonnet/high puis V1.F4b sonnet/medium (commit 3e63bea ; variante 4 choisie par Louis dans Chrome : bloc décalé de 24 px à gauche en vue d'ensemble, centré une fois déployé ; groupe `competences` 714 réussis, 2 délais d'iframe du banc non reproduits au rejeu à 1280 px, 217 réussis ; `suite.js` : garde-fou d'un scénario relevé de 300 à 480 s) : le nom de l'étoile « Tests unitaires JavaScript » sur deux lignes en vue d'ensemble (champ optionnel `nameLines`), dernière demande de Louis avant sa validation
+    - [v] V1.F5 fixer haiku/high (commit a58b06f ; 53 projets contrôlés, 106 cas rouges puis 155 verts) : la fiche d'un projet n'ajoute plus le résumé devant ses blocs (doublon vu par Louis) ; le champ `summary` des données n'est plus affiché nulle part, son sort est à trancher (`todo.md`)
   - [ ] V1.G Louis : valide la V1 dans Chrome ; dépend de : V1.F, V1.C, V1.D
   - [ ] V1.H moniteur : fusion dans `main` (seulement `index.html`, `css/`, `js/`, `data/`, `assets/` et `README.md`, décision du 10/10/2026), push, puis le pré-mortem ; dépend de : V1.G
