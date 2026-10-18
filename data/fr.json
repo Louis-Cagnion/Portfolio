@@ -805,7 +805,23 @@
             "blocks": [
               {
                 "type": "text",
-                "html": "La suite de ma libft : plus de 150 fonctions C rangées par thème, réutilisées dans chacun de mes projets C. Les thèmes : listes chaînées (création et copie, ajout, accès et recherche, tri, fusion, inversion, suppression conditionnelle, parcours avec une fonction, affichage, libération) ; chaînes de caractères (longueur, comparaison, recherche d'occurrences, copie, concaténation, découpage, inversion, échange de caractères, remplacement, suppression, rognage, application d'une fonction à chaque caractère) ; tableaux de chaînes (duplication et concaténation) ; mathématiques (minimum et maximum, valeur absolue, puissance, factorielle, racine carrée, nombres premiers, calcul d'expressions avec parenthèses) ; conversions (chaînes en entiers et en flottants, nombres en chaînes, changements de base, majuscules et minuscules) ; mémoire (allocation, calloc, realloc, duplication, plages d'entiers) et libération groupée ; lecture de fichiers ; affichage (caractères, chaînes, nombres dans une base, tableaux) ; vérifications de caractères ; couleurs et styles de texte ANSI ; un sscanf écrit à la main."
+                "html": "La suite de ma libft : plus de 150 fonctions C rangées par thème, réutilisées dans chacun de mes projets C. Les thèmes :"
+              },
+              {
+                "type": "list",
+                "items": [
+                  "Listes chaînées : création et copie, ajout, accès et recherche, tri, fusion, inversion, suppression conditionnelle, parcours avec une fonction, affichage, libération",
+                  "Chaînes de caractères : longueur, comparaison, recherche d'occurrences, copie, concaténation, découpage, inversion, échange de caractères, remplacement, suppression, rognage, application d'une fonction à chaque caractère",
+                  "Tableaux de chaînes : duplication et concaténation",
+                  "Mathématiques : minimum et maximum, valeur absolue, puissance, factorielle, racine carrée, nombres premiers, calcul d'expressions avec parenthèses",
+                  "Conversions : chaînes en entiers et en flottants, nombres en chaînes, changements de base, majuscules et minuscules",
+                  "Mémoire : allocation, calloc, realloc, duplication, plages d'entiers, libération groupée",
+                  "Fichiers : lecture",
+                  "Affichage : caractères, chaînes, nombres dans une base, tableaux",
+                  "Vérifications : caractères alphanumériques, alphabétiques, numériques, ASCII, imprimables, espaces et bornes",
+                  "Couleurs et styles de texte ANSI",
+                  "Un sscanf écrit à la main"
+                ]
               }
             ],
             "links": [],
@@ -847,7 +863,18 @@
             "blocks": [
               {
                 "type": "text",
-                "html": "De petits programmes, surtout en C++, pour les jeux auxquels je joue : un calculateur de multiplicateurs de types pour Pokémon et un autre pour Temtem (en attaque ou en défense, par types ou par créature), un calculateur du nombre de cartes nécessaires pour dépasser le score maximal de Balatro, un catalogue des statistiques des ballons (par vie et par manche) et des singes de Bloons TD 6, un chercheur de mots pour Tusmo (lettres imposées, préfixe, lettres exclues, dictionnaire français), et un système de jeu inspiré de Solo Leveling, en C, avec sauvegardes."
+                "html": "De petits programmes, surtout en C++, pour les jeux auxquels je joue :"
+              },
+              {
+                "type": "list",
+                "items": [
+                  "Pokémon : un calculateur de multiplicateurs de types, en attaque ou en défense",
+                  "Temtem : le même calculateur, par types ou par créature",
+                  "Balatro : un calculateur du nombre de cartes nécessaires pour dépasser le score maximal",
+                  "Bloons TD 6 : un catalogue des statistiques des ballons (par vie et par manche) et des singes",
+                  "Tusmo : un chercheur de mots (lettres imposées, préfixe, lettres exclues, dictionnaire français)",
+                  "Solo Leveling : un système de jeu inspiré de la série, en C, avec sauvegardes"
+                ]
               }
             ],
             "links": [],

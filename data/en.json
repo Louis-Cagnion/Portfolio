@@ -805,7 +805,23 @@
             "blocks": [
               {
                 "type": "text",
-                "html": "The sequel to my libft: more than 150 C functions grouped by theme, reused in each of my C projects. The themes: linked lists (creation and copy, insertion, access and search, sorting, merging, reversal, conditional removal, iteration with a function, printing, freeing); strings (length, comparison, occurrence search, copy, concatenation, splitting, reversal, character swapping, replacement, removal, trimming, applying a function to each character); string arrays (duplication and concatenation); maths (minimum and maximum, absolute value, power, factorial, square root, prime numbers, expression evaluation with parentheses); conversions (strings to integers and floats, numbers to strings, base changes, upper and lower case); memory (allocation, calloc, realloc, duplication, integer ranges) and grouped freeing; file reading; printing (characters, strings, numbers in a base, arrays); character checks; ANSI text colours and styles; a hand-written sscanf."
+                "html": "The sequel to my libft: more than 150 C functions grouped by theme, reused in each of my C projects. The themes:"
+              },
+              {
+                "type": "list",
+                "items": [
+                  "Linked lists: creation and copy, insertion, access and search, sorting, merging, reversal, conditional removal, iteration with a function, printing, freeing",
+                  "Strings: length, comparison, occurrence search, copy, concatenation, splitting, reversal, character swapping, replacement, removal, trimming, applying a function to each character",
+                  "String arrays: duplication and concatenation",
+                  "Maths: minimum and maximum, absolute value, power, factorial, square root, prime numbers, expression evaluation with parentheses",
+                  "Conversions: strings to integers and floats, numbers to strings, base changes, upper and lower case",
+                  "Memory: allocation, calloc, realloc, duplication, integer ranges, grouped freeing",
+                  "Files: reading",
+                  "Printing: characters, strings, numbers in a base, arrays",
+                  "Checks: alphanumeric, alphabetic, numeric, ASCII and printable characters, whitespace and bounds",
+                  "ANSI text colours and styles",
+                  "A hand-written sscanf"
+                ]
               }
             ],
             "links": [],
@@ -847,7 +863,18 @@
             "blocks": [
               {
                 "type": "text",
-                "html": "Small programs, mostly in C++, for the games I play: a type-multiplier calculator for Pokémon and another for Temtem (attacking or defending, by type or by creature), a calculator for the number of cards needed to exceed Balatro's maximum score, a catalogue of the bloon stats (by health and by round) and monkey stats of Bloons TD 6, a word finder for Tusmo (required letters, prefix, excluded letters, French dictionary), and a game system inspired by Solo Leveling, in C, with saves."
+                "html": "Small programs, mostly in C++, for the games I play:"
+              },
+              {
+                "type": "list",
+                "items": [
+                  "Pokémon: a type-multiplier calculator, attacking or defending",
+                  "Temtem: the same calculator, by type or by creature",
+                  "Balatro: a calculator for the number of cards needed to exceed the maximum score",
+                  "Bloons TD 6: a catalogue of the bloon stats (by health and by round) and monkey stats",
+                  "Tusmo: a word finder (required letters, prefix, excluded letters, French dictionary)",
+                  "Solo Leveling: a game system inspired by the series, in C, with saves"
+                ]
               }
             ],
             "links": [],
