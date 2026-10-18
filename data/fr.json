@@ -805,7 +805,7 @@
             "blocks": [
               {
                 "type": "text",
-                "html": "La suite de ma libft : plus de 150 fonctions C rangées par thème (chaînes, listes chaînées, mathématiques et conversions de bases, mémoire, fichiers, affichage en couleurs, vérifications), réutilisées dans chacun de mes projets C."
+                "html": "La suite de ma libft : plus de 150 fonctions C rangées par thème, réutilisées dans chacun de mes projets C. Les thèmes : listes chaînées (création et copie, ajout, accès et recherche, tri, fusion, inversion, suppression conditionnelle, parcours avec une fonction, affichage, libération) ; chaînes de caractères (longueur, comparaison, recherche d'occurrences, copie, concaténation, découpage, inversion, échange de caractères, remplacement, suppression, rognage, application d'une fonction à chaque caractère) ; tableaux de chaînes (duplication et concaténation) ; mathématiques (minimum et maximum, valeur absolue, puissance, factorielle, racine carrée, nombres premiers, calcul d'expressions avec parenthèses) ; conversions (chaînes en entiers et en flottants, nombres en chaînes, changements de base, majuscules et minuscules) ; mémoire (allocation, calloc, realloc, duplication, plages d'entiers) et libération groupée ; lecture de fichiers ; affichage (caractères, chaînes, nombres dans une base, tableaux) ; vérifications de caractères ; couleurs et styles de texte ANSI ; un sscanf écrit à la main."
               }
             ],
             "links": [],
