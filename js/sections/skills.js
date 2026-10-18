@@ -3,7 +3,7 @@ Compétences : huit constellations dont chaque étoile est une compétence, lég
 Dessin dans skills-art.js, placement dans skills-layout.js, construction de la vue
 d'ensemble dans skills-scene.js, styles dans css/skills.css.
 Ce fichier monte la structure, cadre la caméra, câble les constellations et traduit.
-Les projets liés (puces du panneau) sont dans skills-related.js ; la phrase Devpedia, sous le
+Les projets liés (puces du panneau) sont dans skills-related.js ; la phrase Devpedia, avant le
 plan et sur toute la largeur, est montée ici.
 Le déploiement d'une constellation, la plongée sur un astre et le panneau de compétence sont
 dans skills-focus.js (caméra, séquences) et skills-panel.js (panneau).
@@ -187,7 +187,7 @@ export function mount(root) {
     if (state.skills) build();
   });
 
-  root.append(parts.heading, parts.lede, parts.layout, parts.link.node, parts.legend.node);
+  root.append(parts.heading, parts.lede, parts.link.node, parts.layout, parts.legend.node);
 
   return ({ skills, projects }) => {
     const same = state.built && idsOf(skills.groups) === state.signature;

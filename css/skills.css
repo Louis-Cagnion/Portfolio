@@ -216,9 +216,11 @@ mouvement réduit est déjà coupé pour toutes les animations par css/layout.cs
   margin: 0;
 }
 
-/* Lien Devpedia : une phrase sous le plan, sur toute la largeur de la rubrique. */
+/* Lien Devpedia : une phrase entre le chapeau et le plan, sur toute la largeur de la
+   rubrique. Pas de marge haute : le chapeau (.lede, 28 px dessous) la porte, les marges se
+   replient. */
 .devpedia {
-  margin: 18px 0 0;
+  margin: 0 0 18px;
   color: var(--dim);
   font-size: 0.95rem;
 }

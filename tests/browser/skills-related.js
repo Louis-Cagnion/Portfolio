@@ -8,8 +8,9 @@ Contrat DOM (README.md, groupe competences, à la livraison de C7) :
   immédiate, caméra déjà sur la planète ;
 - fermeture (bouton, fond, un Échap) : focus sur la `.planet` du projet, caméra de retour sur
   le système, `#sysLayout.zfocus` gardé ; la fiche suit la bascule de langue ;
-- lien Devpedia : `p` sous le plan, sur toute la largeur, `intro` + espace + `a[href]`
-  (`target="_blank"`, `rel="noopener"`), tutoyée, lien en ligne exempté (checks.js:106-112).
+- lien Devpedia : `p` entre le chapeau et le plan, sur toute la largeur, `intro` + espace +
+  `a[href]` (`target="_blank"`, `rel="noopener"`), tutoyée, lien en ligne exempté
+  (checks.js:106-112).
 Mesures : skills-focus-probe.js (étoiles) et projects-probe.js (Projets). Cas par site
 (largeur, langue) : 5 au repos, puis 6 par parcours (7 sous mouvement réel, dont la fin du
 saut), aux deux largeurs 390 et 1280 px. */
@@ -420,7 +421,6 @@ function devpediaProblems(kit) {
   const { anchor, para } = devpediaOf(site, text.link);
   if (!anchor) return [`lien Devpedia (href ${text.link.href}) introuvable dans #skills`];
   const problems = [];
-  const plan = parts(site).svg.getBoundingClientRect();
   const box = para?.getBoundingClientRect();
   need(problems, !!para, 'lien Devpedia hors d\'un p');
   if (!para) return problems;
@@ -431,8 +431,18 @@ function devpediaProblems(kit) {
     `phrase « ${textOf(para).slice(0, 40)} » au lieu de « ${sentence.slice(0, 40)} »`,
   );
   need(problems, textOf(anchor) === text.link.label, `lien « ${textOf(anchor)} »`);
-  need(problems, box.top >= plan.bottom - 1, 'phrase au-dessus du bas du plan');
+  const lede = parts(site).lede.getBoundingClientRect();
   const layout = parts(site).layout.getBoundingClientRect();
+  need(
+    problems,
+    box.top >= lede.bottom - 1,
+    'phrase au-dessus du bas du chapeau au lieu d\'entre le chapeau et le plan',
+  );
+  need(
+    problems,
+    box.bottom <= layout.top + 1,
+    'phrase sous le plan au lieu d\'entre le chapeau et le plan',
+  );
   need(
     problems,
     box.width >= layout.width - 2 && Math.abs(box.left - layout.left) <= 2,
@@ -498,7 +508,7 @@ async function restCases(width, lang, datas) {
     await rest(site);
     await test(
       ctx,
-      'lien Devpedia : phrase tutoyée sous le plan, sur toute la largeur',
+      'lien Devpedia : phrase tutoyée entre le chapeau et le plan, sur toute la largeur',
       () => devpediaProblems(kit),
     );
     await test(
