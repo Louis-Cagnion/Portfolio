@@ -2,7 +2,7 @@
 
 Cette checklist fixe les règles de design et d'accessibilité du site (composants et états, contrastes AA, zones cliquables, largeurs, mouvement, clavier, chargement et erreurs). Elle sert de grille de vérification : chaque case doit être cochable par une mesure ou un constat, jamais par un avis. Les valeurs des jetons sont dans `css/tokens.css`.
 
-Les valeurs viennent de la maquette validée (retirée du dépôt, présente dans l'historique git jusqu'au commit a49d2a5) ; le rendu validé de la V1 livrée (`main`) fait foi. Quand une valeur de la maquette ne passait pas un critère, la règle retenue est écrite à côté et marquée **écart**.
+Les valeurs viennent de la maquette validée (retirée du dépôt, visible dans l'historique git, par exemple `git show a49d2a5:docs/design/prototype/`) ; le rendu validé de la V1 livrée (`main`) fait foi. Quand une valeur de la maquette ne passait pas un critère, la règle retenue est écrite à côté et marquée **écart**.
 
 Décision de Louis du 08/10/2026 : le rendu de la maquette est validé et fait foi. Un écart qui changerait l'apparence au repos (couleur, taille, espacement, hauteur de barre) ne s'applique pas : la maquette est reprise telle quelle et le contrôle concerné devient une exception listée (section « Décisions de Louis »). Seuls s'appliquent les ajouts invisibles au repos : clavier, focus, mouvement réduit, états de survol et actif, technique.
 
@@ -21,7 +21,7 @@ Décision de Louis du 08/10/2026 : le rendu de la maquette est validé et fait f
 
 ## 1. Jetons de design
 
-Tous les jetons vivent dans `css/tokens.css` (sélecteur `:root`) et y font foi pour leurs valeurs : couleurs et couleurs de décor, polices, gouttière horizontale (barre et `main`) et largeur de contenu, rayons, échelle d'empilement, ombres, flous, courbes et durées. Aucune couleur, police, durée ou ombre n'est écrite en dur ailleurs dans les feuilles de style. Seuls les dessins des astres, des planètes et du disque restent hors des jetons, dans le JS, indexés par `id` ou `body` (plan, schéma des données). L'échelle typographique est dans les feuilles de style `css/*.css`.
+Tous les jetons vivent dans `css/tokens.css` (sélecteur `:root`) et y font foi pour leurs valeurs : couleurs et couleurs de décor, polices, gouttière horizontale (barre et `main`) et largeur de contenu, rayons, échelle d'empilement, ombres, flous, courbes et durées. Aucune couleur, police, durée ou ombre n'est écrite en dur ailleurs dans les feuilles de style. Seuls les dessins des astres, des planètes et du disque restent hors des jetons, dans le JS, indexés par `id` ou `body` (plan, « Principes »). L'échelle typographique est dans les feuilles de style `css/*.css`.
 
 ### Couleurs
 
