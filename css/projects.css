@@ -21,7 +21,7 @@ docs/design/s6/mockup.css). Chargée après css/journey.css par index.html.
   pointer-events: auto;
 }
 
-/* ───── Fiche : panneau à droite, feuille du bas à 880 px et moins ───── */
+/* ───── Fiche : panneau à droite, feuille du bas à 55 em et moins ───── */
 .sheet {
   position: fixed;
   top: 0;
@@ -225,7 +225,7 @@ docs/design/s6/mockup.css). Chargée après css/journey.css par index.html.
   stroke: none;
 }
 
-/* Décision de Louis du 13/10/2026 : zones visibles dans la Piscine zoomée, teinte --live */
+/* Piscine zoomée : zone de toucher visible, teinte --live */
 .sys.on .planet.nearest .pl-hit {
   fill: color-mix(in srgb, var(--live) 6%, transparent);
   stroke: color-mix(in srgb, var(--live) 35%, transparent);
