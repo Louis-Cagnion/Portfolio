@@ -224,9 +224,16 @@ describe('aucun tiret cadratin (U+2014)', () => {
   });
 });
 
+// Exception de Louis (18/10/2026) : l'alternance dure deux ans, la phrase ne vieillira pas.
+const RELATIVE_TIME_EXCEPTIONS = [
+  'Ancien étudiant à 42 Perpignan',
+  'A former student at 42 Perpignan',
+];
+
 describe('aucun mot de temps relatif (checklist, section 9)', () => {
   test('data/, index.html et README.md en sont exempts', () => {
-    const found = findInFiles(['data', 'index.html', 'README.md'], relativeTimeLines);
+    const found = findInFiles(['data', 'index.html', 'README.md'], relativeTimeLines)
+      .filter((line) => !RELATIVE_TIME_EXCEPTIONS.some((text) => line.includes(text)));
     assert.deepEqual(found, [], `mots de temps relatif trouvés :\n${found.join('\n')}`);
   });
 });

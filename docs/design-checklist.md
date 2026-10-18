@@ -351,7 +351,7 @@ Commandes de contrôle :
 
 - [ ] `grep -rn innerHTML js/` ne renvoie que `js/core/dom.js` ; tout texte de données passe par `setRich()` (balises `<strong>`, `<em>` et `<a href>` en `https:` ou `mailto:` seulement).
 - [ ] Le caractère U+2014 (tiret cadratin) est absent de `index.html`, `css/`, `js/`, `data/` et `README.md`.
-- [ ] Aucun texte du site ne date une situation par un mot de temps relatif (« en cours », « actuellement », « aujourd'hui ») : `grep -rniE "en cours|actuellement|aujourd" index.html data/ README.md` ne renvoie rien. L'accroche de la maquette (`.pitch`) en contient un, absent du texte validé du plan.
+- [ ] Aucun texte du site ne date une situation par un mot de temps relatif (« en cours », « actuellement », « aujourd'hui ») : `grep -rniE "en cours|actuellement|aujourd" index.html data/ README.md` ne renvoie rien. L'accroche de la maquette (`.pitch`) en contient un, absent du texte validé du plan. Exception de Louis (18/10/2026) : l'ouverture de « Je me présente » garde « actuellement » (alternance de deux ans), listée dans `tests/texts.test.mjs`.
 
 ## Décisions de Louis
 
