@@ -1,6 +1,6 @@
 /*
 Dessin des systèmes de la section Projets : teintes, soleils, orbites, planètes, étiquettes.
-Valeurs de la maquette validée (docs/design/s6/mockup.js:17-23, 112-130, 136-290). Aucun
+Valeurs de la maquette validée (historique git, a49d2a5). Aucun
 écouteur, aucune boucle d'animation, aucun HTML brut : les textes entrent par des nœuds texte.
 Le placement vient de projects-layout.js ; le zoom, la boucle et la liste sont ailleurs.
 

@@ -8,7 +8,8 @@ import { BREAKPOINTS } from '../core/dom.js';
 import { reduced, watchReduced } from '../core/motion.js';
 
 const FRAME_MS = 1000 / 60; // vitesses de la maquette : par image de 60 Hz
-const MAX_DT = 50; // ms (checklist, section 6) : une image longue ne fait pas bondir le ciel
+// plafond en ms (checklist §6, pas plafonné) : une image longue ne fait pas bondir le ciel
+const MAX_DT = 50;
 const BASE_SPEED = 0.12;
 const WARP_SPEED = 42;
 const CATCH_UP = 0.08; // part de l'écart à la vitesse cible rattrapée en une image
@@ -54,7 +55,7 @@ function makeStars(size) {
 
 /**
  * @brief Poussière des marges en bureau, sur une bande de chaque côté :
- *   band = max(140, (largeur - 1200) / 2 + 160) (docs/design-checklist.md, section 5).
+ *   band = max(140, (largeur - 1200) / 2 + 160) (checklist §5, poussière au-dessus de 880 px).
  *
  * @param {{ width: number, height: number }} size taille du ciel en px CSS
  *

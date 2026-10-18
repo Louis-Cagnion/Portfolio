@@ -9,7 +9,8 @@ import { reduced, watchReduced } from './motion.js';
 
 const VIEWS = 'main > section.view';
 const TITLES = 'h1, h2';
-const LAST_FRAME_MS = 20; // marge après l'animation d'arrivée : 1020 ms (checklist, section 1)
+// marge après l'animation d'arrivée : 1020 ms (checklist §1, saut en hyperespace)
+const LAST_FRAME_MS = 20;
 const CSS_TIME = /^(\d*\.?\d+)(ms|s)$/;
 const CALM_MS = 650; // fin du flash, ciel rendu à sa vitesse de croisière
 const FOV_MAX = 0.3;

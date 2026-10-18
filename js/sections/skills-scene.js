@@ -5,7 +5,7 @@ placement de skills-layout.js) et tient leurs textes et leurs noms d'étoile à 
 (`lines`) est décalé de `NAME_SHIFT` px d'écran vers la gauche de l'astre (`placeLabels`).
 Le nom complet de chaque étoile (`name`) est gardé sur l'objet étoile ; `nameLines` des
 données ne sert qu'au tracé du nom (deux lignes).
-Structure et mécanique de la maquette : docs/design/prototype/prototype.template.html:810-847.
+Structure et mécanique de la maquette.
 */
 import { format } from '../core/i18n.js';
 import {
@@ -19,8 +19,8 @@ import {
 import { bodyScale, gridOf, layoutConstellation, walkOrder } from './skills-layout.js';
 
 export const LEVELS = ['unknown', 'beginner', 'intermediate', 'advanced'];
-const CENTER_SHIFT_Y = 14; // maquette:816 : centre des étoiles remonté dans la cellule
-const TITLE_RISE = 22; // maquette:838 : nom court à 22 unités du bas de la cellule
+const CENTER_SHIFT_Y = 14; // centre des étoiles remonté dans la cellule
+const TITLE_RISE = 22; // nom court à 22 unités du bas de la cellule
 
 /**
  * @brief Étoiles d'une constellation, placées dans la grille et rangées dans l'ordre du

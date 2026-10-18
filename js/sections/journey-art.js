@@ -1,7 +1,7 @@
 /*
 Dessins du parcours : dégradés partagés, un astre par escale (centré sur 0,0, indexé par
-`body`) et vaisseau. Formes, couleurs et rayons de la maquette
-(docs/design/prototype/prototype.html:589-623 et 378) ; aucun texte.
+`body`) et vaisseau. Formes, couleurs et rayons de la maquette ;
+aucun texte.
 */
 import { svg } from '../core/dom.js';
 

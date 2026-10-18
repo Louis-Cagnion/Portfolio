@@ -1,8 +1,8 @@
 /*
 Panneau de compétence de la rubrique Compétences : retour, titre de la constellation, une puce
 par étoile, fiche de l'étoile (nom, niveau, flèches, description, projets liés).
-Balisage et remplissage de la maquette : docs/design/prototype/prototype.template.html:393-405
-et 849-870 ; styles dans css/skills.css (flèches, retour et titre dans css/panel.css).
+Balisage et remplissage de la maquette ; styles dans css/skills.css (flèches, retour et titre
+dans css/panel.css).
 
 Contrat :
   createPanel(root, { onBack, onStar, onRelated }) -> { show, update }

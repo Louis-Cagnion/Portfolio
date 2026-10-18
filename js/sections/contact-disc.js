@@ -1,19 +1,19 @@
 /*
-Contact : dessin du disque d'or (SVG), sans comportement. Structure de la maquette
-(docs/design/prototype/prototype.template.html:421-438 et 1108-1140) ; styles dans
+Contact : dessin du disque d'or (SVG), sans comportement. Structure de la maquette ;
+styles dans
 css/contact.css. contact.js câble les événements et traduit.
 */
 import { svg } from '../core/dom.js';
 
-export const FULL_BOX = [-250, -250, 500, 500]; // disque entier (maquette:1190)
-export const HALF_BOX = [-125, -250, 250, 250]; // moitié haute (maquette:1190)
+export const FULL_BOX = [-250, -250, 500, 500]; // disque entier
+export const HALF_BOX = [-125, -250, 250, 250]; // moitié haute
 
-const TRACK_RADII = [118, 150, 182, 214]; // sillons allumables (maquette:1109)
-const RING_EDGES = [100, 134, 166, 198, 240]; // bords des anneaux de toucher (maquette:1109)
+const TRACK_RADII = [118, 150, 182, 214]; // sillons allumables
+const RING_EDGES = [100, 134, 166, 198, 240]; // bords des anneaux de toucher
 const GROOVE_FIRST = 100; // premier sillon décoratif
 const GROOVE_LAST = 236;
 const GROOVE_STEP = 2.2;
-const GROOVE_BASE = 0.16; // opacité de la maquette (maquette:1108), relative à --groove
+const GROOVE_BASE = 0.16; // opacité de la maquette, relative à --groove
 const GROOVE_SWING = 0.12;
 const GROOVE_WAVE = 0.7;
 const GROOVE_ALPHA = 0.35; // opacité propre de --groove, que stroke-opacity vient moduler

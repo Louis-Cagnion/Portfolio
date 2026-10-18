@@ -2,7 +2,7 @@
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
 
-/* Points de rupture de docs/design-checklist.md (section 5), en em pour suivre la taille de
+/* Points de rupture (checklist §5, points de rupture), en em pour suivre la taille de
 police du navigateur ; les @media de css/ reprennent ces largeurs, qu'un fichier CSS ne peut
 pas lire ici. */
 export const BREAKPOINTS = Object.freeze({

@@ -1,7 +1,7 @@
 /*
 Boucle d'animation de la rubrique Projets : une seule requestAnimationFrame en attente,
 demandée quand la rubrique est affichée, l'onglet visible et le mouvement non réduit
-(docs/design-checklist.md, section 6). Le nom en projects-*.js compte : la suite navigateur
+(checklist §6, une boucle par rubrique). Le nom en projects-*.js compte : la suite navigateur
 repère la boucle de la rubrique par la pile d'appels.
 */
 import { reduced, watchReduced } from '../core/motion.js';

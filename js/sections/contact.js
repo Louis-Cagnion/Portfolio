@@ -1,16 +1,16 @@
 /*
 Contact : disque d'or dont l'étiquette copie l'adresse e-mail et dont chaque sillon mène à un
 réseau ; sur téléphone, le disque est verrouillé puis s'ouvre sur sa moitié haute.
-Structure et comportement de la maquette (docs/design/prototype/prototype.template.html:419-446
-et 1105-1206) ; dessin dans contact-disc.js, styles dans css/contact.css.
+Structure et comportement de la maquette ;
+dessin dans contact-disc.js, styles dans css/contact.css.
 */
 import { BREAKPOINTS, el } from '../core/dom.js';
 import { ease, lerp, reduced, scrollBehavior } from '../core/motion.js';
 import { format } from '../core/i18n.js';
 import { buildDisc, FULL_BOX, HALF_BOX } from './contact-disc.js';
 
-const REVERT_MS = 2200; // retour de l'invite après une copie réussie (maquette:1163)
-const TWEEN_MS = 700; // ouverture et fermeture du disque (maquette:1190)
+const REVERT_MS = 2200; // retour de l'invite après une copie réussie
+const TWEEN_MS = 700; // ouverture et fermeture du disque
 const TOUCH = ['touch', 'pen'];
 const ARROW = '←';
 
