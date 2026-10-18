@@ -85,7 +85,7 @@ The site is published at https://louis-cagnion.github.io/Portfolio/ and works in
 
 ## Use of AI
 
-The code, the tests and the documentation texts were written with Claude Code (Anthropic), under the direction and validation of the author. The author defined the design choices and reviewed and validated the rendering in the browser. The contents (texts, journey, projects) are the author's own.
+The code, the tests and the documentation texts were written with Claude Code (Anthropic), under the direction and validation of the author. The author uses Claude and design skills to produce modern graphical renderings, like this portfolio, chose the design directions, and reviewed and validated the rendering in the browser. The contents (texts, journey, projects) are the author's own.
 
 ## Contributors
 

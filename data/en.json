@@ -305,7 +305,7 @@
             "name": "CSS",
             "level": "intermediate",
             "projects": ["portfolio", "devpedia", "dashboards"],
-            "description": "Seen in my sites and, with the help of Claude Code, in the redesign of the professional dashboards' interface, for use on desktop as well as mobile (responsive layout, CSS variables, animations) ; I am comfortable with the essentials."
+            "description": "Seen in my sites, whose design I build with Claude and design skills to get modern graphical renderings, like this portfolio, then, with the help of Claude Code, in the redesign of the professional dashboards' interface, for use on desktop as well as mobile (responsive layout, CSS variables, animations) ; I am comfortable with the essentials."
           }
         ]
       },
@@ -696,7 +696,7 @@
             "blocks": [
               {
                 "type": "text",
-                "html": "Yes, this counts. Its space-themed redesign was built with the assistance of Claude Code."
+                "html": "Yes, this counts. Its space-themed redesign was built with Claude Code and design skills, which I use to produce modern graphical renderings."
               }
             ],
             "links": [],

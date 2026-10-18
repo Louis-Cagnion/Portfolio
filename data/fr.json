@@ -305,7 +305,7 @@
             "name": "CSS",
             "level": "intermediate",
             "projects": ["portfolio", "devpedia", "dashboards"],
-            "description": "Vu dans mes sites et, avec l'assistance de Claude Code, dans la refonte de l'interface des tableaux de bord professionnels, pour un usage aussi bien sur ordinateur que sur mobile (mise en page responsive, variables CSS, animations) ; je suis à l'aise sur l'essentiel."
+            "description": "Vu dans mes sites, dont je réalise le design avec Claude et des skills de design pour obtenir des rendus graphiques modernes, comme ce portfolio, puis, avec l'assistance de Claude Code, dans la refonte de l'interface des tableaux de bord professionnels, pour un usage aussi bien sur ordinateur que sur mobile (mise en page responsive, variables CSS, animations) ; je suis à l'aise sur l'essentiel."
           }
         ]
       },
@@ -696,7 +696,7 @@
             "blocks": [
               {
                 "type": "text",
-                "html": "Et oui, ça compte. Sa refonte spatiale a été réalisée avec l'assistance de Claude Code."
+                "html": "Et oui, ça compte. Sa refonte spatiale a été réalisée avec Claude Code et des skills de design, que j'utilise pour produire des rendus graphiques modernes."
               }
             ],
             "links": [],
