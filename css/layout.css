@@ -1,0 +1,674 @@
+/*
+Mise en page commune : base, barre (marque, pilule, bascule de langue), rubriques, panneau HUD,
+boutons, liens en ligne, écran de chargement et d'erreur, barre d'onglets du bas, ciel, flash
+et saut en hyperespace.
+Valeurs : maquette validée (docs/design/prototype/prototype.template.html) et variante Console
+de docs/design/prototype/status-variants.html. Points de rupture : BREAKPOINTS de
+js/core/dom.js.
+*/
+
+/* ───── Base ───── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scrollbar-gutter: stable;
+  scroll-padding-top: calc(var(--bar-h) + 8px);
+  scroll-padding-bottom: 88px;
+}
+
+body {
+  margin: 0;
+  background: var(--void);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+h1 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(2.3rem, 6.6vw, 5.2rem);
+  line-height: 1.04;
+  letter-spacing: -0.01em;
+  margin: 0 0 26px;
+}
+
+h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(1.3rem, 3vw, 1.9rem);
+  margin: 56px 0 8px;
+  overflow-wrap: break-word;
+}
+
+/* ───── Barre du haut ───── */
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-bar);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 12px var(--gutter);
+  background: color-mix(in srgb, var(--void) 82%, transparent);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  border-bottom: 1px solid var(--line);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--display);
+  font-size: 0.82rem;
+  color: var(--text);
+  text-decoration: none;
+  letter-spacing: 0.03em;
+  min-width: 0; /* le nom se coupe sur deux lignes quand la place manque */
+}
+
+.brand i {
+  flex-shrink: 0; /* le point reste rond */
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--live);
+  box-shadow: var(--glow-live);
+  animation: blink var(--dur-blink) infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+/* Pilule : la pastille .pill glisse sous l'onglet actif (mesuré par js/ui/nav.js). */
+.nav {
+  position: relative;
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--panel) 70%, transparent);
+}
+
+.nav button {
+  position: relative;
+  z-index: 1;
+  border: 0;
+  background: none;
+  color: var(--dim);
+  font: 500 0.92rem var(--sans);
+  padding: 8px 16px;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: color var(--dur);
+}
+
+@media (hover: hover) {
+  .nav button:hover {
+    color: var(--text);
+  }
+}
+
+.nav button[aria-current="page"] {
+  color: var(--accent-ink);
+}
+
+.nav .pill {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  transition: left var(--dur-slow) var(--ease-inout), width var(--dur-slow) var(--ease-inout);
+}
+
+.lang {
+  display: flex;
+  flex-shrink: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+
+.lang button {
+  border: 0;
+  background: none;
+  color: var(--dim);
+  font: 500 0.8rem var(--mono);
+  padding: 7px 12px;
+  cursor: pointer;
+  transition: color var(--dur);
+}
+
+/* Le groupe rogne son contenu (overflow: hidden) : l'anneau de focus passe à l'intérieur. */
+.lang button:focus-visible {
+  outline-offset: -3px;
+}
+
+@media (hover: hover) {
+  .lang button:hover {
+    color: var(--text);
+  }
+}
+
+.lang button[aria-pressed="true"] {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+/* ───── Rubriques ───── */
+main {
+  position: relative;
+  z-index: var(--z-main);
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: 0 var(--gutter) 120px;
+}
+
+.view {
+  display: none;
+}
+
+/* flow-root : la marge haute du premier enfant ne fusionne plus avec celle de la rubrique,
+elle reste la même au repos et pendant le saut (rubrique en position: absolute). */
+.view.on {
+  display: flow-root;
+}
+
+.lede {
+  color: var(--dim);
+  margin: 0 0 28px;
+  max-width: 60ch;
+}
+
+.body,
+.lede {
+  overflow-wrap: anywhere;
+}
+
+.body strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.body a,
+.lede a,
+.devpedia a {
+  color: var(--accent);
+  text-decoration: none;
+  background: linear-gradient(currentColor, currentColor) 0 100% / 100% 1px no-repeat;
+  padding-bottom: 1px;
+  transition: background-size var(--dur-link), color var(--dur-fast);
+}
+
+.body a:focus-visible,
+.lede a:focus-visible,
+.devpedia a:focus-visible {
+  background-size: 100% 2px;
+  color: var(--accent-hover);
+}
+
+@media (hover: hover) {
+  .body a:hover,
+  .lede a:hover,
+  .devpedia a:hover {
+    background-size: 100% 2px;
+    color: var(--accent-hover);
+  }
+}
+
+/* ───── Panneau HUD : deux coins or, en haut à gauche et en bas à droite ───── */
+.hud {
+  position: relative;
+  border: 1px solid var(--line);
+  background: linear-gradient(var(--panel), color-mix(in srgb, var(--panel) 40%, transparent));
+}
+
+.hud::before,
+.hud::after {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--accent);
+  pointer-events: none;
+}
+
+.hud::before {
+  top: -2px;
+  left: -2px;
+  border-right: 0;
+  border-bottom: 0;
+}
+
+.hud::after {
+  bottom: -2px;
+  right: -2px;
+  border-left: 0;
+  border-top: 0;
+}
+
+/* ───── Boutons ───── */
+.btn {
+  padding: 13px 22px;
+  font: 600 0.95rem var(--sans);
+  border: 1px solid var(--line);
+  color: var(--text);
+  background: none;
+  cursor: pointer;
+  transition: border-color var(--dur-fast), transform var(--dur-fast);
+  overflow-wrap: break-word;
+}
+
+.btn.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+
+@media (hover: hover) {
+  .btn:hover {
+    transform: translateY(-2px);
+  }
+
+  .btn:not(.primary):hover {
+    border-color: var(--accent);
+  }
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn:not(.primary):active {
+  border-color: var(--accent);
+}
+
+/* ───── Chargement et erreur (#status) : visible avant le JS, masqué une fois prêt ───── */
+.status-screen {
+  position: fixed;
+  inset: var(--bar-h) 0 0;
+  z-index: var(--z-status);
+  display: grid;
+  place-items: center;
+  padding: 24px 0;
+  overflow-y: auto;
+  background: var(--void);
+}
+
+.status-screen[data-state="ready"] {
+  display: none;
+}
+
+body:has(> .status-screen:not([data-state="ready"])) :is(.nav, .tabbar) {
+  visibility: hidden;
+}
+
+.status {
+  width: min(34rem, 100% - 2 * var(--gutter));
+  padding: 28px;
+}
+
+.status :is(h2, h3) {
+  font: 400 1.15rem var(--display);
+  margin: 0 0 10px;
+  overflow-wrap: break-word;
+}
+
+.status p {
+  color: var(--dim);
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.status code {
+  font-family: var(--mono);
+  color: var(--text);
+}
+
+.status-bar {
+  position: relative;
+  height: 3px;
+  margin-top: 18px;
+  overflow: hidden;
+  background: var(--line);
+}
+
+.status-bar i {
+  position: absolute;
+  inset: 0;
+  width: 35%;
+  background: var(--accent);
+  animation: sweep var(--dur-sweep) var(--ease-inout) infinite;
+}
+
+[data-state="error"] .status-bar i {
+  width: 100%;
+  animation: none;
+  background: repeating-linear-gradient(90deg, var(--accent) 0 14px, transparent 14px 22px);
+  opacity: 0.55;
+}
+
+@keyframes sweep {
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(290%);
+  }
+}
+
+.status-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 22px;
+}
+
+[data-state="loading"] .status-actions {
+  display: none;
+}
+
+.status-actions .btn {
+  min-height: 44px;
+  padding-top: 11px;
+  padding-bottom: 11px;
+}
+
+/* Indice d'erreur (#status-hint) : sous la barre, au-dessus des boutons. Qualifié par .status
+pour dépasser « .status p » (margin: 0) ; la couleur reste celle de « .status p ». */
+.status .status-hint {
+  margin: 28px 0 0;
+  font-size: 0.92rem;
+  opacity: 0.85;
+}
+
+[data-state="loading"] .status-hint {
+  display: none;
+}
+
+.status-hint + .status-actions {
+  margin-top: 14px;
+}
+
+/* Panneau « contenu indisponible » d'une rubrique : à 32 px du chapeau (sa marge haute
+l'emporte sur celle du chapeau) et jamais plus large que la colonne. */
+.view .status {
+  width: min(34rem, 100%);
+  margin: 32px 0 0;
+}
+
+/* Sans JavaScript : seul le message du <noscript> reste ; la bascule, inerte, disparaît. */
+@media (scripting: none) {
+  #status-message,
+  .status-bar,
+  .lang {
+    display: none;
+  }
+}
+
+/* ───── Barre d'onglets du bas (880 px et moins, à la place de la pilule) ───── */
+.tabbar {
+  display: none;
+}
+
+@media (max-width: 55em) {
+  .nav {
+    display: none;
+  }
+
+  .tabbar {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    position: fixed;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    z-index: var(--z-tabbar);
+    padding: 6px;
+    border-radius: var(--radius-tabbar);
+    border: 1px solid var(--line);
+    background: color-mix(in srgb, var(--panel) 90%, transparent);
+    backdrop-filter: blur(var(--blur-strong));
+    -webkit-backdrop-filter: blur(var(--blur-strong));
+  }
+
+  .tabbar button {
+    display: grid;
+    justify-items: center;
+    gap: 2px;
+    border: 0;
+    background: none;
+    color: var(--dim);
+    font: 500 0.68rem var(--sans);
+    padding: 6px 0;
+    border-radius: var(--radius-tab);
+    cursor: pointer;
+    transition: color var(--dur);
+  }
+
+  .tabbar svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .tabbar button[aria-current="page"] {
+    color: var(--accent);
+    background: var(--accent-soft);
+  }
+
+  /* Anneau à l'intérieur : les libellés touchent le bord de leur case jusqu'à 430 px. */
+  .tabbar button:focus-visible {
+    outline-offset: -3px;
+  }
+}
+
+@media (max-width: 55em) and (hover: hover) {
+  .tabbar button:not([aria-current="page"]):hover {
+    color: var(--text);
+  }
+}
+
+/* Sous 16.25em (260 px, 780 px à 300 %) : FR/EN en colonne, onglets en icônes seules, un seul
+mis en avant (focalisé, sinon courant ; survolé si l'appareil survole), à la largeur --lead-w
+et à la police --label-size de js/ui/nav.js ; les autres cases se partagent le reste. */
+@media (max-width: 16.25em) {
+  .lang {
+    flex-direction: column;
+    border-radius: var(--radius-lang);
+  }
+
+  .lang button {
+    padding: 5px 10px;
+  }
+
+  .tabbar {
+    display: flex;
+  }
+
+  .tabbar button {
+    flex: 1 1 0px;
+    grid-template-columns: minmax(0, 1fr);
+    align-content: center;
+    min-width: 0;
+    min-height: 50px;
+    overflow: hidden;
+    container-type: inline-size;
+    transition: flex var(--dur) var(--ease-out), color var(--dur), background var(--dur);
+  }
+
+  .tabbar svg {
+    width: min(1.25rem, 100cqi - 4px);
+    height: auto;
+    aspect-ratio: 1;
+  }
+
+  .tabbar span {
+    max-width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    font-size: var(--label-size, 1em);
+    opacity: 0;
+    transition: opacity var(--dur);
+  }
+
+  .tabbar button:focus-visible,
+  .tabbar:not(:has(button:focus-visible)) button[aria-current="page"] {
+    flex: 0 0 var(--lead-w, auto);
+  }
+
+  .tabbar button:focus-visible span,
+  .tabbar:not(:has(button:focus-visible)) button[aria-current="page"] span {
+    opacity: 1;
+  }
+}
+
+/* Appareil qui survole : l'onglet survolé prend la mise en avant, les autres la perdent. */
+@media (max-width: 16.25em) and (hover: hover) {
+  .tabbar:has(button:hover) button:not(:hover) {
+    flex: 1 1 0px;
+  }
+
+  .tabbar:has(button:hover) button:not(:hover) span {
+    opacity: 0;
+  }
+
+  .tabbar button:hover {
+    flex: 0 0 var(--lead-w, auto);
+  }
+
+  .tabbar button:hover span {
+    opacity: 1;
+  }
+}
+
+/* ───── Ciel (js/ui/starfield.js) et flash du saut ───── */
+#sky {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-sky);
+  width: 100%;
+  height: 100%;
+}
+
+.flash {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-flash);
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(circle, rgba(var(--star), 0.22), transparent 60%);
+  transition: opacity var(--dur);
+}
+
+.flash.on {
+  opacity: 1;
+}
+
+.lens {
+  position: absolute;
+}
+
+/* ───── Saut en hyperespace (js/core/router.js) : main devient une scène fixe, courbée par
+#fov ; les deux rubriques y gardent leur place à l'écran (--warp-* mesurées) ───── */
+html[data-warp] main {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-warp);
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  pointer-events: none;
+  filter: url(#fov);
+}
+
+html[data-warp] main > .view.on {
+  --top: var(--bar-h);
+  position: absolute;
+  top: var(--top);
+  left: var(--warp-left);
+  width: var(--warp-width);
+  transform-origin: calc(var(--warp-cx) - var(--warp-left)) calc(var(--warp-cy) - var(--top));
+}
+
+html[data-warp] main > .view.leave {
+  --top: var(--warp-top);
+}
+
+/* Saut avant : la rubrique de départ passe devant, celle d'arrivée grandit depuis le fond. */
+html[data-warp="forward"] .view.leave {
+  z-index: 2;
+  animation: warp-out-forward var(--dur-warp-out) var(--ease-in) both;
+}
+
+html[data-warp="forward"] .view.enter {
+  z-index: 1;
+  animation: warp-in-forward var(--dur-warp-in) var(--ease-out) var(--dur-warp-out) both;
+}
+
+/* Saut arrière : la rubrique de départ recule, celle d'arrivée arrive de devant. */
+html[data-warp="backward"] .view.leave {
+  z-index: 1;
+  animation: warp-out-backward var(--dur-warp-out) var(--ease-in) both;
+}
+
+html[data-warp="backward"] .view.enter {
+  z-index: 2;
+  animation: warp-in-backward var(--dur-warp-in) var(--ease-out) var(--dur-warp-out) both;
+}
+
+@keyframes warp-out-forward {
+  to {
+    opacity: 0;
+    transform: scale(1.7);
+  }
+}
+
+@keyframes warp-in-forward {
+  from {
+    opacity: 0;
+    transform: scale(0.55);
+  }
+}
+
+@keyframes warp-out-backward {
+  to {
+    opacity: 0;
+    transform: scale(0.55);
+  }
+}
+
+@keyframes warp-in-backward {
+  from {
+    opacity: 0;
+    transform: scale(1.7);
+  }
+}
+
+/* ───── Mouvement réduit : ni boucle décorative ni transition ───── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

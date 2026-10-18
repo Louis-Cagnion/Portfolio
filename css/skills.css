@@ -1,0 +1,413 @@
+/*
+Compétences : mise en page de la rubrique (js/sections/skills.js), constellations et dessins
+des astres (js/sections/skills-art.js).
+Règles de la maquette (docs/design/prototype/prototype.template.html:143-207 et 300-307) ; le
+mouvement réduit est déjà coupé pour toutes les animations par css/layout.css.
+*/
+
+/* ───── Mise en page : plan, aide, panneau de compétence (vide au repos), légende ───── */
+/* Pas d'ancrage de défilement : le plan change de hauteur pendant un déploiement et Chrome
+   annulerait le défilement vers lui (téléphone). */
+#skills {
+  overflow-anchor: none;
+}
+
+.skills-layout {
+  position: relative;
+}
+
+.viz {
+  width: 100%;
+  height: 460px;
+  display: block;
+  transition: height var(--dur-height) var(--ease-inout);
+}
+
+/* Déployé au bureau : plan de 540 px (sur téléphone, skills-focus.js anime des pixels). */
+.viz.focused {
+  height: 540px;
+}
+
+.hint {
+  color: var(--faint);
+  font-size: 0.9rem;
+  margin: 10px 0 0;
+  transition: opacity 0.4s; /* 0,4 s : valeur de la maquette, sans jeton */
+}
+
+/* Masquée aussi pour les lecteurs d'écran, une fois le fondu fini. */
+.skills-layout.focus .hint {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s, visibility 0s 0.4s;
+}
+
+/* Au repos le panneau est invisible et inerte (attribut inert posé par skills.js) ;
+   0,3 s, 0,35 s et 0,8 s : valeurs de la maquette, sans jeton. */
+.focus-panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(46%, 540px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) transparent;
+  padding: 22px 24px;
+  background: color-mix(in srgb, var(--panel) 52%, transparent);
+  -webkit-backdrop-filter: blur(var(--blur));
+  backdrop-filter: blur(var(--blur));
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(24px);
+  transition:
+    opacity var(--dur-slow) 0.3s,
+    transform var(--dur-slow) 0.3s,
+    visibility 0s 0.8s;
+}
+
+.skills-layout.focus .focus-panel {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition:
+    opacity var(--dur-slow) 0.35s,
+    transform var(--dur-slow) 0.35s,
+    visibility 0s;
+}
+
+/* Téléphone : le panneau passe sous le plan (collant pendant le déploiement) et remonte de
+   34vw sur lui ; absent au repos. */
+@media (max-width: 55em) {
+  .viz,
+  .viz.focused {
+    height: auto;
+  }
+
+  .skills-layout:not(.focus):not(.leaving) .focus-panel {
+    display: none;
+  }
+
+  /* Retour : le panneau, masqué d'emblée, reste dans le flux et se replie (--fold de 1 à 0,
+     posé par skills-focus.js) pendant que le plan regrandit. */
+  .skills-layout.leaving .focus-panel {
+    visibility: hidden;
+    transition: none;
+    overflow: hidden;
+    height: calc(var(--fold-h) * var(--fold));
+    margin-top: calc(-34vw * var(--fold));
+    padding-block: calc(22px * var(--fold));
+  }
+
+  .skills-layout.focus .viz-wrap {
+    position: sticky;
+    top: var(--bar-h);
+    z-index: 0;
+  }
+
+  .focus-panel {
+    position: relative;
+    z-index: 1;
+    width: auto;
+    margin-top: -34vw;
+    overflow: visible;
+    transform: translateY(24px);
+  }
+
+  .skills-layout.focus .focus-panel {
+    transform: none;
+  }
+}
+
+/* ───── Panneau de compétence (js/sections/skills-panel.js) ───── */
+.focus-panel .ctitle {
+  margin: 18px 0 12px;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 0 18px;
+}
+
+.chips button {
+  border: 1px solid var(--line);
+  background: none;
+  color: var(--dim);
+  font: 500 0.88rem var(--sans);
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.chips button:hover {
+  color: var(--text);
+  border-color: color-mix(in srgb, var(--accent) 50%, transparent);
+}
+
+.chips button[aria-pressed="true"] {
+  color: var(--accent-ink);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+/* Détail imbriqué : ni bordure ni coins ; fondu de 0,3 s pendant un saut (maquette). */
+.skill {
+  margin-top: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  transition:
+    opacity 0.3s,
+    transform 0.3s;
+}
+
+.skill::before,
+.skill::after {
+  display: none;
+}
+
+.skill.traveling {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.skill header {
+  display: flex;
+  flex-wrap: wrap; /* police agrandie : les flèches passent sous le nom */
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.skill h3 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 1.1rem;
+  line-height: 1.4;
+  margin: 0 0 4px;
+}
+
+.skill .body {
+  color: var(--dim);
+}
+
+.skill .lvl {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--dim);
+  font-size: 0.9rem;
+  margin-top: 2px;
+}
+
+.related {
+  margin: 18px 0 0;
+}
+
+.related p {
+  margin: 0 0 8px;
+  color: var(--faint);
+  font-size: 0.85rem;
+}
+
+.related .chips {
+  margin: 0;
+}
+
+/* Lien Devpedia : une phrase entre le chapeau et le plan, sur toute la largeur de la
+   rubrique. Pas de marge haute : le chapeau (.lede, 28 px dessous) la porte, les marges se
+   replient. */
+.devpedia {
+  margin: 0 0 18px;
+  color: var(--dim);
+  font-size: 0.95rem;
+}
+
+/* Légende : une phrase, puis un astre par niveau. */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 22px;
+  color: var(--faint);
+  font-size: 0.85rem;
+  margin-top: 18px;
+}
+
+.legend > span:first-child {
+  flex-basis: 100%;
+  color: var(--dim);
+}
+
+.mag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+/* Sous 880 px, une entrée trop longue pour la ligne (police agrandie) passe à la ligne. */
+@media (max-width: 55em) {
+  .mag {
+    white-space: normal;
+  }
+}
+
+.ico {
+  width: 26px;
+  height: 26px;
+  flex: none;
+  overflow: visible;
+}
+
+/* ───── Constellations ───── */
+.viz text {
+  font-family: var(--sans);
+}
+
+.const .link {
+  stroke: var(--link);
+  stroke-width: 1.3;
+  vector-effect: non-scaling-stroke;
+  transition: stroke 0.3s;
+}
+
+.const .group {
+  cursor: pointer;
+  transition: opacity 0.6s;
+}
+
+.const .group:focus {
+  outline: none;
+}
+
+.const .cell {
+  fill: transparent;
+}
+
+.const .group:hover .link,
+.const .group:focus-visible .link {
+  stroke: var(--accent-edge);
+}
+
+/* Anneau de focus de 2 px (trait de 4 px, la moitié hors de la cellule). */
+.const .group:focus-visible .cell {
+  stroke: var(--accent);
+  stroke-width: 4;
+  vector-effect: non-scaling-stroke;
+}
+
+.const .group:focus-visible .cname {
+  text-decoration: underline;
+}
+
+.const .name {
+  fill: var(--text);
+  font-size: calc(12.5px * var(--u, 1));
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+
+.const .group:hover .name {
+  opacity: 1;
+}
+
+.const .cname {
+  fill: var(--dim);
+  font-size: calc(14px * var(--u, 1));
+  font-weight: 600;
+  text-anchor: middle;
+  transition: opacity 0.4s;
+}
+
+.const .body {
+  pointer-events: none;
+}
+
+.const .body-in {
+  transform: scale(calc(var(--u, 1) * var(--bs, 1.4)));
+}
+
+/* ───── Constellation déployée ───── */
+.const.focused .group {
+  cursor: default;
+}
+
+.const.focused .group.dim {
+  opacity: 0.06;
+  pointer-events: none;
+}
+
+.const.focused .group.sel .name {
+  opacity: 1;
+  font-size: calc(14px * var(--u, 1));
+}
+
+.const.focused .group.sel .cname {
+  opacity: 0;
+}
+
+.const.focused .group.sel .link {
+  stroke: var(--link-sel);
+}
+
+.const.focused .st-g {
+  cursor: pointer;
+}
+
+/* Étoile focalisable (déploiement seulement) : anneau de 2 px sur sa zone cliquable. */
+.const .st-g:focus {
+  outline: none;
+}
+
+.const .st-g:focus-visible circle {
+  stroke: var(--accent);
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+}
+
+.const .link.walk {
+  stroke: var(--accent) !important;
+  stroke-width: 2.4;
+}
+
+.const .st-g.cur .name {
+  fill: var(--accent);
+}
+
+/* ───── Astres (hors .const : la légende et la fiche les animent aussi) ───── */
+.b-glow {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: breathe 3s ease-in-out infinite;
+}
+
+.b-spin {
+  animation: body-spin 60s linear infinite;
+}
+
+.b-drift {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: body-drift 9s ease-in-out infinite;
+}
+
+.b-lava {
+  animation: lava 2.8s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  50% {
+    transform: scale(1.18);
+    opacity: 0.75;
+  }
+}
+
+@keyframes lava {
+  50% {
+    filter: brightness(1.45) drop-shadow(0 0 2px var(--lava));
+  }
+}
