@@ -11,27 +11,19 @@ import { reduced, watchReduced } from '../core/motion.js';
 import { initSheet } from '../ui/sheet.js';
 import {
   buildSystems,
+  plainTitle,
   remeasureLabels,
   renderPlanet,
   rescalePhone,
   tintOf,
 } from './projects-art.js';
-import { nearestPlanet } from './projects-layout.js';
+import { HIT_RADIUS, nearestPlanet } from './projects-layout.js';
 import { createLoop } from './projects-loop.js';
 import { createZoom } from './projects-zoom.js';
 
 const ARROW = '←';
 const HELD = ':hover, :focus-visible'; // une planète survolée ou focalisée cesse de tourner
 let revealById = null; // ouverture d'un projet lié par la rubrique montée (openProject)
-
-/**
- * @brief Titre sans balise, comme celui que projects-art.js affiche.
- *
- * @param {string} title titre de data/*.json
- *
- * @returns {string} titre brut
- */
-const plainTitle = (title) => title.replace(/<[^>]+>/g, '');
 
 /**
  * @brief Projets de tous les systèmes, dans l'ordre d'affichage.
@@ -231,7 +223,7 @@ function centreOf(node) {
  */
 function planetUnder(point, planets) {
   const centres = planets.map((planet) => ({ planet, ...centreOf(planet.nodes.body) }));
-  const near = nearestPlanet(point, centres);
+  const near = nearestPlanet(point, centres, HIT_RADIUS);
   if (near) return near.planet;
   return planets.find((planet) => {
     const box = planet.nodes.bg.getBoundingClientRect();
