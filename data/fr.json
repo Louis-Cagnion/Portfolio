@@ -26,7 +26,8 @@
       "unexpected": "L'intrication quantique a tenté de se faire avec les particules d'une autre ligne temporelle. Réessaie.",
       "boot": "L'intrication quantique s'est rompue.",
       "retry": "Réessayer",
-      "langSwitch": "Essayer en anglais"
+      "langSwitch": "Essayer en anglais",
+      "langHint": "Babel a restitué le texte dans une langue que notre univers ne peut pas comprendre."
     },
     "unavailable": {
       "title": "Contenu indisponible",

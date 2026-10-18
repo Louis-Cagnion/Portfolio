@@ -13,7 +13,8 @@
       "title": "Erreur", "network": "Réseau", "timeout": "Délai dépassé",
       "http": "HTTP {status}", "json": "JSON invalide", "schema": "Champ {path} manquant",
       "unexpected": "Exception inattendue", "boot": "Module introuvable",
-      "retry": "Réessayer", "langSwitch": "Changer de langue"
+      "retry": "Réessayer", "langSwitch": "Changer de langue",
+      "langHint": "Indice de test"
     },
     "unavailable": {
       "title": "Indisponible", "message": "Pas encore de contenu", "home": "Accueil"

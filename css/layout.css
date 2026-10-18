@@ -392,6 +392,22 @@ body:has(> .status-screen:not([data-state="ready"])) :is(.nav, .tabbar) {
   padding-bottom: 11px;
 }
 
+/* Indice d'erreur (#status-hint) : sous la barre, au-dessus des boutons. Qualifié par .status
+pour dépasser « .status p » (margin: 0) ; la couleur reste celle de « .status p ». */
+.status .status-hint {
+  margin: 28px 0 0;
+  font-size: 0.92rem;
+  opacity: 0.85;
+}
+
+[data-state="loading"] .status-hint {
+  display: none;
+}
+
+.status-hint + .status-actions {
+  margin-top: 14px;
+}
+
 /* Panneau « contenu indisponible » d'une rubrique : à 32 px du chapeau (sa marge haute
 l'emporte sur celle du chapeau) et jamais plus large que la colonne. */
 .view .status {

@@ -3,6 +3,7 @@
 ready (masqué). Le panneau parle la langue qu'il charge ; ses textes viennent des modèles
 <template data-lang> du panneau, puisque les données de cette langue manquent encore (ou ont
 échoué). Ces modèles recopient ui.loading et ui.errors de data/*.json : verify() le contrôle.
+En erreur, le panneau affiche aussi l'indice ui.errors.langHint (#status-hint), sous la barre.
 */
 import { LOCALE_ERROR_CODES, LocaleError } from '../core/data.js';
 import { el } from '../core/dom.js';
@@ -46,6 +47,7 @@ export function createStatus({ covered = [], onRetry, onSwitch }) {
   const root = document.getElementById('status');
   const title = root.querySelector('#status-title');
   const message = root.querySelector('#status-message');
+  const hint = root.querySelector('#status-hint');
   const retry = root.querySelector('button[data-action="retry"]');
   const switcher = root.querySelector('button[data-action="switch-lang"]');
   const texts = readTexts(root);
@@ -102,7 +104,8 @@ export function createStatus({ covered = [], onRetry, onSwitch }) {
     },
 
     /**
-     * @brief État d'erreur : message propre à la cause, boutons, focus sur le titre.
+     * @brief État d'erreur : message propre à la cause, indice (errors.langHint) sous la
+     *   barre, boutons, focus sur le titre.
      *
      * Le texte de l'exception n'est jamais affiché.
      *
@@ -123,6 +126,7 @@ export function createStatus({ covered = [], onRetry, onSwitch }) {
         ...parts.map((part) => (part.key ? el('code', {}, part.text) : part.text)),
       );
       retry.textContent = text(lang, 'errors.retry');
+      hint.textContent = text(lang, 'errors.langHint');
       switcher.textContent = text(lang, 'errors.langSwitch');
       setState('error', lang);
       title.focus();

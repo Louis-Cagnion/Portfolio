@@ -26,7 +26,8 @@
       "unexpected": "Quantum entanglement tried to form with particles from another timeline. Try again.",
       "boot": "Quantum entanglement has been broken.",
       "retry": "Retry",
-      "langSwitch": "Try in French"
+      "langSwitch": "Try in French",
+      "langHint": "Babel returned the text in a language our universe cannot understand."
     },
     "unavailable": {
       "title": "Content unavailable",

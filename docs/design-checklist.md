@@ -332,7 +332,7 @@ Le bloc `#status` est statique dans `index.html` et stylé par `layout.css`, don
 - [ ] Le texte statique est en français (langue par défaut) et il est remplacé dès que la langue est connue.
 - [ ] Une balise `<noscript>` affiche un message dans le même panneau.
 - [ ] Erreur : même panneau HUD, titre `ui.errors.title` (Display 1.15rem, `--text`), barre figée en pointillés or (14px pleins, 8px vides, opacité 0,55) entre le message et les boutons, un message distinct par cause, en `--dim` : `network`, `timeout` (délai de 10 s), `http` (avec `{status}`), `json`, `schema` (avec `{path}`), `unexpected` (toute autre exception levée pendant le chargement ou l'affichage, détail en console seulement). `role="alert"`.
-- [ ] Bouton **Réessayer** (`ui.errors.retry`) en bouton primaire, 44 × 44px au moins ; un clic remet l'état de chargement, relance `loadLocale` et ne laisse pas le focus sur un bouton retiré du DOM. Le lien `ui.errors.langSwitch` est un bouton secondaire.
+- [ ] Bouton **Réessayer** (`ui.errors.retry`) en bouton primaire, 44 × 44px au moins ; un clic remet l'état de chargement, relance `loadLocale` et ne laisse pas le focus sur un bouton retiré du DOM. Le lien `ui.errors.langSwitch` est un bouton secondaire. Une phrase d'indice (`ui.errors.langHint`, `#status-hint`) se place sous la barre en pointillés, au-dessus des boutons, à 24 px au moins de la barre (choix de Louis du 18/10/2026).
 - [ ] À l'apparition de l'erreur, le focus va au titre du panneau (`tabindex="-1"`).
 - [ ] Le chemin du champ (`{path}`) et le statut sont en Mono, avec `overflow-wrap: anywhere`.
 - [ ] Aucun débordement ni contraste sous le seuil à 320, 390, 430, 768 et 1280 px, dans les deux langues, pour chacune des six causes (suite navigateur, `fetch` simulé).

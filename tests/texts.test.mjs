@@ -2,7 +2,7 @@
 Tests des textes du site : données (data/*.json), index.html, README.md.
 Critères : docs/design/plan.md (Schéma des données, Chaînes à créer, Tests) et
 docs/design-checklist.md (sections 8 et 9).
- - ui.errors : les dix clés du schéma du plan, non vides
+ - ui.errors : les dix clés du schéma du plan et langHint, non vides
  - textes imposés par le plan : ui.errors.unexpected, home.mission, dossier du pilote
  - modèles <template data-lang> de #status (index.html) = ui.loading et ui.errors, mot pour
    mot (espaces normalisés comme js/ui/status.js), sans clé en trop
@@ -20,7 +20,8 @@ import { assertLinear, readLocale as locale, ROOT } from './helpers.mjs';
 
 const LANGS = ['fr', 'en'];
 
-// Clés de ui.errors du schéma du plan : titre, une par cause, boutons.
+// Clés de ui.errors du schéma du plan (titre, une par cause, boutons), plus l'indice langHint
+// ajouté en V1.F2 (phrase du panneau d'erreur, au-dessus des boutons).
 const ERROR_KEYS = [
   'title',
   'network',
@@ -32,6 +33,7 @@ const ERROR_KEYS = [
   'boot',
   'retry',
   'langSwitch',
+  'langHint',
 ];
 // Textes de la table « Chaînes à créer » du plan ; dossier : surtitre, titre, intitulés.
 const PLAN_TEXTS = {
@@ -344,9 +346,11 @@ describe('détecteurs : modèles de #status', () => {
   });
 
   test('ui absent : chaque clé attendue est signalée', () => {
+    // Une clé de ui.errors par entrée de ERROR_KEYS, plus ui.loading.
+    const expected = ERROR_KEYS.length + 1;
     const found = templateGaps(new Map(), undefined);
-    assert.equal(found.filter((gap) => gap.endsWith('absent des données')).length, 11);
-    assert.equal(found.filter((gap) => gap.endsWith('absent du modèle')).length, 11);
+    assert.equal(found.filter((gap) => gap.endsWith('absent des données')).length, expected);
+    assert.equal(found.filter((gap) => gap.endsWith('absent du modèle')).length, expected);
   });
 });
 

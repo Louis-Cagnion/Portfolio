@@ -35,6 +35,7 @@ import { overflowProblems, targetProblems } from './checks.js';
 import { languageTexts } from './language.js';
 import { duplicateMessages, normalize } from './text.js';
 import { recordExceptions, skip, test } from './runner.js';
+import { HINT_LOADING, hintError, hintLoading } from './states-hint.js';
 
 const FIXTURE = 'tests/fixtures/valid-locale.json';
 const SCHEMA_PATH = 'meta.title'; // champ retiré pour provoquer l'erreur de schéma
@@ -130,7 +131,7 @@ async function pendingLoading(width) {
     release();
     skip(
       ctx,
-      ['loading visible tant que fetch ne répond pas', 'loading puis ready'],
+      ['loading visible tant que fetch ne répond pas', HINT_LOADING, 'loading puis ready'],
       `ouverture du site impossible (${error.message})`,
     );
     return;
@@ -147,6 +148,7 @@ async function pendingLoading(width) {
       if (site.fetch.calls.length === 0) problems.push('aucun appel au fetch injecté');
       return problems;
     });
+    await hintLoading(site, ctx);
     await test(ctx, 'loading puis ready quand fetch répond', async () => {
       release();
       await waitStatus(site, 'ready', 5000);
@@ -717,6 +719,7 @@ export async function runStates(widths, mainWidth) {
   await failThenRetry(mainWidth, withoutAbortController(), true, messages);
   await failThenRetry(mainWidth, withoutDescription(), false, messages);
   await switchFromError(mainWidth);
+  for (const lang of LANGS) await hintError(mainWidth, lang);
   await test(
     { group: 'États', width: mainWidth, section: 'status' },
     'messages d\'erreur tous distincts et non vides',
