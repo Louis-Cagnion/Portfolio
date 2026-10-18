@@ -1,8 +1,8 @@
 # Checklist de design de la refonte
 
-Cette checklist fixe les valeurs de design relevées dans la maquette `docs/design/prototype/prototype.template.html`, les règles de chaque composant et les contrôles d'accessibilité à respecter. Elle guide l'écriture des sous-tâches S3 à S9, puis sert de grille de vérification à la fin de chaque rubrique : chaque case doit être cochable par une mesure ou un constat, jamais par un avis.
+Cette checklist fixe les règles de design et d'accessibilité du site (composants et états, contrastes AA, zones cliquables, largeurs, mouvement, clavier, chargement et erreurs). Elle sert de grille de vérification : chaque case doit être cochable par une mesure ou un constat, jamais par un avis. Les valeurs des jetons sont dans `css/tokens.css`.
 
-Les valeurs viennent de la maquette (variable ou sélecteur cité). Quand une valeur de la maquette ne passe pas un critère, la règle retenue est écrite à côté et marquée **écart**.
+Les valeurs viennent de la maquette validée (retirée du dépôt, visible dans l'historique git, par exemple `git show a49d2a5:docs/design/prototype/`) ; le rendu validé de la V1 livrée (`main`) fait foi. Quand une valeur de la maquette ne passait pas un critère, la règle retenue est écrite à côté et marquée **écart**.
 
 Décision de Louis du 08/10/2026 : le rendu de la maquette est validé et fait foi. Un écart qui changerait l'apparence au repos (couleur, taille, espacement, hauteur de barre) ne s'applique pas : la maquette est reprise telle quelle et le contrôle concerné devient une exception listée (section « Décisions de Louis »). Seuls s'appliquent les ajouts invisibles au repos : clavier, focus, mouvement réduit, états de survol et actif, technique.
 
@@ -18,110 +18,48 @@ Décision de Louis du 08/10/2026 : le rendu de la maquette est validé et fait f
 - [8. Chargement et erreurs](#8-chargement-et-erreurs)
 - [9. Pièges de la maquette](#9-pièges-de-la-maquette)
 - [Décisions de Louis](#décisions-de-louis)
-- [Vérification de la checklist](#vérification-de-la-checklist)
 
 ## 1. Jetons de design
 
-Tous les jetons vivent dans `css/tokens.css` (sélecteur `:root`). Aucune couleur, police, durée ou ombre n'est écrite en dur ailleurs dans les feuilles de style : les couleurs de décor de la maquette ont aussi leur jeton (tableau « Couleurs de décor »), et les ombres de la section « Ombres, flous, durées » sont des jetons. Seuls les dessins des astres, des planètes et du disque restent hors des jetons, dans le JS, indexés par `id` ou `body` (plan, schéma des données).
+Tous les jetons vivent dans `css/tokens.css` (sélecteur `:root`) et y font foi pour leurs valeurs : couleurs et couleurs de décor, polices, gouttière horizontale (barre et `main`) et largeur de contenu, rayons, échelle d'empilement, ombres, flous, courbes et durées. Aucune couleur, police, durée ou ombre n'est écrite en dur ailleurs dans les feuilles de style. Seuls les dessins des astres, des planètes et du disque restent hors des jetons, dans le JS, indexés par `id` ou `body` (plan, « Principes »). L'échelle typographique est dans les feuilles de style `css/*.css`.
 
 ### Couleurs
 
-| Variable à créer | Valeur | Origine dans la maquette | Usage |
-|---|---|---|---|
-| `--void` | `#070d1f` | `:root --void` | fond de page, fond du ciel, encre sur or |
-| `--panel` | `#0f1a38` | `:root --panel` | fond des panneaux, de la fiche, de la barre d'onglets |
-| `--line` | `rgba(220, 230, 255, 0.13)` | `:root --line` | bordures et séparateurs |
-| `--text` | `#e6ecff` | `:root --text` | texte principal, titres |
-| `--dim` | `#9aa7cc` | `:root --dim` | texte secondaire, corps des panneaux |
-| `--faint` | `#66739c` | `:root --faint` | mentions discrètes (compteurs, aides, légendes) ; 3,67:1 à 4,14:1, conservé (section 3) |
-| `--accent` | `#e8b45a` | `:root --accent` | or : actions, coins HUD, focus, état actif |
-| `--accent-ink` | `#070d1f` | `:root --accent-ink` | texte posé sur l'or |
-| `--accent-soft` | `rgba(232, 180, 90, 0.15)` | `:root --accent-soft` | fond de l'élément actif (bascule de langue, onglet) |
-| `--live` | `#8fe3bf` | `:root --live` | vert phosphore, réservé à la position actuelle (voir ci-dessous) |
-| `--star` | `230, 236, 255` | `:root --star` | triplet RVB des étoiles, utilisé en `rgb(var(--star))` |
-| `--accent-hover` | `#f6d08f` | `.body a:hover` | lien en ligne survolé |
-| `--accent-edge` | `rgba(232, 180, 90, 0.55)` | `.const .group:hover .link`, `.planet .pl-bg` | filets or atténués au survol |
-| `--scrim` | `rgba(0, 0, 0, 0.55)` | `.sheet-bg` | voile derrière la fiche |
+Rôles (valeurs dans `css/tokens.css`) :
 
-Couleurs de décor (CSS de la maquette, valeurs relevées telles quelles) :
-
-| Variable à créer | Valeur | Origine dans la maquette | Usage |
-|---|---|---|---|
-| `--label-bg` | `rgba(9, 16, 38, 0.92)` | `.planet .pl-bg` (fill) | fond d'étiquette de planète |
-| `--orbit` | `rgba(220, 230, 255, 0.12)` | `.orbit` | orbite en pointillés |
-| `--link` | `rgba(230, 236, 255, 0.24)` | `.const .link` | trait de constellation |
-| `--link-sel` | `rgba(230, 236, 255, 0.35)` | `.const.focused .group.sel .link` | trait de la constellation sélectionnée |
-| `--trail` | `#ffc56b` | `.trail circle` | traînée du vaisseau |
-| `--groove` | `rgba(70, 45, 10, 0.35)` | `.groove-track` | piste d'un sillon |
-| `--groove-lit` | `rgba(255, 235, 180, 0.85)` | `.groove-track.lit` | sillon allumé (halo `#ffd27a`) |
-| `--engrave` | `rgba(80, 52, 14, 0.75)` | `.engrave` (stroke) | gravure du disque |
-| `--engrave-text` | `rgba(80, 52, 14, 0.85)` | `.engrave-text` | texte gravé de l'étiquette ; 3,91:1, conservé (section 3) |
-| `--arc-ink` | `#3b2507` | `.arc-name` (fill) | nom gravé d'un sillon |
-| `--arc-halo` | `rgba(255, 240, 200, 0.55)` | `.arc-name` (stroke de 2px) | halo clair du nom gravé |
-| `--lava` | `#ff7a2a` | `@keyframes lava` | lueur de la planète de lave |
+- Base : `--void` fond de page, fond du ciel, encre sur or ; `--panel` fond des panneaux, de la fiche, de la barre d'onglets ; `--line` bordures et séparateurs ; `--text` texte principal, titres ; `--dim` texte secondaire, corps des panneaux ; `--faint` mentions discrètes (compteurs, aides, légendes), 3,67:1 à 4,14:1, conservé (section 3).
+- Or et accents : `--accent` or, pour les actions, les coins HUD, le focus, l'état actif ; `--accent-ink` texte posé sur l'or ; `--accent-soft` fond de l'élément actif (bascule de langue, onglet) ; `--accent-hover` lien en ligne survolé ; `--accent-edge` filets or atténués au survol ; `--live` vert phosphore, réservé à la position actuelle (voir ci-dessous) ; `--star` triplet RVB des étoiles, utilisé en `rgb(var(--star))` ; `--scrim` voile derrière la fiche.
+- Décor : `--label-bg` fond d'étiquette de planète ; `--orbit` orbite en pointillés ; `--link` trait de constellation ; `--link-sel` trait de la constellation sélectionnée ; `--trail` traînée du vaisseau ; `--groove` piste d'un sillon ; `--groove-lit` sillon allumé (halo `#ffd27a`) ; `--engrave` gravure du disque ; `--engrave-text` texte gravé de l'étiquette, 3,91:1, conservé (section 3) ; `--arc-ink` nom gravé d'un sillon ; `--arc-halo` halo clair du nom gravé (trait de 2px) ; `--lava` lueur de la planète de lave.
 
 - [ ] `--panel-2` (`#15244b`) n'est utilisé nulle part dans la maquette : ne pas le créer.
 - [ ] Le vert `--live` n'apparaît que sur les signaux de la position actuelle : pastille de marque (`.brand i`), ligne `dd.live` de la télémétrie, pulsation de l'escale actuelle (`.traj .pulse`), voyants du vaisseau et de la station, point du favicon. Aucun bouton, lien, état de chargement ni message d'erreur ne l'utilise.
 - [ ] Aucun rouge, orange ou autre teinte d'alerte n'est ajouté : les erreurs s'expriment avec l'or et le texte (section 8).
-- [ ] Teintes des systèmes de projets, gardées dans `projects.js` : Tressol-Chabrier soleil `#fff6da`/`#e8b45a`, planète `#ffd88f`/`#b9822f` ; Projets perso soleil `#f3e1ff`/`#a46bd8`, planète `#e3c3ff`/`#7a45b0` ; 42 Perpignan soleil `#dcfff8`/`#4fd1c5`, planète `#b8f5ec`/`#25857c`. La teinte du système de la Piscine (S6) est distincte des trois autres et ne reprend ni l'or seul ni le vert `--live`.
+- [ ] Teintes des systèmes de projets, gardées dans `js/sections/projects-art.js` : Tressol-Chabrier soleil `#fff6da`/`#e8b45a`, planète `#ffd88f`/`#b9822f` ; Projets perso soleil `#f3e1ff`/`#a46bd8`, planète `#e3c3ff`/`#7a45b0` ; 42 Perpignan soleil `#dcfff8`/`#4fd1c5`, planète `#b8f5ec`/`#25857c`. La teinte du système de la Piscine (S6) est distincte des trois autres et ne reprend ni l'or seul ni le vert `--live`.
 
 ### Polices
 
-| Variable | Famille | Graisses chargées | Rôle |
-|---|---|---|---|
-| `--display` | `"Michroma", system-ui, sans-serif` | 400 | titres, nom, noms de systèmes |
-| `--sans` | `"IBM Plex Sans", system-ui, sans-serif` | 400, 500, 600 | texte, boutons |
-| `--mono` | `"IBM Plex Mono", ui-monospace, monospace` | 400, 500 | données, dates, étiquettes, disque |
+Familles : `--display`, `--sans` et `--mono` de `css/tokens.css`.
 
-- [ ] Le lien Google Fonts demande exactement ces graisses avec `display=swap` (`<link rel="stylesheet">` de la maquette).
-- [ ] **Écart** : la maquette écrit `font: 600 9.5px var(--mono)` (`.engrave-text`) et `font: 700 15px var(--mono)` (`.arc-name`) alors que seules les graisses 400 et 500 de la Mono sont chargées, ce qui donne un gras synthétique. Charger la 600 et la 700, ou passer ces deux textes en 500.
-
-Échelle typographique (taille, graisse, interligne ; `rem` = 16 px) :
-
-| Rôle | Sélecteur d'origine | Taille | Graisse | Interligne ou autre |
-|---|---|---|---|---|
-| Corps de page | `body` | 1.0625rem | 400 Sans | 1.6 |
-| Nom (h1) | `h1` | `clamp(2.3rem, 6.6vw, 5.2rem)` | 400 Display | 1.04, interlettrage -0.01em |
-| Titre de rubrique (h2) | `h2` | `clamp(1.3rem, 3vw, 1.9rem)` | 400 Display | marges 56px 0 8px |
-| Titre de fiche ou d'escale | `.detail h3` | 1.1rem | 400 Display | 1.4 |
-| Titre de la fiche projet | `.sheet h3` | 1.25rem | 400 Display | 1.35 |
-| Titre du message de contact | `.msg h3` | 1.15rem | 400 Display | 1.5 |
-| Titre de constellation ou de système | `.ctitle` | 1.05rem | Display | marges 18px 0 12px |
-| Marque | `.brand` | 0.82rem | Display | interlettrage 0.03em |
-| Accroche | `.pitch` | 1.12rem | 400 Sans | largeur 33em |
-| Ligne de mission | `.mission` | 1.0625rem | 500 Sans | couleur `--accent` |
-| Chapeau | `.lede` | 1.0625rem | 400 Sans | largeur 60ch |
-| Onglet de pilule | `.nav button` | 0.92rem | 500 Sans | |
-| Bouton | `.btn` | 0.95rem | 600 Sans | |
-| Bouton retour | `.back` | 0.9rem | 500 Sans | |
-| Puce | `.chips button` | 0.88rem | 500 Sans | |
-| Bascule de langue | `.lang button` | 0.8rem | 500 Mono | |
-| Onglet du bas | `.tabbar button` | 0.68rem | 500 Sans | |
-| Intitulé de dossier | `.dossier-body dt` | 0.85rem | 500 Mono | |
-| Date d'escale | `.when` | 0.9rem | 400 Mono | |
-| Compteur, aide, légende | `.count`, `.cue`, `.hint`, `.legend` | 0.8rem, 0.8rem, 0.9rem, 0.85rem | 400 | Mono pour compteur et repère |
-| Étiquette de tag | `.tags li` | 0.8rem | 400 Mono | |
-| Texte SVG | `.traj .wp text`, `.sun-label`, `.pl-name`, `.cname` | 14px, 15px, 12.5px, 14px | 500, 400 Display, 500, 600 | mis à l'échelle par `--u` en zoom |
-
+- [ ] Le lien Google Fonts de `index.html` demande exactement ces graisses, avec `display=swap` : Display (Michroma) 400 pour les titres, le nom et les noms de systèmes ; Sans (IBM Plex Sans) 400, 500, 600 pour le texte et les boutons ; Mono (IBM Plex Mono) 400, 500, 600, 700 pour les données, dates, étiquettes et le disque. Les graisses 600 (`.engrave-text`) et 700 (`.arc-name`) de la Mono évitent un gras synthétique (voir « Décisions de Louis »).
+- [ ] L'échelle typographique (taille, graisse, interligne ; `rem` = 16 px) n'est écrite que dans les feuilles de style `css/*.css`.
 - [ ] Aucun texte justifié ni alinéa ; texte aligné à gauche, lignes de 80 caractères au plus (`max-width` en `ch` : 60ch chapeau, 68ch corps et dossier).
 - [ ] Les textes rédigés (`.body`, `.lede`, dossier) portent `overflow-wrap: anywhere` pour qu'une adresse ou un mot long ne crée jamais de débordement.
 - [ ] Plafonnement général des textes (décision de Louis du 11/10/2026) : un texte de `FIT_TARGETS` (`js/core/fit-words.js`) dont le plus long mot ne tiendrait pas sur une ligne dans sa largeur reçoit un `font-size` en ligne réduit juste assez, sans plancher : jamais un mot coupé ni un débordement. Un texte dont les mots tiennent ne reçoit aucun style. Remesure aux changements de texte, de largeur, de police du navigateur et au chargement des polices (groupe `plafonnement` de la suite navigateur).
 
 ### Espacements, rayons, hauteur de barre
 
-- [ ] Gouttière horizontale : `--gutter: clamp(16px, 4vw, 48px)` (barre et `main`). Largeur de contenu : `--content-max: 1200px`.
 - [ ] Hauteur de la barre : `--bar-h` n'est pas une constante. La maquette fixe `61px` ; la barre mesure en réalité 58px sur mobile et 70px sur ordinateur (boutons de langue de 31px, groupe de 33px), donc 61px est une valeur approchée de la maquette. Le JS affecte `--bar-h` à la hauteur réelle de la barre (`ResizeObserver`), et les éléments collants (`top`) et les défilements s'en servent.
 - [ ] Valeurs d'espacement employées par la maquette, à reprendre sans inventer d'autres : 2, 3, 4, 6, 7, 8, 10, 11, 12, 13, 14, 16, 18, 22, 24, 26, 28, 32, 48, 56, 80 et 120 px (bas de `main`).
 - [ ] Remplissages de panneau : `.detail` 26px 28px (22px 18px sous 880 px) ; `.telemetry` 22px ; `.dossier-body` 6px 28px (4px 18px sous 700 px) ; `.sheet` 32px ; `.focus-panel` 22px 24px.
-- [ ] Rayons : `--radius-pill: 999px` (pilule, bascule), `--radius-tabbar: 22px`, `--radius-tab: 16px`, `--radius-label: 4px` (fond d'étiquette de planète). Panneaux, boutons, flèches, puces, tags et fiche ont des angles droits (0) : c'est l'identité HUD.
+- [ ] Rayons (`--radius-*`, `css/tokens.css`) : panneaux, boutons, flèches, puces, tags et fiche ont des angles droits (0) : c'est l'identité HUD.
 - [ ] Échelle d'empilement : ciel 0 ; `main` 1 ; scène du saut 3 ; flash 4 ; barre (sticky) 5 ; barre d'onglets (fixe) 6 ; voile 20 ; fiche 21.
 
 ### Ombres, flous, durées
 
-- [ ] Flou d'arrière-plan : 12px (barre `.bar`, `.focus-panel`), 14px (`.tabbar`, `#jDetail` sur téléphone). Toujours doublé de `-webkit-backdrop-filter` (la maquette ne le fait que pour `#jDetail`).
-- [ ] Ombres portées : disque `0 20px 40px rgba(0,0,0,.6)` ; halo d'appel du disque `0 0 18px rgba(232,180,90,.45)` ; vaisseau `drop-shadow 4px rgba(232,180,90,.6)` ; survol d'escale `6px .55`, de planète `8px .8`, de soleil `10px .6` ; balise de marque `0 0 10px var(--live)`.
-- [ ] Courbes : `--ease-inout: cubic-bezier(.65, 0, .35, 1)` (pilule 0.5s, hauteurs 0.7s), `--ease-out: cubic-bezier(.2, .8, .2, 1)` (fiche 0.45s, entrée du saut 0.55s), `--ease-in: cubic-bezier(.5, 0, .75, .4)` (sortie du saut 0.45s).
-- [ ] Durées : `--dur-fast: 0.2s` (boutons), `--dur: 0.3s` (couleurs, étiquettes), `--dur-slow: 0.5s`. Saut en hyperespace : 1020 ms au total, courbure FOV maximale `0.3` pendant 1000 ms (`FOV_MAX`).
+Ombres, halos, courbes et durées : `--blur*`, `--shadow-disc`, `--glow-*`, `--ease-*` et `--dur*` de `css/tokens.css` (`--dur-fast` pour les boutons, `--dur` pour les couleurs et les étiquettes).
+
+- [ ] Flou d'arrière-plan : `--blur` (barre `.bar`, `.focus-panel`), `--blur-strong` (`.tabbar`, `#jDetail` sur téléphone). Toujours doublé de `-webkit-backdrop-filter` (la maquette ne le fait que pour `#jDetail`).
+- [ ] Saut en hyperespace : 1020 ms au total, courbure FOV maximale `0.3` pendant 1000 ms (`FOV_MAX`).
 
 ## 2. Composants
 
@@ -129,7 +67,7 @@ Règle commune : tout élément interactif a un état par défaut, survol, focus
 
 ### Focus visible
 
-- [ ] Règle globale `:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px }` (maquette ligne 26) : 10,22:1 sur `--void`, 9,07:1 sur `--panel`.
+- [ ] Règle globale `:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px }` : 10,22:1 sur `--void`, 9,07:1 sur `--panel`.
 - [ ] Jamais d'`outline: none` sans équivalent : la maquette retire le contour des éléments SVG focalisables (`.wp`, `.group`, `.planet`, `.sun-btn`, `.rec-hit`) et ne laisse qu'un filtre de luminosité, insuffisant. **Écart** : chacun reçoit un anneau net en `:focus-visible` (trait `--accent` de 2 px, au moins 3:1 contre le fond voisin) sur sa zone cliquable.
 - [ ] **Écart** pour le disque d'or : l'anneau `#fff3cf` de `.rec-hit:focus-visible .core` donne 1,10:1 à 2,01:1 sur l'or. Anneau sombre `#3b2507` de 2 px à la place (6,49:1 sur `#d9a54d`, 7,64:1 sur `#e8b45a`). Un sillon focalisé au clavier reçoit aussi ce trait sombre de chaque côté de la piste, en plus de l'éclairage (`.groove-track.lit` donne seulement 1,50:1 à 3,50:1 contre l'or).
 - [ ] Un élément focalisé n'est jamais masqué par la barre collante ni la barre d'onglets : `scroll-padding-top: calc(var(--bar-h) + 8px)` et `scroll-padding-bottom: 88px` sur `html`.
@@ -272,13 +210,12 @@ La suite navigateur mesure tout `a[href]`, `button`, `[role="button"]`, `[role="
 
 ## 5. Largeurs et points de rupture
 
-Largeurs de contrôle : 320, 390, 430, 768 et 1280 px, en français et en anglais, pour chaque rubrique.
+Largeurs de contrôle : 320, 390, 430, 768 et 1280 px, en français et en anglais, pour chaque rubrique, examinées en rendu réel dans Chrome (téléphones compris).
 
 - [ ] `documentElement.scrollWidth <= clientWidth` à chacune de ces largeurs et dans chaque rubrique ; aucun élément visible ne sort du viewport ; aucun défilement horizontal (`scrollWidth > clientWidth + 1`) sur un élément, l'`overflow-y: auto` de la fiche restant permis ; aucun `overflow-x: auto` ni `scroll` (la maquette met `body { overflow-x: clip }`, qui masque le défaut sans le corriger : ne pas s'en servir pour passer le test).
-- [ ] En-tête à 320 px : marque 140,4px + bascule de la maquette (moins de 2 × 44px) + intervalle 24px + gouttières 32px tiennent en 286px : aucune règle de repli n'est nécessaire.
-- [ ] Barre d'onglets à 320 px : la grille `repeat(5, 1fr)` de la maquette élargit la colonne « Compétences » à 68,2px et ramène les autres à 54,4px (mesuré au rendu de la maquette, 48px de haut) : aucun débordement, rien à changer. Vérifier aussi en anglais.
+- [ ] À 320 px, l'en-tête (marque 140,4px + bascule de moins de 2 × 44px + intervalle 24px + gouttières 32px, soit 286px) et la barre d'onglets (`repeat(5, 1fr)` : « Compétences » 68,2px, les autres 54,4px, 48px de haut ; relevés sur la maquette) ne débordent pas et n'ont besoin d'aucune règle de repli. Vérifier aussi en anglais.
 
-Points de rupture de la maquette (mêmes valeurs en CSS et en JS, définies une fois) :
+Points de rupture (mêmes valeurs en CSS et en JS, `BREAKPOINTS` de `js/core/dom.js`, définies une fois) :
 
 | Largeur | Source | Ce qui change |
 |---|---|---|
@@ -293,7 +230,6 @@ Les ruptures sont en em pour suivre la taille de police du navigateur : la barre
 - [ ] La plage 701 à 880 px (dont 768 px) combine la barre d'onglets et le parcours horizontal : vérifier les deux ensemble.
 - Non appliqué (décision de Louis) : à 768 px le parcours horizontal (`viewBox 0 0 1100 300`) est réduit à 0,64 (contenu de 706px) ; ses textes de 14px et 12px s'affichent à environ 9px et 7,7px. Le rendu de la maquette est conservé.
 - [ ] Au-dessus de 880 px : le contenu s'arrête à `--content-max` (1200px) centré ; à 1280px la poussière d'étoiles borde les marges (`band = max(140, (W - 1200) / 2 + 160)`).
-- [ ] À la fin de chaque rubrique, les cinq largeurs sont examinées en rendu réel dans Chrome, téléphones compris.
 
 ## 6. Mouvement
 
@@ -304,7 +240,7 @@ Les ruptures sont en em pour suivre la taille de police du navigateur : la barre
 - [ ] Une boucle d'animation (`requestAnimationFrame`) par rubrique, démarrée à l'entrée de la rubrique et annulée (`cancelAnimationFrame`) à sa sortie, à l'onglet masqué (`document.hidden`) et à la fin du mouvement. Seul le ciel tourne en continu. La maquette lance `spin` en permanence et se contente de tester `current === 'projects'` à chaque image : ne pas copier.
 - [ ] Contrôle : sur chaque rubrique, un compteur de `requestAnimationFrame` actifs ne dépasse pas 2 (ciel et rubrique), et vaut 1 sur l'accueil immobile.
 - [ ] Toute boucle qui intègre le temps plafonne le pas : `dt = Math.min(now - last, 50)` (comme `spin` dans la maquette), pour qu'un onglet qui revient de l'arrière-plan ne fasse pas sauter les planètes. S'applique au ciel, aux planètes, au vaisseau.
-- [ ] Une animation de caméra bloque le recentrage automatique au redimensionnement tant qu'elle tourne (`ccam.raf || moving`, `scam.raf || zMoving`).
+- [ ] Une animation de caméra bloque le recentrage automatique au redimensionnement tant qu'elle tourne (`ccam.raf || moving`, `scam.raf || zMoving`), pour que la vue n'alterne pas entre gros plan et vue globale.
 - [ ] Animations d'entrée ou de sortie de texte ne portent que sur `opacity` et `transform` (`fadeText` 0.45s) ; les transitions de hauteur (`.viz`, `.systems`, 0.7s `--ease-inout`) sont les seules sur une propriété de mise en page.
 - [ ] Aucune animation ne clignote plus de 3 fois par seconde sur une grande surface : le battement de la flamme (`steps(2)` en 0.14s) ne couvre que le vaisseau (30px).
 
@@ -326,7 +262,7 @@ Les ruptures sont en em pour suivre la taille de police du navigateur : la barre
 
 ## 8. Chargement et erreurs
 
-Le bloc `#status` est statique dans `index.html` et stylé par `layout.css`, donc visible avant que le JavaScript ait chargé. Variante « Console » choisie par Louis le 08/10/2026, référence rendue : `docs/design/prototype/status-variants.html`.
+Le bloc `#status` est statique dans `index.html` et stylé par `layout.css`, donc visible avant que le JavaScript ait chargé. Variante « Console » choisie par Louis le 08/10/2026.
 
 - [ ] Chargement : panneau HUD centré (largeur `min(34rem, 100% - 2 × var(--gutter))`, **proposé** : sans source dans la maquette) sur fond `--void`, texte `ui.loading` en `--dim`, titre en Display, indicateur : barre de 3px sur fond `--line`, segment or (`--accent`) de 35 % qui balaie en `transform` seulement (1,4s, `--ease-inout`) ; jamais le vert `--live`. `role="status"` et `aria-live="polite"`.
 - [ ] Le texte statique est en français (langue par défaut) et il est remplacé dès que la langue est connue.
@@ -341,17 +277,14 @@ Le bloc `#status` est statique dans `index.html` et stylé par `layout.css`, don
 
 ## 9. Pièges de la maquette
 
-Les principes d'implémentation (mesures, polices, saut en hyperespace, placement des constellations) sont dans la section « Principes » de `docs/design/plan.md`. Règles rappelées ici :
-
 - [ ] Aucune dimension n'est lue sur un élément d'une rubrique non affichée : les largeurs d'étiquettes de planète se calculent par `canvas.measureText`.
 - [ ] Un élément survolé ou focalisé n'est déplacé dans le DOM que s'il n'est pas déjà le dernier de son parent (`sysG.lastElementChild === g || sysG.append(g)`), pour que le clic atteigne l'élément.
-- [ ] Une animation de caméra bloque le recentrage au redimensionnement tant qu'elle tourne, pour que la vue n'alterne pas entre gros plan et vue globale.
 
 Commandes de contrôle :
 
-- [ ] `grep -rn innerHTML js/` ne renvoie que `js/core/dom.js` ; tout texte de données passe par `setRich()` (balises `<strong>`, `<em>` et `<a href>` en `https:` ou `mailto:` seulement).
-- [ ] Le caractère U+2014 (tiret cadratin) est absent de `index.html`, `css/`, `js/`, `data/` et `README.md`.
-- [ ] Aucun texte du site ne date une situation par un mot de temps relatif (« en cours », « actuellement », « aujourd'hui ») : `grep -rniE "en cours|actuellement|aujourd" index.html data/ README.md` ne renvoie rien. L'accroche de la maquette (`.pitch`) en contient un, absent du texte validé du plan. Exception de Louis (18/10/2026) : l'ouverture de « Je me présente » garde « actuellement » (alternance de deux ans), listée dans `tests/texts.test.mjs`.
+- [ ] `git grep -n innerHTML -- js` ne renvoie rien ; tout texte de données passe par `setRich()` (balises `<strong>`, `<em>` et `<a href>` en `https:` ou `mailto:` seulement).
+- [ ] Le caractère U+2014 (tiret cadratin) est absent de `index.html`, `css/`, `js/`, `data/` et `README.md` (`tests/texts.test.mjs`).
+- [ ] Aucun texte du site ne date une situation par un mot de temps relatif (« en cours », « actuellement », « aujourd'hui ») : `grep -rniE "en cours|actuellement|aujourd" index.html data/ README.md` ne renvoie rien. Exception de Louis (18/10/2026) : l'ouverture de « Je me présente » garde « actuellement » (alternance de deux ans), listée dans `tests/texts.test.mjs`.
 
 ## Décisions de Louis
 
@@ -370,10 +303,3 @@ Ajouts appliqués (invisibles au repos) :
 - Mouvement réduit en `animation: none` et `transition: none`, ciel figé.
 - États `:active` et survol sous `@media (hover: hover)` ; bordures `--line` traitées comme décoratives.
 - Une boucle `requestAnimationFrame` par rubrique ; graisses 600 et 700 de la Mono chargées.
-
-Reste à concevoir avec Louis (maquettes rendues dans Chrome) : panneaux de chargement et d'erreur.
-
-## Vérification de la checklist
-
-- [ ] Chaque valeur chiffrée citée est présente dans la maquette (variable ou sélecteur indiqué), hors les rubriques marquées **écart**.
-- [ ] La grille est rejouée à la fin de chaque rubrique S5 à S9, puis une dernière fois à S10.
