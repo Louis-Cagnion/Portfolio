@@ -22,7 +22,7 @@ import {
   watchReduced,
 } from '../core/motion.js';
 import { initSheet } from '../ui/sheet.js';
-import { PHONE_CAMERA, phoneUnit, setPlanetActive } from './projects-art.js';
+import { PHONE_CAMERA, phoneUnit, setPlanetActive, tiltOrbit } from './projects-art.js';
 import { TAU } from './projects-layout.js';
 
 const ENTER_MS = 1000;
@@ -78,7 +78,7 @@ function focusTilt(system, phone) {
 function setTilt(system, tilt) {
   system.tilt = tilt;
   for (const orbit of system.orbits)
-    orbit.setAttribute('ry', (Number(orbit.getAttribute('rx')) * tilt).toFixed(2));
+    tiltOrbit(orbit, tilt);
 }
 
 /**
@@ -288,7 +288,6 @@ export function createZoom({ parts, state, renderAll, showSystem }) {
     const { built, view } = state;
     if (!built || view.zoomedIndex >= 0) return;
     const system = built.systems[index];
-    system.restTilt ??= system.tilt;
     view.zoomedIndex = index;
     built.systems.forEach((each, k) => {
       each.g.classList.toggle('on', k === index);

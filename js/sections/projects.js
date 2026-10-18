@@ -15,6 +15,7 @@ import {
   remeasureLabels,
   renderPlanet,
   rescalePhone,
+  restView,
   tintOf,
 } from './projects-art.js';
 import { HIT_RADIUS, nearestPlanet } from './projects-layout.js';
@@ -207,7 +208,7 @@ function bindRaise(node, next) {
  *
  * @returns {{ x: number, y: number }} centre de sa boîte, en pixels de la fenêtre
  */
-function centreOf(node) {
+function centerOf(node) {
   const box = node.getBoundingClientRect();
   return { x: box.x + box.width / 2, y: box.y + box.height / 2 };
 }
@@ -222,8 +223,8 @@ function centreOf(node) {
  * @returns {object | null} planète, null si rien n'est sous le doigt
  */
 function planetUnder(point, planets) {
-  const centres = planets.map((planet) => ({ planet, ...centreOf(planet.nodes.body) }));
-  const near = nearestPlanet(point, centres, HIT_RADIUS);
+  const centers = planets.map((planet) => ({ planet, ...centerOf(planet.nodes.body) }));
+  const near = nearestPlanet(point, centers, HIT_RADIUS);
   if (near) return near.planet;
   return planets.find((planet) => {
     const box = planet.nodes.bg.getBoundingClientRect();
@@ -253,7 +254,7 @@ export function mount(root) {
     entries: [], // buildEntries : texte de chaque entrée de la liste
     phone: narrow.matches,
     openId: null, // projet de la fiche ouverte
-    view: { u: 1, camera: { cx: 0, w: 1 }, zoomedIndex: -1 },
+    view: restView(1, 1),
   };
 
   /** Fiche du projet `id` ; `origin` reprend le focus à sa fermeture. */
@@ -373,11 +374,7 @@ export function mount(root) {
     parts.plan.style.removeProperty('height');
     parts.plan.classList.remove('zoomed', 'bleed');
     parts.layout.classList.remove('zfocus');
-    Object.assign(view, {
-      u: built.unit,
-      camera: { cx: built.width / 2, w: built.width },
-      zoomedIndex: -1,
-    });
+    Object.assign(view, restView(built.width, built.unit));
     wire(built);
     fit();
   };
