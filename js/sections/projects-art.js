@@ -20,28 +20,32 @@ API :
 camera = centre et largeur du plan visible, zoomedIndex = système zoomé (-1 au repos).
 */
 import { svg } from '../core/dom.js';
-import { planetSlots, splitTitle, systemRadii } from './projects-layout.js';
+import {
+  HIT_RADIUS,
+  PISCINE_ID,
+  TAU,
+  planetSlots,
+  splitTitle,
+  systemRadii,
+} from './projects-layout.js';
 
-const TAU = 2 * Math.PI;
 export const TINTS = Object.freeze({
   pro: { sun: ['#fff6da', '#e8b45a'], planet: ['#ffd88f', '#b9822f'] },
   perso: { sun: ['#f3e1ff', '#a46bd8'], planet: ['#e3c3ff', '#7a45b0'] },
   school: { sun: ['#dcfff8', '#4fd1c5'], planet: ['#b8f5ec', '#25857c'] },
-  piscine: { sun: ['#e2f0ff', '#4f8cff'], planet: ['#bcd8ff', '#2f62c9'] },
+  [PISCINE_ID]: { sun: ['#e2f0ff', '#4f8cff'], planet: ['#bcd8ff', '#2f62c9'] },
 });
-const PISCINE_ID = 'piscine';
 const TILT = 0.42;
 const SYSTEM_ROW = 270;
 const DESK_WIDTH = 1100;
 const PHONE_WIDTH = 360;
 const PISCINE_MAX_RADIUS = 215; // bureau : rayon de l'orbite extérieure de la Piscine
-const PHONE_CAMERA = 370; // largeur du plan zoomé sur téléphone, en unités du plan
+export const PHONE_CAMERA = 370; // largeur du plan zoomé sur téléphone, en unités du plan
 const SUN_OFFSET_Y = -26; // le soleil est remonté pour laisser la place à son nom
 const SUN_GLOW_RADIUS = 44;
 const SUN_RADIUS = 16;
 const SUN_NAME_Y = 112;
 const SUN_COUNT_Y = 132;
-const HIT_RADIUS = 22; // toucher de 44 px de la Piscine sur téléphone (valeur de C2)
 const HIT_MARGIN = 10; // zone de survol : rayon de la planète plus cette marge
 const LABEL_FONT = '500 12.5px "IBM Plex Sans", sans-serif';
 const LABEL_PAD = 16;
@@ -172,7 +176,7 @@ export function remeasureLabels(planets) {
  *
  * @returns {string} titre brut
  */
-const plainTitle = (title) => title.replace(/<[^>]+>/g, '');
+export const plainTitle = (title) => title.replace(/<[^>]+>/g, '');
 
 /**
  * @brief Vérifie les systèmes avant toute construction.

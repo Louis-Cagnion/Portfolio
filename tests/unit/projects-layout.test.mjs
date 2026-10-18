@@ -20,8 +20,9 @@ Module pur, sans accès au DOM. Source : docs/design/s6/mockup.js (maquette vali
       le premier de system.projects d'abord ;
   splitTitle(title) -> [title] sans espace, sinon coupe à l'espace le plus proche du
     milieu (à égalité le premier), l'espace supprimé ;
-  nearestPlanet(point, planets, hitRadius = 22) -> la planète au centre le plus proche,
-    à une distance STRICTEMENT inférieure à hitRadius (égalité : la première), sinon null.
+  nearestPlanet(point, planets, hitRadius = HIT_RADIUS = 22) -> la planète au centre le
+    plus proche, à une distance STRICTEMENT inférieure à hitRadius (égalité : la première),
+    sinon null.
 Position, anneau, rayon et angle ne dépendent que de `id` et de l'ordre des projets, jamais
 des textes ni de la langue ; seule la taille de la Piscine dépend des longueurs de ses textes.
 Taille de la Piscine (par rang de longueur) : projects-layout-sizes.test.mjs.
@@ -558,8 +559,8 @@ describe('nearestPlanet', () => {
   });
 
   test('distance exactement égale au rayon : null (strictement inférieur)', async () => {
-    const { nearestPlanet } = await load();
-    assert.equal(nearestPlanet({ x: 22, y: 0 }, [{ id: 'a', x: 0, y: 0 }]), null);
+    const { HIT_RADIUS, nearestPlanet } = await load();
+    assert.equal(nearestPlanet({ x: HIT_RADIUS, y: 0 }, [{ id: 'a', x: 0, y: 0 }]), null);
     assert.equal(nearestPlanet({ x: 3, y: 4 }, [{ id: 'a', x: 0, y: 0 }], 5), null);
     assert.equal(nearestPlanet({ x: 21.99, y: 0 }, [planets[0]]), planets[0]);
   });

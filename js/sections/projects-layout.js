@@ -5,16 +5,16 @@ Le placement ne dépend que de l'identifiant du système. La taille dépend du n
 sauf à la Piscine, où elle dépend de la longueur du texte (décision du 12/10/2026).
 */
 
-const TAU = 2 * Math.PI;
-const PISCINE_ID = 'piscine';
-const PISCINE_SIZE = 20;
+export const TAU = 2 * Math.PI;
+export const PISCINE_ID = 'piscine';
+const PISCINE_PROJECT_COUNT = 20;
 const SIZE_BASE = 7;
 const SIZE_PER_BLOCK = 1.4;
 const SIZE_BONUS_MAX = 6;
 // Piscine : du projet le plus court (taille d'un bloc) au plus long (taille maximale).
 const PISCINE_SIZE_MIN = SIZE_BASE + SIZE_PER_BLOCK;
 const PISCINE_SIZE_MAX = SIZE_BASE + SIZE_BONUS_MAX;
-const DEFAULT_HIT_RADIUS = 22;
+export const HIT_RADIUS = 22; // rayon de toucher, en pixels d'écran (44 px de diamètre)
 const DEFAULT_RADII = [72, 120, 168];
 const RING_COUNT_OTHER = DEFAULT_RADII.length;
 const ANGLE_STEP_OTHER = 2.4;
@@ -144,9 +144,10 @@ function phoneSlots() {
 function baseSlots(system, phone, maxRadius) {
   const count = system.projects.length;
   if (system.id === PISCINE_ID) {
-    if (count !== PISCINE_SIZE)
+    if (count !== PISCINE_PROJECT_COUNT)
       throw new Error(
-        `planetSlots : le système ${system.id} attend ${PISCINE_SIZE} projets, reçu ${count}`,
+        `planetSlots : le système ${system.id} attend ${PISCINE_PROJECT_COUNT} projets,`
+        + ` reçu ${count}`,
       );
     return phone ? phoneSlots() : deskSlots(systemRadii(system.id, { phone, maxRadius }));
   }
@@ -213,7 +214,7 @@ export function splitTitle(title) {
  *
  * @returns {object|null} Planète à distance strictement inférieure, la première à égalité.
  */
-export function nearestPlanet(point, planets, hitRadius = DEFAULT_HIT_RADIUS) {
+export function nearestPlanet(point, planets, hitRadius = HIT_RADIUS) {
   let best = null;
   let bestDistance = hitRadius;
   for (const planet of planets) {

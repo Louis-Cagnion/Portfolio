@@ -22,16 +22,15 @@ import {
   watchReduced,
 } from '../core/motion.js';
 import { initSheet } from '../ui/sheet.js';
-import { phoneUnit, setPlanetActive } from './projects-art.js';
+import { PHONE_CAMERA, phoneUnit, setPlanetActive } from './projects-art.js';
+import { TAU } from './projects-layout.js';
 
-const TAU = 2 * Math.PI;
 const ENTER_MS = 1000;
 const EXIT_MS = 900;
 const TRACK_MS = 800; // caméra d'un projet lié : du système à la planète, et retour
 const SPIN = 0.00005; // rad/ms : vitesse commune des planètes du système zoomé
 const DESK_HEIGHT = 520; // hauteur du plan zoomé au bureau, en pixels
 const PHONE_RATIO = 1.25; // téléphone : hauteur du plan zoomé, en largeurs
-const PHONE_CAMERA = 370; // téléphone : largeur de la caméra, en unités du plan
 const PIS_HEIGHT = 320; // téléphone : hauteur du plan zoomé de la Piscine, en pixels
 const PIS_ROW = 152; // téléphone : position du centre de la Piscine depuis le haut du plan
 const PIS_LABEL = 8.4; // téléphone : hauteur d'étiquette qui fait descendre la Piscine
