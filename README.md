@@ -35,7 +35,7 @@ The Skills section links to [Devpedia](https://louis-cagnion.github.io/Devpedia/
 ## Features
 
 - **French and English**: every text comes from `data/fr.json` and `data/en.json`; the language switch in the header changes the language and the choice is remembered.
-- **Validated content**: each JSON file is checked against a schema at load time, and a missing or invalid field is reported on a loading and error screen with a retry button.
+- **Validated content**: each JSON file is checked against a schema at load time, and a missing or invalid field is reported on an error screen with a retry button and a button to try the other language.
 - **Keyboard accessibility**: visible focus, named controls, Enter and Space on stops and arrows, and a project sheet that traps focus and closes with Escape.
 - **Reduced motion**: when the system asks for less motion, the sky is a still image, jumps and zooms are immediate and the animation loops stay stopped.
 - **Responsive from 320 px to 2560 px**: the section bar becomes a tab bar on narrow screens, and layouts use breakpoints in `em` so they follow the browser font size.
@@ -59,6 +59,7 @@ assets/         favicon
 - `js/sections/`: one `mount` per section (`home.js`, `journey.js`, `skills.js`, `projects.js`, `contact.js`), split into helpers for drawing (`*-art.js`), placement (`*-layout.js`) and behavior (for example `skills-focus.js`, `projects-zoom.js`, `journey-ship.js`).
 - `js/ui/`: `nav.js` (section bar and tab bar), `starfield.js` (canvas sky), `sheet.js` (project sheet), `status.js` (loading and error screen).
 - `data/`: `fr.json` and `en.json` contain all displayed text, with the same structure in both languages.
+- Development notes, design documents and the unit and browser test suites live on the `redesign/space` branch, not on `main`.
 
 ## Technologies
 
