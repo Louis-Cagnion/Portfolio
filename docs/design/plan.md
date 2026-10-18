@@ -149,7 +149,7 @@ Le modèle et l'effort de chaque agent se choisissent au moment de le lancer, d'
 
 - Langue par défaut : français, choix du visiteur mémorisé.
 - Le lien Devpedia des compétences et les introductions des catégories de projets sont conservés : leur emplacement se propose en maquettes rendues dans Chrome pendant S6 et S8.
-- Les contenus de `content-suggestions.md` (textes proposés le 08/10/2026 d'après ses dépôts, dates, ouverture de « Je me présente », photo) sont reportés par S2 une fois validés par Louis, au plus tard avant S10.
+- Les contenus (textes proposés le 08/10/2026 d'après ses dépôts, dates, ouverture de « Je me présente », photo) ont été reportés dans `data/*.json` après validation de Louis.
 - `css/home.css` se charge par un `<link>` dans `index.html`, après `css/layout.css`, et non par une injection depuis `home.js` (10/10/2026).
 - Les modules de rubrique suivent la forme de `MOUNTS` (`mount(root)` qui rend `update(content)`), et chacun remplace dans `js/main.js` le montage minimal de sa rubrique (10/10/2026).
 - La Piscine devient un quatrième système à côté de Tressol-Chabrier, personnel et 42, avec une planète par module (Shell00 et Shell01, C00 à C13, les trois rushs, BSQ) ; sa présentation se propose en maquettes rendues dans Chrome pendant S6.

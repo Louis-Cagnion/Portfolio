@@ -1,5 +1,5 @@
-/* Projets : Piscine zoomée sur téléphone (320, 390 et 430 px ; plan.md:123 et :159,
-arbre-s6.md:11, :15 et :41). Hypothèses de contrat, tirées de docs/design/s6/mockup.js : chaque
+/* Projets : Piscine zoomée sur téléphone (320, 390 et 430 px ; plan.md:123 et :159).
+Hypothèses de contrat, tirées de docs/design/s6/mockup.js : chaque
 `.planet` contient `.pl-body` (le disque, dont le centre est celui de la planète), `.pl-hit`
 (la zone de toucher) et `.pl-label` (l'étiquette, avec un `text`) ; plan dans `svg#systems`.
 Invariants testés, jamais des rayons : 20 planètes et 20 étiquettes visibles et lisibles dans

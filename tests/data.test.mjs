@@ -390,7 +390,7 @@ describe('détecteurs : parité et chaînes vides', () => {
 });
 
 // ---------- Format de la légende des compétences (S8.B2, ajouté par S8.C0) ----------
-/* arbre-s8.md:22 : clé `skills.legendItem`, « {body} : {level} » en français et
+/* Étape S8.C0 : clé `skills.legendItem`, « {body} : {level} » en français et
 « {body}: {level} » en anglais (maquette, prototype.template.html:932) ; le niveau est affiché
 tel que la donnée (`skills.levels`), sans transformation par le code. */
 describe('légende des compétences : skills.legendItem', () => {

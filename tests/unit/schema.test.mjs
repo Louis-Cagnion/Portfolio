@@ -236,7 +236,7 @@ describe('validateLocale : champs fautifs nommés par leur chemin', () => {
 });
 
 describe('validateLocale : format de la légende des compétences (skills.legendItem)', () => {
-  /* arbre-s8.md:22 : clé requise, ajoutée aux données par la feuille C0. La fixture de
+  /* Étape S8.C0 : clé requise, ajoutée aux données par la feuille C0. La fixture de
   tests/fixtures n'est pas modifiée ici : les cas partent d'une copie qui porte la clé. */
   const KEY = ['skills', 'legendItem'];
   const withKey = (value) => {
