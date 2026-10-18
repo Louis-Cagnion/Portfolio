@@ -485,6 +485,29 @@ async function closeTests(ctx, site, view) {
         return [...problems, ...closedProblems(site)];
       });
   }
+  await check(ctx, 'onClose : une fois à la fermeture, focus déjà rendu, dernier open gagne',
+    site, (ctl) => {
+      const { origin } = addFixtures(site, view);
+      const calls = [];
+      const record = (id) => () => calls.push(`${id}:${site.doc.activeElement === origin}`);
+      const problems = [];
+      const step = (at, want) => ko(problems, String(calls) !== want, `${at} : « ${calls} »`);
+      ctl.open(view, origin, { onClose: record('a') });
+      step('ouverture', '');
+      ctl.close();
+      step('close()', 'a:true');
+      ctl.close();
+      step('second close()', 'a:true');
+      ctl.open(view, origin, { onClose: record('d') });
+      ctl.open(view, origin);
+      ctl.close();
+      step('open sans option après un rappel', 'a:true');
+      ctl.open(view, origin, { onClose: record('b') });
+      ctl.open(view, origin, { onClose: record('c') });
+      ctl.close();
+      step('deux open', 'a:true,c:true');
+      return problems;
+    });
 }
 
 async function updateTest(ctx, site, views) {

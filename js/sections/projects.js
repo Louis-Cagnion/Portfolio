@@ -257,13 +257,16 @@ export function mount(root) {
     view: restView(1, 1),
   };
 
-  /** Fiche du projet `id` ; `origin` reprend le focus à sa fermeture. */
-  const open = (id, origin) => {
+  /**
+   * Fiche du projet `id` ; `origin` reprend le focus à sa fermeture.
+   * `options.onClose` est transmis à la fiche et appelé une fois à sa fermeture.
+   */
+  const open = (id, origin, options) => {
     if (!state.projects) throw new Error('projects : rubrique pas encore rendue');
     const found = findProject(state.projects, id);
     if (!found) throw new Error(`projects : projet « ${id} » absent des données`);
     state.openId = id;
-    initSheet(document).open(sheetView(state.projects, found), origin);
+    initSheet(document).open(sheetView(state.projects, found), origin, options);
   };
 
   /** Replace chaque planète selon l'angle et la vue courants. */
@@ -301,22 +304,6 @@ export function mount(root) {
 
   const zoom = createZoom({ parts, state, renderAll, showSystem });
 
-  /** Rend la caméra au système dès que la fiche est fermée (Échap, bouton ou fond). */
-  const releaseOnClose = () => {
-    const sheet = document.getElementById('sheet');
-    if (!sheet)
-      throw new Error('projects : élément #sheet absent de la page');
-    const watch = new MutationObserver(() => {
-      if (initSheet(document).isOpen()) return;
-      watch.disconnect();
-      zoom.release();
-    });
-    watch.observe(sheet, {
-      attributes: true,
-      attributeFilter: ['class'],
-    });
-  };
-
   /**
    * @brief Projet lié : la caméra rejoint la planète, puis la fiche s'ouvre.
    *
@@ -332,8 +319,7 @@ export function mount(root) {
       return;
     }
     await zoom.toPlanet(planet);
-    open(id, origin);
-    releaseOnClose();
+    open(id, origin, { onClose: () => zoom.release() });
   };
 
   /**
