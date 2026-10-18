@@ -842,12 +842,12 @@
           {
             "id": "games",
             "title": "Des outils pour mes jeux",
-            "summary": "De petits programmes, surtout en C++, pour les jeux auxquels je joue.",
+            "summary": "De petits outils, surtout en C++ : calculateurs de types et de score, catalogue de statistiques et chercheur de mots pour les jeux auxquels je joue.",
             "tags": ["C++", "C"],
             "blocks": [
               {
                 "type": "text",
-                "html": "De petits programmes, surtout en C++, pour les jeux auxquels je joue : calculateurs de multiplicateurs de types pour Pokémon et Temtem, un calcul de score pour Balatro, un catalogue des ballons de Bloons TD 6, un solveur pour Tusmo, un jeu textuel en C inspiré de Solo Leveling avec sauvegarde des joueurs, et le premier prototype de la carte de Heartopia, devenu ensuite le wiki."
+                "html": "De petits programmes, surtout en C++, pour les jeux auxquels je joue : un calculateur de multiplicateurs de types pour Pokémon et un autre pour Temtem (en attaque ou en défense, par types ou par créature), un calculateur du nombre de cartes nécessaires pour dépasser le score maximal de Balatro, un catalogue des statistiques des ballons (par vie et par manche) et des singes de Bloons TD 6, un chercheur de mots pour Tusmo (lettres imposées, préfixe, lettres exclues, dictionnaire français), et un système de jeu inspiré de Solo Leveling, en C, avec sauvegardes."
               }
             ],
             "links": [],
