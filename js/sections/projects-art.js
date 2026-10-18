@@ -23,7 +23,6 @@ import { svg } from '../core/dom.js';
 import { planetSlots, splitTitle, systemRadii } from './projects-layout.js';
 
 const TAU = 2 * Math.PI;
-const TINT_FIELDS = ['sun', 'planet'];
 export const TINTS = Object.freeze({
   pro: { sun: ['#fff6da', '#e8b45a'], planet: ['#ffd88f', '#b9822f'] },
   perso: { sun: ['#f3e1ff', '#a46bd8'], planet: ['#e3c3ff', '#7a45b0'] },
@@ -274,7 +273,7 @@ export function setPlanetActive(node, active) {
  * @param {string} systemId identifiant du système (teinte)
  * @param {string} title titre brut
  * @param {{ size: number, lines: string[], phonePis: boolean }} shape rayon, lignes de
- *   l'étiquette et Piscine sur téléphone (zone de toucher `hit44`, classe `nearest`)
+ *   l'étiquette et Piscine sur téléphone (classe `nearest`)
  * @param {{ width: number, height: number }} box dimensions de l'étiquette
  *
  * @returns {object} nœuds : `g`, `hit`, `body`, `label`, `bg`, `name`
@@ -282,7 +281,7 @@ export function setPlanetActive(node, active) {
 function buildPlanetNodes(systemId, title, shape, box) {
   const { size, lines, phonePis } = shape;
   const hit = svg('circle', {
-    class: phonePis ? 'pl-hit hit44' : 'pl-hit',
+    class: 'pl-hit',
     r: size + HIT_MARGIN,
   });
   const body = svg('circle', { class: 'pl-body', r: size, fill: `url(#planet-${systemId})` });
