@@ -12,14 +12,22 @@ fusionné puis supprimé après relecture du diff. Les agents ne committent pas.
 
 | Id | Contenu | Agent | Statut |
 |----|---------|-------|--------|
-| F1 | Code mort : `TINT_FIELDS`, classe `hit44`, `run.restTilt`, repli `ratio() \|\| OVERVIEW_RATIO` | builder haiku/low | à faire |
-| F4 | `tags ?? []`, `links ?? []` (projects.js:138,140) ; test de `getElementById('sheet')` (:318) | builder haiku/medium | à faire |
-| F6 | Mineurs de forme : accolades, `PISCINE_SIZE` renommé, variables à une lettre, simplifications | builder haiku/medium | à faire |
-| F2 | Un seul endroit pour `plainTitle`, `PHONE_CAMERA`, `PISCINE_ID`, `TAU` (fichiers Projets), rayon de toucher 22 | builder sonnet/medium | à faire |
-| F3 | `format()` dans `buildSun`, pose de `rx`/`ry` commune, fabrique de l'objet `view` | builder sonnet/medium | après F2 |
+| F1 | Code mort : `TINT_FIELDS`, classe `hit44`, `run.restTilt`, repli `ratio() \|\| OVERVIEW_RATIO` | builder haiku/low | en cours |
+| F4 | `tags ?? []`, `links ?? []` (projects.js:138,140) ; test de `getElementById('sheet')` (:318) | builder haiku/medium | en cours |
+| F6 | Mineurs de forme : accolades, variables à une lettre de `placeLabel`, condition répétée, `overview()`, `options.quiet`, `wanted()` | builder haiku/medium | en cours |
+| F2 | Un seul endroit pour `plainTitle`, `PHONE_CAMERA`, `PISCINE_ID`, `TAU` (fichiers Projets), rayon de toucher 22 ; `PISCINE_SIZE` renommé `PISCINE_PROJECT_COUNT` | builder sonnet/medium | en cours |
+| F3 | `format()` dans `buildSun`, pose de `rx`/`ry` commune, fabrique de l'objet `view`, `centreOf` en `centerOf`, `restTilt` déclaré, `HELD` et `held()` fusionnés | builder sonnet/medium | après F2 |
 | F5 | Documentation : en-tête de projects-art.js à 15 lignes, docstring de `buildSystems`, références d'historique, « 880 px » en « 55 em », `@param` manquants | builder sonnet/medium | après F3 |
 | F7 | Constantes magiques, jetons de durée CSS | builder sonnet/medium | après F5 |
-| F8 | `releaseOnClose` remplacé par un rappel `onClose` dans `ui/sheet.js` (fichier partagé) | builder sonnet/high + analyst | en attente de décision |
+| F8 | `releaseOnClose` remplacé par un rappel `onClose` dans `ui/sheet.js` (fichier partagé) | builder sonnet/high + analyst | autorisée (18/10), après F7 |
+
+## Livraison sur main
+
+Le code du site (`js`, `css`, `data`, `assets`, `index.html`) est identique entre `main` et
+`redesign/space` au 18/10/2026 ; `main` n'a que des commits de README en plus. Les
+corrections doivent corriger la V1 publiée : une fois F1 à F8 fusionnées, la suite Node et
+la suite navigateur (par le `checker`) au vert, report des fichiers corrigés de `js/` et
+`css/` sur `main`, puis push de `main` sur accord explicite de Louis.
 
 ## Au pré-mortem (pas pour la V1)
 
