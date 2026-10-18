@@ -870,10 +870,10 @@
                 "items": [
                   "Pokémon: a type-multiplier calculator, attacking or defending",
                   "Temtem: the same calculator, by type or by creature",
-                  "Balatro: a calculator for the number of cards needed to exceed the maximum score",
-                  "Bloons TD 6: a catalogue of the bloon stats (by health and by round) and monkey stats",
+                  "Balatro: a calculator for the number of cards needed to exceed the maximum score (unfinished)",
+                  "Bloons TD 6: a catalogue of the bloon stats (by health and by round), the monkey stats still to be wired in (unfinished)",
                   "Tusmo: a word finder (required letters, prefix, excluded letters, French dictionary)",
-                  "Solo Leveling: a game system inspired by the series, in C, with saves"
+                  "Solo Leveling: a game system inspired by the series, in C, with saves (unfinished)"
                 ]
               }
             ],

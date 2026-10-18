@@ -870,10 +870,10 @@
                 "items": [
                   "Pokémon : un calculateur de multiplicateurs de types, en attaque ou en défense",
                   "Temtem : le même calculateur, par types ou par créature",
-                  "Balatro : un calculateur du nombre de cartes nécessaires pour dépasser le score maximal",
-                  "Bloons TD 6 : un catalogue des statistiques des ballons (par vie et par manche) et des singes",
+                  "Balatro : un calculateur du nombre de cartes nécessaires pour dépasser le score maximal (non terminé)",
+                  "Bloons TD 6 : un catalogue des statistiques des ballons (par vie et par manche), celles des singes restant à brancher (non terminé)",
                   "Tusmo : un chercheur de mots (lettres imposées, préfixe, lettres exclues, dictionnaire français)",
-                  "Solo Leveling : un système de jeu inspiré de la série, en C, avec sauvegardes"
+                  "Solo Leveling : un système de jeu inspiré de la série, en C, avec sauvegardes (non terminé)"
                 ]
               }
             ],
