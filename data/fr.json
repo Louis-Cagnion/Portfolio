@@ -805,7 +805,7 @@
             "blocks": [
               {
                 "type": "text",
-                "html": "La suite de ma libft : plus de 150 fonctions C rangées par thème, réutilisées dans chacun de mes projets C. Les thèmes :"
+                "html": "Elle est réutilisée dans chacun de mes projets C. Les thèmes :"
               },
               {
                 "type": "list",
@@ -863,7 +863,7 @@
             "blocks": [
               {
                 "type": "text",
-                "html": "De petits programmes, surtout en C++, pour les jeux auxquels je joue :"
+                "html": "Un programme par jeu :"
               },
               {
                 "type": "list",
