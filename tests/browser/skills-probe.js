@@ -165,8 +165,13 @@ export function accessibleName(site, el) {
 
 /** Étoiles `.st-g` d'une constellation. */
 export const starsOf = (group) => [...group.querySelectorAll('.st-g')];
-/** Nom affiché d'une étoile (`text.name`). */
-export const starName = (star) => textOf(star.querySelector('text.name'));
+/** Nom affiché d'une étoile (`text.name`) ; les `tspan` d'un nom en lignes sont joints. */
+export const starName = (star) => {
+  const label = star.querySelector('text.name');
+  const lines = [...(label?.querySelectorAll('tspan') ?? [])];
+  if (!lines.length) return textOf(label);
+  return normalize(lines.map((line) => line.textContent).join(' '));
+};
 
 /** Texte des nœuds visibles de `root`, nœuds joints par une espace. */
 export function visibleText(site, root) {

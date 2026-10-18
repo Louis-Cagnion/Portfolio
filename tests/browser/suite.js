@@ -57,7 +57,7 @@ const WIDTHS = [320, 390, 430, 768, 1280];
 // Maquette : max-width 55em (880px, taille par défaut) masque la pilule, montre les onglets.
 const TABBAR_MAX_WIDTH = 880;
 const MAIN_WIDTH = 390; // largeur des cas qui ne dépendent pas de la mise en page
-const SCENARIO_MAX_MS = 300000; // garde-fou d'un scénario entier
+const SCENARIO_MAX_MS = 480000; // garde-fou d'un scénario entier (competences : 5 min)
 const GROUPS = [
   'contrat',
   'setrich',

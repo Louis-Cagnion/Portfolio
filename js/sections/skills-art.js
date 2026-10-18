@@ -4,6 +4,11 @@ géante jaune, 2 intermédiaire = nébuleuse, 3 avancé = galaxie), centré sur 
 en pixels d'écran, son icône et le groupe SVG d'une constellation. Formes, couleurs et
 rayons de la maquette (docs/design/prototype/prototype.template.html:768-795 et 815-859).
 Le placement vient de skills-layout.js ; aucun écouteur, aucun texte, aucun état ici.
+Le nom d'une étoile est un `text.name` : une ligne, ou deux `tspan` quand l'étoile porte
+`lines` (`nameLines` des données) ; `setName` et `moveLabel` sont les seuls à le toucher.
+Sur deux lignes, la seconde reste à la place d'une ligne unique et la première est au-dessus.
+En vue d'ensemble, ce bloc est décalé de `NAME_SHIFT` px vers la gauche (choix de Louis du
+18/10/2026), pour ne pas toucher le nom voisin ; il se résorbe avec le déploiement.
 */
 import { svg } from '../core/dom.js';
 import { bodyRadius } from './skills-layout.js';
@@ -12,6 +17,8 @@ const LEVELS = ['unknown', 'beginner', 'intermediate', 'advanced'];
 const HIT_RADIUS = 18;
 const LABEL_GAP = 9;
 const GALAXY_LABEL_SHARE = 0.6; // la galaxie, aplatie, remonte moins son nom
+export const NAME_SHIFT = 24; // px d'écran : décalage à gauche d'un nom à deux lignes
+const LINE_EM = 1.15; // interligne d'un nom sur deux lignes, en em
 const ARMS = 2;
 const ARM_STARS = 46;
 const GALAXY_ARMS_DATA = galaxyArmsData();
@@ -195,6 +202,54 @@ export function labelOffset(level, scale, unit = 1) {
   return (bodyRadius(LEVELS[level] ?? LEVELS[0]) * scale * share + LABEL_GAP) * unit;
 }
 
+/**
+ * Écrit le nom d'une étoile : une ligne, ou deux `tspan` si `lines` est donné.
+ *
+ * La seconde ligne est sur la base du `text`, la première une interligne au-dessus ; chaque
+ * `tspan` porte le `x` du `text` (centré par `text-anchor`).
+ *
+ * @param {SVGTextElement} label nom de l'étoile (`text.name`)
+ * @param {string} name nom complet
+ * @param {string[]} [lines] deux lignes dont la jointure par une espace donne `name`
+ */
+export function setName(label, name, lines) {
+  if (!lines) {
+    label.textContent = name;
+    return;
+  }
+  const x = label.getAttribute('x');
+  label.replaceChildren(...lines.map((line, row) => svg(
+    'tspan',
+    { x, dy: `${row ? LINE_EM : -LINE_EM}em` },
+    line,
+  )));
+}
+
+/**
+ * Interlignes que le nom occupe au-dessus de sa base : 0 sur une ligne, 1 sur deux.
+ *
+ * @param {SVGTextElement} label nom de l'étoile (`text.name`)
+ *
+ * @returns {number} interlignes entre la base du `text` et le haut de la première ligne
+ */
+export function nameRise(label) {
+  return Math.max(0, label.childElementCount - 1);
+}
+
+/**
+ * Déplace le nom d'une étoile : `y` est la base du `text` (celle d'une ligne unique).
+ *
+ * @param {SVGTextElement} label nom de l'étoile (`text.name`)
+ * @param {number | undefined} x abscisse du centre ; absente, `x` reste inchangé
+ * @param {number} y ordonnée de la base du `text`
+ */
+export function moveLabel(label, x, y) {
+  label.setAttribute('y', y);
+  if (x === undefined) return;
+  label.setAttribute('x', x);
+  for (const line of label.children) line.setAttribute('x', x);
+}
+
 /** Une étoile : corps, zone cliquable et nom, placés au point donné. */
 function starNode(star, scale) {
   const level = LEVELS[star.level] ? star.level : 0;
@@ -204,16 +259,14 @@ function starNode(star, scale) {
     svg('g', { class: 'body-in' }, ...bodyArt(level)),
   );
   const hit = svg('circle', { cx: star.x, cy: star.y, r: HIT_RADIUS, fill: 'transparent' });
-  const label = svg(
-    'text',
-    {
-      class: 'name',
-      'text-anchor': 'middle',
-      x: star.x,
-      y: star.y - labelOffset(level, scale),
-    },
-    star.name,
-  );
+  const label = svg('text', {
+    class: 'name',
+    'text-anchor': 'middle',
+    x: star.x,
+    y: star.y - labelOffset(level, scale),
+  });
+  setName(label, star.name, star.lines);
+  if (star.lines) moveLabel(label, star.x - NAME_SHIFT, label.getAttribute('y'));
   const element = svg('g', { class: `st-g lv${level}` }, body, hit, label);
   return { element, body, hit, label };
 }
@@ -226,8 +279,8 @@ function starNode(star, scale) {
  * @param {string} spec.title nom court affiché sous la constellation
  * @param {{ x: number, y: number, width: number, height: number }} spec.cell cellule
  * @param {{ x: number, y: number }} spec.titleAt position du nom court
- * @param {{ x: number, y: number, level: number, name: string }[]} spec.stars étoiles
- *   placées par skills-layout.js, dans l'ordre du parcours
+ * @param {{ x: number, y: number, level: number, name: string, lines?: string[] }[]}
+ *   spec.stars étoiles placées par skills-layout.js, dans l'ordre du parcours
  * @param {number} [spec.scale] échelle de repos du corps, pour la place du nom
  *
  * @returns {{ group: SVGGElement, links: SVGLineElement[], stars: object[] }} le groupe,

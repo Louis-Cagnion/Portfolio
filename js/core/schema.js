@@ -115,6 +115,40 @@ const byLevel = record({
   unknown: label,
 });
 
+/**
+ * @brief Nom d'étoile sur deux lignes : deux libellés non vides (`nameLines`).
+ *
+ * La jointure par une espace doit redonner `name` : `star` le vérifie.
+ */
+const twoLines = (candidate, path, faults) => {
+  if (!Array.isArray(candidate) || candidate.length !== 2) faults.push(path);
+  else candidate.forEach((line, index) => label(line, `${path}[${index}]`, faults));
+};
+
+const starFields = {
+  id,
+  name: label,
+  nameLines: optional(twoLines),
+  level,
+  projects: optional(list(id, { empty: true })),
+  description: label,
+};
+
+/**
+ * @brief Étoile des compétences : champs de `starFields`, `nameLines` jointe égale à `name`.
+ *
+ * @param {unknown} candidate étoile à valider
+ * @param {string} path chemin de l'étoile
+ * @param {string[]} faults chemins fautifs, complété
+ */
+const star = (candidate, path, faults) => {
+  const before = faults.length;
+  record(starFields)(candidate, path, faults);
+  const lines = isRecord(candidate) ? candidate.nameLines : undefined;
+  if (faults.length === before && lines && lines.join(' ') !== candidate.name)
+    faults.push(child(path, 'nameLines'));
+};
+
 const LOCALE = record({
   meta: record({ lang: id, title: label, description: label }),
   ui: record({
@@ -195,13 +229,7 @@ const LOCALE = record({
       id,
       title: label,
       short: label,
-      items: list(record({
-        id,
-        name: label,
-        level,
-        projects: optional(list(id, { empty: true })),
-        description: label,
-      })),
+      items: list(star),
     })),
   }),
   projects: record({

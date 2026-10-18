@@ -22,6 +22,7 @@ import {
   parts,
   rest,
   skillsData,
+  starCentre,
   starEls,
   starName,
   starsOf,
@@ -240,6 +241,79 @@ async function groupTests(site, ctx, text) {
   });
 }
 
+// ---------- Noms d'étoile sur deux lignes (nameLines) ----------
+
+const LINES_CENTER_TOLERANCE = 1.5; // px : bloc du nom centré sur son astre
+const LINES_X_TOLERANCE = 1; // px : deux lignes d'un même nom centrées l'une sur l'autre
+const NAME_SHIFT = 24; // px : décalage à gauche du bloc à deux lignes en vue d'ensemble
+const OVERLAP_TOLERANCE = 2; // px : marge d'approche des boîtes de deux noms (chasse)
+
+const intersect = (a, b) => {
+  const [dx, dy] = [Math.min(a.right, b.right) - Math.max(a.left, b.left),
+    Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top)];
+  return dx > OVERLAP_TOLERANCE && dy > OVERLAP_TOLERANCE;
+};
+
+/** Les deux lignes d'une étoile à `nameLines` : textes, centrage, ordre, astre au-dessous. */
+function twoLineProblems(star, lines, tspans) {
+  const label = star.querySelector('text.name');
+  const [first, second] = tspans.map((line) => line.getBoundingClientRect());
+  const shown = tspans.map((line) => normalize(line.textContent));
+  const problems = [];
+  if (shown.join('|') !== lines.join('|'))
+    problems.push(`lignes « ${shown.join(' | ')} » au lieu de « ${lines.join(' | ')} »`);
+  if (tspans.length !== 2 || !first || !second) return [...problems, 'deux tspan attendus'];
+  const gap = (first.x + first.width / 2) - (second.x + second.width / 2);
+  if (Math.abs(gap) > LINES_X_TOLERANCE)
+    problems.push(`lignes décentrées l'une de l'autre de ${gap.toFixed(1)} px`);
+  if (second.top <= first.top) problems.push('la seconde ligne n\'est pas sous la première');
+  const block = label.getBoundingClientRect();
+  const centre = starCentre(star);
+  const off = block.x + block.width / 2 - centre.x + NAME_SHIFT;
+  if (Math.abs(off) > LINES_CENTER_TOLERANCE)
+    problems.push(`bloc écarté de ${off.toFixed(1)} px de -${NAME_SHIFT} px de l'astre`);
+  if (block.bottom > centre.y) problems.push('bloc au-dessous du centre de l\'astre');
+  return problems;
+}
+
+/** Noms d'une langue : `nameLines` rendu en tspan, aucune autre étoile sur deux lignes. */
+function nameLinesProblems(site, text) {
+  const groups = groupEls(site);
+  const problems = [];
+  text.groups.forEach((group, k) => {
+    const stars = groups[k] ? starsOf(groups[k]) : [];
+    for (const star of stars) {
+      const item = group.items.find((entry) => plain(entry.name) === starName(star));
+      const tspans = [...star.querySelectorAll('text.name tspan')];
+      const label = item?.id ?? starName(star);
+      if (!item?.nameLines) {
+        if (tspans.length) problems.push(`${label} : ${tspans.length} tspan sans nameLines`);
+        continue;
+      }
+      problems.push(...twoLineProblems(star, item.nameLines, tspans)
+        .map((fault) => `${label} : ${fault}`));
+      const mine = star.querySelector('text.name').getBoundingClientRect();
+      for (const other of stars) {
+        const box = other.querySelector('text.name').getBoundingClientRect();
+        if (other !== star && intersect(mine, box))
+          problems.push(`${label} chevauche le nom « ${starName(other)} »`);
+      }
+    }
+  });
+  return problems.slice(0, 8);
+}
+
+async function nameLinesTests(site, ctx, text) {
+  const wanted = text.groups.flatMap((group) => group.items).filter((item) => item.nameLines);
+  await test(ctx, 'noms sur deux lignes : tspan de nameLines, centrés, sans chevauchement',
+    () => {
+      const missing = gate(site);
+      if (missing.length) return missing;
+      if (!wanted.length) return ['aucune étoile à nameLines dans les données'];
+      return nameLinesProblems(site, text);
+    });
+}
+
 // ---------- Disposition ----------
 
 const near = (a, b, tolerance = EDGE_TOLERANCE) => Math.abs(a - b) <= tolerance;
@@ -353,6 +427,7 @@ function translatedProblems(site, other) {
       (item) => plain(item.name),
     )));
   });
+  problems.push(...nameLinesProblems(site, other));
   const name = accessibleName(site, parts(site).svg);
   if (name !== plain(other.title)) problems.push(`svg#constSvg : nom « ${name} » non traduit`);
   return [...problems, ...legendProblems(site, other)];
@@ -428,6 +503,7 @@ async function runSite(width, lang, datas, mainWidth) {
   try {
     await structureTests(site, ctx, text);
     await groupTests(site, ctx, text);
+    await nameLinesTests(site, ctx, text);
     await layoutShapeTests(site, ctx, text, width);
     await layoutTests(site, ctx, 'repos');
     await placementTest(site, ctx, lang, width, datas);

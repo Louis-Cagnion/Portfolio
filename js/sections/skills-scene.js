@@ -1,11 +1,21 @@
 /*
 Compétences, vue d'ensemble : construit les huit constellations (dessin de skills-art.js,
 placement de skills-layout.js) et tient leurs textes et leurs noms d'étoile à jour. Aucun
-écouteur, aucun état : skills.js câble et mesure.
+écouteur, aucun état : skills.js câble et mesure. Au repos, le nom sur deux lignes d'une étoile
+(`lines`) est décalé de `NAME_SHIFT` px d'écran vers la gauche de l'astre (`placeLabels`).
+Le nom complet de chaque étoile (`name`) est gardé sur l'objet étoile ; `nameLines` des
+données ne sert qu'au tracé du nom (deux lignes).
 Structure et mécanique de la maquette : docs/design/prototype/prototype.template.html:810-847.
 */
 import { format } from '../core/i18n.js';
-import { constellationGroup, labelOffset, skillsDefs } from './skills-art.js';
+import {
+  constellationGroup,
+  labelOffset,
+  moveLabel,
+  NAME_SHIFT,
+  setName,
+  skillsDefs,
+} from './skills-art.js';
 import { bodyScale, gridOf, layoutConstellation, walkOrder } from './skills-layout.js';
 
 export const LEVELS = ['unknown', 'beginner', 'intermediate', 'advanced'];
@@ -21,7 +31,8 @@ const TITLE_RISE = 22; // maquette:838 : nom court à 22 unités du bas de la ce
  * @param {{ x: number, y: number }} center centre des étoiles
  * @param {{ width: number, height: number }} size taille de la cellule
  *
- * @returns {{ id: string, name: string, level: number, x: number, y: number }[]} étoiles
+ * @returns {{ id: string, name: string, lines?: string[], level: number, x: number,
+ *   y: number }[]} étoiles
  */
 function placeStars(group, origin, center, size) {
   const placed = layoutConstellation(group, size).map((point) => ({
@@ -34,6 +45,7 @@ function placeStars(group, origin, center, size) {
   return walkOrder(placed, center).map((id) => ({
     ...byId.get(id),
     name: items.get(id).name,
+    lines: items.get(id).nameLines,
     level: LEVELS.indexOf(items.get(id).level),
   }));
 }
@@ -52,7 +64,8 @@ function placeStars(group, origin, center, size) {
  * @returns {{ children: SVGElement[], width: number, height: number, scale: number,
  *   groups: object[] }} nœuds à placer dans le svg (skillsDefs d'abord), taille de la grille,
  *   échelle de repos des astres et, par constellation, `{ id, node, title, center, stars }`
- *   où `stars` suit l'ordre du parcours : `{ id, level, x, y, element, body, hit, label }`
+ *   où `stars` suit l'ordre du parcours : `{ id, name, level, x, y, element, body, hit,
+ *   label }` (`name` : nom complet de la langue affichée, jamais lu dans `label`)
  */
 export function buildOverview({ groups, text, phone }) {
   const grid = gridOf(groups.length, { phone });
@@ -107,7 +120,12 @@ export function retext(built, groups, text) {
     const items = new Map(group.items.map((item) => [item.id, item]));
     entry.node.setAttribute('aria-label', format(text.explore, { name: group.title }));
     entry.title.textContent = group.short;
-    for (const star of entry.stars) star.label.textContent = items.get(star.id).name;
+    for (const star of entry.stars) {
+      const item = items.get(star.id);
+      star.name = item.name;
+      star.lines = item.nameLines;
+      setName(star.label, item.name, item.nameLines);
+    }
   });
 }
 
@@ -118,7 +136,11 @@ export function retext(built, groups, text) {
  * @param {number} unit unités du dessin par pixel affiché (`--u` de la caméra)
  */
 export function placeLabels(built, unit) {
-  for (const entry of built.groups)
-    for (const star of entry.stars)
-      star.label.setAttribute('y', star.y - labelOffset(star.level, built.scale, unit));
+  for (const entry of built.groups) {
+    for (const star of entry.stars) {
+      const shift = star.lines ? NAME_SHIFT * unit : 0;
+      const y = star.y - labelOffset(star.level, built.scale, unit);
+      moveLabel(star.label, star.lines ? star.x - shift : undefined, y);
+    }
+  }
 }

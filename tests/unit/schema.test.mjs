@@ -270,6 +270,59 @@ describe('validateLocale : format de la légende des compétences (skills.legend
     });
 });
 
+describe('validateLocale : nom d\'étoile sur deux lignes (nameLines)', () => {
+  /* Champ facultatif d'une étoile : deux libellés dont la jointure par une espace donne
+  exactement `name`. La fixture n'est pas modifiée : les cas partent d'une copie. */
+  const PATH = 'skills.groups[0].items[1].nameLines';
+  const withLines = (lines, name = 'Tests unitaires JavaScript') => {
+    const copy = clone(valid);
+    const item = copy.skills.groups[0].items[1];
+    item.name = name;
+    if (lines !== undefined) item.nameLines = lines;
+    return copy;
+  };
+
+  test('absent : accepté', async () => {
+    const validateLocale = await load();
+    assert.deepEqual(validateLocale(withLines(undefined)), []);
+  });
+
+  test('deux libellés dont la jointure donne name : accepté', async () => {
+    const validateLocale = await load();
+    assert.deepEqual(validateLocale(withLines(['Tests unitaires', 'JavaScript'])), []);
+    assert.deepEqual(
+      validateLocale(withLines(['JavaScript', 'unit tests'], 'JavaScript unit tests')),
+      [],
+    );
+  });
+
+  test('jointure différente de name : le chemin de nameLines est nommé', async () => {
+    const validateLocale = await load();
+    assert.deepEqual(validateLocale(withLines(['Tests', 'JavaScript'])), [PATH]);
+    assert.deepEqual(validateLocale(withLines(['Tests unitaires', 'JavaScript '])), [PATH]);
+  });
+
+  test('un seul élément ou trois : le chemin de nameLines est nommé', async () => {
+    const validateLocale = await load();
+    assert.deepEqual(validateLocale(withLines(['Tests unitaires JavaScript'])), [PATH]);
+    assert.deepEqual(validateLocale(withLines(['Tests', 'unitaires', 'JavaScript'])), [PATH]);
+    assert.deepEqual(validateLocale(withLines([])), [PATH]);
+  });
+
+  test('libellé vide ou de mauvais type : l\'élément fautif est nommé', async () => {
+    const validateLocale = await load();
+    const [empty, wrong] = [['', 'Tests unitaires JavaScript'], ['Tests unitaires', 42]];
+    assert.deepEqual(validateLocale(withLines(empty)), [`${PATH}[0]`]);
+    assert.deepEqual(validateLocale(withLines(wrong)), [`${PATH}[1]`]);
+  });
+
+  for (const [name, bad] of [['chaîne', 'a b'], ['nombre', 42], ['null', null], ['objet', {}]])
+    test(`${name} à la place de la liste : le chemin de nameLines est nommé`, async () => {
+      const validateLocale = await load();
+      assert.deepEqual(validateLocale(withLines(bad)), [PATH]);
+    });
+});
+
 describe('validateLocale : entrées limites', () => {
   for (const [name, input] of [
     ['null', null],

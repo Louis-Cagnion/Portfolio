@@ -1,18 +1,22 @@
 /*
 Compétences, déploiement : pose des étoiles et de leurs noms, cadrage du téléphone et recul
 du saut d'étoile. Fonctions sans état ni écouteur : skills-focus.js les appelle à chaque
-image de l'animation.
+image de l'animation. Un nom sur deux lignes (deux `tspan`) garde sa seconde ligne à la place
+d'un nom d'une ligne et monte d'une interligne (`nameRise`) : sous l'astre il descend d'autant,
+et la caméra du téléphone compte cette hauteur de plus au-dessus de l'astre. Au repos il est
+décalé de `NAME_SHIFT` px à gauche de l'astre ; ce décalage se résorbe avec `t` (nul déployé).
 Formules de la maquette P2 : docs/design/s8/mockup-skills.js (`layoutStars`, `dive`) ;
 cadrage du nuage entier sur téléphone : critère de Louis du 13/10/2026 (31 noms entiers).
 */
 import { ease, lerp } from '../core/motion.js';
-import { labelOffset } from './skills-art.js';
+import { labelOffset, moveLabel, NAME_SHIFT, nameRise } from './skills-art.js';
 import { bodyRadius, bodyScale, extentOf } from './skills-layout.js';
 import { LEVELS } from './skills-scene.js';
 
 export const PHONE_RATIO = 1.15; // hauteur du plan déployé en largeurs (plan.md : 1 / 1.15)
 const NAME_DROP = 12; // maquette:layoutStars : nom sous l'astre, 12 px sous son bord
 const NAME_HEIGHT = 18; // px : hauteur d'une ligne de nom (14 px de police)
+const NAME_LINE = 16; // px : interligne d'un nom sur deux lignes (1,15 em de 14 px)
 const NAME_GAP = 9; // px : écart entre l'astre et un nom placé au-dessus
 const EDGE = 6; // px : marge entre un nom ou un astre et le bord du cadre
 const FIT_WIDTH = { min: 200, max: 4000 }; // largeur visible du cadrage du nuage
@@ -45,9 +49,9 @@ export function placeStars(entry, spots, { t, drop, scale, unit, phone }) {
     star.body.setAttribute('transform', `translate(${x} ${y})`);
     star.hit.setAttribute('cx', x);
     star.hit.setAttribute('cy', y);
-    star.label.setAttribute('x', x);
-    const below = y + offset + NAME_DROP * unit;
-    star.label.setAttribute('y', phone ? lerp(above, below, drop) : above);
+    const below = y + offset + (NAME_DROP + nameRise(star.label) * NAME_LINE) * unit;
+    const shift = nameRise(star.label) ? NAME_SHIFT * unit * (1 - t) : 0;
+    moveLabel(star.label, x - shift, phone ? lerp(above, below, drop) : above);
   });
   entry.links.forEach((link, j) => {
     const [a, b] = [entry.stars[j], entry.stars[j + 1]];
@@ -86,13 +90,15 @@ export function phoneFrame(plan, panel) {
  *
  * @param {{ level: number, label: SVGTextElement }[]} stars étoiles de la constellation
  *
- * @returns {{ half: number, reach: number }[]} une entrée par étoile
+ * @returns {{ half: number, reach: number, rise: number }[]} une entrée par étoile
+ *   (`rise` : interlignes du nom au-dessus de sa base)
  */
 export function nameBoxes(stars) {
   const scale = bodyScale({ phone: true, focused: true });
   return stars.map((star) => ({
     half: star.label.getBoundingClientRect().width / 2,
     reach: bodyRadius(LEVELS[star.level]) * scale,
+    rise: nameRise(star.label),
   }));
 }
 
@@ -101,14 +107,14 @@ export function nameBoxes(stars) {
  *   zone libre du cadre.
  *
  * @param {{ x: number, y: number }} offset écart de l'étoile au centre du nuage (unités)
- * @param {{ half: number, reach: number }} box mesures de l'étoile
+ * @param {{ half: number, reach: number, rise: number }} box mesures de l'étoile
  * @param {{ width: number, free: number }} frame cadre visible
  *
  * @returns {number} largeur du viewBox ; `Infinity` si la zone libre ne la contient jamais
  */
-function widthFor({ x, y }, { half, reach }, { width, free }) {
+function widthFor({ x, y }, { half, reach, rise }, { width, free }) {
   const side = width / 2 - EDGE - half;
-  const top = free / 2 - reach - NAME_GAP - NAME_HEIGHT - EDGE;
+  const top = free / 2 - reach - NAME_GAP - NAME_HEIGHT - rise * NAME_LINE - EDGE;
   const bottom = free / 2 - reach - EDGE;
   const need = (distance, room) => (room > 0 ? (distance * width) / room : Infinity);
   return Math.max(
@@ -126,7 +132,7 @@ function widthFor({ x, y }, { half, reach }, { width, free }) {
  *
  * @param {{ width: number, height: number, free: number }} frame résultat de phoneFrame
  * @param {{ x: number, y: number }[]} spots positions écartées des étoiles
- * @param {{ half: number, reach: number }[]} boxes résultat de nameBoxes
+ * @param {{ half: number, reach: number, rise: number }[]} boxes résultat de nameBoxes
  *
  * @returns {{ cx: number, cy: number, w: number }} centre et largeur visible
  */

@@ -339,6 +339,7 @@
           {
             "id": "js-tests",
             "name": "JavaScript unit tests",
+            "nameLines": ["JavaScript", "unit tests"],
             "level": "beginner",
             "projects": ["wiki", "supermarket_compare"],
             "description": "Seen with Vitest for the Heartopia wiki and node --test for the grocery comparison app (unit tests); I am taking my first steps and still rely a lot on the documentation and AI."

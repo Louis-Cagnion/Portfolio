@@ -339,6 +339,7 @@
           {
             "id": "js-tests",
             "name": "Tests unitaires JavaScript",
+            "nameLines": ["Tests unitaires", "JavaScript"],
             "level": "beginner",
             "projects": ["wiki", "supermarket_compare"],
             "description": "Vu avec Vitest pour le wiki Heartopia et node --test pour le comparateur de courses (tests unitaires) ; j'en suis aux premiers pas et je m'aide encore beaucoup de la documentation et de l'IA."

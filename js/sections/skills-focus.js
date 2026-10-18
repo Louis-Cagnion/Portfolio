@@ -249,11 +249,11 @@ export function createFocus({ root, parts, state, camera, onRelated }) {
 
   /** Étoiles de la constellation choisie : focalisables et annoncées, ou rendues au repos. */
   const arm = (built, on) => {
-    for (const { element, label } of built.stars) {
+    for (const { element, name } of built.stars) {
       element.setAttribute('tabindex', on ? '0' : '-1');
       if (on) {
         element.setAttribute('role', 'button');
-        element.setAttribute('aria-label', label.textContent);
+        element.setAttribute('aria-label', name);
       } else {
         element.removeAttribute('role');
         element.removeAttribute('aria-label');
@@ -425,8 +425,8 @@ export function createFocus({ root, parts, state, camera, onRelated }) {
   /** Bascule de langue : noms accessibles des étoiles et textes du panneau. */
   const relabel = () => {
     if (!deck || deck.built.id !== state.selection.group) return;
-    for (const { element, label } of deck.built.stars)
-      element.setAttribute('aria-label', label.textContent);
+    for (const { element, name } of deck.built.stars)
+      element.setAttribute('aria-label', name);
     deck.panel.update(textsOf());
   };
 

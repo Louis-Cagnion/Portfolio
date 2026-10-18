@@ -62,7 +62,11 @@ Identique en FR et en EN. Les champs non textuels (identifiants, ordre, `href`, 
               "bodies": { "advanced", "intermediate", "beginner", "unknown" },
               "legendItem",
               "link": { "intro", "label", "href" },
-              "groups": [{ "id", "title", "short", "items": [{ "id", "name", "level", "projects": ["id"], "description" }] }] },
+              "groups": [{ "id", "title", "short", "items": [{ "id", "name", "nameLines"?: ["ligne 1", "ligne 2"], "level", "projects": ["id"], "description" }] }] },
+  // nameLines (facultatif) : tracé du nom de l'étoile sur deux lignes, décalé de 24 px vers
+  // la gauche en vue d'ensemble (choix de Louis du 18/10/2026) ;
+  // deux libellés non vides dont la jointure par une espace donne exactement `name`
+  // (le schéma refuse sinon). `name` reste la source du panneau, des puces et des aria-label.
   "projects": { "title", "lede", "back", "count", "approach", "systemOf", "listLabel",
                 "systems": [{ "id", "name", "intro", "projects": [{ "id", "title", "summary", "tags": [],
                   "blocks": [{ "type": "text", "html" } | { "type": "list", "items": ["html"] }],

@@ -40,7 +40,7 @@ import {
   uncaught,
   walkProblems,
 } from './skills-focus-probe.js';
-import { nameCases } from './skills-focus-names.js';
+import { lineCases, nameCases, shiftCases } from './skills-focus-names.js';
 import { runLeaveHeight } from './skills-focus-leave.js';
 import { runMotion } from './skills-focus-motion.js';
 import {
@@ -478,6 +478,8 @@ async function runSite(width, lang, datas) {
     await switchCases(kit);
     await hygieneCases(kit);
     if (PHONE_WIDTHS.includes(width)) await nameCases(kit);
+    await shiftCases(kit);
+    await lineCases(kit);
     await test(kit.ctx, 'aucune exception non rattrapée', () => uncaught(kit.site));
   } finally {
     kit.site.close();
