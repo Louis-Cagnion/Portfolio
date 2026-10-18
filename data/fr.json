@@ -236,7 +236,7 @@
               "cub3d",
               "codewars"
             ],
-            "description": "Mon langage de base : prédominant durant mon tronc commun et ma piscine à 42, j'ai pu apprendre et pousser pas mal de concepts en C (allocation dynamique, listes chaînées, arbres binaires, pointeurs sur fonctions, processus, signaux, threads, MinilibX) ; ce langage est naturel à lire pour moi."
+            "description": "Mon langage de base : prédominant durant mon tronc commun et mes piscines à 42, j'ai pu apprendre et pousser pas mal de concepts en C (allocation dynamique, listes chaînées, arbres binaires, pointeurs sur fonctions, processus, signaux, threads, MinilibX) ; ce langage est naturel à lire pour moi."
           },
           {
             "id": "cpp",

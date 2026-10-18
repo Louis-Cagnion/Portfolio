@@ -236,7 +236,7 @@
               "cub3d",
               "codewars"
             ],
-            "description": "My core language: predominant during my common core and my piscine at 42, I was able to learn and push quite a few concepts in C (dynamic allocation, linked lists, binary trees, function pointers, processes, signals, threads, MinilibX); this language is natural for me to read."
+            "description": "My core language: predominant during my common core and my piscines at 42, I was able to learn and push quite a few concepts in C (dynamic allocation, linked lists, binary trees, function pointers, processes, signals, threads, MinilibX); this language is natural for me to read."
           },
           {
             "id": "cpp",
