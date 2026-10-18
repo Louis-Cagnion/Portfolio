@@ -124,7 +124,7 @@ function findProject(projects, id) {
 }
 
 /**
- * @brief Fiche (contrat de ui/sheet.js) d'un projet : le résumé ouvre les blocs.
+ * @brief Fiche (contrat de ui/sheet.js) d'un projet : titre, étiquettes et blocs, sans résumé.
  *
  * @param {object} projects données `projects` de la langue
  * @param {{ system: object, project: object }} found projet et son système
@@ -136,7 +136,7 @@ function sheetView(projects, { system, project }) {
     category: format(projects.systemOf, { name: system.name }),
     title: plainTitle(project.title),
     tags: project.tags,
-    blocks: [{ type: 'text', html: project.summary }, ...project.blocks],
+    blocks: project.blocks,
     links: project.links,
   };
 }

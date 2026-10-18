@@ -43,6 +43,7 @@ import { runUnavailable } from './unavailable.js';
 import { runContact } from './contact.js';
 import { runSheet } from './sheet.js';
 import { runSheetFocus } from './sheet-focus.js';
+import { runSheetBody } from './sheet-body.js';
 import { runEscapeProjects, runEscapeSheet, runEscapeSkills } from './escape-focus.js';
 import { runProjects } from './projects.js';
 import { runSkills } from './skills.js';
@@ -451,6 +452,7 @@ async function main() {
       await scenario('fiche', () => runSheet(widths, mainWidth));
       await scenario('fiche (replis du focus)', () => runSheetFocus(widths));
       await scenario('fiche (retour par Échap et clic)', () => runEscapeSheet(widths));
+      await scenario('fiche (corps des projets)', () => runSheetBody(widths));
     }
     if (groups.includes('projets')) {
       for (const width of widths)
