@@ -1,7 +1,7 @@
 # Arbre : correction des bugs du crash-test de la V1 (feuilles validées 0/9, faites 3/9)
 
 Statuts : [ ] à faire, [~] en cours, [x] faite, [v] validée, [!] bloquée, [>] reportée au pré-mortem
-Prochaine feuille prête : reprise de CT-2.1 et de CT-3.2 (travail partiel dans leurs worktrees, sur le PC Linux seulement) ; CT-4.2 prête ; CT-3.3 attend CT-3.2 ; CT-1.2 attend le choix de Louis
+Prochaine feuille prête : reprise de CT-2.1 et de CT-3.2 (travail partiel dans leurs worktrees, sur le PC Linux seulement) ; CT-4.2 prête ; CT-3.3 attend CT-3.2 ; CT-1.2 prête (rendu `flip` choisi)
 Moniteur : sonnet/high, réévalué à la création de l'arbre (aucun point de contrôle encore)
 
 Branches `agent/ct-*` et worktrees `.claude/worktrees/ct-*` locaux au PC Linux, non poussés ; maquette de CT-1.1 relançable par `timeout 3600 python3 -m http.server 5520 --bind 127.0.0.1` depuis `.claude/worktrees/ct-1-1`, URLs `/index.html?label=current|flip|clamp&demo=1#projects`.
@@ -9,8 +9,8 @@ Branches `agent/ct-*` et worktrees `.claude/worktrees/ct-*` locaux au PC Linux, 
 Règles : rapports reçus de la session crash-test par `SendMessage` ; cas commun (320 px et plus, police jusqu'à 200 %) corrigé ici, cas niche reporté dans `todo.md` (pré-mortem). Un rendu qui change doit être montré dans Chrome à Louis avant d'être appliqué. Worktrees `.claude/worktrees/<feuille>` créés depuis `redesign/space` ; ports 5510 à 5519 (agents), 5520 à 5529 (moniteur), 5530 et plus (crash-test).
 
 - CT-1 [nœud] : étiquette d'une planète survolée coupée au bord droit du plan Projets, au repos, bureau à la souris (mineur, cas commun) ; point de contrôle : `?groups=projets` sans nouveau rouge et test Node de `placeLabel` vert
-  - [x] CT-1.1 builder : maquette jetable de 3 rendus jouables dans Chrome (actuel, étiquette basculée à gauche de la planète, étiquette décalée vers la gauche), jamais fusionnée ; dépend de : - ; fait par : sonnet/medium ; maquette servie sur le port 5520 depuis `.claude/worktrees/ct-1-1`, choix de Louis attendu
-  - [ ] CT-1.2 fixer : test Node rouge puis correctif de `placeLabel` (`js/sections/projects-art.js`) selon le rendu choisi par Louis ; dépend de : CT-1.1 et choix de Louis ; niveau pressenti : haiku/high (brief étoffé)
+  - [x] CT-1.1 builder : maquette jetable de 3 rendus jouables dans Chrome (actuel, étiquette basculée à gauche de la planète, étiquette décalée vers la gauche), jamais fusionnée ; dépend de : - ; fait par : sonnet/medium ; maquette servie sur le port 5520 depuis `.claude/worktrees/ct-1-1`, choix de Louis : `flip` (18/10/2026)
+  - [ ] CT-1.2 fixer : test Node rouge puis correctif de `placeLabel` (`js/sections/projects-art.js`) selon le rendu `flip` choisi par Louis (étiquette à gauche de la planète si la place manque à droite, puis bornée à gauche, au repos ; décider au brief si la borne vaut aussi pour les systèmes non zoomés quand un autre est zoomé) ; dépend de : CT-1.1 (faite) ; niveau pressenti : haiku/high (brief étoffé)
 
 - CT-2 [nœud] : nom « Processus, pipes et signaux » (EN « Processes, pipes and signals ») coupé au bord droit du plan Compétences au survol, de 881 à environ 1000 px (mineur, cas commun) ; point de contrôle : zéro débord à 881 et 1000 px FR et EN, `node --test` 419/419, groupe `competences` à 390 px sans nouveau rouge
   - [!] CT-2.1 fixer : `nameLines` de l'étoile `processes` dans `data/fr.json` et `data/en.json`, mesures avant/après ; dépend de : - ; fait par : haiku/high ; le rendu (nom sur deux lignes) est montré à Louis dans Chrome avant la fusion ; arrêtée avant son rapport : diff en place dans le worktree `ct-2-1` (une ligne `nameLines` dans `data/fr.json` et `data/en.json`), `node --test` 419/419, balayage des débords après changement et groupe `competences` à 390 px non faits (le brief donnait une URL de banc sans `/tests/browser/`, corrigée : `http://127.0.0.1:<port>/tests/browser/?groups=competences&widths=390`)
