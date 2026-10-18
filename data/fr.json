@@ -243,7 +243,7 @@
             "name": "C++",
             "level": "intermediate",
             "projects": ["cpp_modules", "webserv"],
-            "description": "Appris avec les dix modules C++ du tronc commun de 42 puis mis en pratique dans Webserv, un serveur HTTP écrit de zéro en C++98 : j'y ai pratiqué la programmation orientée objet (classes, templates, STL) ; je suis à l'aise sur l'essentiel et je consulte la documentation pour le reste."
+            "description": "Appris avec les dix modules C++ du tronc commun de 42 puis mis en pratique dans Webserv, un serveur HTTP écrit de zéro en C++98 : j'y ai pratiqué la programmation orientée objet (classes, templates, STL) ; je suis à l'aise sur l'essentiel."
           },
           {
             "id": "python",
@@ -256,28 +256,28 @@
               "codewars",
               "chatbot"
             ],
-            "description": "Appris par des tutoriels puis par Codewars, et utilisé en production avec l'assistance de Claude Code : j'y ai pratiqué les pipelines de données et les scripts par lots (audit nocturne, parseur de PDF avec OCR, tests pytest) ; je suis à l'aise sur l'essentiel et je consulte la documentation pour le reste."
+            "description": "Appris par des tutoriels puis par Codewars, et utilisé en production avec l'assistance de Claude Code : j'y ai pratiqué les pipelines de données et les scripts par lots (audit nocturne, parseur de PDF avec OCR, tests pytest) ; je suis à l'aise sur l'essentiel."
           },
           {
             "id": "javascript",
             "name": "JavaScript",
             "level": "intermediate",
             "projects": ["portfolio", "devpedia", "wiki", "supermarket_compare", "dashboards"],
-            "description": "Sans framework : ce portfolio, Devpedia et son parseur Markdown fait maison, le wiki Heartopia et, avec l'assistance de Claude Code, les graphiques ECharts des tableaux de bord professionnels (modules ES, manipulation du DOM, graphiques) ; je suis à l'aise sur l'essentiel et je consulte la documentation pour le reste."
+            "description": "Sans framework : ce portfolio, Devpedia et son parseur Markdown fait maison, le wiki Heartopia et, avec l'assistance de Claude Code, les graphiques ECharts des tableaux de bord professionnels (modules ES, manipulation du DOM, graphiques) ; je suis à l'aise sur l'essentiel."
           },
           {
             "id": "bash",
             "name": "Bash",
             "level": "intermediate",
             "projects": ["shell00", "shell01", "minishell"],
-            "description": "Vu dans les scripts de la Piscine et de mesure de mes solveurs, et surtout dans Minishell, qui m'a fait reproduire en C le comportement de Bash (redirections, variables d'environnement, signaux, opérateurs logiques et priorités) ; je suis à l'aise sur l'essentiel et je consulte la documentation pour le reste."
+            "description": "Vu dans les scripts de la Piscine et de mesure de mes solveurs, et surtout dans Minishell, qui m'a fait reproduire en C le comportement de Bash (redirections, variables d'environnement, signaux, opérateurs logiques et priorités) ; je suis à l'aise sur l'essentiel."
           },
           {
             "id": "php",
             "name": "PHP",
             "level": "intermediate",
             "projects": ["admin_backoffice", "nps_scores", "audit_infomediaires", "call_resolution"],
-            "description": "Utilisé au Groupe Tressol-Chabrier dans quatre modules de back-office (scores NPS, audit, suivi et résolution des appels), développés avec l'assistance de Claude Code (PHP 8 avec Slim 4, PDO, droits d'accès par module et par profil, cache fichier) ; je suis à l'aise sur l'essentiel et je consulte la documentation pour le reste."
+            "description": "Utilisé au Groupe Tressol-Chabrier dans quatre modules de back-office (scores NPS, audit, suivi et résolution des appels), développés avec l'assistance de Claude Code (PHP 8 avec Slim 4, PDO, droits d'accès par module et par profil, cache fichier) ; je suis à l'aise sur l'essentiel."
           },
           {
             "id": "typescript",
@@ -298,14 +298,14 @@
             "name": "HTML",
             "level": "intermediate",
             "projects": ["portfolio", "devpedia", "wiki"],
-            "description": "Vu dans la structure de mes sites : ce portfolio, Devpedia et le wiki Heartopia (structure des pages, navigation, accessibilité au clavier) ; je suis à l'aise sur l'essentiel et je consulte la documentation pour le reste."
+            "description": "Vu dans la structure de mes sites : ce portfolio, Devpedia et le wiki Heartopia (structure des pages, navigation, accessibilité au clavier) ; je suis à l'aise sur l'essentiel."
           },
           {
             "id": "css",
             "name": "CSS",
             "level": "intermediate",
             "projects": ["portfolio", "devpedia", "dashboards"],
-            "description": "Vu dans mes sites et, avec l'assistance de Claude Code, dans la refonte de l'interface des tableaux de bord professionnels, pour un usage aussi bien sur ordinateur que sur mobile (mise en page responsive, variables CSS, animations) ; je suis à l'aise sur l'essentiel et je consulte la documentation pour le reste."
+            "description": "Vu dans mes sites et, avec l'assistance de Claude Code, dans la refonte de l'interface des tableaux de bord professionnels, pour un usage aussi bien sur ordinateur que sur mobile (mise en page responsive, variables CSS, animations) ; je suis à l'aise sur l'essentiel."
           }
         ]
       },
@@ -319,21 +319,21 @@
             "name": "Makefiles",
             "level": "intermediate",
             "projects": ["minishell", "cub3d", "philosophers", "c09"],
-            "description": "Vu dans chaque projet C du tronc commun de 42, de Minishell à Cub3D, Philosophers et ma première bibliothèque statique (règles de compilation, dépendances, bibliothèque statique) ; je suis à l'aise sur l'essentiel et je consulte la documentation pour le reste."
+            "description": "Vu dans chaque projet C du tronc commun de 42, de Minishell à Cub3D, Philosophers et ma première bibliothèque statique (règles de compilation, dépendances, bibliothèque statique) ; je suis à l'aise sur l'essentiel."
           },
           {
             "id": "git",
             "name": "Git",
             "level": "intermediate",
             "projects": ["transcendence"],
-            "description": "Utilisé pour tous mes projets ; Transcendence a exigé des commits propres et compréhensibles pour toute une équipe (commits lisibles, travail en équipe) ; je suis à l'aise sur l'essentiel et je consulte la documentation pour le reste."
+            "description": "Utilisé pour tous mes projets ; Transcendence a exigé des commits propres et compréhensibles pour toute une équipe (commits lisibles, travail en équipe) ; je suis à l'aise sur l'essentiel."
           },
           {
             "id": "github",
             "name": "GitHub",
             "level": "intermediate",
             "projects": ["devpedia", "wiki", "portfolio"],
-            "description": "Hébergement de mon code et de mes sites, publiés sur GitHub Pages : Devpedia, le wiki Heartopia et ce portfolio (dépôts, GitHub Pages) ; je suis à l'aise sur l'essentiel et je consulte la documentation pour le reste."
+            "description": "Hébergement de mon code et de mes sites, publiés sur GitHub Pages : Devpedia, le wiki Heartopia et ce portfolio (dépôts, GitHub Pages) ; je suis à l'aise sur l'essentiel."
           },
           {
             "id": "js-tests",
@@ -368,7 +368,7 @@
             "name": "Threads, mutex et sémaphores",
             "level": "intermediate",
             "projects": ["philosophers"],
-            "description": "Vu dans Philosophers : maintenir des philosophes en vie à la milliseconde près (threads, mutex, puis processus et sémaphores en bonus) ; je suis à l'aise sur l'essentiel et je consulte la documentation pour le reste."
+            "description": "Vu dans Philosophers : maintenir des philosophes en vie à la milliseconde près (threads, mutex, puis processus et sémaphores en bonus) ; je suis à l'aise sur l'essentiel."
           },
           {
             "id": "processes",
@@ -389,28 +389,28 @@
             "name": "Sockets TCP et HTTP/1.1",
             "level": "intermediate",
             "projects": ["webserv"],
-            "description": "Vu dans Webserv, un serveur non bloquant écrit de zéro (requêtes GET, POST et DELETE, codes de statut, cookies et sessions, CGI) ; je suis à l'aise sur l'essentiel et je consulte la documentation pour le reste."
+            "description": "Vu dans Webserv, un serveur non bloquant écrit de zéro (requêtes GET, POST et DELETE, codes de statut, cookies et sessions, CGI) ; je suis à l'aise sur l'essentiel."
           },
           {
             "id": "ip-networking",
             "name": "Réseau IP",
             "level": "intermediate",
             "projects": ["netpractice", "born2beroot"],
-            "description": "Vu dans Netpractice et Born2beroot (adresses, masques de sous-réseau, routage, pare-feu, SSH) ; je suis à l'aise sur l'essentiel et je consulte la documentation pour le reste."
+            "description": "Vu dans Netpractice et Born2beroot (adresses, masques de sous-réseau, routage, pare-feu, SSH) ; je suis à l'aise sur l'essentiel."
           },
           {
             "id": "apis",
             "name": "APIs",
             "level": "intermediate",
             "projects": ["dashboards", "client_migration", "chatbot", "devpedia"],
-            "description": "Vu au Groupe Tressol-Chabrier avec l'assistance de Claude Code, et dans mes projets personnels (17 endpoints d'API d'un tableau de bord, intégration Power BI, envoi des fiches clients par l'API du nouveau logiciel, API locale d'Ollama, API DeepL pour traduire Devpedia automatiquement) ; je suis à l'aise sur l'essentiel et je consulte la documentation pour le reste."
+            "description": "Vu au Groupe Tressol-Chabrier avec l'assistance de Claude Code, et dans mes projets personnels (17 endpoints d'API d'un tableau de bord, intégration Power BI, envoi des fiches clients par l'API du nouveau logiciel, API locale d'Ollama, API DeepL pour traduire Devpedia automatiquement) ; je suis à l'aise sur l'essentiel."
           },
           {
             "id": "sql-pdo",
             "name": "SQL / PDO",
             "level": "intermediate",
             "projects": ["admin_backoffice", "nps_scores"],
-            "description": "Utilisé au Groupe avec l'assistance de Claude Code : back-office sur SQL Server via PDO, une base par module, et pipeline NPS en trois couches (Staging, Silver, Gold) validées par des tests de cohérence SQL ; je suis à l'aise sur l'essentiel et je consulte la documentation pour le reste."
+            "description": "Utilisé au Groupe avec l'assistance de Claude Code : back-office sur SQL Server via PDO, une base par module, et pipeline NPS en trois couches (Staging, Silver, Gold) validées par des tests de cohérence SQL ; je suis à l'aise sur l'essentiel."
           },
           {
             "id": "elasticsearch",
@@ -431,7 +431,7 @@
             "name": "Sécurité web",
             "level": "intermediate",
             "projects": ["search_tool"],
-            "description": "Vu dans l'outil de recherche conversationnelle : une campagne de crash-test a permis de corriger une trentaine de bugs et de failles, avec l'assistance de Claude Code (token signé HMAC, limitation de débit par adresse IP, protection CSRF, contrôle d'accès par concession, en-têtes CSP, fixation de session) ; je suis à l'aise sur l'essentiel et je consulte la documentation pour le reste."
+            "description": "Vu dans l'outil de recherche conversationnelle : une campagne de crash-test a permis de corriger une trentaine de bugs et de failles, avec l'assistance de Claude Code (token signé HMAC, limitation de débit par adresse IP, protection CSRF, contrôle d'accès par concession, en-têtes CSP, fixation de session) ; je suis à l'aise sur l'essentiel."
           }
         ]
       },
@@ -473,21 +473,21 @@
             "name": "VirtualBox",
             "level": "intermediate",
             "projects": ["born2beroot", "inception"],
-            "description": "Vu dans Born2beroot, avec une Debian installée et sécurisée à la main, puis dans Inception, dont l'infrastructure de conteneurs devait tourner dans une machine virtuelle (machines virtuelles, installation de Debian) ; je suis à l'aise sur l'essentiel et je consulte la documentation pour le reste."
+            "description": "Vu dans Born2beroot, avec une Debian installée et sécurisée à la main, puis dans Inception, dont l'infrastructure de conteneurs devait tourner dans une machine virtuelle (machines virtuelles, installation de Debian) ; je suis à l'aise sur l'essentiel."
           },
           {
             "id": "minilibx",
             "name": "MinilibX",
             "level": "intermediate",
             "projects": ["fract-ol", "cub3d"],
-            "description": "Vu dans Fract-ol, dont elle fait tout le rendu, puis dans Cub3D (fenêtre et images, minimap, déplacements, collisions) ; je suis à l'aise sur l'essentiel et je consulte la documentation pour le reste."
+            "description": "Vu dans Fract-ol, dont elle fait tout le rendu, puis dans Cub3D (fenêtre et images, minimap, déplacements, collisions) ; je suis à l'aise sur l'essentiel."
           },
           {
             "id": "valgrind",
             "name": "Valgrind",
             "level": "intermediate",
             "projects": ["minishell", "philosophers"],
-            "description": "Utilisé dans mes projets C, où la moindre fuite fait échouer l'évaluation (fuites mémoire, erreurs d'accès) ; je suis à l'aise sur l'essentiel et je consulte la documentation pour le reste."
+            "description": "Utilisé dans mes projets C, où la moindre fuite fait échouer l'évaluation (fuites mémoire, erreurs d'accès) ; je suis à l'aise sur l'essentiel."
           },
           {
             "id": "docker",
