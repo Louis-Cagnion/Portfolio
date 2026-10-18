@@ -42,7 +42,6 @@ const FOCUS_PAD = 46; // marge au-dessus et au-dessous de la plus grande orbite
 const ORBIT_PAD = 80; // marge latérale de la plus grande orbite
 const BLEED = 24; // débord du plan de la Piscine, 12 px de chaque côté
 const SCROLL_MARGIN = 8;
-const OVERVIEW_RATIO = 0.4; // hauteur sur largeur d'un plan pas encore mesuré
 const PLANET_SHARE = 0.45; // largeur de la caméra sur une planète, en part de celle du système
 
 /**
@@ -172,7 +171,7 @@ export function createZoom({ parts, state, renderAll, showSystem }) {
     }
     if (state.phone) return { cx: system.cx, cy: system.cy, w: PHONE_CAMERA };
     const height = 2 * (system.maxRadius * TILT_DESK + FOCUS_PAD);
-    const wide = height / (camera.ratio() || OVERVIEW_RATIO);
+    const wide = height / camera.ratio();
     const width = Math.max(wide, 2 * system.maxRadius + ORBIT_PAD);
     return { cx: system.cx, cy: system.cy, w: width };
   };
@@ -264,7 +263,6 @@ export function createZoom({ parts, state, renderAll, showSystem }) {
       target: chase ?? toSystem,
       tilt: system.tilt,
       tiltTo: tiltAt(kind, system),
-      restTilt: system.restTilt,
       duration: { in: ENTER_MS, out: EXIT_MS }[kind] ?? TRACK_MS,
       elapsed: 0,
       done: 0,
@@ -303,7 +301,7 @@ export function createZoom({ parts, state, renderAll, showSystem }) {
     showSystem(index);
     setHeight(plan, zoomedHeight(system));
     if (state.phone) scrollToPlan();
-    camera.set({ ...overview() });
+    camera.set(overview());
     start('in', system, planetsOf(index), options);
   };
 
@@ -317,7 +315,7 @@ export function createZoom({ parts, state, renderAll, showSystem }) {
     const { built, view } = state;
     if (view.zoomedIndex < 0 || run) return;
     const system = built.systems[view.zoomedIndex];
-    const quiet = options?.quiet === true;
+    const quiet = options.quiet === true;
     lock = null;
     layout.classList.remove('zfocus');
     if (quiet || head.contains(document.activeElement)) focusSun(system.sun, quiet);

@@ -14,7 +14,7 @@ const SIZE_BONUS_MAX = 6;
 // Piscine : du projet le plus court (taille d'un bloc) au plus long (taille maximale).
 const PISCINE_SIZE_MIN = SIZE_BASE + SIZE_PER_BLOCK;
 const PISCINE_SIZE_MAX = SIZE_BASE + SIZE_BONUS_MAX;
-export const HIT_RADIUS = 22; // rayon de toucher en pixels d'écran (44 px de diamètre, Piscine sur téléphone)
+export const HIT_RADIUS = 22; // rayon de toucher, en pixels d'écran (44 px de diamètre)
 const DEFAULT_RADII = [72, 120, 168];
 const RING_COUNT_OTHER = DEFAULT_RADII.length;
 const ANGLE_STEP_OTHER = 2.4;
@@ -41,9 +41,8 @@ const PHONE_SLOTS = [
  */
 export function planetSize(project) {
   const blocks = project?.blocks;
-  if (!Array.isArray(blocks)) {
+  if (!Array.isArray(blocks))
     throw new TypeError(`planetSize : blocks doit être un tableau, reçu ${String(blocks)}`);
-  }
   return SIZE_BASE + Math.min(SIZE_BONUS_MAX, SIZE_PER_BLOCK * blocks.length);
 }
 
@@ -100,9 +99,8 @@ function piscineSizes(projects) {
 export function systemRadii(systemId, { phone, maxRadius } = {}) {
   if (systemId !== PISCINE_ID) return [...DEFAULT_RADII];
   if (phone) return [...PHONE_RINGS_PX];
-  if (!Number.isFinite(maxRadius) || maxRadius <= 0) {
+  if (!Number.isFinite(maxRadius) || maxRadius <= 0)
     throw new RangeError(`systemRadii : maxRadius invalide (${String(maxRadius)})`);
-  }
   return DESK_RATIOS.map((ratio) => ratio * maxRadius);
 }
 
@@ -146,12 +144,11 @@ function phoneSlots() {
 function baseSlots(system, phone, maxRadius) {
   const count = system.projects.length;
   if (system.id === PISCINE_ID) {
-    if (count !== PISCINE_PROJECT_COUNT) {
+    if (count !== PISCINE_PROJECT_COUNT)
       throw new Error(
         `planetSlots : le système ${system.id} attend ${PISCINE_PROJECT_COUNT} projets,`
         + ` reçu ${count}`,
       );
-    }
     return phone ? phoneSlots() : deskSlots(systemRadii(system.id, { phone, maxRadius }));
   }
   const radii = systemRadii(system.id, { phone, maxRadius });
