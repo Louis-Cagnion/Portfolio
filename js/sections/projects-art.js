@@ -4,47 +4,42 @@ Valeurs de la maquette validée (docs/design/s6/mockup.js:17-23, 112-130, 136-29
 écouteur, aucune boucle d'animation, aucun HTML brut : les textes entrent par des nœuds texte.
 Le placement vient de projects-layout.js ; le zoom, la boucle et la liste sont ailleurs.
 
-API :
-  TINTS, tintOf(id)                     teintes des quatre systèmes ; id inconnu : erreur
-  geometry(count, phone)                plan : largeur, hauteur et cellules des systèmes
-  phoneUnit(width)                      unités du plan par pixel d'écran, Piscine téléphone
-  buildSystems(systems, text, options)  nœuds au repos et références (voir sa docstring)
-  placePlanet(planet, system, view)     position, opacité et étiquette d'une planète (pur)
-  placeLabel(planet, point, view)       décalage et échelle de l'étiquette (pur)
-  renderPlanet(planet, system, view)    applique placePlanet aux nœuds de la planète
-  rescalePhone(system, planets, width)  rayons de la Piscine téléphone selon la largeur
-  setPlanetActive(node, active)         planète active (tabindex 0) ou inerte (-1, aria-hidden)
-  textWidth(text), remeasureLabels(planets)   mesure par canvas, à refaire aux polices
+Chaque export est documenté par son docstring.
 
 `view` : { u, camera: { cx, w }, zoomedIndex } ; u = unités du plan par pixel d'écran,
 camera = centre et largeur du plan visible, zoomedIndex = système zoomé (-1 au repos).
 */
 import { svg } from '../core/dom.js';
-import { planetSlots, splitTitle, systemRadii } from './projects-layout.js';
+import { format } from '../core/i18n.js';
+import {
+  HIT_RADIUS,
+  PISCINE_ID,
+  TAU,
+  planetSlots,
+  splitTitle,
+  systemRadii,
+} from './projects-layout.js';
 
-const TAU = 2 * Math.PI;
-const TINT_FIELDS = ['sun', 'planet'];
 export const TINTS = Object.freeze({
   pro: { sun: ['#fff6da', '#e8b45a'], planet: ['#ffd88f', '#b9822f'] },
   perso: { sun: ['#f3e1ff', '#a46bd8'], planet: ['#e3c3ff', '#7a45b0'] },
   school: { sun: ['#dcfff8', '#4fd1c5'], planet: ['#b8f5ec', '#25857c'] },
-  piscine: { sun: ['#e2f0ff', '#4f8cff'], planet: ['#bcd8ff', '#2f62c9'] },
+  [PISCINE_ID]: { sun: ['#e2f0ff', '#4f8cff'], planet: ['#bcd8ff', '#2f62c9'] },
 });
-const PISCINE_ID = 'piscine';
 const TILT = 0.42;
 const SYSTEM_ROW = 270;
 const DESK_WIDTH = 1100;
 const PHONE_WIDTH = 360;
 const PISCINE_MAX_RADIUS = 215; // bureau : rayon de l'orbite extérieure de la Piscine
-const PHONE_CAMERA = 370; // largeur du plan zoomé sur téléphone, en unités du plan
+export const PHONE_CAMERA = 370; // largeur du plan zoomé sur téléphone, en unités du plan
 const SUN_OFFSET_Y = -26; // le soleil est remonté pour laisser la place à son nom
 const SUN_GLOW_RADIUS = 44;
 const SUN_RADIUS = 16;
 const SUN_NAME_Y = 112;
 const SUN_COUNT_Y = 132;
-const HIT_RADIUS = 22; // toucher de 44 px de la Piscine sur téléphone (valeur de C2)
 const HIT_MARGIN = 10; // zone de survol : rayon de la planète plus cette marge
-const LABEL_FONT = '500 12.5px "IBM Plex Sans", sans-serif';
+const LABEL_FONT_SIZE = 12.5; // px
+const LABEL_FONT = `500 ${LABEL_FONT_SIZE}px "IBM Plex Sans", sans-serif`;
 const LABEL_PAD = 16;
 const LABEL_LINE = 14;
 const LABEL_BASE = 8;
@@ -54,8 +49,19 @@ const LABEL_RADIUS = 4;
 const SPLIT_OVER = 20; // téléphone : un titre de plus de 20 caractères se coupe en deux
 const GAP = 6; // écart entre planète et étiquette, en pixels d'écran
 const EDGE = 4; // marge de l'étiquette zoomée au bord de la vue, en pixels d'écran
-const FALLBACK_EM = 0.6; // largeur d'un caractère sans contexte 2D, en fraction de 12,5 px
-const SPEED_UNIT = 0.00012 * 180;
+const FALLBACK_EM = 0.6; // largeur d'un caractère sans contexte 2D, en fraction de la police
+const REF_SPEED = 0.00012; // rad/ms à REF_RADIUS
+const REF_RADIUS = 180; // rayon de référence des vitesses, en unités du plan
+const SPEED_UNIT = REF_SPEED * REF_RADIUS; // la vitesse angulaire varie en 1/rayon
+const LABEL_CLAMP_TOLERANCE = 1; // débord toléré avant de passer l'étiquette dessus/dessous
+const LABEL_SIDE_SIN = 0.6; // sinus en dessous duquel la planète est sur un côté
+const FAR_OPACITY = 0.75; // planète derrière le soleil
+const SUN_GLOW_STOP = 0.55; // part du rayon où la lueur du soleil commence à s'éteindre
+const PLANET_SHINE = { cx: 0.35, cy: 0.3, r: 0.8 }; // reflet des planètes (haut gauche)
+// décimales des attributs SVG écrits : positions, rayons, échelle
+const POSITION_DIGITS = 1;
+const RADIUS_DIGITS = 2;
+const SCALE_DIGITS = 4;
 
 let measurer = null; // contexte canvas de mesure, créé une seule fois
 
@@ -132,7 +138,7 @@ function measuringContext() {
  */
 export function textWidth(text) {
   const context = measuringContext();
-  if (!context) return text.length * FALLBACK_EM * 12.5;
+  if (!context) return text.length * FALLBACK_EM * LABEL_FONT_SIZE;
   context.font = LABEL_FONT;
   return context.measureText(text).width;
 }
@@ -173,7 +179,7 @@ export function remeasureLabels(planets) {
  *
  * @returns {string} titre brut
  */
-const plainTitle = (title) => title.replace(/<[^>]+>/g, '');
+export const plainTitle = (title) => title.replace(/<[^>]+>/g, '');
 
 /**
  * @brief Vérifie les systèmes avant toute construction.
@@ -216,9 +222,9 @@ function gradients(id) {
   }));
   return [
     svg('radialGradient', { id: `sun-${id}` }, ...stops([
-      [0, sun[0]], [0.55, sun[1]], [1, sun[1], 0],
+      [0, sun[0]], [SUN_GLOW_STOP, sun[1]], [1, sun[1], 0],
     ])),
-    svg('radialGradient', { id: `planet-${id}`, cx: 0.35, cy: 0.3, r: 0.8 }, ...stops([
+    svg('radialGradient', { id: `planet-${id}`, ...PLANET_SHINE }, ...stops([
       [0, planet[0]], [1, planet[1]],
     ])),
   ];
@@ -236,14 +242,14 @@ function gradients(id) {
  */
 function buildSun(system, center, text) {
   const { x, y } = center;
-  const count = text.count.replace('{n}', system.projects.length);
+  const count = format(text.count, { n: system.projects.length });
   return svg(
     'g',
     {
       class: 'sun-btn',
       tabindex: 0,
       role: 'button',
-      'aria-label': text.approach.replace('{name}', system.name),
+      'aria-label': format(text.approach, { name: system.name }),
     },
     svg('circle', {
       class: 'sun-glow', cx: x, cy: y, r: SUN_GLOW_RADIUS, fill: `url(#sun-${system.id})`,
@@ -274,7 +280,7 @@ export function setPlanetActive(node, active) {
  * @param {string} systemId identifiant du système (teinte)
  * @param {string} title titre brut
  * @param {{ size: number, lines: string[], phonePis: boolean }} shape rayon, lignes de
- *   l'étiquette et Piscine sur téléphone (zone de toucher `hit44`, classe `nearest`)
+ *   l'étiquette et Piscine sur téléphone (classe `nearest`)
  * @param {{ width: number, height: number }} box dimensions de l'étiquette
  *
  * @returns {object} nœuds : `g`, `hit`, `body`, `label`, `bg`, `name`
@@ -282,7 +288,7 @@ export function setPlanetActive(node, active) {
 function buildPlanetNodes(systemId, title, shape, box) {
   const { size, lines, phonePis } = shape;
   const hit = svg('circle', {
-    class: phonePis ? 'pl-hit hit44' : 'pl-hit',
+    class: 'pl-hit',
     r: size + HIT_MARGIN,
   });
   const body = svg('circle', { class: 'pl-body', r: size, fill: `url(#planet-${systemId})` });
@@ -346,7 +352,7 @@ function buildPlanet(system, project, slot, phone) {
  * @brief Écart d'angle de chaque planète à la première, pour l'espacement régulier du zoom.
  *
  * @param {object[]} slots emplacements du système, dans l'ordre des projets
- * @param {boolean} isPiscine la Piscine garde l'écart de ses cases, les autres un pas égal
+ * @param {boolean} isPiscine vrai pour le système de la Piscine, faux pour les autres
  *
  * @returns {number[]} `rel` de chaque planète
  */
@@ -360,7 +366,7 @@ function relativeAngles(slots, isPiscine) {
  * @brief Système au repos : cellule, orbites, soleil et planètes.
  *
  * @param {object} data système de `projects.systems`
- * @param {number} index indice du système (ajouté aux angles, comme la maquette)
+ * @param {number} index rang du système dans `projects.systems`, entier de 0 à 3
  * @param {object} cell cellule { x, y, w, h } du plan
  * @param {{ text: object, phone: boolean, width: number }} context textes, mode, largeur
  *
@@ -391,6 +397,7 @@ function buildSystem(data, index, cell, context) {
     cx: center.x,
     cy: center.y,
     tilt: TILT,
+    restTilt: TILT,
     orbits,
     maxRadius: Math.max(...radii),
     phonePis,
@@ -410,22 +417,17 @@ function buildSystem(data, index, cell, context) {
 /**
  * @brief Nœuds et références des systèmes au repos, au bureau ou sur téléphone.
  *
- * Le contenu vient des données ; `text` porte `projects.approach` (nom accessible du soleil,
- * « {name} ») et `projects.count` (« {n} »). L'appelant pose `children` dans le SVG, règle
- * son `viewBox` sur `0 0 width height` et appelle `remeasureLabels` quand les polices sont
- * prêtes. La Piscine hors de 20 projets lève l'erreur de `planetSlots`.
+ * Appelant : pose `children`, `viewBox` sur `0 0 width height`, `remeasureLabels` aux polices.
  *
  * @param {object[]} systems `projects.systems`, dans l'ordre d'affichage
- * @param {{ approach: string, count: string }} text modèles de textes
- * @param {{ phone?: boolean, width?: number }} [options] mode téléphone et largeur affichée
- *   du SVG en pixels (0 si inconnue)
+ * @param {{ approach: string, count: string }} text modèles « {name} » et « {n} »
+ * @param {{ phone?: boolean, width?: number }} [options] mode téléphone, largeur du SVG en px
  *
  * @returns {{ children: SVGElement[], width: number, height: number, unit: number,
- *   systems: object[], planets: object[] }} nœuds à poser, dimensions du plan, unité d'écran
- *   au repos, systèmes (`id`, `index`, `g`, `cx`, `cy`, `tilt`, `orbits`, `maxRadius`,
- *   `phonePis`) et planètes à plat (`id`, `nodes`, `size`, `radius`, `angle`, `speed`, `rel`,
- *   `ring`, `systemIndex`, `lines`, `labelWidth`, `labelHeight`, `below`)
- * @throws {Error} Entrée invalide : le message nomme le système ou le projet fautif.
+ *   systems: object[], planets: object[] }} systèmes (`id`, `index`, `g`, `cx`, `cy`, `tilt`,
+ *   `orbits`, `maxRadius`, `phonePis`), planètes (`id`, `nodes`, `size`, `radius`, `angle`,
+ *   `speed`, `rel`, `ring`, `systemIndex`, `lines`, `labelWidth`, `labelHeight`, `below`)
+ * @throws {Error} Entrée invalide (dont Piscine hors de 20 projets) : nomme le fautif.
  */
 export function buildSystems(systems, text, { phone = false, width = 0 } = {}) {
   validate(systems);
@@ -444,10 +446,9 @@ export function buildSystems(systems, text, { phone = false, width = 0 } = {}) {
     systems: built.map(({ system }) => system),
     planets: built.flatMap(({ planets }) => planets),
   };
-  const view = { u: unit, camera: { cx: plan.width / 2, w: plan.width }, zoomedIndex: -1 };
-  for (const planet of result.planets) {
+  const view = restView(plan.width, unit);
+  for (const planet of result.planets)
     renderPlanet(planet, result.systems[planet.systemIndex], view);
-  }
   return result;
 }
 
@@ -467,26 +468,29 @@ export function buildSystems(systems, text, { phone = false, width = 0 } = {}) {
 export function placeLabel(planet, point, view) {
   const { u, camera, zoomedIndex } = view;
   const { x, y } = point;
-  const lw = planet.labelWidth * u;
-  const lh = planet.labelHeight * u;
-  const d = planet.size + GAP * u;
-  let bx = x + d;
-  let by = y - lh / 2;
+  const labelWidth = planet.labelWidth * u;
+  const labelHeight = planet.labelHeight * u;
+  const offset = planet.size + GAP * u;
+  let boxX = x + offset;
+  let boxY = y - labelHeight / 2;
   const left = camera.cx - camera.w / 2 + EDGE * u;
   const right = camera.cx + camera.w / 2 - EDGE * u;
-  if (zoomedIndex === planet.systemIndex && planet.below) {
-    bx = Math.max(left, Math.min(right - lw, x - lw / 2));
-    by = y + planet.size + EDGE * u;
-  } else if (zoomedIndex === planet.systemIndex) {
-    const c = Math.cos(planet.angle);
-    const s = Math.sin(planet.angle);
-    bx = x + d * c - (lw * (1 - c)) / 2;
-    by = y + d * s - (lh * (1 - s)) / 2;
-    const clamped = Math.max(left, Math.min(right - lw, bx));
-    if (Math.abs(clamped - bx) > 1 && Math.abs(s) < 0.6) by = s >= 0 ? y + d : y - d - lh;
-    bx = clamped;
+  if (zoomedIndex === planet.systemIndex) {
+    if (planet.below) {
+      boxX = Math.max(left, Math.min(right - labelWidth, x - labelWidth / 2));
+      boxY = y + planet.size + EDGE * u;
+    } else {
+      const cos = Math.cos(planet.angle);
+      const sin = Math.sin(planet.angle);
+      boxX = x + offset * cos - (labelWidth * (1 - cos)) / 2;
+      boxY = y + offset * sin - (labelHeight * (1 - sin)) / 2;
+      const clamped = Math.max(left, Math.min(right - labelWidth, boxX));
+      if (Math.abs(clamped - boxX) > LABEL_CLAMP_TOLERANCE && Math.abs(sin) < LABEL_SIDE_SIN)
+        boxY = sin >= 0 ? y + offset : y - offset - labelHeight;
+      boxX = clamped;
+    }
   }
-  return { dx: bx - x, dy: by - y, scale: u };
+  return { dx: boxX - x, dy: boxY - y, scale: u };
 }
 
 /**
@@ -506,7 +510,7 @@ export function placePlanet(planet, system, view) {
   return {
     x,
     y,
-    opacity: Math.sin(planet.angle) < 0 ? 0.75 : 1,
+    opacity: Math.sin(planet.angle) < 0 ? FAR_OPACITY : 1,
     hitRadius: planet.below ? HIT_RADIUS * view.u : null,
     label: placeLabel(planet, { x, y }, view),
   };
@@ -525,15 +529,42 @@ export function renderPlanet(planet, system, view) {
   const placed = placePlanet(planet, system, view);
   const { nodes } = planet;
   const { dx, dy, scale } = placed.label;
-  const position = `translate(${placed.x.toFixed(1)} ${placed.y.toFixed(1)})`;
+  const px = placed.x.toFixed(POSITION_DIGITS);
+  const py = placed.y.toFixed(POSITION_DIGITS);
+  const position = `translate(${px} ${py})`;
   nodes.g.setAttribute('transform', position);
   nodes.g.style.opacity = placed.opacity;
-  if (placed.hitRadius !== null) nodes.hit.setAttribute('r', placed.hitRadius.toFixed(2));
+  if (placed.hitRadius !== null)
+    nodes.hit.setAttribute('r', placed.hitRadius.toFixed(RADIUS_DIGITS));
   nodes.label.setAttribute(
     'transform',
-    `translate(${dx.toFixed(1)} ${dy.toFixed(1)}) scale(${scale.toFixed(4)})`,
+    `translate(${dx.toFixed(POSITION_DIGITS)} ${dy.toFixed(POSITION_DIGITS)})`
+      + ` scale(${scale.toFixed(SCALE_DIGITS)})`,
   );
   return placed;
+}
+
+/**
+ * @brief Pose le petit axe d'une orbite : `ry` = `rx` fois l'inclinaison.
+ *
+ * @param {Element} orbit ellipse de l'orbite, dont `rx` est déjà posé
+ * @param {number} tilt rapport de l'axe vertical sur l'axe horizontal
+ */
+export function tiltOrbit(orbit, tilt) {
+  orbit.setAttribute('ry', (Number(orbit.getAttribute('rx')) * tilt).toFixed(RADIUS_DIGITS));
+}
+
+/**
+ * @brief Vue au repos : caméra centrée sur tout le plan, aucun système zoomé.
+ *
+ * @param {number} width largeur du plan, en unités du viewBox
+ * @param {number} unit unité de mesure du plan
+ *
+ * @returns {{ u: number, camera: { cx: number, w: number }, zoomedIndex: number }}
+ *   objet neuf, à muter par l'appelant
+ */
+export function restView(width, unit) {
+  return { u: unit, camera: { cx: width / 2, w: width }, zoomedIndex: -1 };
 }
 
 /**
@@ -550,8 +581,8 @@ export function rescalePhone(system, planets, width) {
   const k = phoneUnit(width);
   const rings = systemRadii(system.id, { phone: true }).map((radius) => radius * k);
   system.orbits.forEach((orbit, n) => {
-    orbit.setAttribute('rx', rings[n].toFixed(2));
-    orbit.setAttribute('ry', (rings[n] * system.tilt).toFixed(2));
+    orbit.setAttribute('rx', rings[n].toFixed(RADIUS_DIGITS));
+    tiltOrbit(orbit, system.tilt);
   });
   for (const planet of planets) {
     if (planet.systemIndex === system.index) planet.radius = rings[planet.ring];

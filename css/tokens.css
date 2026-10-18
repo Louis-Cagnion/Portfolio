@@ -78,7 +78,9 @@ courbes et durées des feuilles de style. Valeurs relevées dans la maquette val
   --ease-in: cubic-bezier(.5, 0, .75, .4);
   --dur-fast: 0.2s;
   --dur: 0.3s;
+  --dur-mid: 0.4s;
   --dur-slow: 0.5s;
+  --dur-long: 0.6s;
   --dur-link: 0.25s;
   --dur-sheet: 0.45s;
   --dur-scrim: 0.35s;

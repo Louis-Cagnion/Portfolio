@@ -11,27 +11,20 @@ import { reduced, watchReduced } from '../core/motion.js';
 import { initSheet } from '../ui/sheet.js';
 import {
   buildSystems,
+  plainTitle,
   remeasureLabels,
   renderPlanet,
   rescalePhone,
+  restView,
   tintOf,
 } from './projects-art.js';
-import { nearestPlanet } from './projects-layout.js';
+import { HIT_RADIUS, nearestPlanet } from './projects-layout.js';
 import { createLoop } from './projects-loop.js';
 import { createZoom } from './projects-zoom.js';
 
 const ARROW = '←';
 const HELD = ':hover, :focus-visible'; // une planète survolée ou focalisée cesse de tourner
 let revealById = null; // ouverture d'un projet lié par la rubrique montée (openProject)
-
-/**
- * @brief Titre sans balise, comme celui que projects-art.js affiche.
- *
- * @param {string} title titre de data/*.json
- *
- * @returns {string} titre brut
- */
-const plainTitle = (title) => title.replace(/<[^>]+>/g, '');
 
 /**
  * @brief Projets de tous les systèmes, dans l'ordre d'affichage.
@@ -57,7 +50,7 @@ const idsOf = (systems) => systems
  * @brief Lie Entrée et Espace d'un nœud à une action (la touche n'y défile pas).
  *
  * @param {Element} node nœud focalisable
- * @param {() => void} action rappel
+ * @param {() => void} action fonction sans argument ni retour
  */
 function onActivate(node, action) {
   node.addEventListener('keydown', (event) => {
@@ -135,9 +128,9 @@ function sheetView(projects, { system, project }) {
   return {
     category: format(projects.systemOf, { name: system.name }),
     title: plainTitle(project.title),
-    tags: project.tags,
+    tags: project.tags ?? [],
     blocks: project.blocks,
-    links: project.links,
+    links: project.links ?? [],
   };
 }
 
@@ -215,7 +208,7 @@ function bindRaise(node, next) {
  *
  * @returns {{ x: number, y: number }} centre de sa boîte, en pixels de la fenêtre
  */
-function centreOf(node) {
+function centerOf(node) {
   const box = node.getBoundingClientRect();
   return { x: box.x + box.width / 2, y: box.y + box.height / 2 };
 }
@@ -230,8 +223,8 @@ function centreOf(node) {
  * @returns {object | null} planète, null si rien n'est sous le doigt
  */
 function planetUnder(point, planets) {
-  const centres = planets.map((planet) => ({ planet, ...centreOf(planet.nodes.body) }));
-  const near = nearestPlanet(point, centres);
+  const centers = planets.map((planet) => ({ planet, ...centerOf(planet.nodes.body) }));
+  const near = nearestPlanet(point, centers, HIT_RADIUS);
   if (near) return near.planet;
   return planets.find((planet) => {
     const box = planet.nodes.bg.getBoundingClientRect();
@@ -245,7 +238,7 @@ function planetUnder(point, planets) {
  *   `update`.
  *
  * La bascule de langue réécrit les textes sur place (nœuds des planètes stables, fiche
- * ouverte par `update`, système zoomé gardé) ; le passage de 880 px reconstruit le plan.
+ * ouverte par `update`, système zoomé gardé) ; le passage de 55 em reconstruit le plan.
  *
  * @param {HTMLElement} root section.view#projects
  *
@@ -261,16 +254,19 @@ export function mount(root) {
     entries: [], // buildEntries : texte de chaque entrée de la liste
     phone: narrow.matches,
     openId: null, // projet de la fiche ouverte
-    view: { u: 1, camera: { cx: 0, w: 1 }, zoomedIndex: -1 },
+    view: restView(1, 1),
   };
 
-  /** Fiche du projet `id` ; `origin` reprend le focus à sa fermeture. */
-  const open = (id, origin) => {
+  /**
+   * Fiche du projet `id` ; `origin` reprend le focus à sa fermeture.
+   * `options.onClose` est transmis à la fiche et appelé une fois à sa fermeture.
+   */
+  const open = (id, origin, options) => {
     if (!state.projects) throw new Error('projects : rubrique pas encore rendue');
     const found = findProject(state.projects, id);
     if (!found) throw new Error(`projects : projet « ${id} » absent des données`);
     state.openId = id;
-    initSheet(document).open(sheetView(state.projects, found), origin);
+    initSheet(document).open(sheetView(state.projects, found), origin, options);
   };
 
   /** Replace chaque planète selon l'angle et la vue courants. */
@@ -308,22 +304,13 @@ export function mount(root) {
 
   const zoom = createZoom({ parts, state, renderAll, showSystem });
 
-  /** Rend la caméra au système dès que la fiche est fermée (Échap, bouton ou fond). */
-  const releaseOnClose = () => {
-    const watch = new MutationObserver(() => {
-      if (initSheet(document).isOpen()) return;
-      watch.disconnect();
-      zoom.release();
-    });
-    watch.observe(document.getElementById('sheet'), {
-      attributes: true,
-      attributeFilter: ['class'],
-    });
-  };
-
   /**
-   * Projet lié : la caméra va d'un seul mouvement jusqu'à la planète, puis la fiche s'ouvre.
+   * @brief Projet lié : la caméra rejoint la planète, puis la fiche s'ouvre.
+   *
    * À la fermeture, le focus va à la planète et la caméra revient sur le système zoomé.
+   *
+   * @param {string} id identifiant d'un projet de `projects.systems`
+   * @param {Element} origin nœud qui reçoit le focus à la fermeture de la fiche
    */
   const reveal = async (id, origin) => {
     const planet = state.built?.planets.find((each) => each.id === id);
@@ -332,13 +319,13 @@ export function mount(root) {
       return;
     }
     await zoom.toPlanet(planet);
-    open(id, origin);
-    releaseOnClose();
+    open(id, origin, { onClose: () => zoom.release() });
   };
 
   /**
-   * Branche les systèmes (zoom), les planètes (fiche si leur système est zoomé, remontée au
-   * survol) d'un dessin neuf.
+   * @brief Branche les systèmes (zoom) et les planètes (fiche, remontée au survol).
+   *
+   * @param {{ systems: object[], planets: object[] }} built résultat de `buildSystems`
    */
   const wire = ({ systems, planets }) => {
     for (const system of systems) {
@@ -378,11 +365,7 @@ export function mount(root) {
     parts.plan.style.removeProperty('height');
     parts.plan.classList.remove('zoomed', 'bleed');
     parts.layout.classList.remove('zfocus');
-    Object.assign(view, {
-      u: built.unit,
-      camera: { cx: built.width / 2, w: built.width },
-      zoomedIndex: -1,
-    });
+    Object.assign(view, restView(built.width, built.unit));
     wire(built);
     fit();
   };

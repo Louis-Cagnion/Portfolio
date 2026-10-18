@@ -2,19 +2,19 @@
 Placement des planètes de la section Projets : module pur, sans accès au DOM.
 Source des valeurs : docs/design/s6/mockup.js (maquette validée).
 Le placement ne dépend que de l'identifiant du système. La taille dépend du nombre de blocs,
-sauf à la Piscine, où elle dépend de la longueur du texte (décision du 12/10/2026).
+sauf à la Piscine, où elle dépend de la longueur du texte.
 */
 
-const TAU = 2 * Math.PI;
-const PISCINE_ID = 'piscine';
-const PISCINE_SIZE = 20;
+export const TAU = 2 * Math.PI;
+export const PISCINE_ID = 'piscine';
+const PISCINE_PROJECT_COUNT = 20;
 const SIZE_BASE = 7;
 const SIZE_PER_BLOCK = 1.4;
 const SIZE_BONUS_MAX = 6;
 // Piscine : du projet le plus court (taille d'un bloc) au plus long (taille maximale).
 const PISCINE_SIZE_MIN = SIZE_BASE + SIZE_PER_BLOCK;
 const PISCINE_SIZE_MAX = SIZE_BASE + SIZE_BONUS_MAX;
-const DEFAULT_HIT_RADIUS = 22;
+export const HIT_RADIUS = 22; // rayon de toucher, en pixels d'écran (44 px de diamètre)
 const DEFAULT_RADII = [72, 120, 168];
 const RING_COUNT_OTHER = DEFAULT_RADII.length;
 const ANGLE_STEP_OTHER = 2.4;
@@ -30,31 +30,30 @@ const PHONE_SLOTS = [
 ];
 
 /**
- * Taille d'une planète selon le nombre de blocs du projet.
+ * @brief taille d'une planète selon le nombre de blocs du projet
  *
  * @example planetSize({ blocks: [{}, {}] }) -> 9.8
  *
- * @param {{ blocks: Array }} project Projet dont on compte les blocs.
+ * @param {{ blocks: Array }} project projet dont on compte les blocs
  *
- * @returns {number} 7 plus 1,4 par bloc, avec un bonus plafonné à 6.
- * @throws {TypeError} Si `blocks` n'est pas un tableau.
+ * @returns {number} 7 plus 1,4 par bloc, avec un bonus plafonné à 6
+ * @throws {TypeError} si `blocks` n'est pas un tableau
  */
 export function planetSize(project) {
   const blocks = project?.blocks;
-  if (!Array.isArray(blocks)) {
+  if (!Array.isArray(blocks))
     throw new TypeError(`planetSize : blocks doit être un tableau, reçu ${String(blocks)}`);
-  }
   return SIZE_BASE + Math.min(SIZE_BONUS_MAX, SIZE_PER_BLOCK * blocks.length);
 }
 
 /**
- * Longueur du texte d'un projet, pour classer les planètes de la Piscine.
+ * @brief longueur du texte d'un projet, pour classer les planètes de la Piscine
  *
  * @example textLength({ blocks: [{ type: 'list', items: ['ab', 'c'] }] }) -> 3
  *
- * @param {{ blocks: Array }} project Projet : blocs `text` (`html`) ou `list` (`items`).
+ * @param {{ blocks: Array }} project projet : blocs `text` (`html`) ou `list` (`items`)
  *
- * @returns {number} Nombre de caractères, sans séparateur entre les items.
+ * @returns {number} nombre de caractères, sans séparateur entre les items
  */
 function textLength(project) {
   return project.blocks
@@ -63,13 +62,13 @@ function textLength(project) {
 }
 
 /**
- * Tailles des planètes de la Piscine, selon le rang de longueur du texte.
+ * @brief tailles des planètes de la Piscine, selon le rang de longueur du texte
  *
  * @example piscineSizes([{ blocks: [] }, { blocks: [{ html: 'ab' }] }]) -> [8.4, 13]
  *
- * @param {{ blocks: Array }[]} projects Projets de la Piscine.
+ * @param {{ blocks: Array }[]} projects projets de la Piscine
  *
- * @returns {number[]} Une taille par projet, dans l'ordre des projets, de 8,4 à 13.
+ * @returns {number[]} une taille par projet, dans l'ordre des projets, de 8,4 à 13
  */
 function piscineSizes(projects) {
   const count = projects.length;
@@ -87,31 +86,30 @@ function piscineSizes(projects) {
 }
 
 /**
- * Rayons des orbites d'un système.
+ * @brief rayons des orbites d'un système
  *
  * @example systemRadii('pro', { phone: false }) -> [72, 120, 168]
  *
- * @param {string} systemId Identifiant du système.
- * @param {{ phone?: boolean, maxRadius?: number }} options Mode et rayon maximal.
+ * @param {string} systemId identifiant du système
+ * @param {{ phone?: boolean, maxRadius?: number }} options mode et rayon maximal
  *
- * @returns {number[]} Rayons, du centre vers le bord (tableau neuf).
- * @throws {RangeError} Piscine au bureau sans `maxRadius` fini et positif.
+ * @returns {number[]} rayons, du centre vers le bord (tableau neuf)
+ * @throws {RangeError} Piscine au bureau sans `maxRadius` fini et positif
  */
 export function systemRadii(systemId, { phone, maxRadius } = {}) {
   if (systemId !== PISCINE_ID) return [...DEFAULT_RADII];
   if (phone) return [...PHONE_RINGS_PX];
-  if (!Number.isFinite(maxRadius) || maxRadius <= 0) {
+  if (!Number.isFinite(maxRadius) || maxRadius <= 0)
     throw new RangeError(`systemRadii : maxRadius invalide (${String(maxRadius)})`);
-  }
   return DESK_RATIOS.map((ratio) => ratio * maxRadius);
 }
 
 /**
- * Cases de la Piscine au bureau, triées par angle de base.
+ * @brief cases de la Piscine au bureau, triées par angle de base
  *
- * @param {number[]} radii Rayons des cinq orbites.
+ * @param {number[]} radii rayons des cinq orbites
  *
- * @returns {{ ring: number, radius: number, angle: number }[]} Cases triées.
+ * @returns {{ ring: number, radius: number, angle: number }[]} cases triées
  */
 function deskSlots(radii) {
   const slots = [];
@@ -125,32 +123,32 @@ function deskSlots(radii) {
 }
 
 /**
- * Cases de la Piscine au téléphone, dans l'ordre des modules.
+ * @brief cases de la Piscine au téléphone, dans l'ordre des modules
  *
- * @returns {{ ring: number, radius: number, angle: number }[]} Cases figées.
+ * @returns {{ ring: number, radius: number, angle: number }[]} cases figées
  */
 function phoneSlots() {
   return PHONE_SLOTS.map(([ring, angle]) => ({ ring, radius: PHONE_RINGS_PX[ring], angle }));
 }
 
 /**
- * Cases (orbite, rayon, angle de base) d'un système, avant décalage et taille.
+ * @brief cases (orbite, rayon, angle de base) d'un système, avant décalage et taille
  *
- * @param {object} system Système à placer.
- * @param {boolean} phone Mode téléphone.
- * @param {number} maxRadius Rayon maximal de la Piscine au bureau.
+ * @param {object} system système à placer
+ * @param {boolean} phone mode téléphone
+ * @param {number} maxRadius rayon maximal de la Piscine au bureau
  *
- * @returns {{ ring: number, radius: number, angle: number }[]} Une case par projet.
- * @throws {Error} Piscine qui n'a pas 20 projets.
+ * @returns {{ ring: number, radius: number, angle: number }[]} une case par projet
+ * @throws {Error} Piscine qui n'a pas 20 projets
  */
 function baseSlots(system, phone, maxRadius) {
   const count = system.projects.length;
   if (system.id === PISCINE_ID) {
-    if (count !== PISCINE_SIZE) {
+    if (count !== PISCINE_PROJECT_COUNT)
       throw new Error(
-        `planetSlots : le système ${system.id} attend ${PISCINE_SIZE} projets, reçu ${count}`,
+        `planetSlots : le système ${system.id} attend ${PISCINE_PROJECT_COUNT} projets,`
+        + ` reçu ${count}`,
       );
-    }
     return phone ? phoneSlots() : deskSlots(systemRadii(system.id, { phone, maxRadius }));
   }
   const radii = systemRadii(system.id, { phone, maxRadius });
@@ -161,18 +159,18 @@ function baseSlots(system, phone, maxRadius) {
 }
 
 /**
- * Emplacement de chaque planète d'un système, dans l'ordre des projets.
- * Taille : `planetSize`, sauf à la Piscine (rang de longueur du texte).
+ * @brief emplacement de chaque planète d'un système, dans l'ordre des projets.
+ * Taille : `planetSize`, sauf à la Piscine (rang de longueur du texte)
  *
  * @example planetSlots(system, { phone: false })[0] -> { id, ring: 0, radius: 72, ... }
  *
- * @param {object} system Système (`id` et `projects`).
- * @param {{ phone?: boolean, systemIndex?: number, maxRadius?: number }} options Mode,
- *   décalage d'angle (0 par défaut) et rayon maximal.
+ * @param {object} system système (`id` et `projects`)
+ * @param {{ phone?: boolean, systemIndex?: number, maxRadius?: number }} options mode,
+ *   décalage d'angle (0 par défaut) et rayon maximal
  *
  * @returns {{ id: string, ring: number, radius: number, angle: number, size: number }[]}
- *   Un élément par projet.
- * @throws {Error} Piscine hors de 20 projets, ou `maxRadius` invalide au bureau.
+ *   un élément par projet
+ * @throws {Error} Piscine hors de 20 projets, ou `maxRadius` invalide au bureau
  */
 export function planetSlots(system, { phone, systemIndex = 0, maxRadius } = {}) {
   const slots = baseSlots(system, phone, maxRadius);
@@ -187,13 +185,13 @@ export function planetSlots(system, { phone, systemIndex = 0, maxRadius } = {}) 
 }
 
 /**
- * Coupe un titre à l'espace le plus proche du milieu (le premier à égalité).
+ * @brief coupe un titre à l'espace le plus proche du milieu (le premier à égalité)
  *
  * @example splitTitle('Hello world') -> ['Hello', 'world']
  *
- * @param {string} title Titre à couper.
+ * @param {string} title titre à couper
  *
- * @returns {string[]} `[title]` sans espace, sinon deux parties, espace supprimé.
+ * @returns {string[]} `[title]` sans espace, sinon deux parties, espace supprimé
  */
 export function splitTitle(title) {
   const middle = title.length / 2;
@@ -206,17 +204,17 @@ export function splitTitle(title) {
 }
 
 /**
- * Planète au centre le plus proche d'un point, sous un rayon de toucher.
+ * @brief planète au centre le plus proche d'un point, sous un rayon de toucher
  *
  * @example nearestPlanet({ x: 1, y: 0 }, [{ x: 0, y: 0 }]) -> la planète
  *
- * @param {{ x: number, y: number }} point Point visé.
- * @param {{ x: number, y: number }[]} planets Planètes (centres en x et y).
- * @param {number} [hitRadius] Distance à ne pas atteindre (22 par défaut).
+ * @param {{ x: number, y: number }} point point visé
+ * @param {{ x: number, y: number }[]} planets planètes (centres en x et y)
+ * @param {number} [hitRadius] distance à ne pas atteindre (22 par défaut)
  *
- * @returns {object|null} Planète à distance strictement inférieure, la première à égalité.
+ * @returns {object | null} planète à distance strictement inférieure, la première à égalité
  */
-export function nearestPlanet(point, planets, hitRadius = DEFAULT_HIT_RADIUS) {
+export function nearestPlanet(point, planets, hitRadius = HIT_RADIUS) {
   let best = null;
   let bestDistance = hitRadius;
   for (const planet of planets) {

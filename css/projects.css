@@ -21,7 +21,7 @@ docs/design/s6/mockup.css). Chargée après css/journey.css par index.html.
   pointer-events: auto;
 }
 
-/* ───── Fiche : panneau à droite, feuille du bas à 880 px et moins ───── */
+/* ───── Fiche : panneau à droite, feuille du bas à 55 em et moins ───── */
 .sheet {
   position: fixed;
   top: 0;
@@ -138,14 +138,14 @@ docs/design/s6/mockup.css). Chargée après css/journey.css par index.html.
   fill: var(--text);
   font: 400 15px var(--display);
   text-anchor: middle;
-  transition: opacity 0.4s; /* 0,4 s : valeur de la maquette, sans jeton */
+  transition: opacity var(--dur-mid);
 }
 
 .sun-sub {
   fill: var(--faint);
   font: 400 12px var(--mono);
   text-anchor: middle;
-  transition: opacity 0.4s;
+  transition: opacity var(--dur-mid);
 }
 
 .sun-glow {
@@ -200,6 +200,7 @@ docs/design/s6/mockup.css). Chargée après css/journey.css par index.html.
 
 .pl-name {
   fill: var(--text);
+  /* égal à LABEL_FONT_SIZE de projects-art.js */
   font: 500 12.5px var(--sans);
 }
 
@@ -225,7 +226,7 @@ docs/design/s6/mockup.css). Chargée après css/journey.css par index.html.
   stroke: none;
 }
 
-/* Décision de Louis du 13/10/2026 : zones visibles dans la Piscine zoomée, teinte --live */
+/* Piscine zoomée : zone de toucher visible, teinte --live */
 .sys.on .planet.nearest .pl-hit {
   fill: color-mix(in srgb, var(--live) 6%, transparent);
   stroke: color-mix(in srgb, var(--live) 35%, transparent);
@@ -255,6 +256,7 @@ docs/design/s6/mockup.css). Chargée après css/journey.css par index.html.
 }
 
 .systems.bleed {
+  /* égal au débord BLEED de projects-zoom.js */
   width: calc(100% + 24px);
   margin: 0 -12px;
 }
@@ -265,7 +267,7 @@ docs/design/s6/mockup.css). Chargée après css/journey.css par index.html.
 }
 
 .sys {
-  transition: opacity 0.6s; /* 0,6 s : valeur de la maquette, sans jeton */
+  transition: opacity var(--dur-long);
 }
 
 /* Système masqué : invisible, hors de l'ordre de Tab et de l'arbre d'accessibilité une fois
@@ -275,8 +277,8 @@ docs/design/s6/mockup.css). Chargée après css/journey.css par index.html.
   visibility: hidden;
   pointer-events: none;
   transition:
-    opacity 0.6s,
-    visibility 0s 0.6s;
+    opacity var(--dur-long),
+    visibility 0s var(--dur-long);
 }
 
 /* ───── En-tête du système zoomé : retour, nom et compte ───── */
@@ -292,15 +294,15 @@ docs/design/s6/mockup.css). Chargée après css/journey.css par index.html.
   opacity: 0;
   visibility: hidden;
   transition:
-    opacity 0.4s,
-    visibility 0s 0.4s;
+    opacity var(--dur-mid),
+    visibility 0s var(--dur-mid);
 }
 
 .zfocus .sys-head {
   opacity: 1;
   visibility: visible;
   transition:
-    opacity 0.4s 0.5s,
+    opacity var(--dur-mid) 0.5s,
     visibility 0s;
 }
 

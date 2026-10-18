@@ -1,5 +1,5 @@
 /*
-Zoom sur un système de la rubrique Projets (S6.C5) : la caméra approche, les orbites
+Zoom sur un système de la rubrique Projets : la caméra approche, les orbites
 s'inclinent, les autres systèmes s'effacent, l'en-tête et l'introduction apparaissent.
 Mécanique de la maquette validée (docs/design/s6/mockup.js:330-431) ; la caméra est
 makeCamera (js/core/motion.js), la même que celle de Parcours.
@@ -22,16 +22,15 @@ import {
   watchReduced,
 } from '../core/motion.js';
 import { initSheet } from '../ui/sheet.js';
-import { phoneUnit, setPlanetActive } from './projects-art.js';
+import { PHONE_CAMERA, phoneUnit, setPlanetActive, tiltOrbit } from './projects-art.js';
+import { TAU } from './projects-layout.js';
 
-const TAU = 2 * Math.PI;
 const ENTER_MS = 1000;
 const EXIT_MS = 900;
 const TRACK_MS = 800; // caméra d'un projet lié : du système à la planète, et retour
 const SPIN = 0.00005; // rad/ms : vitesse commune des planètes du système zoomé
 const DESK_HEIGHT = 520; // hauteur du plan zoomé au bureau, en pixels
 const PHONE_RATIO = 1.25; // téléphone : hauteur du plan zoomé, en largeurs
-const PHONE_CAMERA = 370; // téléphone : largeur de la caméra, en unités du plan
 const PIS_HEIGHT = 320; // téléphone : hauteur du plan zoomé de la Piscine, en pixels
 const PIS_ROW = 152; // téléphone : position du centre de la Piscine depuis le haut du plan
 const PIS_LABEL = 8.4; // téléphone : hauteur d'étiquette qui fait descendre la Piscine
@@ -41,9 +40,9 @@ const TILT_PHONE = 0.9;
 const TILT_PISCINE = 1; // orbites en cercles
 const FOCUS_PAD = 46; // marge au-dessus et au-dessous de la plus grande orbite
 const ORBIT_PAD = 80; // marge latérale de la plus grande orbite
-const BLEED = 24; // débord du plan de la Piscine, 12 px de chaque côté
+// débord du plan de la Piscine, 12 px de chaque côté, égal au débord de css/projects.css
+const BLEED = 24;
 const SCROLL_MARGIN = 8;
-const OVERVIEW_RATIO = 0.4; // hauteur sur largeur d'un plan pas encore mesuré
 const PLANET_SHARE = 0.45; // largeur de la caméra sur une planète, en part de celle du système
 
 /**
@@ -80,7 +79,7 @@ function focusTilt(system, phone) {
 function setTilt(system, tilt) {
   system.tilt = tilt;
   for (const orbit of system.orbits)
-    orbit.setAttribute('ry', (Number(orbit.getAttribute('rx')) * tilt).toFixed(2));
+    tiltOrbit(orbit, tilt);
 }
 
 /**
@@ -117,7 +116,7 @@ function columnWidth(plan) {
  * le focus, pour que `focusVisible: false` s'applique.
  *
  * @param {SVGGElement} sun soleil du système sorti
- * @param {boolean} quiet sortie par Échap
+ * @param {boolean} quiet vrai pour une sortie par Échap, faux pour le bouton retour
  */
 function focusSun(sun, quiet) {
   if (quiet && document.activeElement === sun) sun.blur();
@@ -173,7 +172,7 @@ export function createZoom({ parts, state, renderAll, showSystem }) {
     }
     if (state.phone) return { cx: system.cx, cy: system.cy, w: PHONE_CAMERA };
     const height = 2 * (system.maxRadius * TILT_DESK + FOCUS_PAD);
-    const wide = height / (camera.ratio() || OVERVIEW_RATIO);
+    const wide = height / camera.ratio();
     const width = Math.max(wide, 2 * system.maxRadius + ORBIT_PAD);
     return { cx: system.cx, cy: system.cy, w: width };
   };
@@ -243,9 +242,13 @@ export function createZoom({ parts, state, renderAll, showSystem }) {
   };
 
   /**
-   * Lance l'animation `kind` (in, out, track, release) ; sous mouvement réduit, elle se
-   * termine aussitôt. `options.planet` : la caméra rejoint cette planète, `options.resolve` :
-   * rappel de la fin, `options.quiet` : sortie par Échap (focus du soleil sans anneau).
+   * @brief Lance l'animation d'un système ; sous mouvement réduit, elle se termine aussitôt.
+   *
+   * @param {'in' | 'out' | 'track' | 'release'} kind entrée, sortie, suivi de planète, retour
+   * @param {object} system système de `state.built.systems`
+   * @param {object[]} planets planètes de ce système, dans l'ordre des projets
+   * @param {{ planet?: object, resolve?: () => void, quiet?: boolean }} [options]
+   *   planète rejointe par la caméra, rappel de fin, sortie par Échap
    */
   const start = (kind, system, planets, options = {}) => {
     const { built } = state;
@@ -265,7 +268,6 @@ export function createZoom({ parts, state, renderAll, showSystem }) {
       target: chase ?? toSystem,
       tilt: system.tilt,
       tiltTo: tiltAt(kind, system),
-      restTilt: system.restTilt,
       duration: { in: ENTER_MS, out: EXIT_MS }[kind] ?? TRACK_MS,
       elapsed: 0,
       done: 0,
@@ -291,7 +293,6 @@ export function createZoom({ parts, state, renderAll, showSystem }) {
     const { built, view } = state;
     if (!built || view.zoomedIndex >= 0) return;
     const system = built.systems[index];
-    system.restTilt ??= system.tilt;
     view.zoomedIndex = index;
     built.systems.forEach((each, k) => {
       each.g.classList.toggle('on', k === index);
@@ -304,7 +305,7 @@ export function createZoom({ parts, state, renderAll, showSystem }) {
     showSystem(index);
     setHeight(plan, zoomedHeight(system));
     if (state.phone) scrollToPlan();
-    camera.set({ ...overview() });
+    camera.set(overview());
     start('in', system, planetsOf(index), options);
   };
 
@@ -318,7 +319,7 @@ export function createZoom({ parts, state, renderAll, showSystem }) {
     const { built, view } = state;
     if (view.zoomedIndex < 0 || run) return;
     const system = built.systems[view.zoomedIndex];
-    const quiet = options?.quiet === true;
+    const quiet = options.quiet === true;
     lock = null;
     layout.classList.remove('zfocus');
     if (quiet || head.contains(document.activeElement)) focusSun(system.sun, quiet);
@@ -329,10 +330,11 @@ export function createZoom({ parts, state, renderAll, showSystem }) {
   };
 
   /**
-   * Emmène la caméra jusqu'à `planet` : d'un seul mouvement depuis la vue d'ensemble (zoom du
-   * système) ou depuis son système zoomé (du système à la planète) ; en deux temps si un autre
-   * système est zoomé (sortie de ce zoom, puis entrée dans celui de la planète). Sans effet
-   * (résolue aussitôt) si une animation tourne ou si le plan a été reconstruit entre-temps.
+   * @brief Emmène la caméra jusqu'à une planète, en deux temps si un autre système est zoomé.
+   *
+   * Un seul mouvement depuis la vue d'ensemble (zoom du système) ou depuis le système déjà
+   * zoomé (du système à la planète) ; deux temps si un autre est zoomé (sortie, puis entrée).
+   * Sans effet (résolue aussitôt) si une animation tourne ou si le plan a été reconstruit.
    *
    * @param {object} planet planète de `state.built.planets`
    *
@@ -377,7 +379,7 @@ export function createZoom({ parts, state, renderAll, showSystem }) {
   /**
    * @brief Avance l'animation en cours, ou la rotation du système zoomé.
    *
-   * @param {number} dt pas de la boucle en ms (50 au plus)
+   * @param {number} dt pas de la boucle en ms
    */
   const step = (dt) => {
     const { built, view } = state;

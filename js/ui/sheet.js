@@ -1,10 +1,12 @@
 /*
-Fiche projet : volet à droite (feuille du bas à 880 px et moins) qui détaille un projet.
-Contrat : initSheet(doc) rend { open(view, origin), update(view), close(options), isOpen() } ;
-`options.quiet` (fermeture par Échap) rend le focus sans anneau de focus clavier.
+Fiche projet : volet à droite (feuille du bas à 55 em et moins) qui détaille un projet.
+Contrat : initSheet(doc) rend { open(view, origin, options), update(view), close(options),
+isOpen() }. `options.onClose` (facultatif, sans argument) est appelé une fois à la fermeture,
+focus déjà rendu ; un `open` sans `onClose` l'efface. `options.quiet` de close (fermeture
+par Échap) rend le focus sans anneau de focus clavier.
 view = { category, title, tags, blocks: [{ type: 'text', html } | { type: 'list', items }],
-links: [{ intro, label, href }] }. Les `html` ne passent que par setRich. S8 réutilise ce
-module pour ouvrir un projet lié. Balisage et styles : index.html, css/projects.css.
+links: [{ intro, label, href }] }. Les `html` ne passent que par setRich. Balisage et
+styles : index.html, css/projects.css.
 */
 import { setRich } from '../core/dom.js';
 
@@ -75,9 +77,10 @@ function shapeOf(view) {
  * @param {Document} doc document contenant #sheet, #sheetBg et #close
  *
  * @returns {{ open: Function, update: Function, close: Function, isOpen: Function }}
- *   open(view, origin) affiche la fiche (origin reçoit le focus à la fermeture), update(view)
- *   réécrit ses textes sur place, close(options) la ferme (`quiet` : par Échap, focus sans
- *   anneau), isOpen() dit si elle est ouverte
+ *   open(view, origin, options) affiche la fiche (origin reçoit le focus à la fermeture,
+ *   `options.onClose` est appelé une fois après elle), update(view) réécrit ses textes sur
+ *   place, close(options) la ferme (`quiet` : par Échap, focus sans anneau), isOpen() dit
+ *   si elle est ouverte
  */
 export function initSheet(doc) {
   if (controllers.has(doc)) return controllers.get(doc);
@@ -90,7 +93,15 @@ export function initSheet(doc) {
     tags: doc.getElementById('sTags'),
     body: doc.getElementById('sBody'),
   };
-  const state = { open: false, origin: null, title: '', shape: '', held: [], timer: 0 };
+  const state = {
+    open: false,
+    origin: null,
+    title: '',
+    shape: '',
+    held: [],
+    timer: 0,
+    onClose: null,
+  };
   const still = () => Boolean(doc.defaultView.matchMedia?.(REDUCED).matches);
 
   const setStill = () => {
@@ -158,9 +169,10 @@ export function initSheet(doc) {
     }
   };
 
-  const open = (view, origin) => {
+  const open = (view, origin, options) => {
     const wasOpen = state.open;
     state.origin = origin;
+    state.onClose = options?.onClose ?? null;
     if (!wasOpen || shapeOf(view) !== state.shape) build(view);
     writeTexts(view);
     if (wasOpen) return;
@@ -197,6 +209,9 @@ export function initSheet(doc) {
     restoreFocus(options?.quiet === true);
     if (still()) hide();
     else state.timer = setTimeout(hide, HIDE_DELAY_MS);
+    const { onClose } = state;
+    state.onClose = null;
+    onClose?.();
   };
 
   sheet.addEventListener('keydown', trap);
