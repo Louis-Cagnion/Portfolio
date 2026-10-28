@@ -276,7 +276,7 @@
           {
             "id": "bash",
             "name": "Bash",
-            "level": "intermediate",
+            "level": "beginner",
             "projects": ["shell00", "shell01", "minishell"],
             "description": "Vu dans les scripts de la Piscine et de mesure de mes solveurs, et surtout dans Minishell, qui m'a fait reproduire en C le comportement de Bash (redirections, variables d'environnement, signaux, opérateurs logiques et priorités)."
           },
