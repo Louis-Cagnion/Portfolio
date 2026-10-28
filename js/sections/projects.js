@@ -14,13 +14,14 @@ import {
   plainTitle,
   remeasureLabels,
   renderPlanet,
+  LABEL_FONT_SIZE,
   rescalePhone,
   restView,
   tintOf,
 } from './projects-art.js';
 import { HIT_RADIUS, nearestPlanet } from './projects-layout.js';
 import { createLoop } from './projects-loop.js';
-import { createZoom } from './projects-zoom.js';
+import { BLEED, createZoom } from './projects-zoom.js';
 
 const ARROW = '←';
 const HELD = ':hover, :focus-visible'; // une planète survolée ou focalisée cesse de tourner
@@ -78,6 +79,8 @@ function buildParts() {
   const count = el('span', { class: 'count' });
   const head = el('div', { class: 'sys-head' }, back, title, count);
   const plan = svg('svg', { class: 'systems', id: 'systems', role: 'group' });
+  plan.style.setProperty('--label-size', `${LABEL_FONT_SIZE}px`);
+  plan.style.setProperty('--bleed', `${BLEED}px`);
   const layout = el(
     'div',
     { class: 'sys-layout', id: 'sysLayout' },
