@@ -11,9 +11,9 @@ En vue d'ensemble, ce bloc est décalé de `NAME_SHIFT` px vers la gauche (choix
 18/10/2026), pour ne pas toucher le nom voisin ; il se résorbe avec le déploiement.
 */
 import { svg } from '../core/dom.js';
+import { LEVELS } from '../core/levels.js';
 import { bodyRadius } from './skills-layout.js';
 
-const LEVELS = ['unknown', 'beginner', 'intermediate', 'advanced'];
 const HIT_RADIUS = 18;
 const LABEL_GAP = 9;
 const GALAXY_LABEL_SHARE = 0.6; // la galaxie, aplatie, remonte moins son nom

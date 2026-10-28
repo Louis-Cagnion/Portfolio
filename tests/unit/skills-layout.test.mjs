@@ -25,7 +25,7 @@ const load = async () => {
   return mod.layoutConstellation;
 };
 
-const LEVELS = ['advanced', 'intermediate', 'beginner', 'unknown'];
+const { LEVELS } = await importModule('js/core/levels.js');
 function makeGroup(id, count, prefix = 'star') {
   return {
     id,
@@ -34,7 +34,7 @@ function makeGroup(id, count, prefix = 'star') {
     items: Array.from({ length: count }, (_, i) => ({
       id: `${prefix}-${i}`,
       name: `Nom ${i}`,
-      level: LEVELS[i % 4],
+      level: LEVELS[i % LEVELS.length],
       projects: i % 2 ? [`p${i}`] : [],
       description: `Description ${i}`,
     })),

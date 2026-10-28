@@ -10,6 +10,7 @@ Calculs d'image : skills-pose.js ; règles : css/skills.css.
 Une seule boucle `requestAnimationFrame`, qui lit `performance.now()` à chaque image : la
 progression ne dépend jamais de l'argument du rappel (origine différente dans une iframe).
 */
+import { LEVELS } from '../core/levels.js';
 import { ease, lerp, reduced, scrollBehavior, watchReduced } from '../core/motion.js';
 import { initSheet } from '../ui/sheet.js';
 import { createPanel } from './skills-panel.js';
@@ -22,7 +23,7 @@ import {
   overviewCamera,
   spreadOf,
 } from './skills-layout.js';
-import { LEVELS, placeLabels } from './skills-scene.js';
+import { placeLabels } from './skills-scene.js';
 import {
   PHONE_RATIO,
   blend,

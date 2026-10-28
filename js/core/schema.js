@@ -3,8 +3,8 @@ Validation pure du JSON d'une langue.
 Chaque nœud du schéma est une fonction (valeur, chemin, fautes) qui ajoute à
 `fautes` le chemin de tout champ absent, vide ou mal typé ; rien n'est jamais levé.
 */
+import { LEVELS } from './levels.js';
 
-const LEVELS = ['advanced', 'intermediate', 'beginner', 'unknown'];
 const HREF = /^(?:https:\/\/|mailto:)\S+$/;
 const OPTIONAL = Symbol('optional');
 
@@ -108,12 +108,7 @@ const html = text();
 const label = text();
 const id = text();
 const link = record({ intro: label, label, href: text(HREF) });
-const byLevel = record({
-  advanced: label,
-  intermediate: label,
-  beginner: label,
-  unknown: label,
-});
+const byLevel = record(Object.fromEntries(LEVELS.map((name) => [name, label])));
 
 /**
  * @brief Nom d'étoile sur deux lignes : deux libellés non vides (`nameLines`).

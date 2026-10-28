@@ -21,9 +21,8 @@ Le DOM se construit une fois ; seul `#skill` est `aria-live`, avec ce qui change
 La classe `.traveling` (fondu pendant un saut) est posée par l'appelant sur `#skill`.
 */
 import { el, setRich } from '../core/dom.js';
+import { levelRank } from '../core/levels.js';
 import { bodyIcon } from './skills-art.js';
-
-const LEVEL_RANK = Object.freeze({ advanced: 3, intermediate: 2, beginner: 1, unknown: 0 });
 
 /**
  * @brief Monte le panneau dans `root` (le `.focus-panel`) et rend ses points d'entrée.
@@ -129,7 +128,7 @@ export function createPanel(root, { onBack, onStar, onRelated }) {
   /** Fiche de l'étoile courante : n'écrit que ce qui diffère de l'état affiché. */
   const syncSkill = () => {
     const star = state.texts.stars[state.index];
-    const rank = LEVEL_RANK[star.level] ?? 0;
+    const rank = Math.max(levelRank(star.level), 0);
     if (name.textContent !== star.name) name.textContent = star.name;
     if (state.shown.rank !== rank) level.replaceChildren(bodyIcon(rank), levelText);
     state.shown.rank = rank;

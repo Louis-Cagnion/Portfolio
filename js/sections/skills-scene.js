@@ -8,6 +8,7 @@ données ne sert qu'au tracé du nom (deux lignes).
 Structure et mécanique de la maquette.
 */
 import { format } from '../core/i18n.js';
+import { levelRank } from '../core/levels.js';
 import {
   constellationGroup,
   labelOffset,
@@ -18,7 +19,6 @@ import {
 } from './skills-art.js';
 import { bodyScale, gridOf, layoutConstellation, walkOrder } from './skills-layout.js';
 
-export const LEVELS = ['unknown', 'beginner', 'intermediate', 'advanced'];
 const CENTER_SHIFT_Y = 14; // centre des étoiles remonté dans la cellule
 const TITLE_RISE = 22; // nom court à 22 unités du bas de la cellule
 
@@ -46,7 +46,7 @@ function placeStars(group, origin, center, size) {
     ...byId.get(id),
     name: items.get(id).name,
     lines: items.get(id).nameLines,
-    level: LEVELS.indexOf(items.get(id).level),
+    level: levelRank(items.get(id).level),
   }));
 }
 

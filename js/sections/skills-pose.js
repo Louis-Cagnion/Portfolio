@@ -8,10 +8,10 @@ décalé de `NAME_SHIFT` px à gauche de l'astre ; ce décalage se résorbe avec
 Formules de la maquette P2 (`layoutStars`, `dive`) ;
 cadrage du nuage entier sur téléphone : critère de Louis du 13/10/2026 (31 noms entiers).
 */
+import { LEVELS } from '../core/levels.js';
 import { ease, lerp } from '../core/motion.js';
 import { labelOffset, moveLabel, NAME_SHIFT, nameRise } from './skills-art.js';
 import { bodyRadius, bodyScale, extentOf } from './skills-layout.js';
-import { LEVELS } from './skills-scene.js';
 
 export const PHONE_RATIO = 1.15; // hauteur déployée en largeurs (design-checklist.md, §5)
 const NAME_DROP = 12; // nom sous l'astre, 12 px sous son bord
