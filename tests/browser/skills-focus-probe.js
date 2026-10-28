@@ -329,10 +329,11 @@ export function skillProblems(kit, k, ids, index) {
     need(problems, (chip.getAttribute('aria-pressed') === 'true') === mine,
       `puce « ${ownText(chip)} » : aria-pressed ${chip.getAttribute('aria-pressed')}`);
   }
+  const note = item.levelNote ?? text.levelNotes[item.level];
   const wanted = [
     ['h3', p.h3, plain(item.name)],
     ['.lvl', p.lvl, plain(text.levels[item.level])],
-    ['.body', p.body, plain(item.description ?? '')],
+    ['.body', p.body, plain(`${item.description ?? ''} ${note}`)],
   ];
   for (const [label, el, expected] of wanted)
     if (!el) problems.push(`${label} introuvable`);

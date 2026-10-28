@@ -206,6 +206,12 @@
       "beginner": "Beginner",
       "unknown": "Level to be confirmed"
     },
+    "levelNotes": {
+      "advanced": "This is an area where I am very comfortable.",
+      "intermediate": "I am comfortable with the essentials.",
+      "beginner": "I am taking my first steps and still rely a lot on the documentation and AI.",
+      "unknown": "My level on this topic remains to be confirmed."
+    },
     "bodies": {
       "advanced": "Galaxy",
       "intermediate": "Nebula",
@@ -228,6 +234,7 @@
             "id": "c",
             "name": "C",
             "level": "advanced",
+            "levelNote": "This language is natural for me to read.",
             "projects": [
               "libft",
               "push_swap",
@@ -237,14 +244,14 @@
               "cub3d",
               "codewars"
             ],
-            "description": "My core language: predominant during my common core and my piscines at 42, I was able to learn and push quite a few concepts in C (dynamic allocation, linked lists, binary trees, function pointers, processes, signals, threads, MinilibX); this language is natural for me to read."
+            "description": "My core language: predominant during my common core and my piscines at 42, I was able to learn and push quite a few concepts in C (dynamic allocation, linked lists, binary trees, function pointers, processes, signals, threads, MinilibX)."
           },
           {
             "id": "cpp",
             "name": "C++",
             "level": "intermediate",
             "projects": ["cpp_modules", "webserv"],
-            "description": "Learned through the ten C++ modules of the 42 common core, then put into practice in Webserv, an HTTP server written from scratch in C++98: I practised object-oriented programming there (classes, templates, STL); I am comfortable with the essentials."
+            "description": "Learned through the ten C++ modules of the 42 common core, then put into practice in Webserv, an HTTP server written from scratch in C++98: I practised object-oriented programming there (classes, templates, STL)."
           },
           {
             "id": "python",
@@ -257,35 +264,35 @@
               "codewars",
               "chatbot"
             ],
-            "description": "Learned through tutorials then Codewars, and used in production with the help of Claude Code: I practised data pipelines and batch scripts there (nightly audit, PDF parser with OCR, pytest tests); I am comfortable with the essentials."
+            "description": "Learned through tutorials then Codewars, and used in production with the help of Claude Code: I practised data pipelines and batch scripts there (nightly audit, PDF parser with OCR, pytest tests)."
           },
           {
             "id": "javascript",
             "name": "JavaScript",
             "level": "intermediate",
             "projects": ["portfolio", "devpedia", "wiki", "supermarket_compare", "dashboards"],
-            "description": "With no framework: this portfolio, Devpedia and its hand-made Markdown parser, the Heartopia wiki and, with the help of Claude Code, the ECharts charts of the professional dashboards (ES modules, DOM manipulation, charts); I am comfortable with the essentials."
+            "description": "With no framework: this portfolio, Devpedia and its hand-made Markdown parser, the Heartopia wiki and, with the help of Claude Code, the ECharts charts of the professional dashboards (ES modules, DOM manipulation, charts)."
           },
           {
             "id": "bash",
             "name": "Bash",
             "level": "intermediate",
             "projects": ["shell00", "shell01", "minishell"],
-            "description": "Seen in the Piscine scripts and the scripts measuring my solvers, and above all in Minishell, which made me reproduce Bash's behaviour in C (redirections, environment variables, signals, logical operators and priorities); I am comfortable with the essentials."
+            "description": "Seen in the Piscine scripts and the scripts measuring my solvers, and above all in Minishell, which made me reproduce Bash's behaviour in C (redirections, environment variables, signals, logical operators and priorities)."
           },
           {
             "id": "php",
             "name": "PHP",
-            "level": "intermediate",
+            "level": "beginner",
             "projects": ["admin_backoffice", "nps_scores", "audit_infomediaires", "call_resolution"],
-            "description": "Used at the Tressol-Chabrier Group in four back-office modules (NPS scores, audit, call tracking and resolution), developed with the help of Claude Code (PHP 8 with Slim 4, PDO, access rights per module and per profile, file cache); I am comfortable with the essentials."
+            "description": "Used at the Tressol-Chabrier Group in four back-office modules (NPS scores, audit, call tracking and resolution), developed with the help of Claude Code (PHP 8 with Slim 4, PDO, access rights per module and per profile, file cache)."
           },
           {
             "id": "typescript",
             "name": "TypeScript",
             "level": "beginner",
             "projects": ["transcendence"],
-            "description": "Seen with the Transcendence Pong: the opposing AI on the server side and the 3D rendering on the client side; I am taking my first steps and still rely a lot on the documentation and AI."
+            "description": "Seen with the Transcendence Pong: the opposing AI on the server side and the 3D rendering on the client side."
           }
         ]
       },
@@ -299,14 +306,14 @@
             "name": "HTML",
             "level": "intermediate",
             "projects": ["portfolio", "devpedia", "wiki"],
-            "description": "Seen in the structure of my sites: this portfolio, Devpedia and the Heartopia wiki (page structure, navigation, keyboard accessibility); I am comfortable with the essentials."
+            "description": "Seen in the structure of my sites: this portfolio, Devpedia and the Heartopia wiki (page structure, navigation, keyboard accessibility)."
           },
           {
             "id": "css",
             "name": "CSS",
             "level": "intermediate",
             "projects": ["portfolio", "devpedia", "dashboards"],
-            "description": "Seen in my sites, whose design I build with Claude and design skills to get modern graphical renderings, like this portfolio, then, with the help of Claude Code, in the redesign of the professional dashboards' interface, for use on desktop as well as mobile (responsive layout, CSS variables, animations); I am comfortable with the essentials."
+            "description": "Seen in my sites, whose design I build with Claude and design skills to get modern graphical renderings, like this portfolio, then, with the help of Claude Code, in the redesign of the professional dashboards' interface, for use on desktop as well as mobile (responsive layout, CSS variables, animations)."
           }
         ]
       },
@@ -320,21 +327,21 @@
             "name": "Makefiles",
             "level": "intermediate",
             "projects": ["minishell", "cub3d", "philosophers", "c09"],
-            "description": "Seen in every C project of the 42 common core, from Minishell to Cub3D, Philosophers and my first static library (build rules, dependencies, static library); I am comfortable with the essentials."
+            "description": "Seen in every C project of the 42 common core, from Minishell to Cub3D, Philosophers and my first static library (build rules, dependencies, static library)."
           },
           {
             "id": "git",
             "name": "Git",
             "level": "intermediate",
             "projects": ["transcendence"],
-            "description": "Used for all my projects; Transcendence required clean, understandable commits for a whole team (readable commits, teamwork); I am comfortable with the essentials."
+            "description": "Used for all my projects; Transcendence required clean, understandable commits for a whole team (readable commits, teamwork)."
           },
           {
             "id": "github",
             "name": "GitHub",
             "level": "intermediate",
             "projects": ["devpedia", "wiki", "portfolio"],
-            "description": "Hosting for my code and my sites, published on GitHub Pages: Devpedia, the Heartopia wiki and this portfolio (repositories, GitHub Pages); I am comfortable with the essentials."
+            "description": "Hosting for my code and my sites, published on GitHub Pages: Devpedia, the Heartopia wiki and this portfolio (repositories, GitHub Pages)."
           },
           {
             "id": "js-tests",
@@ -342,21 +349,21 @@
             "nameLines": ["JavaScript", "unit tests"],
             "level": "beginner",
             "projects": ["wiki", "supermarket_compare"],
-            "description": "Seen with Vitest for the Heartopia wiki and node --test for the grocery comparison app (unit tests); I am taking my first steps and still rely a lot on the documentation and AI."
+            "description": "Seen with Vitest for the Heartopia wiki and node --test for the grocery comparison app (unit tests)."
           },
           {
             "id": "azure-pipelines",
             "name": "Azure DevOps Pipelines",
             "level": "beginner",
             "projects": ["nps_scores", "audit_infomediaires"],
-            "description": "Used for the scheduled deployment of the NPS and audit pipelines, set up with the help of Claude Code (validation with Ruff and pytest, staging and production); I am taking my first steps and still rely a lot on the documentation and AI."
+            "description": "Used for the scheduled deployment of the NPS and audit pipelines, set up with the help of Claude Code (validation with Ruff and pytest, staging and production)."
           },
           {
             "id": "playwright",
             "name": "Playwright",
             "level": "beginner",
             "projects": ["audit_infomediaires"],
-            "description": "Used in the nightly check of the online shops' visibility, built with the help of Claude Code (browser automation, parallel runs per platform); I am taking my first steps and still rely a lot on the documentation and AI."
+            "description": "Used in the nightly check of the online shops' visibility, built with the help of Claude Code (browser automation, parallel runs per platform)."
           }
         ]
       },
@@ -370,14 +377,14 @@
             "name": "Threads, mutexes and semaphores",
             "level": "intermediate",
             "projects": ["philosophers"],
-            "description": "Seen in Philosophers: keeping philosophers alive to the millisecond (threads, mutexes, then processes and semaphores as a bonus); I am comfortable with the essentials."
+            "description": "Seen in Philosophers: keeping philosophers alive to the millisecond (threads, mutexes, then processes and semaphores as a bonus)."
           },
           {
             "id": "processes",
             "name": "Processes, pipes and signals",
             "level": "advanced",
             "projects": ["pipex", "minishell", "minitalk", "philosophers"],
-            "description": "Seen in Pipex, Minishell, Minitalk and the Philosophers bonus (fork, pipe, dup2, execve, UNIX signals, semaphores); this is an area where I am very comfortable."
+            "description": "Seen in Pipex, Minishell, Minitalk and the Philosophers bonus (fork, pipe, dup2, execve, UNIX signals, semaphores)."
           }
         ]
       },
@@ -391,35 +398,35 @@
             "name": "TCP sockets and HTTP/1.1",
             "level": "intermediate",
             "projects": ["webserv"],
-            "description": "Seen in Webserv, a non-blocking server written from scratch (GET, POST and DELETE requests, status codes, cookies and sessions, CGI); I am comfortable with the essentials."
+            "description": "Seen in Webserv, a non-blocking server written from scratch (GET, POST and DELETE requests, status codes, cookies and sessions, CGI)."
           },
           {
             "id": "ip-networking",
             "name": "IP networking",
             "level": "intermediate",
             "projects": ["netpractice", "born2beroot"],
-            "description": "Seen in Netpractice and Born2beroot (addresses, subnet masks, routing, firewall, SSH); I am comfortable with the essentials."
+            "description": "Seen in Netpractice and Born2beroot (addresses, subnet masks, routing, firewall, SSH)."
           },
           {
             "id": "apis",
             "name": "APIs",
             "level": "intermediate",
             "projects": ["dashboards", "client_migration", "chatbot", "devpedia"],
-            "description": "Seen at the Tressol-Chabrier Group with the help of Claude Code, and in my personal projects (17 API endpoints for a dashboard, Power BI integration, client records sent through the new software's API, Ollama's local API, DeepL API to translate Devpedia automatically); I am comfortable with the essentials."
+            "description": "Seen at the Tressol-Chabrier Group with the help of Claude Code, and in my personal projects (17 API endpoints for a dashboard, Power BI integration, client records sent through the new software's API, Ollama's local API, DeepL API to translate Devpedia automatically)."
           },
           {
             "id": "sql-pdo",
             "name": "SQL / PDO",
             "level": "intermediate",
             "projects": ["admin_backoffice", "nps_scores"],
-            "description": "Used at the Group with the help of Claude Code: back-office on SQL Server through PDO, one database per module, and an NPS pipeline in three layers (Staging, Silver, Gold) validated by SQL consistency tests; I am comfortable with the essentials."
+            "description": "Used at the Group with the help of Claude Code: back-office on SQL Server through PDO, one database per module, and an NPS pipeline in three layers (Staging, Silver, Gold) validated by SQL consistency tests."
           },
           {
             "id": "elasticsearch",
             "name": "Elasticsearch",
             "level": "beginner",
             "projects": ["search_tool"],
-            "description": "Seen in the conversational search tool, which turns a natural-language question into an Elasticsearch query on the vehicle stock: the engine existed before I took over the project, I fixed the filters and the data quality there with the help of Claude Code (query built by an LLM, filters); I am taking my first steps and still rely a lot on the documentation and AI."
+            "description": "Seen in the conversational search tool, which turns a natural-language question into an Elasticsearch query on the vehicle stock: the engine existed before I took over the project, I fixed the filters and the data quality there with the help of Claude Code (query built by an LLM, filters)."
           }
         ]
       },
@@ -433,7 +440,7 @@
             "name": "Web security",
             "level": "beginner",
             "projects": ["search_tool"],
-            "description": "Seen in the conversational search tool, where a crash-test campaign fixed about thirty bugs and vulnerabilities with the help of Claude Code: I did not run it myself, I read up on the flaws encountered (HMAC-signed token, rate limiting per IP address, CSRF protection, access control per dealership, CSP headers, session fixation); I am taking my first steps and still rely a lot on the documentation and AI."
+            "description": "Seen in the conversational search tool, where a crash-test campaign fixed about thirty bugs and vulnerabilities with the help of Claude Code: I did not run it myself, I read up on the flaws encountered (HMAC-signed token, rate limiting per IP address, CSRF protection, access control per dealership, CSP headers, session fixation)."
           }
         ]
       },
@@ -447,21 +454,21 @@
             "name": "NumPy",
             "level": "beginner",
             "projects": ["chatbot"],
-            "description": "Seen in my AI experiments (statistics, standardisation, missing values); I am taking my first steps and still rely a lot on the documentation and AI."
+            "description": "Seen in my AI experiments (statistics, standardisation, missing values)."
           },
           {
             "id": "matplotlib",
             "name": "Matplotlib",
             "level": "beginner",
             "projects": ["chatbot"],
-            "description": "Seen in my AI experiments (learning curves, image display); I am taking my first steps and still rely a lot on the documentation and AI."
+            "description": "Seen in my AI experiments (learning curves, image display)."
           },
           {
             "id": "keras",
             "name": "TensorFlow / Keras",
             "level": "beginner",
             "projects": ["chatbot"],
-            "description": "My first steps in deep learning, in my AI experiments (a linear neural network whose training I follow, GPU detection with TensorFlow); I am taking my first steps and still rely a lot on the documentation and AI."
+            "description": "My first steps in deep learning, in my AI experiments (a linear neural network whose training I follow, GPU detection with TensorFlow)."
           }
         ]
       },
@@ -475,35 +482,35 @@
             "name": "VirtualBox",
             "level": "intermediate",
             "projects": ["born2beroot", "inception"],
-            "description": "Seen in Born2beroot, with a Debian installed and secured by hand, then in Inception, whose container infrastructure had to run inside a virtual machine (virtual machines, Debian installation); I am comfortable with the essentials."
+            "description": "Seen in Born2beroot, with a Debian installed and secured by hand, then in Inception, whose container infrastructure had to run inside a virtual machine (virtual machines, Debian installation)."
           },
           {
             "id": "minilibx",
             "name": "MinilibX",
             "level": "intermediate",
             "projects": ["fract-ol", "cub3d"],
-            "description": "Seen in Fract-ol, where it does all the rendering, then in Cub3D (window and images, minimap, movement, collisions); I am comfortable with the essentials."
+            "description": "Seen in Fract-ol, where it does all the rendering, then in Cub3D (window and images, minimap, movement, collisions)."
           },
           {
             "id": "valgrind",
             "name": "Valgrind",
             "level": "advanced",
             "projects": ["minishell", "philosophers"],
-            "description": "Used in my C projects, where the slightest leak fails the evaluation: I learned to trace a bug back to its origin even when the leaks came from elsewhere in the code, for example a badly allocated variable behind the first error (memory leaks, access errors); this is an area where I am very comfortable."
+            "description": "Used in my C projects, where the slightest leak fails the evaluation: I learned to trace a bug back to its origin even when the leaks came from elsewhere in the code, for example a badly allocated variable behind the first error (memory leaks, access errors)."
           },
           {
             "id": "docker",
             "name": "Docker",
             "level": "beginner",
             "projects": ["inception"],
-            "description": "Seen in Inception, with Dockerfiles and a docker-compose written by hand (Nginx, MariaDB, WordPress); I am taking my first steps and still rely a lot on the documentation and AI."
+            "description": "Seen in Inception, with Dockerfiles and a docker-compose written by hand (Nginx, MariaDB, WordPress)."
           },
           {
             "id": "threejs",
             "name": "Three.js",
             "level": "beginner",
             "projects": ["transcendence"],
-            "description": "Seen in the 3D version of the Transcendence Pong (models, lighting, animated camera); I am taking my first steps and still rely a lot on the documentation and AI."
+            "description": "Seen in the 3D version of the Transcendence Pong (models, lighting, animated camera)."
           }
         ]
       }

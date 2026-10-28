@@ -431,6 +431,46 @@ describe('légende des compétences : skills.legendItem', () => {
   });
 });
 
+describe('phrase finale des compétences : skills.levelNotes', () => {
+  for (const lang of LANGS) {
+    const skills = () => locale(lang).skills;
+    const items = () => skills().groups.flatMap((group) => group.items);
+
+    test(`${lang} : chaque niveau d'étoile a sa phrase dans skills.levelNotes`, () => {
+      for (const item of items()) {
+        const note = skills().levelNotes?.[item.level];
+        assert.equal(
+          typeof note,
+          'string',
+          `${lang} : ${item.id} (${item.level}) sans phrase`,
+        );
+        assert.notEqual(note.trim(), '', `${lang} : levelNotes.${item.level} vide`);
+      }
+    });
+
+    test(`${lang} : seule une exception motivée a sa propre phrase (levelNote)`, () => {
+      const own = items().filter((item) => item.levelNote !== undefined);
+      assert.deepEqual(own.map((item) => item.id), ['c']);
+      assert.notEqual(own[0].levelNote, skills().levelNotes[own[0].level]);
+    });
+
+    test(`${lang} : aucune description ne répète une phrase de niveau`, () => {
+      const notes = [
+        ...Object.values(skills().levelNotes),
+        ...items().flatMap((item) => item.levelNote ?? []),
+      ];
+      for (const item of items())
+        for (const note of notes) {
+          assert.equal(
+            item.description.includes(note),
+            false,
+            `${lang} : ${item.id} répète « ${note} »`,
+          );
+        }
+    });
+  }
+});
+
 describe('détecteurs : volume (10 000 chaînes, temps linéaire)', () => {
   const tree = (n, text) =>
     ({ journey: { stops: [{ paragraphs: Array.from({ length: n }, () => text) }] } });

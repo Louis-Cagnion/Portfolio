@@ -132,6 +132,7 @@ const starFields = {
   level,
   projects: optional(list(id, { empty: true })),
   description: label,
+  levelNote: optional(label),
 };
 
 /**
@@ -222,6 +223,7 @@ const LOCALE = record({
     related: label,
     legend: label,
     levels: byLevel,
+    levelNotes: byLevel,
     bodies: byLevel,
     legendItem: label,
     link,
