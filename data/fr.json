@@ -417,7 +417,7 @@
           {
             "id": "sql-pdo",
             "name": "SQL / PDO",
-            "level": "intermediate",
+            "level": "beginner",
             "projects": ["admin_backoffice", "nps_scores"],
             "description": "Utilisé au Groupe avec l'assistance de Claude Code : back-office sur SQL Server via PDO, une base par module, et pipeline NPS en trois couches (Staging, Silver, Gold) validées par des tests de cohérence SQL."
           },
