@@ -385,6 +385,20 @@
             "level": "advanced",
             "projects": ["pipex", "minishell", "minitalk", "philosophers"],
             "description": "Seen in Pipex, Minishell, Minitalk and the Philosophers bonus (fork, pipe, dup2, execve, UNIX signals, semaphores)."
+          },
+          {
+            "id": "algorithms",
+            "name": "Algorithms",
+            "level": "intermediate",
+            "projects": ["push_swap", "codewars"],
+            "description": "Seen in Push_swap (sorting a stack with a minimal number of operations) and on Codewars, where I solved Skyscrapers (kyu 1) by writing it myself, with Claude Code only checking my approach (pruning from the clues, fewest-choices heuristic, bit masks)."
+          },
+          {
+            "id": "linux-kernel",
+            "name": "Linux and kernel",
+            "level": "beginner",
+            "projects": ["born2beroot"],
+            "description": "Seen in Born2beroot (a Debian installed and secured by hand) and in ft_linux, which I am working on: building a Linux distribution by hand (partitions and mounts, cross-compilation, boot, kernel and distribution)."
           }
         ]
       },
