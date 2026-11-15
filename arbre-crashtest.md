@@ -1,10 +1,10 @@
-# Arbre : correction des bugs du crash-test de la V1 (feuilles validées 0/10, faites 5/10)
+# Arbre : correction des bugs du crash-test de la V1 (feuilles validées 2/12, faites 5/12)
 
 Statuts : [ ] à faire, [~] en cours, [x] faite, [v] validée, [!] bloquée, [>] reportée au pré-mortem
-Prochaine feuille prête : CT-2.1 et CT-3.2 attendent que Louis valide leur rendu dans Chrome avant la fusion dans `redesign/space` (branche locale `agent/ct-3-2`, qui contient `agent/ct-2-1` et `redesign/space` à jour) ; CT-3.3, CT-4.2 et CT-1.2 prêtes ; CT-5.1 à cadrer
+Prochaine feuille prête : CT-5.2 attend le choix de Louis sur les maquettes de CT-5.1 ; CT-3.3, CT-4.2, CT-1.2 et CT-6.1 prêtes
 Moniteur : sonnet/high, réévalué à la création de l'arbre (aucun point de contrôle encore)
 
-Branches `agent/ct-*` et worktrees `.claude/worktrees/ct-*` locaux au PC Linux, non poussés ; maquette de CT-1.1 relançable par `timeout 3600 python3 -m http.server 5520 --bind 127.0.0.1` depuis `.claude/worktrees/ct-1-1`, URLs `/index.html?label=current|flip|clamp&demo=1#projects`.
+Branches `agent/ct-*` et worktrees `.claude/worktrees/ct-*` locaux au PC Linux, non poussés (`ct-3-1` et `ct-3-2` fusionnés, à supprimer) ; maquette de CT-1.1 relançable par `timeout 3600 python3 -m http.server 5520 --bind 127.0.0.1` depuis `.claude/worktrees/ct-1-1`, URLs `/index.html?label=current|flip|clamp&demo=1#projects` ; maquette de CT-5.1 dans `.claude/worktrees/ct-2-1` (port 5524, `/index.html?names=current|avoid|single#skills`).
 
 Règles : rapports reçus de la session crash-test par `SendMessage` ; cas commun (320 px et plus, police jusqu'à 200 %) corrigé ici, cas niche reporté dans `todo.md` (pré-mortem). Un rendu qui change doit être montré dans Chrome à Louis avant d'être appliqué. Worktrees `.claude/worktrees/<feuille>` créés depuis `redesign/space` ; ports 5510 à 5519 (agents), 5520 à 5529 (moniteur), 5530 et plus (crash-test).
 
@@ -13,11 +13,11 @@ Règles : rapports reçus de la session crash-test par `SendMessage` ; cas commu
   - [ ] CT-1.2 fixer : test Node rouge puis correctif de `placeLabel` (`js/sections/projects-art.js`) selon le rendu `flip` choisi par Louis (étiquette à gauche de la planète si la place manque à droite, puis bornée à gauche, au repos ; décider au brief si la borne vaut aussi pour les systèmes non zoomés quand un autre est zoomé) ; dépend de : CT-1.1 (faite) ; niveau pressenti : haiku/high (brief étoffé)
 
 - CT-2 [nœud] : nom « Processus, pipes et signaux » (EN « Processes, pipes and signals ») coupé au bord droit du plan Compétences au survol, de 881 à environ 1000 px (mineur, cas commun) ; point de contrôle : zéro débord à 881 et 1000 px FR et EN, `node --test` 419/419, groupe `competences` à 390 px sans nouveau rouge
-  - [x] CT-2.1 fixer : `nameLines` de l'étoile `processes` dans `data/fr.json` et `data/en.json` ; dépend de : - ; fait par : haiku/high puis la session (15/11/2026) ; zéro débord de 881 à 2560 px FR et EN, `node --test` 460/460, groupe `competences` à 390 px 230 réussis ; reste : rendu à valider par Louis dans Chrome avant la fusion
+  - [>] CT-2.1 : nom sur deux lignes refusé par Louis le 15/11/2026 (texte trop compact, noms qui se chevauchent) ; le débord de 881 à 1000 px se règle dans CT-5
 
 - CT-3 [nœud] : téléphone en paysage (844 x 390, 667 x 375) : la constellation déployée de Compétences et le système zoomé de Projets (hors Piscine) ont une hauteur fixée par la largeur seule (`PHONE_RATIO` de `js/sections/skills-pose.js:16` et `js/sections/projects-zoom.js:33`) : étoile, nom et panneau sous la barre d'onglets ou hors écran (mineur à la limite du majeur, cas commun) ; point de contrôle : cas paysage verts, cas portrait inchangés, groupes `competences` et `projets` sans nouveau rouge ; reprend le point 2 des reports de la relecture S8.C6 du `todo.md` (à retirer une fois corrigé)
-  - [x] CT-3.1 tester : cas rouges 844 x 390 et 667 x 375 (Compétences et Projets) plus garde-fou portrait, dans `tests/browser/skills-landscape.js` et `projects-landscape.js` (groupe `paysage`, enregistré dans `tests/browser/suite.js`) ; dépend de : - ; fait par : sonnet/medium ; rejoué par le moniteur : 2 réussis, 4 rouges comme attendu, commité sur `agent/ct-3-1` (e8c2668), non fusionné
-  - [x] CT-3.2 builder : fonction pure `fitHeight` (`js/core/viewport.js`) et son test Node, hauteur du plan bornée dans Compétences (`phoneFrame`, `fitDive` de `js/sections/skills-pose.js`) ; dépend de : CT-3.1 ; fait par : sonnet/high puis la session (15/11/2026, docstrings ramenées sous 15 lignes) ; groupe `paysage` : cas Compétences et garde-fou portrait verts, 2 rouges Projets attendus (CT-3.3) ; reste : rendu à valider par Louis dans Chrome avant la fusion
+  - [v] CT-3.1 tester : cas paysage de Compétences et de Projets (groupe `paysage`) ; fusionné dans `redesign/space` avec CT-3.2 le 15/11/2026
+  - [v] CT-3.2 builder : `fitHeight` (`js/core/viewport.js`), hauteur du plan bornée dans Compétences ; rendu validé par Louis et fusionné le 15/11/2026 ; les 2 cas Projets du groupe `paysage` restent rouges jusqu'à CT-3.3
   - [ ] CT-3.3 builder : même borne dans `zoomedHeight` de Projets avec la fonction de CT-3.2 ; dépend de : CT-3.2 ; niveau pressenti : haiku/high (brief étoffé)
   - [ ] CT-3.4 checker : cas paysage verts, portrait inchangés, groupes `competences` et `projets` ; dépend de : CT-3.2 et CT-3.3
 
@@ -25,8 +25,12 @@ Règles : rapports reçus de la session crash-test par `SendMessage` ; cas commu
   - [x] CT-4.1 tester : cas rouges 667 x 375 et 740 x 360 plus garde-fou portrait, dans `tests/browser/contact-landscape.js` (groupe `paysage`) ; dépend de : CT-3.1 ; fait par : haiku/high ; rejoué par le moniteur : 3 réussis, 6 rouges comme attendu, commité sur `agent/ct-4-1` (7c102df, depuis `agent/ct-3-1`), non fusionné
   - [ ] CT-4.2 fixer : borne CSS de la largeur du disque ouvert par la hauteur visible (`css/contact.css`) ; dépend de : CT-4.1 ; niveau pressenti : haiku/high ; rendu montré à Louis avant la fusion
 
-- CT-5 [nœud] : au survol de la constellation Systèmes sur ordinateur, « Threads, mutex et sémaphores » chevauche « Linux et noyau » (81 x 7 px à 881 px, 75 x 1 px à 1280 px) et « Processus, pipes et signaux » chevauche « Algorithmique » jusqu'à 1000 px (mineur, cas commun) ; apparu avec les deux étoiles ajoutées à Systèmes, absent de `main` ; point de contrôle : aucun chevauchement de noms au survol de 881 à 2560 px, FR et EN, dans les 8 constellations
-  - [ ] CT-5.1 analyst : cause dans le placement des noms (`placeLabels` de `js/sections/skills-scene.js`, `js/sections/skills-layout.js`) et 2 ou 3 remèdes à montrer à Louis dans Chrome (écartement des étoiles, nom au-dessus, `nameLines`) ; dépend de : CT-2.1 fusionnée ; niveau pressenti : sonnet/medium
+- CT-5 [nœud] : noms d'étoiles au survol d'une constellation, sur ordinateur : 5 chevauchements de 881 à 1920 px (Systèmes, Outils de dev, Réseau et BDD, Outils) et débord à droite de « Processus, pipes et signaux » de 881 à 1000 px (mineur, cas commun) ; point de contrôle : aucun chevauchement ni débord au survol de 881 à 2560 px, FR et EN, dans les 8 constellations
+  - [x] CT-5.1 maquette jetable de 3 rendus jouables (`current` ; `avoid` : nom sur une ligne, borné au plan, déplacé sous l'étoile ou sur le côté quand la place est prise ; `single` : seul le nom de l'étoile survolée) ; fait par : la session (15/11/2026) ; `avoid` mesuré : 1 chevauchement restant (Outils, 881 px) ; reste : choix de Louis
+  - [ ] CT-5.2 builder : test Node rouge puis placement retenu dans `placeLabels` (`js/sections/skills-scene.js`), fonction pure, remesure à `document.fonts.ready`, titre de la constellation compté comme obstacle ; dépend de : choix de Louis ; niveau pressenti : sonnet/medium
+
+- CT-6 [nœud] : téléphone en paysage, vue d'ensemble de Compétences : constellations trop grosses, 2 par ligne (demande de Louis du 15/11/2026 : 3 ou 4 par ligne) ; point de contrôle : 844 x 390 et 667 x 375, portrait inchangé
+  - [ ] CT-6.1 builder : maquette jouable à 3 et à 4 colonnes en paysage (`PHONE_GRID` et `gridOf` de `js/sections/skills-layout.js`), à montrer à Louis dans Chrome avant le correctif ; dépend de : - ; niveau pressenti : sonnet/medium
 
 ## Faits pour la suite
 - CT-4.1 : à 667 x 375 la place visible est d'environ 245 px (de 58 à 303) : le correctif doit réduire la taille du disque ouvert en paysage, pas seulement le centrage. Barre du haut = `header.bar` (bas à 58 px) ; `nav.nav` est masquée sous 880 px. Le cas contient deux contrôles du bouton `.rec-hint` en plus du brief (visible, haut non sous la barre du haut) : le second est redondant avec le disque dans la fenêtre.
