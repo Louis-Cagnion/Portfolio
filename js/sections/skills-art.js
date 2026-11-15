@@ -15,7 +15,7 @@ import { LEVELS } from '../core/levels.js';
 import { bodyRadius } from './skills-layout.js';
 
 const HIT_RADIUS = 18;
-const LABEL_GAP = 9;
+export const LABEL_GAP = 9; // px d'écran entre un astre et son nom
 const GALAXY_LABEL_SHARE = 0.6; // la galaxie, aplatie, remonte moins son nom
 export const NAME_SHIFT = 24; // px d'écran : décalage à gauche d'un nom à deux lignes
 const LINE_EM = 1.15; // interligne d'un nom sur deux lignes, en em

@@ -327,22 +327,23 @@ export function createFocus({ root, parts, state, camera, onRelated }) {
     if (phone()) setHeight(plan, (view().width * overview.height) / overview.width);
     const [begin, scale0] = [cameraPose(), scale];
     const rest = bodyScale({ phone: phone(), focused: false });
+    const home = () => overviewCamera(overview, view().ratio);
     await play(EXIT_MS, (k) => {
       const e = ease(k);
       host.style.setProperty('--fold', String(1 - e));
-      travel(begin, overviewCamera(overview, view().ratio), e);
+      travel(begin, home(), e);
       setScale(lerp(scale0, rest, e));
-      placeLabels(overview, unit());
+      placeLabels(overview, unit()); // place habituelle en route, évitement à l'arrivée
       arrange(1 - e, 1 - e);
     });
     if (token !== epoch) return;
     endFold();
     plan.style.removeProperty('height');
     plan.style.aspectRatio = `${overview.width} / ${overview.height}`;
-    camera.set(overviewCamera(overview, view().ratio));
+    camera.set(home());
     setScale(rest);
     arrange(0, 0);
-    placeLabels(overview, unit());
+    placeLabels(overview, unit(), !phone());
     host.replaceChildren();
     deck = null;
     settle();

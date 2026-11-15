@@ -123,7 +123,7 @@ export function mount(root) {
     const { built, width, selection } = state;
     if (!built || !width || selection.group || focus.moving()) return;
     camera.set(overviewCamera(built, camera.ratio()));
-    placeLabels(built, camera.w / width);
+    placeLabels(built, camera.w / width, !state.phone);
   };
 
   /** Constellations : clic, Entrée et Espace appellent `focus.enter` de leur rang. */
@@ -187,6 +187,8 @@ export function mount(root) {
   narrow.addEventListener('change', () => {
     if (state.skills) build();
   });
+  document.fonts?.ready.then(fit); // largeurs des noms avec les polices chargées
+  document.fonts?.addEventListener('loadingdone', fit);
 
   root.append(parts.heading, parts.lede, parts.link.node, parts.layout, parts.legend.node);
 
@@ -197,6 +199,7 @@ export function mount(root) {
     if (same) {
       retext(state.built, skills.groups, skills);
       focus.relabel();
+      fit(); // les noms traduits changent de largeur
     } else {
       state.signature = idsOf(skills.groups);
       build();
