@@ -25,8 +25,9 @@ import {
 } from './skills-layout.js';
 import { placeLabels } from './skills-scene.js';
 import {
-  PHONE_RATIO,
+  SCROLL_MARGIN,
   blend,
+  fitDive,
   hopOf,
   nameBoxes,
   phoneCamera,
@@ -38,7 +39,6 @@ const ENTER_MS = 1000;
 const DIVE_MS = 950;
 const JUMP_MS = 1400;
 const EXIT_MS = 1200;
-const SCROLL_MARGIN = 8; // px entre la barre du haut et le plan (maquette)
 
 /**
  * @brief Lie Entrée et Espace d'un nœud à une action (la touche n'y défile pas).
@@ -214,7 +214,13 @@ export function createFocus({ root, parts, state, camera, onRelated }) {
   const aim = (rank) => {
     const spot = deck.spots[rank];
     const level = LEVELS[deck.built.stars[rank].level];
-    return diveTarget({ x: spot.x, y: spot.y, level }, view(), { phone: phone() });
+    const target = diveTarget({ x: spot.x, y: spot.y, level }, view(), { phone: phone() });
+    if (!phone()) return target;
+    return fitDive(target, deck.frame, {
+      y: spot.y,
+      level,
+      rise: deck.boxes[rank].rise,
+    });
   };
 
   /** Plongée sur l'étoile `to` ; `from` (rang) ajoute le recul à mi-course d'un saut. */
@@ -379,7 +385,7 @@ export function createFocus({ root, parts, state, camera, onRelated }) {
     host.querySelector('#skill').classList.add('traveling');
     if (phone()) {
       Object.assign(deck, { frame: phoneFrame(plan, host), boxes: nameBoxes(built.stars) });
-      setHeight(plan, view().width * PHONE_RATIO);
+      setHeight(plan, deck.frame.height);
       scrollToPlan(layout);
     }
     const [begin, scale0] = [cameraPose(), scale];
@@ -442,7 +448,8 @@ export function createFocus({ root, parts, state, camera, onRelated }) {
     if (phone()) {
       plan.style.transition = 'none'; // pose directe : la vue lit aussitôt la hauteur finale
       plan.style.aspectRatio = '';
-      plan.style.height = `${view().width * PHONE_RATIO}px`;
+      deck.frame = phoneFrame(plan, host);
+      plan.style.height = `${deck.frame.height}px`;
       view();
       plan.style.removeProperty('transition');
     }

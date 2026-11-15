@@ -47,6 +47,8 @@ import { runSheetBody } from './sheet-body.js';
 import { runEscapeProjects, runEscapeSheet, runEscapeSkills } from './escape-focus.js';
 import { runProjects } from './projects.js';
 import { runSkills } from './skills.js';
+import { runSkillsLandscape } from './skills-landscape.js';
+import { runProjectsLandscape } from './projects-landscape.js';
 import { runJourney } from './journey.js';
 import { runFitWords } from './fit-words.js';
 import { runNarrow } from './narrow.js';
@@ -75,6 +77,7 @@ const GROUPS = [
   'parcours',
   'etroit',
   'plafonnement',
+  'paysage',
 ];
 const PILL_WIDTH = 1280; // saut rejoué aussi par la pilule
 
@@ -469,6 +472,10 @@ async function main() {
     if (groups.includes('etroit')) await scenario('barres étroites', runNarrow);
     if (groups.includes('plafonnement'))
       await scenario('plafonnement', () => runFitWords(widths));
+    if (groups.includes('paysage')) {
+      await scenario('paysage (compétences)', runSkillsLandscape);
+      await scenario('paysage (projets)', runProjectsLandscape);
+    }
   } catch (error) {
     skip({ group: 'Suite', section: null }, ['suite'], `erreur interne : ${errorText(error)}`);
   } finally {

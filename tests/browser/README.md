@@ -6,7 +6,7 @@ Suite sans dépendance qui charge le site dans des iframes de 320, 390, 430, 768
 
 1. Servir la racine du dépôt : Live Server (port 5500) ou `python -m http.server 5501`.
 2. Ouvrir `http://127.0.0.1:5501/tests/browser/` dans Chrome (ou le port 5500), onglet au premier plan jusqu'à la fin (plusieurs minutes une fois le site en place).
-3. Relance ciblée, paramètres facultatifs : `?widths=320,1280` et `?groups=contrat,setrich,etats,navigation,saut,langue,matrice,accueil,indisponible,contact,fiche,projets,competences,parcours,etroit,plafonnement`.
+3. Relance ciblée, paramètres facultatifs : `?widths=320,1280` et `?groups=contrat,setrich,etats,navigation,saut,langue,matrice,accueil,indisponible,contact,fiche,projets,competences,parcours,etroit,plafonnement,paysage`.
 
 Sans fenêtre : `node tools/run-browser-suite.mjs http://127.0.0.1:5501/tests/browser/ resultat.json 1300` joue la suite dans un Chrome headless et écrit le bilan en JSON (code 1 si un cas échoue). Un serveur par Chrome : deux Chrome sur un même `http.server` laissent un module en suspens.
 
@@ -47,3 +47,5 @@ Contrat du déploiement (S8.B3) :
 Le groupe `etroit` (`narrow.js`) joue des largeurs fixes de 200, 240 et 390 px, hors du filtre `widths`. Le lanceur headless ouvre une page sans focus (ni `:focus`, ni événement de focus) : le cas du focus clavier y rejoue alors les règles de la barre avec une classe à la place de `:focus-visible`. La police du navigateur ne se règle pas dans une iframe : le cas « 300 % » se vérifie hors banc.
 
 Le groupe `plafonnement` (`fit-words.js`) joue le module `js/core/fit-words.js` sur des éléments synthétiques de la page du banc, puis chaque rubrique et panneau d'erreur du site aux largeurs de la suite et à 200 et 240 px, à 100, 200 et 300 % de police (`html { font-size }` : mêmes limites que ci-dessus, les débordements de la pilule et de la barre d'onglets sont écartés). Un test qui change un texte ou la police du site attend le plafonnement par `afterFit(site)`.
+
+Le groupe `paysage` joue des fenêtres fixes de 844 x 390 et 667 x 375 px (téléphone en paysage), hors du filtre `widths`, plus un garde-fou en 390 x 844 : `skills-landscape.js` (constellation « Langages » déployée : nom de l'étoile et titre du panneau dans la place visible au-dessus de `.tabbar`) et `projects-landscape.js` (système « Tressol-Chabrier » zoomé : soleil et moitié des planètes dans la place visible).
