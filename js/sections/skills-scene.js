@@ -3,7 +3,7 @@ Compétences, vue d'ensemble : construit les huit constellations (dessin de skil
 placement de skills-layout.js) et tient leurs textes et leurs noms d'étoile à jour. Aucun
 écouteur, aucun état : skills.js câble et mesure. Au repos, le nom sur deux lignes d'une étoile
 (`lines`) est décalé de `NAME_SHIFT` px d'écran vers la gauche de l'astre ; un nom qui en
-gênerait un autre ou sortirait de sa cellule change de place (`placeLabels`, skills-names.js).
+gênerait un autre ou quitterait sa cellule change de place (`placeLabels`, skills-names.js).
 Le nom complet de chaque étoile (`name`) est gardé sur l'objet étoile ; `nameLines` des
 données ne sert qu'au tracé du nom (deux lignes).
 Structure et mécanique de la maquette.
@@ -27,6 +27,7 @@ const CENTER_SHIFT_Y = 14; // centre des étoiles remonté dans la cellule
 const TITLE_RISE = 22; // nom court à 22 unités du bas de la cellule
 const NAME_FONT = 12.5; // px : police d'un nom d'étoile (`.const .name` de skills.css)
 const TITLE_FONT = 14; // px : police du nom d'une constellation (`.const .cname`)
+const CELL_OVERFLOW = 0.2; // part de sa cellule dont un nom peut dépasser de chaque côté
 
 /**
  * @brief Étoiles d'une constellation, placées dans la grille et rangées dans l'ordre du
@@ -150,42 +151,48 @@ function titleBox(title, unit) {
   return { l: x - half, r: x + half, t: y - ASCENT * font, b: y + DESCENT * font };
 }
 
-/** Boîtes à éviter par les noms d'une constellation : son titre, la rangée du dessus. */
-function obstaclesOf(entry, unit) {
-  const { x, y, width, height } = entry.cell;
-  const title = titleBox(entry.title, unit);
-  return y > 0 ? [title, { l: x, r: x + width, t: y - height, b: y }] : [title];
+/** Boîte d'un astre au repos, à l'unité d'écran courante. */
+function bodyBox(star, radius) {
+  return { l: star.x - radius, r: star.x + radius, t: star.y - radius, b: star.y + radius };
 }
 
 /**
  * @brief Replace le nom de chaque étoile à l'unité d'écran courante : au-dessus de son
  *   astre, ou à la première place libre s'il gênerait un autre nom (`placeNames`).
  *
- * @param {{ groups: object[], scale: number }} built résultat de buildOverview
+ * @param {{ groups: object[], scale: number, width: number }} built résultat de
+ *   buildOverview
  * @param {number} unit unités du dessin par pixel affiché (`--u` de la caméra)
- * @param {boolean} [avoid] vrai : un nom gênant change de place, dans la cellule de sa
- *   constellation ; faux (téléphone, noms masqués au repos) : place habituelle
+ * @param {boolean} [avoid] vrai : un nom gênant change de place, près de sa cellule, hors
+ *   des titres et des astres voisins ; faux (téléphone, noms masqués au repos) : place
+ *   habituelle
  */
 export function placeLabels(built, unit, avoid = false) {
   const lift = LABEL_GAP * unit;
-  for (const entry of built.groups) {
+  const radiusOf = (star) => labelOffset(star.level, built.scale, unit) - lift;
+  const others = avoid ? built.groups.map((entry) => [
+    titleBox(entry.title, unit),
+    ...entry.stars.map((star) => bodyBox(star, radiusOf(star))),
+  ]) : [];
+  built.groups.forEach((entry, rank) => {
     const names = entry.stars.map((star) => ({
       cx: star.x,
       y: star.y,
-      radius: labelOffset(star.level, built.scale, unit) - lift,
+      radius: radiusOf(star),
       half: halfWidth(star.label),
       rise: nameRise(star.label),
       shift: star.lines ? NAME_SHIFT * unit : 0,
     }));
+    const { x, width } = entry.cell;
     const spots = avoid
       ? placeNames(names, {
-        min: entry.cell.x,
-        max: entry.cell.x + entry.cell.width,
+        min: Math.max(0, x - width * CELL_OVERFLOW),
+        max: Math.min(built.width, x + width * (1 + CELL_OVERFLOW)),
         font: NAME_FONT * unit,
         lift,
-        obstacles: obstaclesOf(entry, unit),
+        obstacles: [others[rank][0], ...others.filter((_, k) => k !== rank).flat()],
       })
       : names.map((name) => usualSpot(name, lift));
     entry.stars.forEach((star, k) => moveLabel(star.label, spots[k].x, spots[k].base));
-  }
+  });
 }

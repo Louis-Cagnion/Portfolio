@@ -3,11 +3,13 @@ Contrat testé : js/sections/skills-names.js (placement des noms d'étoiles, mod
   placeNames(names, { min, max, font, lift, obstacles }) -> [{ x, base }], ordre des entrées
   - sans gêne : place habituelle, centre `cx - shift`, base `y - radius - lift` ;
   - deux noms ne se chevauchent jamais, aucun nom ne sort de [min, max] ;
+  - le nom le plus large garde sa place, le plus court se décale ; aucun nom des
+    constellations réelles n'est empilé à un cran ou plus de son astre ;
   - aucun nom sur l'astre d'une autre étoile ni sur un obstacle (titre de la constellation) ;
   - entrées non modifiées, résultat identique d'un appel à l'autre, liste vide acceptée.
 Les constellations réelles viennent de data/fr.json et data/en.json, placées par
-skills-layout.js, bornées à leur cellule ; largeur d'un nom estimée (0,51 em par caractère,
-mesure du nom le plus long dans Chrome).
+skills-layout.js, bornées à leur cellule élargie de 20 % ; largeur d'un nom estimée
+(0,51 em par caractère, mesure du nom le plus long dans Chrome).
 Lancer : node --test (depuis la racine du dépôt).
 */
 import { test, describe } from 'node:test';
@@ -88,7 +90,15 @@ describe('placeNames', () => {
     const spots = placeNames(names, OPTIONS);
     assert.deepEqual(problems(names, spots, OPTIONS), []);
     const usual = { x: 300, base: 200 - 8 - LIFT };
-    assert.deepEqual(spots[0], usual, 'le plus haut garde sa place');
+    assert.deepEqual(spots[0], usual, 'le plus large garde sa place');
+  });
+
+  test('nom long sous un nom court plus haut : le long garde sa place', async () => {
+    const placeNames = await load();
+    const names = [star(300, 220, 90), star(400, 214, 30)];
+    const spots = placeNames(names, OPTIONS);
+    assert.deepEqual(problems(names, spots, OPTIONS), []);
+    assert.deepEqual(spots[0], { x: 300, base: 220 - 8 - LIFT });
   });
 
   test('nom qui dépasserait du plan : ramené à l\'intérieur, des deux côtés', async () => {
@@ -138,7 +148,11 @@ describe('placeNames', () => {
           x: (k % grid.cols) * grid.cellWidth,
           y: Math.floor(k / grid.cols) * grid.cellHeight,
         };
-        const options = { ...OPTIONS, min: origin.x, max: origin.x + grid.cellWidth };
+        const options = {
+          ...OPTIONS,
+          min: Math.max(0, origin.x - grid.cellWidth * 0.2),
+          max: Math.min(grid.width, origin.x + grid.cellWidth * 1.2),
+        };
         const points = layoutConstellation(
           group,
           { width: grid.cellWidth, height: grid.cellHeight },
@@ -156,8 +170,14 @@ describe('placeNames', () => {
             shift: item.nameLines ? 24 : 0,
           };
         });
-        const found = problems(names, placeNames(names, options), options);
-        assert.deepEqual(found, [], `constellation ${group.id}`);
+        const spots = placeNames(names, options);
+        assert.deepEqual(problems(names, spots, options), [], `constellation ${group.id}`);
+        names.forEach((name, j) => {
+          const usual = name.y - name.radius - LIFT;
+          const below = name.y + name.radius + LIFT + (name.rise * 1.15 + 1) * FONT;
+          const near = spots[j].base >= usual - FONT / 2 && spots[j].base <= below + FONT / 2;
+          assert.ok(near, `${group.id} : nom ${j} empilé loin de son astre`);
+        });
       });
     });
   }
