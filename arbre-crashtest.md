@@ -1,10 +1,10 @@
-# Arbre : correction des bugs du crash-test de la V1 (feuilles validées 2/12, faites 5/12)
+# Arbre : correction des bugs du crash-test de la V1 (feuilles validées 2/12, faites 6/12)
 
 Statuts : [ ] à faire, [~] en cours, [x] faite, [v] validée, [!] bloquée, [>] reportée au pré-mortem
-Prochaine feuille prête : CT-5.2 attend le choix de Louis sur les maquettes de CT-5.1 ; CT-3.3, CT-4.2, CT-1.2 et CT-6.1 prêtes
+Prochaine feuille prête : CT-5.2 attend que Louis valide le rendu final dans Chrome (puis report du site sur `main`) ; CT-3.3, CT-4.2, CT-1.2 et CT-6.1 prêtes
 Moniteur : sonnet/high, réévalué à la création de l'arbre (aucun point de contrôle encore)
 
-Branches `agent/ct-*` et worktrees `.claude/worktrees/ct-*` locaux au PC Linux, non poussés (`ct-3-1` et `ct-3-2` fusionnés, à supprimer) ; maquette de CT-1.1 relançable par `timeout 3600 python3 -m http.server 5520 --bind 127.0.0.1` depuis `.claude/worktrees/ct-1-1`, URLs `/index.html?label=current|flip|clamp&demo=1#projects` ; maquette de CT-5.1 dans `.claude/worktrees/ct-2-1` (port 5524, `/index.html?names=current|avoid|single#skills`).
+Branches `agent/ct-*` et worktrees `.claude/worktrees/ct-*` locaux au PC Linux, non poussés (restent `ct-1-1` et `ct-4-1`) ; maquette de CT-1.1 relançable par `timeout 3600 python3 -m http.server 5520 --bind 127.0.0.1` depuis `.claude/worktrees/ct-1-1`, URLs `/index.html?label=current|flip|clamp&demo=1#projects`.
 
 Règles : rapports reçus de la session crash-test par `SendMessage` ; cas commun (320 px et plus, police jusqu'à 200 %) corrigé ici, cas niche reporté dans `todo.md` (pré-mortem). Un rendu qui change doit être montré dans Chrome à Louis avant d'être appliqué. Worktrees `.claude/worktrees/<feuille>` créés depuis `redesign/space` ; ports 5510 à 5519 (agents), 5520 à 5529 (moniteur), 5530 et plus (crash-test).
 
@@ -26,8 +26,8 @@ Règles : rapports reçus de la session crash-test par `SendMessage` ; cas commu
   - [ ] CT-4.2 fixer : borne CSS de la largeur du disque ouvert par la hauteur visible (`css/contact.css`) ; dépend de : CT-4.1 ; niveau pressenti : haiku/high ; rendu montré à Louis avant la fusion
 
 - CT-5 [nœud] : noms d'étoiles au survol d'une constellation, sur ordinateur : 5 chevauchements de 881 à 1920 px (Systèmes, Outils de dev, Réseau et BDD, Outils) et débord à droite de « Processus, pipes et signaux » de 881 à 1000 px (mineur, cas commun) ; point de contrôle : aucun chevauchement ni débord au survol de 881 à 2560 px, FR et EN, dans les 8 constellations
-  - [x] CT-5.1 maquette jetable de 3 rendus jouables (`current` ; `avoid` : nom sur une ligne, borné au plan, déplacé sous l'étoile ou sur le côté quand la place est prise ; `single` : seul le nom de l'étoile survolée) ; fait par : la session (15/11/2026) ; `avoid` mesuré : 1 chevauchement restant (Outils, 881 px) ; reste : choix de Louis
-  - [ ] CT-5.2 builder : test Node rouge puis placement retenu dans `placeLabels` (`js/sections/skills-scene.js`), fonction pure, remesure à `document.fonts.ready`, titre de la constellation compté comme obstacle ; dépend de : choix de Louis ; niveau pressenti : sonnet/medium
+  - [v] CT-5.1 maquette jetable de 3 rendus jouables ; choix de Louis le 15/11/2026 : `avoid` (tous les noms affichés, un nom gênant change de place) ; maquette supprimée
+  - [x] CT-5.2 : `placeNames` (`js/sections/skills-names.js`, module pur, retour arrière borné) branché dans `placeLabels` ; fait par : la session (15/11/2026) ; noms bornés à la cellule de leur constellation, hors du titre et de la rangée du dessus, ordinateur seulement ; mesuré au survol réel à 881, 940, 1000, 1100, 1280, 1920 et 2560 px, FR et EN : 0 chevauchement, 0 débord ; `node --test` 470/470, groupe `competences` 730 réussis ; reste : rendu final à valider par Louis
 
 - CT-6 [nœud] : téléphone en paysage, vue d'ensemble de Compétences : constellations trop grosses, 2 par ligne (demande de Louis du 15/11/2026 : 3 ou 4 par ligne) ; point de contrôle : 844 x 390 et 667 x 375, portrait inchangé
   - [ ] CT-6.1 builder : maquette jouable à 3 et à 4 colonnes en paysage (`PHONE_GRID` et `gridOf` de `js/sections/skills-layout.js`), à montrer à Louis dans Chrome avant le correctif ; dépend de : - ; niveau pressenti : sonnet/medium
