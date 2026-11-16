@@ -1,7 +1,7 @@
-# Arbre : correction des bugs du crash-test de la V1 (feuilles validées 2/12, faites 6/12)
+# Arbre : correction des bugs du crash-test de la V1 (feuilles validées 4/12, faites 6/12)
 
 Statuts : [ ] à faire, [~] en cours, [x] faite, [v] validée, [!] bloquée, [>] reportée au pré-mortem
-Prochaine feuille prête : CT-5.2 attend que Louis valide le rendu final dans Chrome (puis report du site sur `main`) ; CT-3.3, CT-4.2, CT-1.2 et CT-6.1 prêtes
+Prochaines feuilles prêtes : CT-3.3, CT-4.2, CT-1.2 et CT-6.1
 Moniteur : sonnet/high, réévalué à la création de l'arbre (aucun point de contrôle encore)
 
 Branches `agent/ct-*` et worktrees `.claude/worktrees/ct-*` locaux au PC Linux, non poussés (restent `ct-1-1` et `ct-4-1`) ; maquette de CT-1.1 relançable par `timeout 3600 python3 -m http.server 5520 --bind 127.0.0.1` depuis `.claude/worktrees/ct-1-1`, URLs `/index.html?label=current|flip|clamp&demo=1#projects`.
@@ -27,7 +27,7 @@ Règles : rapports reçus de la session crash-test par `SendMessage` ; cas commu
 
 - CT-5 [nœud] : noms d'étoiles au survol d'une constellation, sur ordinateur : 5 chevauchements de 881 à 1920 px (Systèmes, Outils de dev, Réseau et BDD, Outils) et débord à droite de « Processus, pipes et signaux » de 881 à 1000 px (mineur, cas commun) ; point de contrôle : aucun chevauchement ni débord au survol de 881 à 2560 px, FR et EN, dans les 8 constellations
   - [v] CT-5.1 maquette jetable de 3 rendus jouables ; choix de Louis le 15/11/2026 : `avoid` (tous les noms affichés, un nom gênant change de place) ; maquette supprimée
-  - [x] CT-5.2 : `placeNames` (`js/sections/skills-names.js`, module pur, retour arrière borné) branché dans `placeLabels` ; fait par : la session (15/11/2026) ; noms bornés à la cellule de leur constellation, hors du titre et de la rangée du dessus, ordinateur seulement ; mesuré au survol réel à 881, 940, 1000, 1100, 1280, 1920 et 2560 px, FR et EN : 0 chevauchement, 0 débord ; `node --test` 470/470, groupe `competences` 730 réussis ; reste : rendu final à valider par Louis
+  - [v] CT-5.2 : `placeNames` (`js/sections/skills-names.js`, module pur, retour arrière borné) branché dans `placeLabels` ; fait par : la session (15/11/2026) ; noms bornés à la cellule de leur constellation, hors du titre et de la rangée du dessus, ordinateur seulement ; mesuré au survol réel à 881, 940, 1000, 1100, 1280, 1920 et 2560 px, FR et EN : 0 chevauchement, 0 débord ; `node --test` 470/470, groupe `competences` 730 réussis ; rendu validé par Louis le 15/11/2026, site reporté sur `main` (18c1a31)
 
 - CT-6 [nœud] : téléphone en paysage, vue d'ensemble de Compétences : constellations trop grosses, 2 par ligne (demande de Louis du 15/11/2026 : 3 ou 4 par ligne) ; point de contrôle : 844 x 390 et 667 x 375, portrait inchangé
   - [ ] CT-6.1 builder : maquette jouable à 3 et à 4 colonnes en paysage (`PHONE_GRID` et `gridOf` de `js/sections/skills-layout.js`), à montrer à Louis dans Chrome avant le correctif ; dépend de : - ; niveau pressenti : sonnet/medium
