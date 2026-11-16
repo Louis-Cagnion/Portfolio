@@ -11,17 +11,18 @@ Contrat :
   update(texts)       réécrit les textes sans rien reconstruire (bascule de langue) : le focus
                       reste où il est
   texts = { ui, title, stars } : `ui` est `skills` de data/*.json (back, chipsLabel, prev,
-  next, related, levels), `title` le titre de la constellation et `stars` les étoiles DANS
-  L'ORDRE DU PARCOURS : { name, level, description, projects: [{ id, title }] }.
+  next, related, levels, levelNotes), `title` le titre de la constellation et `stars` les
+  étoiles DANS L'ORDRE DU PARCOURS : { name, level, description, projects: [{ id, title }] }.
+  La fiche écrit `description`, puis `ui.levelNotes[level]` (même phrase pour un niveau),
+  ou `levelNote` de l'étoile quand elle en a une propre.
   onBack() : retour à la vue d'ensemble ; onStar(i) : puce ou flèche vers le rang `i` ;
   onRelated(id, button) : projet lié, le module n'ouvre rien lui-même.
 Le DOM se construit une fois ; seul `#skill` est `aria-live`, avec ce qui change seulement.
 La classe `.traveling` (fondu pendant un saut) est posée par l'appelant sur `#skill`.
 */
 import { el, setRich } from '../core/dom.js';
+import { levelRank } from '../core/levels.js';
 import { bodyIcon } from './skills-art.js';
-
-const LEVEL_RANK = Object.freeze({ advanced: 3, intermediate: 2, beginner: 1, unknown: 0 });
 
 /**
  * @brief Monte le panneau dans `root` (le `.focus-panel`) et rend ses points d'entrée.
@@ -127,15 +128,17 @@ export function createPanel(root, { onBack, onStar, onRelated }) {
   /** Fiche de l'étoile courante : n'écrit que ce qui diffère de l'état affiché. */
   const syncSkill = () => {
     const star = state.texts.stars[state.index];
-    const rank = LEVEL_RANK[star.level] ?? 0;
+    const rank = Math.max(levelRank(star.level), 0);
     if (name.textContent !== star.name) name.textContent = star.name;
     if (state.shown.rank !== rank) level.replaceChildren(bodyIcon(rank), levelText);
     state.shown.rank = rank;
     const levelName = state.texts.ui.levels?.[star.level] ?? '';
     if (levelText.data !== levelName) levelText.data = levelName;
-    if (state.shown.description !== star.description) {
-      setRich(body, star.description, `skills.groups[].items[${state.index}].description`);
-      state.shown.description = star.description;
+    const note = star.levelNote ?? state.texts.ui.levelNotes?.[star.level];
+    const description = note ? `${star.description} ${note}` : star.description;
+    if (state.shown.description !== description) {
+      setRich(body, description, `skills.groups[].items[${state.index}].description`);
+      state.shown.description = description;
     }
     syncRelated(star.projects);
   };

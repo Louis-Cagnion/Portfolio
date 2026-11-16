@@ -10,6 +10,7 @@ Calculs d'image : skills-pose.js ; règles : css/skills.css.
 Une seule boucle `requestAnimationFrame`, qui lit `performance.now()` à chaque image : la
 progression ne dépend jamais de l'argument du rappel (origine différente dans une iframe).
 */
+import { LEVELS } from '../core/levels.js';
 import { ease, lerp, reduced, scrollBehavior, watchReduced } from '../core/motion.js';
 import { initSheet } from '../ui/sheet.js';
 import { createPanel } from './skills-panel.js';
@@ -22,10 +23,11 @@ import {
   overviewCamera,
   spreadOf,
 } from './skills-layout.js';
-import { LEVELS, placeLabels } from './skills-scene.js';
+import { placeLabels } from './skills-scene.js';
 import {
-  PHONE_RATIO,
+  SCROLL_MARGIN,
   blend,
+  fitDive,
   hopOf,
   nameBoxes,
   phoneCamera,
@@ -37,7 +39,6 @@ const ENTER_MS = 1000;
 const DIVE_MS = 950;
 const JUMP_MS = 1400;
 const EXIT_MS = 1200;
-const SCROLL_MARGIN = 8; // px entre la barre du haut et le plan (maquette)
 
 /**
  * @brief Lie Entrée et Espace d'un nœud à une action (la touche n'y défile pas).
@@ -213,7 +214,13 @@ export function createFocus({ root, parts, state, camera, onRelated }) {
   const aim = (rank) => {
     const spot = deck.spots[rank];
     const level = LEVELS[deck.built.stars[rank].level];
-    return diveTarget({ x: spot.x, y: spot.y, level }, view(), { phone: phone() });
+    const target = diveTarget({ x: spot.x, y: spot.y, level }, view(), { phone: phone() });
+    if (!phone()) return target;
+    return fitDive(target, deck.frame, {
+      y: spot.y,
+      level,
+      rise: deck.boxes[rank].rise,
+    });
   };
 
   /** Plongée sur l'étoile `to` ; `from` (rang) ajoute le recul à mi-course d'un saut. */
@@ -320,22 +327,23 @@ export function createFocus({ root, parts, state, camera, onRelated }) {
     if (phone()) setHeight(plan, (view().width * overview.height) / overview.width);
     const [begin, scale0] = [cameraPose(), scale];
     const rest = bodyScale({ phone: phone(), focused: false });
+    const home = () => overviewCamera(overview, view().ratio);
     await play(EXIT_MS, (k) => {
       const e = ease(k);
       host.style.setProperty('--fold', String(1 - e));
-      travel(begin, overviewCamera(overview, view().ratio), e);
+      travel(begin, home(), e);
       setScale(lerp(scale0, rest, e));
-      placeLabels(overview, unit());
+      placeLabels(overview, unit()); // place habituelle en route, évitement à l'arrivée
       arrange(1 - e, 1 - e);
     });
     if (token !== epoch) return;
     endFold();
     plan.style.removeProperty('height');
     plan.style.aspectRatio = `${overview.width} / ${overview.height}`;
-    camera.set(overviewCamera(overview, view().ratio));
+    camera.set(home());
     setScale(rest);
     arrange(0, 0);
-    placeLabels(overview, unit());
+    placeLabels(overview, unit(), !phone());
     host.replaceChildren();
     deck = null;
     settle();
@@ -378,7 +386,7 @@ export function createFocus({ root, parts, state, camera, onRelated }) {
     host.querySelector('#skill').classList.add('traveling');
     if (phone()) {
       Object.assign(deck, { frame: phoneFrame(plan, host), boxes: nameBoxes(built.stars) });
-      setHeight(plan, view().width * PHONE_RATIO);
+      setHeight(plan, deck.frame.height);
       scrollToPlan(layout);
     }
     const [begin, scale0] = [cameraPose(), scale];
@@ -441,7 +449,8 @@ export function createFocus({ root, parts, state, camera, onRelated }) {
     if (phone()) {
       plan.style.transition = 'none'; // pose directe : la vue lit aussitôt la hauteur finale
       plan.style.aspectRatio = '';
-      plan.style.height = `${view().width * PHONE_RATIO}px`;
+      deck.frame = phoneFrame(plan, host);
+      plan.style.height = `${deck.frame.height}px`;
       view();
       plan.style.removeProperty('transition');
     }

@@ -200,8 +200,8 @@ Chargée après css/journey.css par index.html.
 
 .pl-name {
   fill: var(--text);
-  /* égal à LABEL_FONT_SIZE de projects-art.js */
-  font: 500 12.5px var(--sans);
+  /* `--label-size` : LABEL_FONT_SIZE de projects-art.js, posé par projects.js */
+  font: 500 var(--label-size) var(--sans);
 }
 
 .planet:hover .pl-label,
@@ -256,9 +256,9 @@ Chargée après css/journey.css par index.html.
 }
 
 .systems.bleed {
-  /* égal au débord BLEED de projects-zoom.js */
-  width: calc(100% + 24px);
-  margin: 0 -12px;
+  /* `--bleed` : BLEED de projects-zoom.js, posé par projects.js */
+  width: calc(100% + var(--bleed));
+  margin: 0 calc(var(--bleed) / -2);
 }
 
 /* Zoom : le plan zoomé rogne ce que la caméra ne montre pas (svg : overflow hidden). */

@@ -11,14 +11,13 @@ Structure et mécanique de la maquette (HTML et construction).
 */
 import { BREAKPOINTS, el, svg } from '../core/dom.js';
 import { format } from '../core/i18n.js';
+import { LEVELS_DESCENDING, levelRank } from '../core/levels.js';
 import { makeCamera } from '../core/motion.js';
 import { bodyIcon } from './skills-art.js';
 import { createFocus, onActivate } from './skills-focus.js';
 import { overviewCamera } from './skills-layout.js';
 import { openRelated } from './skills-related.js';
-import { buildOverview, LEVELS, placeLabels, retext } from './skills-scene.js';
-
-const LEGEND_ORDER = ['advanced', 'intermediate', 'beginner', 'unknown'];
+import { buildOverview, placeLabels, retext } from './skills-scene.js';
 
 /**
  * @brief Empreinte de la structure des données : identifiants des groupes et des étoiles.
@@ -39,9 +38,12 @@ const idsOf = (groups) => groups
  */
 function buildLegend() {
   const intro = el('span');
-  const items = LEGEND_ORDER.map((level) => ({ level, text: document.createTextNode('') }));
+  const items = LEVELS_DESCENDING.map((level) => ({
+    level,
+    text: document.createTextNode(''),
+  }));
   const entries = items.map(({ level, text }) => (
-    el('span', { class: 'mag' }, bodyIcon(LEVELS.indexOf(level)), text)
+    el('span', { class: 'mag' }, bodyIcon(levelRank(level)), text)
   ));
   return { node: el('div', { class: 'legend' }, intro, ...entries), intro, items };
 }
@@ -121,7 +123,7 @@ export function mount(root) {
     const { built, width, selection } = state;
     if (!built || !width || selection.group || focus.moving()) return;
     camera.set(overviewCamera(built, camera.ratio()));
-    placeLabels(built, camera.w / width);
+    placeLabels(built, camera.w / width, !state.phone);
   };
 
   /** Constellations : clic, Entrée et Espace appellent `focus.enter` de leur rang. */
@@ -185,6 +187,8 @@ export function mount(root) {
   narrow.addEventListener('change', () => {
     if (state.skills) build();
   });
+  document.fonts?.ready.then(fit); // largeurs des noms avec les polices chargées
+  document.fonts?.addEventListener('loadingdone', fit);
 
   root.append(parts.heading, parts.lede, parts.link.node, parts.layout, parts.legend.node);
 
@@ -195,6 +199,7 @@ export function mount(root) {
     if (same) {
       retext(state.built, skills.groups, skills);
       focus.relabel();
+      fit(); // les noms traduits changent de largeur
     } else {
       state.signature = idsOf(skills.groups);
       build();

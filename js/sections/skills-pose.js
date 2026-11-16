@@ -8,17 +8,22 @@ décalé de `NAME_SHIFT` px à gauche de l'astre ; ce décalage se résorbe avec
 Formules de la maquette P2 (`layoutStars`, `dive`) ;
 cadrage du nuage entier sur téléphone : critère de Louis du 13/10/2026 (31 noms entiers).
 */
+import { LEVELS } from '../core/levels.js';
 import { ease, lerp } from '../core/motion.js';
+import { fitHeight, screenBounds } from '../core/viewport.js';
 import { labelOffset, moveLabel, NAME_SHIFT, nameRise } from './skills-art.js';
 import { bodyRadius, bodyScale, extentOf } from './skills-layout.js';
-import { LEVELS } from './skills-scene.js';
 
 export const PHONE_RATIO = 1.15; // hauteur déployée en largeurs (design-checklist.md, §5)
+export const SCROLL_MARGIN = 8; // px entre la barre du haut et le plan déployé (maquette)
+const SHORT_WINDOW = 500; // px : un téléphone en paysage reste sous cette hauteur (~430 px)
+const PANEL_SHOWN = 12; // px du haut du panneau visibles sous la place de l'étoile
 const NAME_DROP = 12; // nom sous l'astre, 12 px sous son bord
 const NAME_HEIGHT = 18; // px : hauteur d'une ligne de nom (14 px de police)
 const NAME_LINE = 16; // px : interligne d'un nom sur deux lignes (1,15 em de 14 px)
 const NAME_GAP = 9; // px : écart entre l'astre et un nom placé au-dessus
 const EDGE = 6; // px : marge entre un nom ou un astre et le bord du cadre
+const MIN_BODY = 8; // px : rayon minimal d'un astre plongé dans une place réduite
 const FIT_WIDTH = { min: 200, max: 4000 }; // largeur visible du cadrage du nuage
 const HOP_FACTOR = 2.4; // recul à 2,4 fois la distance entre les deux étoiles
 const HOP_MIN = 160; // largeur minimale du recul
@@ -66,21 +71,64 @@ export function placeStars(entry, spots, { t, drop, scale, unit, phone }) {
  * @brief Cadre visible du plan de téléphone déployé, à mesurer plan affiché.
  *
  * Le panneau remonte de `margin-top` sur le bloc collant (plan puis aide) : la partie libre
- * est la hauteur finale du plan moins ce que le panneau en recouvre.
+ * est la hauteur du plan moins ce que le panneau en recouvre, bornée par la place visible
+ * (`fitHeight`). Téléphone en paysage : le titre de la compétence reste aussi à l'écran.
+ * L'appelant pose la hauteur renvoyée, jamais une autre.
  *
  * @param {SVGSVGElement} plan svg#constSvg
  * @param {HTMLElement} panel .focus-panel, déjà en flux (rubrique déployée)
  *
- * @returns {{ width: number, height: number, free: number }} largeur, hauteur finale du
- *   plan et hauteur libre au-dessus du panneau, en pixels
+ * @returns {{ width: number, height: number, free: number, bounded: boolean }} largeur,
+ *   hauteur finale du plan et hauteur libre au-dessus du panneau, en pixels ; `bounded` :
+ *   la place visible a réduit la hauteur libre
  */
 export function phoneFrame(plan, panel) {
   const width = plan.clientWidth;
-  const height = width * PHONE_RATIO;
   const hint = plan.parentElement.getBoundingClientRect().height
     - plan.getBoundingClientRect().height;
-  const cover = -parseFloat(getComputedStyle(panel).marginTop) - hint;
-  return { width, height, free: height - Math.max(0, cover) };
+  const cover = Math.max(0, -parseFloat(getComputedStyle(panel).marginTop) - hint);
+  const bounds = screenBounds();
+  const title = panel.querySelector('h3')?.getBoundingClientRect();
+  const peek = title ? title.top - panel.getBoundingClientRect().top : 0; // haut du titre
+  const short = bounds.landscape && bounds.windowHeight <= SHORT_WINDOW;
+  const wanted = width * PHONE_RATIO - cover;
+  const free = fitHeight({
+    wanted,
+    windowHeight: bounds.windowHeight,
+    tabbarTop: bounds.tabbarTop,
+    planTop: bounds.barHeight + SCROLL_MARGIN,
+    margin: PANEL_SHOWN + (short ? peek : 0),
+  });
+  return { width, height: free + cover, free, bounded: free < wanted };
+}
+
+/**
+ * @brief Réduit la plongée sur une étoile quand la zone libre du plan est trop basse.
+ *
+ * Place réduite (téléphone en paysage) : l'astre est rapetissé et remonté pour tenir avec
+ * son nom, placé dessous, dans la zone libre. Plan non borné : cible inchangée.
+ *
+ * @param {{ cam: { cx: number, cy: number, w: number }, scale: number }} target résultat
+ *   de `diveTarget`
+ * @param {{ width: number, height: number, free: number, bounded: boolean }} frame résultat
+ *   de phoneFrame
+ * @param {object} star
+ * @param {number} star.y ordonnée de l'étoile (unités)
+ * @param {string} star.level niveau de l'étoile
+ * @param {number} star.rise interlignes du nom au-dessus de sa base (`nameBoxes`)
+ *
+ * @returns {{ cam: { cx: number, cy: number, w: number }, scale: number }} cible adaptée
+ */
+export function fitDive(target, frame, { y, level, rise }) {
+  if (!frame.bounded) return target;
+  const radius = bodyRadius(level);
+  const unit = target.cam.w / frame.width; // unités du dessin par pixel
+  const centre = frame.height / 2 - (target.cam.cy - y) / unit; // px sous le haut du plan
+  const below = NAME_DROP + NAME_HEIGHT + rise * NAME_LINE + EDGE;
+  if (centre + target.scale * radius + below <= frame.free) return target;
+  const body = Math.max((frame.free - below - EDGE) / 2, MIN_BODY);
+  const cy = y + (frame.height / 2 - (EDGE + body)) * unit;
+  return { cam: { ...target.cam, cy }, scale: Math.min(target.scale, body / radius) };
 }
 
 /**
